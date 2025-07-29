@@ -18,7 +18,19 @@ export default {
 			}
 		},
 		extend: {
+			fontFamily: {
+				'sf-pro': ['"SF Pro Display"', '"SF Pro Text"', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+				'sf-text': ['"SF Pro Text"', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+			},
 			colors: {
+				'yp-yellow': 'hsl(var(--yp-yellow))',
+				'yp-yellow-hover': 'hsl(var(--yp-yellow-hover))',
+				'yp-dark': 'hsl(var(--yp-dark))',
+				'yp-gray-light': 'hsl(var(--yp-gray-light))',
+				'yp-gray-medium': 'hsl(var(--yp-gray-medium))',
+				'yp-gray-dark': 'hsl(var(--yp-gray-dark))',
+				'yp-blue': 'hsl(var(--yp-blue))',
+				'yp-green': 'hsl(var(--yp-green))',
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
