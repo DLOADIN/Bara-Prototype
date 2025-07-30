@@ -9,20 +9,20 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 const cities = [
-  "Atlanta, GA",
-  "New York, NY", 
-  "Los Angeles, CA",
-  "Chicago, IL",
-  "Houston, TX",
-  "Phoenix, AZ",
-  "Philadelphia, PA",
-  "San Antonio, TX",
-  "San Diego, CA",
-  "Dallas, TX"
+  "Kigali, RW",
+  "Cairo, EGY", 
+  "Nairobi, KEN",
+  "Cape Town, SA",
+  "Harare, ZMB",
+  "Mbarara, UG",
+  "Dodoma, TZ",
+  "Addis Ababa, ETH",
+  "Durban, SA",
+  "Abuja, NG"
 ];
 
 export const Header = () => {
-  const [selectedCity, setSelectedCity] = useState("Atlanta, GA");
+  const [selectedCity, setSelectedCity] = useState("");
 
   return (
     <header className="bg-background border-b border-border">

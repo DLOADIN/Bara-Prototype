@@ -59,7 +59,7 @@ export const BusinessSection = () => {
                   href="tel:18667940889" 
                   className="text-yp-blue hover:underline font-medium"
                 >
-                  1-866-794-0889
+                  (+250) 791 291 003
                 </a>
               </p>
             </div>

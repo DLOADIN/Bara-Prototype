@@ -28,7 +28,7 @@ const categories = [
     name: "Dentists", 
     icon: Stethoscope, 
     link: "/dentists",
-    cities: ["Dallas", "Denver", "Phoenix", "Portland", "Austin"]
+    cities: ["", "Denver", "Phoenix", "Portland", "Austin"]
   },
   { 
     name: "Plumbers", 
