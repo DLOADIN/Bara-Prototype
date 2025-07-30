@@ -6,7 +6,7 @@ import heroImage from "@/assets/hero-kitchen.jpg";
 
 export const HeroSection = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [location, setLocation] = useState("Atlanta, GA");
+  const [location, setLocation] = useState("Kigali, RW");
 
   const handleSearch = () => {
     // Search functionality would be implemented here

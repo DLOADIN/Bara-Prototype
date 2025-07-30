@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Menu, Star, Building } from "lucide-react";
+import { Link } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -30,12 +31,16 @@ export const Header = () => {
         <div className="flex items-center justify-between h-16">
           {/* Logo */}
           <div className="flex items-center">
-            <div className="bg-yp-dark text-white px-3 py-2 rounded-md font-sf-pro font-bold text-lg">
-              YP
-            </div>
+            <Link to="/">
+              <div className="bg-yp-dark text-white px-3 py-2 rounded-md font-sf-pro font-bold text-lg">
+                ML
+              </div>
+            </Link>
+            <Link to="/"> 
             <span className="ml-2 font-sf-pro font-medium text-yp-dark text-lg">
-              The Real Yellow Pages
+              The Real More Listings
             </span>
+            </Link> 
           </div>
 
           {/* Desktop Navigation */}
