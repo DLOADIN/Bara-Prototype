@@ -50,10 +50,12 @@ export const Header = () => {
               Advertise
             </Button>
             
-            <Button variant="ghost" className="font-sf-text">
-              <Star className="w-4 h-4 mr-1" />
-              Write a Review
-            </Button>
+            <Link to="/writeareview">
+              <Button variant="ghost" className="font-sf-text">
+                <Star className="w-4 h-4 mr-1" />
+                Write a Review
+              </Button>
+            </Link>
 
             {/* Search by City Dropdown */}
             <DropdownMenu>

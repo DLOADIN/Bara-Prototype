@@ -13,12 +13,12 @@ import {
 import { useNavigate } from "react-router-dom";
 
 const categories = [
-  { 
-    name: "Find People", 
-    icon: Users, 
-    link: "/find-people",
-    cities: ["Kigali", "Cairo", "Nairobi", "Cape Town", "Harare"]
-  },
+  // { 
+  //   name: "Find People", 
+  //   icon: Users, 
+  //   link: "/find-people",
+  //   cities: ["Kigali", "Cairo", "Nairobi", "Cape Town", "Harare"]
+  // },
   { 
     name: "Restaurants", 
     icon: UtensilsCrossed, 
@@ -87,7 +87,7 @@ export const CategoryGrid = () => {
   return (
     <section className="py-12 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-10 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-5 lg:grid-cols-9 gap-6">
           {categories.map((category) => {
             const IconComponent = category.icon;
             return (
