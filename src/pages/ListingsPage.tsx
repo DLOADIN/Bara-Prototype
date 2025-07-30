@@ -426,12 +426,16 @@ export const ListingsPage = () => {
                     {listing.distance}
                   </div>
                   <div className="space-y-2">
-                    <Button size="sm" variant="outline" className="font-sf-text w-full">
-                      More Info
-                    </Button>
-                    <Button size="sm" className="bg-yp-blue hover:bg-yp-blue/90 text-white font-sf-text w-full">
-                      Write Review
-                    </Button>
+                    <Link to={`/${city}/${category}/${listing.id}`}>
+                      <Button size="sm" variant="outline" className="font-sf-text w-full">
+                        More Info
+                      </Button>
+                    </Link>
+                    <Link to="/write-review">
+                      <Button size="sm" className="bg-yp-blue hover:bg-yp-blue/90 text-white font-sf-text w-full">
+                        Write Review
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </div>
