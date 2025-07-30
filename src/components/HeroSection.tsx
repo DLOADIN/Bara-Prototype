@@ -1,12 +1,33 @@
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, MapPin } from "lucide-react";
+import { Search, MapPin, ChevronDown } from "lucide-react";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import heroImage from "@/assets/hero-kitchen.jpg";
+
+// All locations from the app
+const allLocations = [
+  "Kigali, RW",
+  "Cairo, EGY", 
+  "Nairobi, KEN",
+  "Cape Town, SA",
+  "Harare, ZMB",
+  "Mbarara, UG",
+  "Dodoma, TZ",
+  "Addis Ababa, ETH",
+  "Durban, SA",
+  "Abuja, NG"
+];
 
 export const HeroSection = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [location, setLocation] = useState("Kigali, RW");
+  const [isLocationOpen, setIsLocationOpen] = useState(false);
 
   const handleSearch = () => {
     // Search functionality would be implemented here
@@ -41,16 +62,42 @@ export const HeroSection = () => {
                 />
               </div>
               
-              {/* Location Input */}
+              {/* Location Dropdown */}
               <div className="flex-1 relative">
-                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-yp-gray-dark w-5 h-5" />
-                <Input
-                  type="text"
-                  placeholder="Location"
-                  value={location}
-                  onChange={(e) => setLocation(e.target.value)}
-                  className="pl-10 h-12 font-sf-text border-yp-gray-medium focus:border-yp-blue focus:ring-yp-blue"
-                />
+                <DropdownMenu open={isLocationOpen} onOpenChange={setIsLocationOpen}>
+                  <DropdownMenuTrigger asChild>
+                    <div className="relative">
+                      <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-yp-gray-dark w-5 h-5" />
+                      <Input
+                        type="text"
+                        placeholder="Location"
+                        value={location}
+                        readOnly
+                        className="pl-10 pr-10 h-12 font-sf-text border-yp-gray-medium focus:border-yp-blue focus:ring-yp-blue cursor-pointer"
+                      />
+                      <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-yp-gray-dark w-5 h-5" />
+                    </div>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-full max-h-60 overflow-y-auto bg-white border border-yp-gray-medium shadow-lg">
+                    <div className="p-2">
+                      <h3 className="text-sm font-sf-text font-semibold text-yp-dark mb-2 px-2">QUICK LOCATIONS</h3>
+                      {allLocations.map((loc) => (
+                        <DropdownMenuItem
+                          key={loc}
+                          onClick={() => {
+                            setLocation(loc);
+                            setIsLocationOpen(false);
+                          }}
+                          className={`font-sf-text px-2 py-2 cursor-pointer hover:bg-yp-gray-light ${
+                            location === loc ? "bg-yp-gray-light text-yp-blue" : "text-yp-dark"
+                          }`}
+                        >
+                          {loc}
+                        </DropdownMenuItem>
+                      ))}
+                    </div>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
               
               {/* Search Button */}
