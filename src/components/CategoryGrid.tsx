@@ -10,74 +10,78 @@ import {
   Scale, 
   Bed 
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const categories = [
   { 
     name: "Find People", 
     icon: Users, 
     link: "/find-people",
-    cities: ["Atlanta", "New York", "Los Angeles", "Chicago", "Houston"]
+    cities: ["Kigali", "Cairo", "Nairobi", "Cape Town", "Harare"]
   },
   { 
     name: "Restaurants", 
     icon: UtensilsCrossed, 
     link: "/restaurants",
-    cities: ["Atlanta", "Miami", "San Francisco", "Boston", "Seattle"]
+    cities: ["Kigali", "Mbarara", "Dodoma", "Addis Ababa", "Durban"]
   },
   { 
     name: "Dentists", 
     icon: Stethoscope, 
     link: "/dentists",
-    cities: ["", "Denver", "Phoenix", "Portland", "Austin"]
+    cities: ["Abuja", "Cairo", "Nairobi", "Cape Town", "Kigali"]
   },
   { 
     name: "Plumbers", 
     icon: Wrench, 
     link: "/plumbers",
-    cities: ["Las Vegas", "Nashville", "Orlando", "Tampa", "Memphis"]
+    cities: ["Harare", "Mbarara", "Dodoma", "Durban", "Abuja"]
   },
   { 
     name: "Contractors", 
     icon: HardHat, 
     link: "/contractors",
-    cities: ["Charlotte", "Jacksonville", "Indianapolis", "Columbus", "San Jose"]
+    cities: ["Addis Ababa", "Nairobi", "Cape Town", "Kigali", "Cairo"]
   },
   { 
     name: "Electricians", 
     icon: Zap, 
     link: "/electricians",
-    cities: ["Fort Worth", "Detroit", "El Paso", "Milwaukee", "Baltimore"]
+    cities: ["Durban", "Harare", "Mbarara", "Dodoma", "Abuja"]
   },
   { 
     name: "Auto Repair", 
     icon: Car, 
     link: "/auto-repair",
-    cities: ["Washington", "Louisville", "Oklahoma City", "Tucson", "Fresno"]
+    cities: ["Cairo", "Addis Ababa", "Nairobi", "Cape Town", "Kigali"]
   },
   { 
     name: "Roofing", 
     icon: Home, 
     link: "/roofing",
-    cities: ["Sacramento", "Kansas City", "Mesa", "Virginia Beach", "Colorado Springs"]
+    cities: ["Abuja", "Durban", "Harare", "Mbarara", "Dodoma"]
   },
   { 
     name: "Attorneys", 
     icon: Scale, 
     link: "/attorneys",
-    cities: ["Omaha", "Raleigh", "Long Beach", "Miami", "Virginia Beach"]
+    cities: ["Kigali", "Cairo", "Nairobi", "Cape Town", "Addis Ababa"]
   },
   { 
     name: "Hotels", 
     icon: Bed, 
     link: "/hotels",
-    cities: ["Oakland", "Minneapolis", "Tulsa", "Wichita", "New Orleans"]
+    cities: ["Harare", "Mbarara", "Dodoma", "Durban", "Abuja"]
   }
 ];
 
 export const CategoryGrid = () => {
+  const navigate = useNavigate();
+  
   const handleCategoryClick = (category: string, city: string) => {
-    console.log(`Navigating to ${category} in ${city}`);
-    // Navigation logic would be implemented here
+    const categorySlug = category.toLowerCase().replace(/\s+/g, '-');
+    const citySlug = city.toLowerCase().replace(/\s+/g, '-');
+    navigate(`/${citySlug}/${categorySlug}`);
   };
 
   return (
