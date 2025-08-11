@@ -27,18 +27,26 @@ export const Header = () => {
 
   return (
     <header className="bg-background border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-4">
+        <div className="flex items-center justify-between h-30">
           {/* Logo */}
           <div className="flex items-center">
             <Link to="/">
-              <div className="bg-yp-dark text-white px-3 py-2 rounded-md font-sf-pro font-bold text-lg">
+              {/* <div className="bg-yp-dark text-white px-3 py-2 rounded-md font-sf-pro font-bold text-lg">
                 ML
+              </div> */}
+              <div className="flex items-center py-4">
+                <Link to="/">
+                <img src="/bara-3.png" className="w-30 h-16" alt="Logo picture" />
+                </Link>
+                <Link to="/">
+                <img src="/bara-1-removebg-preview.png" className="w-30 h-16" alt="Logo picture" />
+                </Link>
               </div>
             </Link>
             <Link to="/"> 
             <span className="ml-2 font-sf-pro font-medium text-yp-dark text-lg">
-              The Real More Listings
+              {/* <img src="/bara-1.jpg" alt="logo" className="w-10 h-10" /> */}
             </span>
             </Link> 
           </div>

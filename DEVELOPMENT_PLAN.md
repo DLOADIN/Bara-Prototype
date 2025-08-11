@@ -35,7 +35,7 @@
 
 ### **Days 3-4: Homepage Redesign**
 - [ ] **Header Updates**
-  - Change app name from "The Real More Listings" to "Bara"
+  - Change app name from "The Real BARA LISTINGS" to "Bara"
   - Update navigation styling with new brand colors
   - Implement language selector (English/French/Swahili)
 
