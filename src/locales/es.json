@@ -141,6 +141,12 @@
     "copyright": "© 2024 Bara. Todos los derechos reservados."
   },
   "categories": {
+    "title": "Todas las Categorías",
+    "searchPlaceholder": "Buscar categorías...",
+    "noResults": {
+      "title": "No se encontraron categorías",
+      "description": "Intenta ajustar tus términos de búsqueda o explora todas las categorías"
+    },
     "airports": "Aeropuertos",
     "banks": "Bancos",
     "bars": "Bares",

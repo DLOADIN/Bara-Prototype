@@ -38,7 +38,8 @@ import {
   GraduationCap,
   Truck,
   CreditCard,
-  Smartphone
+  Smartphone,
+  MoreHorizontal
 } from "lucide-react";
 
 // Icon mapping for categories
@@ -104,7 +105,7 @@ export const CategoryGrid = () => {
           .select('*')
           .eq('is_active', true)
           .order('sort_order', { ascending: true })
-          .limit(36);
+          .limit(10); // Limit to 10 categories for the grid
 
         if (error) {
           console.error('Error fetching categories:', error);
@@ -123,6 +124,10 @@ export const CategoryGrid = () => {
 
   const handleCategoryClick = (categorySlug: string) => {
     navigate(`/category/${categorySlug}`);
+  };
+
+  const handleViewAllCategories = () => {
+    navigate('/categories');
   };
 
   if (loading) {
@@ -144,7 +149,7 @@ export const CategoryGrid = () => {
         <h2 className="text-2xl font-sf-pro font-bold text-yp-dark text-center mb-8">
           {t('homepage.categories.title')}
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-9 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-10 gap-4 md:gap-6">
           {categories.map((category) => {
             const IconComponent = iconMap[category.slug] || Home;
             const translatedName = t(`categories.${category.slug}`);
@@ -153,16 +158,29 @@ export const CategoryGrid = () => {
               <div key={category.id} className="text-center">
                 <button 
                   onClick={() => handleCategoryClick(category.slug)}
-                  className="w-16 h-16 mx-auto mb-3 bg-white border-2 border-yp-gray-medium rounded-full flex items-center justify-center hover:border-yp-blue hover:bg-yp-gray-light transition-all duration-200 group"
+                  className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-2 md:mb-3 bg-white border-2 border-yp-gray-medium rounded-full flex items-center justify-center hover:border-yp-blue hover:bg-yp-gray-light transition-all duration-200 group"
                 >
-                  <IconComponent className="w-8 h-8 text-yp-gray-dark group-hover:text-yp-blue" />
+                  <IconComponent className="w-6 h-6 md:w-8 md:h-8 text-yp-gray-dark group-hover:text-yp-blue" />
                 </button>
-                <h3 className="font-sf-text font-medium text-sm text-yp-dark mb-2">
+                <h3 className="font-sf-text font-medium text-xs md:text-sm text-yp-dark mb-2">
                   {translatedName}
                 </h3>
               </div>
             );
           })}
+          
+          {/* More Categories Button */}
+          <div className="text-center">
+            <button 
+              onClick={handleViewAllCategories}
+              className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-2 md:mb-3 bg-white border-2 border-yp-gray-medium rounded-full flex items-center justify-center hover:border-yp-blue hover:bg-yp-gray-light transition-all duration-200 group"
+            >
+              <MoreHorizontal className="w-6 h-6 md:w-8 md:h-8 text-yp-gray-dark group-hover:text-yp-blue" />
+            </button>
+            <h3 className="font-sf-text font-medium text-xs md:text-sm text-yp-dark mb-2">
+              {t('homepage.categories.viewMore')}
+            </h3>
+          </div>
         </div>
       </div>
     </section>

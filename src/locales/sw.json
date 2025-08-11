@@ -141,6 +141,12 @@
     "copyright": "© 2024 Bara. Haki zote zimehifadhiwa."
   },
   "categories": {
+    "title": "Kategoria Zote",
+    "searchPlaceholder": "Tafuta kategoria...",
+    "noResults": {
+      "title": "Hakuna kategoria zilizopatikana",
+      "description": "Jaribu kubadilisha maneno ya utafutaji au tazama kategoria zote"
+    },
     "airports": "Viwanja vya Ndege",
     "banks": "Mabenki",
     "bars": "Mabaa",
