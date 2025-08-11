@@ -58,6 +58,16 @@
     }
   },
   "business": {
+    "owners": "Business Owners",
+    "manageListing": {
+      "title": "Manage your free listing.",
+      "step1": "Update your business information in a few steps.",
+      "step2": "Make it easy for your customers to find you on Bara app.",
+      "new": "New!",
+      "jobPosting": "Post a job opening on your free listing."
+    },
+    "claimListing": "Claim Your Listing",
+    "orCall": "or call",
     "details": {
       "phone": "Phone",
       "email": "Email",
@@ -78,6 +88,13 @@
       "suspended": "Suspended",
       "premium": "Premium"
     }
+  },
+  "qa": {
+    "askQuestions": "Ask questions to the Bara community",
+    "shareKnowledge": "Share your knowledge to help out others",
+    "findAnswers": "Find answers or offer solutions",
+    "askQuestion": "Ask a Question",
+    "browsePopular": "Browse Popular Questions & Answers"
   },
   "reviews": {
     "title": "Reviews",
@@ -130,15 +147,15 @@
     "barbers": "Barbers",
     "bookstores": "Bookstores",
     "cafes": "Cafes",
-    "cinemasTheatres": "Cinemas & Theatres",
+    "cinemas-theatres": "Cinemas & Theatres",
     "clinics": "Clinics",
-    "clubsProfessional": "Clubs (Professional / Private)",
-    "clubsLeisure": "Clubs (Leisure / Dance)",
+    "clubs-professional": "Clubs (Professional / Private)",
+    "clubs-leisure": "Clubs (Leisure / Dance)",
     "dentists": "Dentists",
     "doctors": "Doctors",
     "faith": "Faith",
     "farms": "Farms",
-    "galleriesArt": "Galleries (Art)",
+    "galleries-art": "Galleries (Art)",
     "government": "Government",
     "hospitals": "Hospitals",
     "hotels": "Hotels",
@@ -148,9 +165,9 @@
     "museums": "Museums",
     "parks": "Parks",
     "pharmacies": "Pharmacies",
-    "postOffices": "Post Offices",
+    "post-offices": "Post Offices",
     "recreation": "Recreation",
-    "realEstate": "Real Estate",
+    "real-estate": "Real Estate",
     "restaurants": "Restaurants",
     "salons": "Salons",
     "schools": "Schools",

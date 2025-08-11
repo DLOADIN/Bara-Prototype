@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { MessageCircle, HelpCircle, Lightbulb } from "lucide-react";
 
@@ -12,6 +13,8 @@ const popularTopics = [
 ];
 
 export const QASection = () => {
+  const { t } = useTranslation();
+
   const handleTopicClick = (topic: string) => {
     console.log(`Clicked on topic: ${topic}`);
     // Navigation logic would be implemented here
@@ -39,25 +42,25 @@ export const QASection = () => {
 
             <div className="space-y-4 mb-8">
               <p className="font-sf-text text-lg text-yp-dark">
-                Ask questions to the YP community
+                {t('qa.askQuestions')}
               </p>
               <p className="font-sf-text text-lg text-yp-dark">
-                Share your knowledge to help out others
+                {t('qa.shareKnowledge')}
               </p>
               <p className="font-sf-text text-lg text-yp-dark">
-                Find answers or offer solutions
+                {t('qa.findAnswers')}
               </p>
             </div>
 
             <Button className="bg-yp-green hover:bg-yp-green/90 text-white font-sf-text font-semibold text-lg px-8 py-3 h-auto">
-              Ask a Question
+              {t('qa.askQuestion')}
             </Button>
           </div>
 
           {/* Right Side - Popular Topics */}
           <div>
             <h3 className="text-2xl font-sf-pro font-bold text-yp-dark mb-6">
-              Browse Popular Questions & Answers
+              {t('qa.browsePopular')}
             </h3>
             
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

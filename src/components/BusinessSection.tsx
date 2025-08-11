@@ -1,7 +1,11 @@
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { MapPin, Link as LinkIcon } from "lucide-react";
+import { Link } from 'react-router-dom'
 
 export const BusinessSection = () => {
+  const { t } = useTranslation();
+
   return (
     <section className="py-16 bg-yp-gray-light">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -41,7 +45,7 @@ export const BusinessSection = () => {
                 Update your business information in a few steps.
               </p>
               <p className="text-lg font-sf-text text-yp-dark">
-                Make it easy for your customers to find you on Yellowpages.
+                Make it easy for your customers to find you on Bara app.
               </p>
               <p className="text-lg font-sf-text text-yp-dark">
                 <span className="font-bold text-yp-green">New!</span> Post a job opening on your free listing.
@@ -49,9 +53,11 @@ export const BusinessSection = () => {
             </div>
 
             <div className="space-y-4">
-              <Button className="bg-yp-blue hover:bg-yp-blue/90 text-white font-sf-text font-semibold text-lg px-8 py-3 h-auto">
-                Claim Your Listing
-              </Button>
+              <Link to="/">
+                <Button className="bg-yp-blue hover:bg-yp-blue/90 text-white font-sf-text font-semibold text-lg px-8 py-3 h-auto">
+                  Claim Your Listing
+                </Button>
+              </Link>
               
               <p className="text-sm font-sf-text text-yp-gray-dark">
                 or call{" "}
