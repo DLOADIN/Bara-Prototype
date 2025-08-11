@@ -269,3 +269,4 @@ src/
 ---
 
 **Ready to kick it and get to the money! 🚀💰** 
+Also remember to use the suspense fallback for the user not be bored and leave the site when they do not get the data under 3 seconds{}
