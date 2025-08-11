@@ -58,6 +58,16 @@
     }
   },
   "business": {
+    "owners": "Propriétaires d'Entreprises",
+    "manageListing": {
+      "title": "Gérez votre annonce gratuite.",
+      "step1": "Mettez à jour les informations de votre entreprise en quelques étapes.",
+      "step2": "Facilitez à vos clients de vous trouver sur l'application Bara.",
+      "new": "Nouveau !",
+      "jobPosting": "Publiez une offre d'emploi sur votre annonce gratuite."
+    },
+    "claimListing": "Réclamer Votre Annonce",
+    "orCall": "ou appelez",
     "details": {
       "phone": "Téléphone",
       "email": "Email",
@@ -78,6 +88,13 @@
       "suspended": "Suspendu",
       "premium": "Premium"
     }
+  },
+  "qa": {
+    "askQuestions": "Posez des questions à la communauté Bara",
+    "shareKnowledge": "Partagez vos connaissances pour aider les autres",
+    "findAnswers": "Trouvez des réponses ou proposez des solutions",
+    "askQuestion": "Poser une Question",
+    "browsePopular": "Parcourir les Questions et Réponses Populaires"
   },
   "reviews": {
     "title": "Avis",
@@ -130,15 +147,15 @@
     "barbers": "Barbiers",
     "bookstores": "Librairies",
     "cafes": "Cafés",
-    "cinemasTheatres": "Cinémas et Théâtres",
+    "cinemas-theatres": "Cinémas et Théâtres",
     "clinics": "Cliniques",
-    "clubsProfessional": "Clubs (Professionnel / Privé)",
-    "clubsLeisure": "Clubs (Loisirs / Danse)",
+    "clubs-professional": "Clubs (Professionnel / Privé)",
+    "clubs-leisure": "Clubs (Loisirs / Danse)",
     "dentists": "Dentistes",
     "doctors": "Médecins",
     "faith": "Foi",
     "farms": "Fermes",
-    "galleriesArt": "Galeries d'Art",
+    "galleries-art": "Galeries d'Art",
     "government": "Gouvernement",
     "hospitals": "Hôpitaux",
     "hotels": "Hôtels",
@@ -148,9 +165,9 @@
     "museums": "Musées",
     "parks": "Parcs",
     "pharmacies": "Pharmacies",
-    "postOffices": "Bureaux de Poste",
+    "post-offices": "Bureaux de Poste",
     "recreation": "Loisirs",
-    "realEstate": "Immobilier",
+    "real-estate": "Immobilier",
     "restaurants": "Restaurants",
     "salons": "Salons",
     "schools": "Écoles",

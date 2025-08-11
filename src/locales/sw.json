@@ -58,6 +58,16 @@
     }
   },
   "business": {
+    "owners": "Wamiliki wa Biashara",
+    "manageListing": {
+      "title": "Dhibiti orodha yako ya bure.",
+      "step1": "Sasisha maelezo ya biashara yako kwa hatua chache.",
+      "step2": "Fanya iwe rahisi kwa wateja wako kukupata kwenye programu ya Bara.",
+      "new": "Mpya!",
+      "jobPosting": "Chapisha nafasi ya kazi kwenye orodha yako ya bure."
+    },
+    "claimListing": "Dai Orodha Yako",
+    "orCall": "au piga",
     "details": {
       "phone": "Simu",
       "email": "Barua Pepe",
@@ -78,6 +88,13 @@
       "suspended": "Imezuiliwa",
       "premium": "Premium"
     }
+  },
+  "qa": {
+    "askQuestions": "Uliza maswali kwa jumuiya ya Bara",
+    "shareKnowledge": "Shiriki maarifa yako kusaidia wengine",
+    "findAnswers": "Pata majibu au toa suluhisho",
+    "askQuestion": "Uliza Swali",
+    "browsePopular": "Tazama Maswali na Majibu Maarufu"
   },
   "reviews": {
     "title": "Tathmini",
@@ -130,15 +147,15 @@
     "barbers": "Wakinyozi",
     "bookstores": "Maduka ya Vitabu",
     "cafes": "Mikahawa",
-    "cinemasTheatres": "Sinema na Ukumbi wa Tamasha",
+    "cinemas-theatres": "Sinema na Ukumbi wa Tamasha",
     "clinics": "Kliniki",
-    "clubsProfessional": "Vikundi (Kazi / Binafsi)",
-    "clubsLeisure": "Vikundi (Burudani / Ngoma)",
+    "clubs-professional": "Vikundi (Kazi / Binafsi)",
+    "clubs-leisure": "Vikundi (Burudani / Ngoma)",
     "dentists": "Madaktari wa Meno",
     "doctors": "Madaktari",
     "faith": "Imani",
     "farms": "Mashamba",
-    "galleriesArt": "Jumba la Sanaa",
+    "galleries-art": "Jumba la Sanaa",
     "government": "Serikali",
     "hospitals": "Hospitali",
     "hotels": "Hoteli",
@@ -148,9 +165,9 @@
     "museums": "Makumbusho",
     "parks": "Mbuga",
     "pharmacies": "Maduka ya Dawa",
-    "postOffices": "Ofisi za Posta",
+    "post-offices": "Ofisi za Posta",
     "recreation": "Burudani",
-    "realEstate": "Mali ya Ishi",
+    "real-estate": "Mali ya Ishi",
     "restaurants": "Mikahawa",
     "salons": "Saluni",
     "schools": "Shule",

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Menu, Star, Building } from "lucide-react";
@@ -10,23 +10,77 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LanguageSelector } from "./LanguageSelector";
+import { db } from "@/lib/supabase";
 
-const cities = [
-  "Kigali, RW",
-  "Cairo, EGY", 
-  "Nairobi, KEN",
-  "Cape Town, SA",
-  "Harare, ZMB",
-  "Mbarara, UG",
-  "Dodoma, TZ",
-  "Addis Ababa, ETH",
-  "Durban, SA",
-  "Abuja, NG"
-];
+interface City {
+  id: string;
+  name: string;
+  country_id: string;
+  latitude: number | null;
+  longitude: number | null;
+  population: number | null;
+  countries: {
+    name: string;
+    code: string;
+  };
+}
 
 export const Header = () => {
   const { t } = useTranslation();
   const [selectedCity, setSelectedCity] = useState("");
+  const [cities, setCities] = useState<City[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const { data, error } = await db.cities()
+          .select(`
+            id,
+            name,
+            country_id,
+            latitude,
+            longitude,
+            population,
+            countries (
+              name,
+              code
+            )
+          `)
+          .order('name', { ascending: true })
+          .limit(10); // Limit to 10 cities for the header dropdown
+
+        if (error) {
+          console.error('Error fetching cities:', error);
+        } else {
+          // Type assertion to handle the Supabase response structure
+          const typedData = (data as unknown) as Array<{
+            id: string;
+            name: string;
+            country_id: string;
+            latitude: number | null;
+            longitude: number | null;
+            population: number | null;
+            countries: {
+              name: string;
+              code: string;
+            } | null;
+          }>;
+          setCities(typedData || []);
+        }
+      } catch (error) {
+        console.error('Error fetching cities:', error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCities();
+  }, []);
+
+  const formatCityDisplay = (city: City) => {
+    return `${city.name}, ${city.countries?.code || ''}`;
+  };
 
   return (
     <header className="bg-background border-b border-border">
@@ -73,17 +127,24 @@ export const Header = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent className="w-56 bg-background border border-border shadow-lg">
-                {cities.map((city) => (
-                  <DropdownMenuItem
-                    key={city}
-                    onClick={() => setSelectedCity(city)}
-                    className={`font-sf-text ${
-                      selectedCity === city ? "bg-yp-gray-light" : ""
-                    }`}
-                  >
-                    {city}
-                  </DropdownMenuItem>
-                ))}
+                {loading ? (
+                  <div className="text-center py-4">
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-yp-blue mx-auto"></div>
+                    <p className="text-xs text-yp-gray-dark mt-1">{t('common.loading')}</p>
+                  </div>
+                ) : (
+                  cities.map((city) => (
+                    <DropdownMenuItem
+                      key={city.id}
+                      onClick={() => setSelectedCity(formatCityDisplay(city))}
+                      className={`font-sf-text ${
+                        selectedCity === formatCityDisplay(city) ? "bg-yp-gray-light" : ""
+                      }`}
+                    >
+                      {formatCityDisplay(city)}
+                    </DropdownMenuItem>
+                  ))
+                )}
               </DropdownMenuContent>
             </DropdownMenu>
 

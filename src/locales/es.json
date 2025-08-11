@@ -58,6 +58,16 @@
     }
   },
   "business": {
+    "owners": "Propietarios de Negocios",
+    "manageListing": {
+      "title": "Gestiona tu anuncio gratuito.",
+      "step1": "Actualiza la información de tu negocio en pocos pasos.",
+      "step2": "Facilita que tus clientes te encuentren en la aplicación Bara.",
+      "new": "¡Nuevo!",
+      "jobPosting": "Publica una oferta de trabajo en tu anuncio gratuito."
+    },
+    "claimListing": "Reclamar Tu Anuncio",
+    "orCall": "o llama",
     "details": {
       "phone": "Teléfono",
       "email": "Correo Electrónico",
@@ -78,6 +88,13 @@
       "suspended": "Suspendido",
       "premium": "Premium"
     }
+  },
+  "qa": {
+    "askQuestions": "Haz preguntas a la comunidad Bara",
+    "shareKnowledge": "Comparte tu conocimiento para ayudar a otros",
+    "findAnswers": "Encuentra respuestas u ofrece soluciones",
+    "askQuestion": "Hacer una Pregunta",
+    "browsePopular": "Explorar Preguntas y Respuestas Populares"
   },
   "reviews": {
     "title": "Reseñas",
@@ -130,15 +147,15 @@
     "barbers": "Barberos",
     "bookstores": "Librerías",
     "cafes": "Cafés",
-    "cinemasTheatres": "Cines y Teatros",
+    "cinemas-theatres": "Cines y Teatros",
     "clinics": "Clínicas",
-    "clubsProfessional": "Clubes (Profesional / Privado)",
-    "clubsLeisure": "Clubes (Ocio / Baile)",
+    "clubs-professional": "Clubes (Profesional / Privado)",
+    "clubs-leisure": "Clubes (Ocio / Baile)",
     "dentists": "Dentistas",
     "doctors": "Doctores",
     "faith": "Fe",
     "farms": "Granjas",
-    "galleriesArt": "Galerías de Arte",
+    "galleries-art": "Galerías de Arte",
     "government": "Gobierno",
     "hospitals": "Hospitales",
     "hotels": "Hoteles",
@@ -148,9 +165,9 @@
     "museums": "Museos",
     "parks": "Parques",
     "pharmacies": "Farmacias",
-    "postOffices": "Oficinas de Correos",
+    "post-offices": "Oficinas de Correos",
     "recreation": "Recreación",
-    "realEstate": "Bienes Raíces",
+    "real-estate": "Bienes Raíces",
     "restaurants": "Restaurantes",
     "salons": "Salones",
     "schools": "Escuelas",
