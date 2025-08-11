@@ -1,0 +1,164 @@
+{
+  "common": {
+    "search": "Tafuta",
+    "find": "Pata",
+    "view": "Ona",
+    "edit": "Hariri",
+    "delete": "Futa",
+    "save": "Hifadhi",
+    "cancel": "Ghairi",
+    "submit": "Wasilisha",
+    "loading": "Inapakia...",
+    "error": "Hitilafu",
+    "success": "Mafanikio",
+    "close": "Funga",
+    "back": "Rudi",
+    "next": "Ifuatayo",
+    "previous": "Iliyotangulia",
+    "yes": "Ndiyo",
+    "no": "Hapana",
+    "ok": "Sawa"
+  },
+  "navigation": {
+    "home": "Nyumbani",
+    "advertise": "Tangaza",
+    "writeReview": "Andika Tathmini",
+    "searchByCity": "Tafuta kwa Jiji",
+    "marketplace": "Soko",
+    "events": "Matukio",
+    "about": "Kuhusu",
+    "contact": "Wasiliana",
+    "login": "Ingia",
+    "signup": "Jisajili",
+    "profile": "Wasifu",
+    "logout": "Ondoka"
+  },
+  "languages": {
+    "english": "Kiingereza",
+    "french": "Kifaransa",
+    "spanish": "Kihispania",
+    "swahili": "Kiswahili",
+    "selectLanguage": "Chagua Lugha"
+  },
+  "homepage": {
+    "hero": {
+      "title": "Gundua Mitaani",
+      "subtitle": "Pata biashara bora katika eneo lako",
+      "searchPlaceholder": "Pata biashara",
+      "locationPlaceholder": "Mahali",
+      "searchButton": "TAFUTA"
+    },
+    "categories": {
+      "title": "Tazama Kategoria",
+      "viewMore": "Ona Zaidi"
+    },
+    "businesses": {
+      "title": "Biashara Zilizochaguliwa",
+      "viewAll": "Ona Zote"
+    }
+  },
+  "business": {
+    "details": {
+      "phone": "Simu",
+      "email": "Barua Pepe",
+      "website": "Tovuti",
+      "address": "Anwani",
+      "hours": "Masaa",
+      "services": "Huduma",
+      "reviews": "Tathmini",
+      "rating": "Ukadiriaji",
+      "orderOnline": "Oda Mtandaoni",
+      "visitWebsite": "Tembelea Tovuti",
+      "getDirections": "Pata Maelekezo",
+      "share": "Shiriki"
+    },
+    "status": {
+      "active": "Inafanya Kazi",
+      "pending": "Inasubiri",
+      "suspended": "Imezuiliwa",
+      "premium": "Premium"
+    }
+  },
+  "reviews": {
+    "title": "Tathmini",
+    "writeReview": "Andika Tathmini",
+    "rating": "Ukadiriaji",
+    "helpful": "Msaada",
+    "notHelpful": "Si Msaada",
+    "report": "Ripoti",
+    "sortBy": "Panga kwa",
+    "filterBy": "Chuja kwa",
+    "allReviews": "Tathmini Zote",
+    "positiveReviews": "Tathmini Chanya",
+    "negativeReviews": "Tathmini Hasi"
+  },
+  "auth": {
+    "login": {
+      "title": "Ingia",
+      "email": "Barua Pepe",
+      "password": "Nywila",
+      "forgotPassword": "Umesahau Nywila?",
+      "noAccount": "Huna akaunti?",
+      "signup": "Jisajili"
+    },
+    "signup": {
+      "title": "Jisajili",
+      "fullName": "Jina Kamili",
+      "email": "Barua Pepe",
+      "password": "Nywila",
+      "confirmPassword": "Thibitisha Nywila",
+      "agreeTerms": "Nakubaliana na masharti na hali",
+      "alreadyAccount": "Una akaunti tayari?",
+      "login": "Ingia"
+    }
+  },
+  "footer": {
+    "localCommunities": "Jumuiya za Mitaani",
+    "rwandafulRwanda": "Rwanda Nzuri",
+    "beautifulBotswana": "Botswana Nzuri",
+    "kenyafulKenya": "Kenya Nzuri",
+    "about": "Kuhusu",
+    "contact": "Wasiliana",
+    "privacy": "Sera ya Faragha",
+    "terms": "Masharti ya Huduma",
+    "copyright": "© 2024 Bara. Haki zote zimehifadhiwa."
+  },
+  "categories": {
+    "airports": "Viwanja vya Ndege",
+    "banks": "Mabenki",
+    "bars": "Mabaa",
+    "barbers": "Wakinyozi",
+    "bookstores": "Maduka ya Vitabu",
+    "cafes": "Mikahawa",
+    "cinemasTheatres": "Sinema na Ukumbi wa Tamasha",
+    "clinics": "Kliniki",
+    "clubsProfessional": "Vikundi (Kazi / Binafsi)",
+    "clubsLeisure": "Vikundi (Burudani / Ngoma)",
+    "dentists": "Madaktari wa Meno",
+    "doctors": "Madaktari",
+    "faith": "Imani",
+    "farms": "Mashamba",
+    "galleriesArt": "Jumba la Sanaa",
+    "government": "Serikali",
+    "hospitals": "Hospitali",
+    "hotels": "Hoteli",
+    "lawyers": "Mawakili",
+    "libraries": "Maktaba",
+    "markets": "Masoko",
+    "museums": "Makumbusho",
+    "parks": "Mbuga",
+    "pharmacies": "Maduka ya Dawa",
+    "postOffices": "Ofisi za Posta",
+    "recreation": "Burudani",
+    "realEstate": "Mali ya Ishi",
+    "restaurants": "Mikahawa",
+    "salons": "Saluni",
+    "schools": "Shule",
+    "services": "Huduma",
+    "shopping": "Kununua",
+    "tours": "Safari",
+    "transportation": "Usafiri",
+    "universities": "Vyuo Vikuu",
+    "utilities": "Huduma za Umma"
+  }
+} 

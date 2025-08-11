@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Menu, Star, Building } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -8,6 +9,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { LanguageSelector } from "./LanguageSelector";
 
 const cities = [
   "Kigali, RW",
@@ -23,6 +25,7 @@ const cities = [
 ];
 
 export const Header = () => {
+  const { t } = useTranslation();
   const [selectedCity, setSelectedCity] = useState("");
 
   return (
@@ -32,9 +35,6 @@ export const Header = () => {
           {/* Logo */}
           <div className="flex items-center">
             <Link to="/">
-              {/* <div className="bg-yp-dark text-white px-3 py-2 rounded-md font-sf-pro font-bold text-lg">
-                ML
-              </div> */}
               <div className="flex items-center py-4">
                 <Link to="/">
                 <img src="/bara-3.png" className="w-30 h-16" alt="Logo picture" />
@@ -46,7 +46,6 @@ export const Header = () => {
             </Link>
             <Link to="/"> 
             <span className="ml-2 font-sf-pro font-medium text-yp-dark text-lg">
-              {/* <img src="/bara-1.jpg" alt="logo" className="w-10 h-10" /> */}
             </span>
             </Link> 
           </div>
@@ -55,13 +54,13 @@ export const Header = () => {
           <div className="hidden md:flex items-center space-x-6">
             <Button variant="ghost" className="font-sf-text">
               <Building className="w-4 h-4 mr-1" />
-              Advertise
+              {t('navigation.advertise')}
             </Button>
             
             <Link to="/writeareview">
               <Button variant="ghost" className="font-sf-text">
                 <Star className="w-4 h-4 mr-1" />
-                Write a Review
+                {t('navigation.writeReview')}
               </Button>
             </Link>
 
@@ -69,7 +68,7 @@ export const Header = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" className="font-sf-text">
-                  Search by City
+                  {t('navigation.searchByCity')}
                   <ChevronDown className="w-4 h-4 ml-1" />
                 </Button>
               </DropdownMenuTrigger>
@@ -87,6 +86,9 @@ export const Header = () => {
                 ))}
               </DropdownMenuContent>
             </DropdownMenu>
+
+            {/* Language Selector */}
+            <LanguageSelector />
 
             {/* Mobile Menu Button */}
             <Button variant="ghost" size="sm" className="md:hidden">

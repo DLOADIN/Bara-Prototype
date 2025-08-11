@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Search, MapPin, ChevronDown } from "lucide-react";
@@ -25,6 +26,7 @@ const allLocations = [
 ];
 
 export const HeroSection = () => {
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("");
   const [location, setLocation] = useState("Kigali, RW");
   const [isLocationOpen, setIsLocationOpen] = useState(false);
@@ -44,7 +46,7 @@ export const HeroSection = () => {
         {/* Content Overlay */}
         <div className="relative z-10 flex flex-col items-center justify-center h-full px-4">
           <h1 className="text-4xl md:text-5xl font-sf-pro font-bold text-yp-dark text-center mb-8">
-            Discover Local<sup className="text-sm">℠</sup>
+            {t('homepage.hero.title')}<sup className="text-sm">℠</sup>
           </h1>
           
           {/* Search Form */}
@@ -55,7 +57,7 @@ export const HeroSection = () => {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-yp-gray-dark w-5 h-5" />
                 <Input
                   type="text"
-                  placeholder="Find a business"
+                  placeholder={t('homepage.hero.searchPlaceholder')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
                   className="pl-10 h-12 font-sf-text border-yp-gray-medium focus:border-yp-blue focus:ring-yp-blue"
@@ -70,7 +72,7 @@ export const HeroSection = () => {
                       <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-yp-gray-dark w-5 h-5" />
                       <Input
                         type="text"
-                        placeholder="Location"
+                        placeholder={t('homepage.hero.locationPlaceholder')}
                         value={location}
                         readOnly
                         className="pl-10 pr-10 h-12 font-sf-text border-yp-gray-medium focus:border-yp-blue focus:ring-yp-blue cursor-pointer"
@@ -103,9 +105,9 @@ export const HeroSection = () => {
               {/* Search Button */}
               <Button 
                 onClick={handleSearch}
-                className="bg-yp-yellow hover:bg-yp-yellow-hover text-yp-dark font-sf-text font-semibold h-12 px-8 text-base"
+                className="bg-yp-blue hover:bg-yp-blue-dark text-white font-sf-text font-semibold px-8 h-12"
               >
-                FIND
+                {t('homepage.hero.searchButton')}
               </Button>
             </div>
           </div>

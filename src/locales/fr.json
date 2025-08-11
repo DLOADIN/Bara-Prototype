@@ -1,0 +1,164 @@
+{
+  "common": {
+    "search": "Rechercher",
+    "find": "Trouver",
+    "view": "Voir",
+    "edit": "Modifier",
+    "delete": "Supprimer",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "submit": "Soumettre",
+    "loading": "Chargement...",
+    "error": "Erreur",
+    "success": "Succès",
+    "close": "Fermer",
+    "back": "Retour",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "yes": "Oui",
+    "no": "Non",
+    "ok": "OK"
+  },
+  "navigation": {
+    "home": "Accueil",
+    "advertise": "Annoncer",
+    "writeReview": "Écrire un Avis",
+    "searchByCity": "Rechercher par Ville",
+    "marketplace": "Marché",
+    "events": "Événements",
+    "about": "À propos",
+    "contact": "Contact",
+    "login": "Connexion",
+    "signup": "S'inscrire",
+    "profile": "Profil",
+    "logout": "Déconnexion"
+  },
+  "languages": {
+    "english": "Anglais",
+    "french": "Français",
+    "spanish": "Espagnol",
+    "swahili": "Swahili",
+    "selectLanguage": "Sélectionner la Langue"
+  },
+  "homepage": {
+    "hero": {
+      "title": "Découvrir Local",
+      "subtitle": "Trouvez les meilleures entreprises de votre région",
+      "searchPlaceholder": "Trouver une entreprise",
+      "locationPlaceholder": "Localisation",
+      "searchButton": "TROUVER"
+    },
+    "categories": {
+      "title": "Parcourir les Catégories",
+      "viewMore": "Voir Plus"
+    },
+    "businesses": {
+      "title": "Entreprises en Vedette",
+      "viewAll": "Voir Tout"
+    }
+  },
+  "business": {
+    "details": {
+      "phone": "Téléphone",
+      "email": "Email",
+      "website": "Site Web",
+      "address": "Adresse",
+      "hours": "Heures",
+      "services": "Services",
+      "reviews": "Avis",
+      "rating": "Évaluation",
+      "orderOnline": "Commander en Ligne",
+      "visitWebsite": "Visiter le Site Web",
+      "getDirections": "Obtenir l'Itinéraire",
+      "share": "Partager"
+    },
+    "status": {
+      "active": "Actif",
+      "pending": "En Attente",
+      "suspended": "Suspendu",
+      "premium": "Premium"
+    }
+  },
+  "reviews": {
+    "title": "Avis",
+    "writeReview": "Écrire un Avis",
+    "rating": "Évaluation",
+    "helpful": "Utile",
+    "notHelpful": "Pas Utile",
+    "report": "Signaler",
+    "sortBy": "Trier par",
+    "filterBy": "Filtrer par",
+    "allReviews": "Tous les Avis",
+    "positiveReviews": "Avis Positifs",
+    "negativeReviews": "Avis Négatifs"
+  },
+  "auth": {
+    "login": {
+      "title": "Connexion",
+      "email": "Email",
+      "password": "Mot de Passe",
+      "forgotPassword": "Mot de Passe Oublié?",
+      "noAccount": "Vous n'avez pas de compte?",
+      "signup": "S'inscrire"
+    },
+    "signup": {
+      "title": "S'inscrire",
+      "fullName": "Nom Complet",
+      "email": "Email",
+      "password": "Mot de Passe",
+      "confirmPassword": "Confirmer le Mot de Passe",
+      "agreeTerms": "J'accepte les termes et conditions",
+      "alreadyAccount": "Vous avez déjà un compte?",
+      "login": "Connexion"
+    }
+  },
+  "footer": {
+    "localCommunities": "Communautés Locales",
+    "rwandafulRwanda": "Rwanda Magnifique",
+    "beautifulBotswana": "Botswana Magnifique",
+    "kenyafulKenya": "Kenya Magnifique",
+    "about": "À propos",
+    "contact": "Contact",
+    "privacy": "Politique de Confidentialité",
+    "terms": "Conditions d'Utilisation",
+    "copyright": "© 2024 Bara. Tous droits réservés."
+  },
+  "categories": {
+    "airports": "Aéroports",
+    "banks": "Banques",
+    "bars": "Bars",
+    "barbers": "Barbiers",
+    "bookstores": "Librairies",
+    "cafes": "Cafés",
+    "cinemasTheatres": "Cinémas et Théâtres",
+    "clinics": "Cliniques",
+    "clubsProfessional": "Clubs (Professionnel / Privé)",
+    "clubsLeisure": "Clubs (Loisirs / Danse)",
+    "dentists": "Dentistes",
+    "doctors": "Médecins",
+    "faith": "Foi",
+    "farms": "Fermes",
+    "galleriesArt": "Galeries d'Art",
+    "government": "Gouvernement",
+    "hospitals": "Hôpitaux",
+    "hotels": "Hôtels",
+    "lawyers": "Avocats",
+    "libraries": "Bibliothèques",
+    "markets": "Marchés",
+    "museums": "Musées",
+    "parks": "Parcs",
+    "pharmacies": "Pharmacies",
+    "postOffices": "Bureaux de Poste",
+    "recreation": "Loisirs",
+    "realEstate": "Immobilier",
+    "restaurants": "Restaurants",
+    "salons": "Salons",
+    "schools": "Écoles",
+    "services": "Services",
+    "shopping": "Shopping",
+    "tours": "Tours",
+    "transportation": "Transport",
+    "universities": "Universités",
+    "utilities": "Services Publics"
+  }
+} 

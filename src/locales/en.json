@@ -1,0 +1,164 @@
+{
+  "common": {
+    "search": "Search",
+    "find": "Find",
+    "view": "View",
+    "edit": "Edit",
+    "delete": "Delete",
+    "save": "Save",
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "loading": "Loading...",
+    "error": "Error",
+    "success": "Success",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "previous": "Previous",
+    "yes": "Yes",
+    "no": "No",
+    "ok": "OK"
+  },
+  "navigation": {
+    "home": "Home",
+    "advertise": "Advertise",
+    "writeReview": "Write a Review",
+    "searchByCity": "Search by City",
+    "marketplace": "Marketplace",
+    "events": "Events",
+    "about": "About",
+    "contact": "Contact",
+    "login": "Login",
+    "signup": "Sign Up",
+    "profile": "Profile",
+    "logout": "Logout"
+  },
+  "languages": {
+    "english": "English",
+    "french": "French",
+    "spanish": "Spanish",
+    "swahili": "Swahili",
+    "selectLanguage": "Select Language"
+  },
+  "homepage": {
+    "hero": {
+      "title": "Discover Local",
+      "subtitle": "Find the best businesses in your area",
+      "searchPlaceholder": "Find a business",
+      "locationPlaceholder": "Location",
+      "searchButton": "FIND"
+    },
+    "categories": {
+      "title": "Browse Categories",
+      "viewMore": "View More"
+    },
+    "businesses": {
+      "title": "Featured Businesses",
+      "viewAll": "View All"
+    }
+  },
+  "business": {
+    "details": {
+      "phone": "Phone",
+      "email": "Email",
+      "website": "Website",
+      "address": "Address",
+      "hours": "Hours",
+      "services": "Services",
+      "reviews": "Reviews",
+      "rating": "Rating",
+      "orderOnline": "Order Online",
+      "visitWebsite": "Visit Website",
+      "getDirections": "Get Directions",
+      "share": "Share"
+    },
+    "status": {
+      "active": "Active",
+      "pending": "Pending",
+      "suspended": "Suspended",
+      "premium": "Premium"
+    }
+  },
+  "reviews": {
+    "title": "Reviews",
+    "writeReview": "Write a Review",
+    "rating": "Rating",
+    "helpful": "Helpful",
+    "notHelpful": "Not Helpful",
+    "report": "Report",
+    "sortBy": "Sort by",
+    "filterBy": "Filter by",
+    "allReviews": "All Reviews",
+    "positiveReviews": "Positive Reviews",
+    "negativeReviews": "Negative Reviews"
+  },
+  "auth": {
+    "login": {
+      "title": "Login",
+      "email": "Email",
+      "password": "Password",
+      "forgotPassword": "Forgot Password?",
+      "noAccount": "Don't have an account?",
+      "signup": "Sign Up"
+    },
+    "signup": {
+      "title": "Sign Up",
+      "fullName": "Full Name",
+      "email": "Email",
+      "password": "Password",
+      "confirmPassword": "Confirm Password",
+      "agreeTerms": "I agree to the terms and conditions",
+      "alreadyAccount": "Already have an account?",
+      "login": "Login"
+    }
+  },
+  "footer": {
+    "localCommunities": "Local Communities",
+    "rwandafulRwanda": "Rwandaful Rwanda",
+    "beautifulBotswana": "Beautiful Botswana",
+    "kenyafulKenya": "Kenyaful Kenya",
+    "about": "About",
+    "contact": "Contact",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "copyright": "© 2024 Bara. All rights reserved."
+  },
+  "categories": {
+    "airports": "Airports",
+    "banks": "Banks",
+    "bars": "Bars",
+    "barbers": "Barbers",
+    "bookstores": "Bookstores",
+    "cafes": "Cafes",
+    "cinemasTheatres": "Cinemas & Theatres",
+    "clinics": "Clinics",
+    "clubsProfessional": "Clubs (Professional / Private)",
+    "clubsLeisure": "Clubs (Leisure / Dance)",
+    "dentists": "Dentists",
+    "doctors": "Doctors",
+    "faith": "Faith",
+    "farms": "Farms",
+    "galleriesArt": "Galleries (Art)",
+    "government": "Government",
+    "hospitals": "Hospitals",
+    "hotels": "Hotels",
+    "lawyers": "Lawyers",
+    "libraries": "Libraries",
+    "markets": "Markets",
+    "museums": "Museums",
+    "parks": "Parks",
+    "pharmacies": "Pharmacies",
+    "postOffices": "Post Offices",
+    "recreation": "Recreation",
+    "realEstate": "Real Estate",
+    "restaurants": "Restaurants",
+    "salons": "Salons",
+    "schools": "Schools",
+    "services": "Services",
+    "shopping": "Shopping",
+    "tours": "Tours",
+    "transportation": "Transportation",
+    "universities": "Universities",
+    "utilities": "Utilities"
+  }
+} 
