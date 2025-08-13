@@ -1,5 +1,6 @@
 import { useParams, Link } from "react-router-dom";
 import { Header } from "@/components/Header";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { MapPin, Phone, Globe, Star, Clock, Building, ChevronRight, Camera, Users } from "lucide-react";
@@ -310,6 +311,7 @@ export const BusinessDetailPage = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

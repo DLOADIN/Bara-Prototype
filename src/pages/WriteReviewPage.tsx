@@ -1,4 +1,5 @@
 import { Header } from "@/components/Header";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { MapPin, Search, Store, MessageSquare, FileText } from "lucide-react";
@@ -116,6 +117,7 @@ export const WriteReviewPage = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };
