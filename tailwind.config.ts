@@ -19,8 +19,14 @@ export default {
 		},
 		extend: {
 			fontFamily: {
-				'sf-pro': ['"SF Pro Display"', '"SF Pro Text"', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
-				'sf-text': ['"SF Pro Text"', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'sans-serif'],
+				'comfortaa': ['Comfortaa', 'cursive'],
+				'roboto': ['Roboto', 'sans-serif'],
+				'comfortaa-light': ['Comfortaa', 'cursive'],
+				'comfortaa-medium': ['Comfortaa', 'cursive'],
+				'comfortaa-bold': ['Comfortaa', 'cursive'],
+				'roboto-light': ['Roboto', 'sans-serif'],
+				'roboto-medium': ['Roboto', 'sans-serif'],
+				'roboto-bold': ['Roboto', 'sans-serif'],
 			},
 			colors: {
 				'yp-yellow': 'hsl(var(--yp-yellow))',

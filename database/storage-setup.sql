@@ -19,8 +19,8 @@ ON storage.objects FOR INSERT
 TO authenticated
 WITH CHECK (
   bucket_id = 'business-images' AND
-  (storage.foldername(name))[1] = auth.uid()::text OR
-  (storage.foldername(name))[1] IN (
+  (storage.foldername(name))[1]::uuid = auth.uid() OR
+  (storage.foldername(name))[1]::uuid IN (
     SELECT id FROM public.businesses 
     WHERE owner_id = auth.uid()
   )
@@ -38,7 +38,7 @@ ON storage.objects FOR UPDATE
 TO authenticated
 USING (
   bucket_id = 'business-images' AND
-  (storage.foldername(name))[1] IN (
+  (storage.foldername(name))[1]::uuid IN (
     SELECT id FROM public.businesses 
     WHERE owner_id = auth.uid()
   )
@@ -50,7 +50,7 @@ ON storage.objects FOR DELETE
 TO authenticated
 USING (
   bucket_id = 'business-images' AND
-  (storage.foldername(name))[1] IN (
+  (storage.foldername(name))[1]::uuid IN (
     SELECT id FROM public.businesses 
     WHERE owner_id = auth.uid()
   )
@@ -63,7 +63,7 @@ BEGIN
   -- Delete all images associated with the deleted business
   DELETE FROM storage.objects 
   WHERE bucket_id = 'business-images' 
-    AND (storage.foldername(name))[1] = OLD.id;
+    AND (storage.foldername(name))[1]::uuid = OLD.id;
   
   RETURN OLD;
 END;
@@ -90,7 +90,7 @@ BEGIN
     obj.created_at
   FROM storage.objects obj
   WHERE obj.bucket_id = 'business-images'
-    AND (storage.foldername(obj.name))[1] = business_uuid::text
+    AND (storage.foldername(obj.name))[1]::uuid = business_uuid
   ORDER BY obj.created_at DESC;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;

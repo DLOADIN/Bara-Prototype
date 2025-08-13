@@ -146,7 +146,7 @@ export const CategoryGrid = () => {
   return (
     <section className="py-12 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-sf-pro font-bold text-yp-dark text-center mb-8">
+        <h2 className="text-2xl font-comfortaa font-bold text-yp-dark text-center mb-8">
           {t('homepage.categories.title')}
         </h2>
         <div className="flex flex-wrap justify-center gap-4 md:gap-6">
@@ -162,7 +162,7 @@ export const CategoryGrid = () => {
                 >
                   <IconComponent className="w-6 h-6 md:w-8 md:h-8 text-yp-gray-dark group-hover:text-yp-blue" />
                 </button>
-                <h3 className="font-sf-text font-medium text-xs md:text-sm text-yp-dark mb-2">
+                <h3 className="font-roboto font-medium text-xs md:text-sm text-yp-dark mb-2">
                   {translatedName}
                 </h3>
               </div>
@@ -177,7 +177,7 @@ export const CategoryGrid = () => {
             >
               <MoreHorizontal className="w-6 h-6 md:w-8 md:h-8 text-yp-gray-dark group-hover:text-yp-blue" />
             </button>
-            <h3 className="font-sf-text font-medium text-xs md:text-sm text-yp-dark mb-2">
+            <h3 className="font-roboto font-medium text-xs md:text-sm text-yp-dark mb-2">
               {t('homepage.categories.viewMore')}
             </h3>
           </div>

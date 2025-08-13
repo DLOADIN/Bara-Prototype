@@ -41,18 +41,18 @@ export const QASection = () => {
             </div>
 
             <div className="space-y-3 md:space-y-4 mb-6 md:mb-8">
-              <p className="font-sf-text text-base md:text-lg text-yp-dark">
+              <p className="font-roboto text-base md:text-lg text-yp-dark">
                 {t('qa.askQuestions')}
               </p>
-              <p className="font-sf-text text-base md:text-lg text-yp-dark">
+              <p className="font-roboto text-base md:text-lg text-yp-dark">
                 {t('qa.shareKnowledge')}
               </p>
-              <p className="font-sf-text text-base md:text-lg text-yp-dark">
+              <p className="font-roboto text-base md:text-lg text-yp-dark">
                 {t('qa.findAnswers')}
               </p>
             </div>
 
-            <Button className="w-full md:w-auto bg-yp-green hover:bg-yp-green/90 text-white font-sf-text font-semibold text-base md:text-lg px-6 md:px-8 py-3 h-auto">
+            <Button className="w-full md:w-auto bg-yp-green hover:bg-yp-green/90 text-white font-roboto font-semibold text-base md:text-lg px-6 md:px-8 py-3 h-auto">
               {t('qa.askQuestion')}
             </Button>
           </div>
@@ -70,10 +70,10 @@ export const QASection = () => {
                   onClick={() => handleTopicClick(topic.name)}
                   className="text-left p-3 md:p-4 bg-white border border-yp-gray-medium rounded-lg hover:border-yp-blue hover:bg-yp-gray-light transition-all duration-200 group"
                 >
-                  <h4 className="font-sf-text font-semibold text-yp-blue group-hover:text-yp-blue/80 text-sm md:text-base">
+                  <h4 className="font-roboto font-semibold text-yp-blue group-hover:text-yp-blue/80 text-sm md:text-base">
                     {topic.name}
                   </h4>
-                  <p className="font-sf-text text-xs md:text-sm text-yp-gray-dark mt-1">
+                  <p className="font-roboto text-xs md:text-sm text-yp-gray-dark mt-1">
                     {topic.category}
                   </p>
                 </button>

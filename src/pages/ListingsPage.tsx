@@ -287,7 +287,7 @@ export const ListingsPage = () => {
   const currentListings = categoryListings[category as keyof typeof categoryListings] || [];
 
   return (
-    <div className="min-h-screen bg-background font-sf-pro">
+    <div className="min-h-screen bg-background font-roboto">
       <Header />
       
       {/* Search Header */}
@@ -298,7 +298,7 @@ export const ListingsPage = () => {
               <input
                 type="text"
                 placeholder={categoryName}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md font-sf-text"
+                className="w-full px-4 py-2 border border-gray-300 rounded-md font-roboto"
                 defaultValue={categoryName}
               />
             </div>
@@ -308,12 +308,12 @@ export const ListingsPage = () => {
                 <input
                   type="text"
                   placeholder="City, State"
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md font-sf-text"
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md font-roboto"
                   defaultValue={`${cityName}, Rwanda`}
                 />
               </div>
             </div>
-            <Button className="bg-yp-blue hover:bg-yp-blue/90 text-white px-8 font-sf-text">
+            <Button className="bg-yp-blue hover:bg-yp-blue/90 text-white px-8 font-roboto">
               Find
             </Button>
           </div>
@@ -324,25 +324,25 @@ export const ListingsPage = () => {
       <div className="bg-white border-b border-gray-200 py-3">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center space-x-4">
-            <Button variant="outline" size="sm" className="font-sf-text">
+            <Button variant="outline" size="sm" className="font-roboto">
               <MapPin className="w-4 h-4 mr-1" />
               Map View
             </Button>
-            <Button variant="outline" size="sm" className="font-sf-text">
+            <Button variant="outline" size="sm" className="font-roboto">
               <Filter className="w-4 h-4 mr-1" />
               All
             </Button>
-            <Button variant="outline" size="sm" className="font-sf-text">
+            <Button variant="outline" size="sm" className="font-roboto">
               Order Online
             </Button>
-            <Button variant="outline" size="sm" className="font-sf-text">
+            <Button variant="outline" size="sm" className="font-roboto">
               Kid Friendly
             </Button>
-            <Button variant="outline" size="sm" className="font-sf-text">
+            <Button variant="outline" size="sm" className="font-roboto">
               Coupons
             </Button>
             <div className="ml-auto">
-              <span className="text-sm text-gray-600 font-sf-text">Sort: Default</span>
+              <span className="text-sm text-gray-600 font-roboto">Sort: Default</span>
             </div>
           </div>
         </div>
@@ -352,7 +352,7 @@ export const ListingsPage = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex items-center mb-4">
           <Clock className="w-4 h-4 text-gray-500 mr-2" />
-          <span className="text-sm text-gray-600 font-sf-text">
+          <span className="text-sm text-gray-600 font-roboto">
             View all businesses that are OPEN 24 Hours
           </span>
           <RotateCcw className="w-4 h-4 text-gray-400 ml-2" />
@@ -364,7 +364,7 @@ export const ListingsPage = () => {
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <div className="flex items-center mb-2">
-                    <h3 className="text-xl font-semibold text-yp-dark font-sf-pro mr-2">
+                    <h3 className="text-xl font-semibold text-yp-dark font-comfortaa mr-2">
                       {listing.name}
                     </h3>
                     <div className="flex items-center">
@@ -378,25 +378,25 @@ export const ListingsPage = () => {
                           }`}
                         />
                       ))}
-                      <span className="ml-1 text-sm text-gray-600 font-sf-text">
+                      <span className="ml-1 text-sm text-gray-600 font-roboto">
                         ({listing.reviews})
                       </span>
                     </div>
                   </div>
                   
-                  <p className="text-gray-600 font-sf-text mb-2">
+                  <p className="text-gray-600 font-roboto mb-2">
                     {listing.category}
                   </p>
                   
                   <div className="flex flex-wrap gap-2 mb-3">
                     {listing.tags.map((tag) => (
-                      <Badge key={tag} variant="secondary" className="text-xs font-sf-text">
+                      <Badge key={tag} variant="secondary" className="text-xs font-roboto">
                         {tag}
                       </Badge>
                     ))}
                   </div>
                   
-                  <div className="space-y-1 text-sm text-gray-600 font-sf-text">
+                  <div className="space-y-1 text-sm text-gray-600 font-roboto">
                     <div className="flex items-center">
                       <MapPin className="w-4 h-4 mr-2" />
                       {listing.address}
@@ -423,17 +423,17 @@ export const ListingsPage = () => {
                 </div>
                 
                 <div className="text-right">
-                  <div className="text-sm text-gray-500 font-sf-text mb-2">
+                  <div className="text-sm text-gray-500 font-roboto mb-2">
                     {listing.distance}
                   </div>
                   <div className="space-y-2">
                     <Link to={`/${city}/${category}/${listing.id}`}>
-                      <Button size="sm" variant="outline" className="font-sf-text w-full">
+                      <Button size="sm" variant="outline" className="font-roboto w-full">
                         More Info
                       </Button>
                     </Link>
                     <Link to="/write-review">
-                      <Button size="sm" className="bg-yp-blue hover:bg-yp-blue/90 text-white font-sf-text w-full">
+                      <Button size="sm" className="bg-yp-blue hover:bg-yp-blue/90 text-white font-roboto w-full">
                         Write Review
                       </Button>
                     </Link>
@@ -445,7 +445,7 @@ export const ListingsPage = () => {
         </div>
 
         <div className="mt-8 text-center">
-          <Button variant="outline" className="font-sf-text">
+          <Button variant="outline" className="font-roboto">
             Load More Results
           </Button>
         </div>

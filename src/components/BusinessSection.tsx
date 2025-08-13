@@ -19,7 +19,7 @@ export const BusinessSection = () => {
                     <div className="w-16 h-16 md:w-24 md:h-24 bg-yp-yellow rounded-full mx-auto mb-3 md:mb-4 flex items-center justify-center">
                       <LinkIcon className="w-8 h-8 md:w-12 md:h-12 text-yp-dark" />
                     </div>
-                    <p className="font-sf-text text-yp-dark font-medium text-sm md:text-base">{t('business.owners')}</p>
+                    <p className="font-roboto text-yp-dark font-medium text-sm md:text-base">{t('business.owners')}</p>
                   </div>
                 </div>
               </div>
@@ -36,30 +36,30 @@ export const BusinessSection = () => {
 
           {/* Right Side - Content */}
           <div className="order-1 md:order-2 text-center md:text-left">
-            <h2 className="text-2xl md:text-3xl lg:text-4xl font-sf-pro font-bold text-yp-dark mb-4 md:mb-6">
+            <h2 className="text-2xl md:text-3xl lg:text-4xl font-comfortaa font-bold text-yp-dark mb-4 md:mb-6">
               {t('business.manageListing.title')}
             </h2>
             
             <div className="space-y-3 md:space-y-4 mb-6 md:mb-8">
-              <p className="text-base md:text-lg font-sf-text text-yp-dark">
+              <p className="text-base md:text-lg font-roboto text-yp-dark">
                 {t('business.manageListing.step1')}
               </p>
-              <p className="text-base md:text-lg font-sf-text text-yp-dark">
+              <p className="text-base md:text-lg font-roboto text-yp-dark">
                 {t('business.manageListing.step2')}
               </p>
-              <p className="text-base md:text-lg font-sf-text text-yp-dark">
+              <p className="text-base md:text-lg font-roboto text-yp-dark">
                 <span className="font-bold text-yp-green">{t('business.manageListing.new')}</span> {t('business.manageListing.jobPosting')}
               </p>
             </div>
 
             <div className="space-y-3 md:space-y-4">
               <Link to="/">
-                <Button className="w-full md:w-auto bg-yp-blue hover:bg-yp-blue/90 text-white font-sf-text font-semibold text-base md:text-lg px-6 md:px-8 py-3 h-auto">
+                <Button className="w-full md:w-auto bg-yp-blue hover:bg-yp-blue/90 text-white font-roboto font-semibold text-base md:text-lg px-6 md:px-8 py-3 h-auto">
                   {t('business.claimListing')}
                 </Button>
               </Link>
               
-              <p className="text-xs md:text-sm font-sf-text text-yp-gray-dark">
+              <p className="text-xs md:text-sm font-roboto text-yp-gray-dark">
                 {t('business.orCall')}{" "}
                 <a 
                   href="tel:18667940889" 

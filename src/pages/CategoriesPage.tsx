@@ -162,7 +162,7 @@ export const CategoriesPage = () => {
     <div className="min-h-screen bg-yp-gray-light">
         <Header />
 
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-4">
@@ -173,7 +173,7 @@ export const CategoriesPage = () => {
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <h1 className="text-2xl md:text-3xl font-sf-pro font-bold text-yp-dark">
+            <h1 className="text-2xl md:text-3xl font-comfortaa font-bold text-yp-dark">
               {t('categories.title')}
             </h1>
           </div>
@@ -188,7 +188,7 @@ export const CategoriesPage = () => {
               placeholder={t('categories.searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 h-12 font-sf-text border-yp-gray-medium focus:border-yp-blue focus:ring-yp-blue"
+              className="pl-10 h-12 font-roboto border-yp-gray-medium focus:border-yp-blue focus:ring-yp-blue"
             />
           </div>
         </div>
@@ -214,12 +214,12 @@ export const CategoriesPage = () => {
 
                 {/* Category Content */}
                 <div className="px-6 pb-6">
-                  <h3 className="font-sf-text font-semibold text-lg text-yp-dark mb-2 text-center group-hover:text-yp-blue transition-colors duration-200">
-                    {translatedName}
+                  <h3 className="font-roboto font-semibold text-lg text-yp-dark mb-2 text-center group-hover:text-yp-blue transition-colors duration-200">
+                    {category.name}
                   </h3>
                   
                   {category.description && (
-                    <p className="font-sf-text text-sm text-yp-gray-dark text-center leading-relaxed">
+                    <p className="font-roboto text-sm text-yp-gray-dark text-center leading-relaxed">
                       {category.description}
                     </p>
                   )}
@@ -243,7 +243,7 @@ export const CategoriesPage = () => {
             <div className="w-16 h-16 bg-yp-gray-light rounded-full flex items-center justify-center mx-auto mb-4">
               <Search className="w-8 h-8 text-yp-gray-dark" />
             </div>
-            <h3 className="text-lg font-sf-text font-semibold text-yp-dark mb-2">
+            <h3 className="text-lg font-roboto font-semibold text-yp-dark mb-2">
               {t('categories.noResults.title')}
             </h3>
             <p className="text-yp-gray-dark">

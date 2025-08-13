@@ -99,20 +99,21 @@ export const Header = () => {
               </div>
             </Link>
             <Link to="/"> 
-            <span className="ml-2 font-sf-pro font-medium text-yp-dark text-lg">
-            </span>
+            {/* <span className="ml-2 font-comfortaa font-medium text-yp-dark text-lg">
+              
+            </span> */}
             </Link> 
           </div>
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
-            <Button variant="ghost" className="font-sf-text">
+            <Button variant="ghost" className="font-roboto">
               <Building className="w-4 h-4 mr-1" />
               {t('navigation.advertise')}
             </Button>
             
             <Link to="/writeareview">
-              <Button variant="ghost" className="font-sf-text">
+              <Button variant="ghost" className="font-roboto">
                 <Star className="w-4 h-4 mr-1" />
                 {t('navigation.writeReview')}
               </Button>
@@ -121,7 +122,7 @@ export const Header = () => {
             {/* Search by City Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="font-sf-text">
+                <Button variant="ghost" className="font-roboto">
                   {t('navigation.searchByCity')}
                   <ChevronDown className="w-4 h-4 ml-1" />
                 </Button>
@@ -137,7 +138,7 @@ export const Header = () => {
                     <DropdownMenuItem
                       key={city.id}
                       onClick={() => setSelectedCity(formatCityDisplay(city))}
-                      className={`font-sf-text ${
+                      className={`font-roboto ${
                         selectedCity === formatCityDisplay(city) ? "bg-yp-gray-light" : ""
                       }`}
                     >

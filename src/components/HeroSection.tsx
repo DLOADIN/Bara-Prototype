@@ -118,7 +118,7 @@ export const HeroSection = () => {
                   placeholder={t('homepage.hero.searchPlaceholder')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 h-12 font-sf-text border-yp-gray-medium focus:border-yp-blue focus:ring-yp-blue"
+                  className="pl-10 h-12 font-roboto border-yp-gray-medium focus:border-yp-blue focus:ring-yp-blue"
                 />
               </div>
               
@@ -133,14 +133,14 @@ export const HeroSection = () => {
                         placeholder={t('homepage.hero.locationPlaceholder')}
                         value={location}
                         readOnly
-                        className="pl-10 pr-10 h-12 font-sf-text border-yp-gray-medium focus:border-yp-blue focus:ring-yp-blue cursor-pointer"
+                        className="pl-10 pr-10 h-12 font-roboto border-yp-gray-medium focus:border-yp-blue focus:ring-yp-blue cursor-pointer"
                       />
                       <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-yp-gray-dark w-5 h-5" />
                     </div>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-full max-h-60 overflow-y-auto bg-white border border-yp-gray-medium shadow-lg">
                     <div className="p-2">
-                      <h3 className="text-sm font-sf-text font-semibold text-yp-dark mb-2 px-2">QUICK LOCATIONS</h3>
+                      <h3 className="text-sm font-roboto font-semibold text-yp-dark mb-2 px-2">QUICK LOCATIONS</h3>
                       {loading ? (
                         <div className="text-center py-4">
                           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-yp-blue mx-auto"></div>
@@ -154,7 +154,7 @@ export const HeroSection = () => {
                               setLocation(formatCityDisplay(city));
                               setIsLocationOpen(false);
                             }}
-                            className={`font-sf-text px-2 py-2 cursor-pointer hover:bg-yp-gray-light ${
+                            className={`font-roboto px-2 py-2 cursor-pointer hover:bg-yp-gray-light ${
                               location === formatCityDisplay(city) ? "bg-yp-gray-light text-yp-blue" : "text-yp-dark"
                             }`}
                           >
@@ -170,7 +170,7 @@ export const HeroSection = () => {
               {/* Search Button */}
               <Button 
                 onClick={handleSearch}
-                className="bg-yp-blue hover:bg-yp-blue-dark text-white font-sf-text font-semibold px-8 h-12"
+                className="bg-yp-blue hover:bg-yp-blue-dark text-white font-roboto font-semibold px-8 h-12"
               >
                 {t('homepage.hero.searchButton')}
               </Button>

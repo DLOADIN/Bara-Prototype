@@ -269,7 +269,7 @@ export const WriteReviewPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background font-sf-pro">
+    <div className="min-h-screen bg-background font-roboto">
       <Header />
       
       {/* Hero Section */}
@@ -294,20 +294,20 @@ export const WriteReviewPage = () => {
             </div>
           </div>
           
-          <h1 className="text-4xl font-bold text-yp-dark mb-4 font-sf-pro">
+          <h1 className="text-4xl font-bold text-yp-dark mb-4 font-comfortaa">
             <span className="text-yp-blue">Review</span> a Business and Help Others!
           </h1>
-          <p className="text-xl text-gray-600 mb-2 font-sf-text">
+          <p className="text-xl text-gray-600 mb-2 font-roboto">
             Other people need your help finding good businesses.
           </p>
-          <p className="text-xl text-gray-600 mb-8 font-sf-text">
+          <p className="text-xl text-gray-600 mb-8 font-roboto">
             Write a review and share your experience.
           </p>
           
           {/* Search Form */}
           {currentStep === 'search' && (
           <div className="bg-white rounded-lg shadow-lg p-6 max-w-2xl mx-auto">
-            <p className="text-sm text-gray-600 mb-4 font-sf-text">
+            <p className="text-sm text-gray-600 mb-4 font-roboto">
                 {t('reviews.searchBusiness')}
             </p>
             <div className="flex gap-3">
@@ -319,7 +319,7 @@ export const WriteReviewPage = () => {
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
                     onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
-                  className="pl-10 h-12 text-base font-sf-text"
+                  className="pl-10 h-12 text-base font-roboto"
                 />
               </div>
               <div className="flex-1 relative">
@@ -329,13 +329,13 @@ export const WriteReviewPage = () => {
                     placeholder={t('reviews.location')}
                     value={location}
                     onChange={(e) => setLocation(e.target.value)}
-                  className="pl-10 h-12 text-base font-sf-text"
+                  className="pl-10 h-12 text-base font-roboto"
                 />
                 </div>
                 <Button 
                   onClick={handleSearch}
                   disabled={isSearching}
-                  className="bg-yp-yellow hover:bg-yp-yellow/90 text-yp-dark px-8 h-12 font-sf-text font-semibold"
+                  className="bg-yp-yellow hover:bg-yp-yellow/90 text-yp-dark px-8 h-12 font-roboto font-semibold"
                 >
                   {isSearching ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -352,7 +352,7 @@ export const WriteReviewPage = () => {
       {/* Search Results */}
       {currentStep === 'search' && searchResults.length > 0 && (
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <h2 className="text-2xl font-semibold text-yp-dark mb-6 font-sf-pro">
+          <h2 className="text-2xl font-semibold text-yp-dark mb-6 font-comfortaa">
             {t('reviews.selectBusiness')}
           </h2>
           <div className="grid gap-4">
@@ -365,10 +365,10 @@ export const WriteReviewPage = () => {
                 <CardContent className="p-6">
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-yp-dark font-sf-pro mb-2">
+                      <h3 className="text-lg font-semibold text-yp-dark font-comfortaa mb-2">
                         {business.name}
                       </h3>
-                      <div className="flex items-center space-x-4 text-sm text-gray-600 font-sf-text mb-2">
+                      <div className="flex items-center space-x-4 text-sm text-gray-600 font-roboto mb-2">
                         {business.category && (
                           <Badge variant="secondary">{business.category.name}</Badge>
                         )}
@@ -380,12 +380,12 @@ export const WriteReviewPage = () => {
                         )}
                       </div>
                       {business.address && (
-                        <p className="text-sm text-gray-600 font-sf-text mb-2">
+                        <p className="text-sm text-gray-600 font-roboto mb-2">
                           {business.address}
                         </p>
                       )}
                       {business.phone && (
-                        <p className="text-sm text-gray-600 font-sf-text flex items-center">
+                        <p className="text-sm text-gray-600 font-roboto flex items-center">
                           <Phone className="w-4 h-4 mr-2" />
                           {business.phone}
                         </p>
@@ -422,12 +422,12 @@ export const WriteReviewPage = () => {
             
             <Card className="mb-6">
               <CardHeader>
-                <CardTitle className="text-xl font-sf-pro">
+                <CardTitle className="text-xl font-comfortaa">
                   Reviewing: {selectedBusiness.name}
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600 font-sf-text">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600 font-roboto">
                   {selectedBusiness.category && (
                     <div className="flex items-center">
                       <Store className="w-4 h-4 mr-2" />
@@ -459,12 +459,12 @@ export const WriteReviewPage = () => {
 
           <Card>
             <CardHeader>
-              <CardTitle className="text-xl font-sf-pro">{t('reviews.writeReview')}</CardTitle>
+              <CardTitle className="text-xl font-comfortaa">{t('reviews.writeReview')}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               {/* Rating */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-3 font-sf-text">
+                <label className="block text-sm font-medium text-gray-700 mb-3 font-roboto">
                   {t('reviews.rating')} *
                 </label>
                 <div className="flex items-center space-x-2">
@@ -486,7 +486,7 @@ export const WriteReviewPage = () => {
                       />
                     </button>
                   ))}
-                  <span className="ml-3 text-sm text-gray-600 font-sf-text">
+                  <span className="ml-3 text-sm text-gray-600 font-roboto">
                     {reviewForm.rating > 0 && `${reviewForm.rating} ${t('reviews.outOf5')}`}
                   </span>
                 </div>
@@ -494,7 +494,7 @@ export const WriteReviewPage = () => {
 
               {/* Review Title */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2 font-sf-text">
+                <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
                   {t('reviews.reviewTitle')} *
                 </label>
                 <Input
@@ -502,34 +502,34 @@ export const WriteReviewPage = () => {
                   placeholder={t('reviews.reviewTitle')}
                   value={reviewForm.title}
                   onChange={(e) => handleInputChange('title', e.target.value)}
-                  className="font-sf-text"
+                  className="font-roboto"
                   maxLength={100}
                 />
-                <p className="text-xs text-gray-500 mt-1 font-sf-text">
+                <p className="text-xs text-gray-500 mt-1 font-roboto">
                   {reviewForm.title.length}/100 {t('reviews.characterCount')}
                 </p>
               </div>
 
               {/* Review Content */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2 font-sf-text">
+                <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
                   {t('reviews.reviewContent')} *
                 </label>
                 <Textarea
                   placeholder={t('reviews.reviewContent')}
                   value={reviewForm.content}
                   onChange={(e) => handleInputChange('content', e.target.value)}
-                  className="font-sf-text min-h-[120px]"
+                  className="font-roboto min-h-[120px]"
                   maxLength={1000}
                 />
-                <p className="text-xs text-gray-500 mt-1 font-sf-text">
+                <p className="text-xs text-gray-500 mt-1 font-roboto">
                   {reviewForm.content.length}/1000 {t('reviews.characterCount')}
                 </p>
               </div>
 
               {/* Image Upload */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2 font-sf-text">
+                <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
                   Add Photos (Optional)
                 </label>
                 <BusinessImageUpload
@@ -552,7 +552,7 @@ export const WriteReviewPage = () => {
                 <Button 
                   onClick={handleSubmitReview}
                   disabled={isSubmitting || reviewForm.rating === 0 || !reviewForm.title.trim() || !reviewForm.content.trim()}
-                  className="bg-yp-blue hover:bg-yp-blue/90 text-white font-sf-text"
+                  className="bg-yp-blue hover:bg-yp-blue/90 text-white font-roboto"
                 >
                   {isSubmitting ? (
                     <>
@@ -579,10 +579,10 @@ export const WriteReviewPage = () => {
               <div className="bg-gray-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
                 <Store className="w-10 h-10 text-yp-blue" />
               </div>
-              <h3 className="text-xl font-semibold text-yp-dark mb-3 font-sf-pro">
+              <h3 className="text-xl font-semibold text-yp-dark mb-3 font-comfortaa">
                 Find the Business
               </h3>
-              <p className="text-gray-600 font-sf-text">
+              <p className="text-gray-600 font-roboto">
                 Look for businesses by name and location.
               </p>
             </div>
@@ -592,10 +592,10 @@ export const WriteReviewPage = () => {
               <div className="bg-gray-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
                 <MessageSquare className="w-10 h-10 text-yp-blue" />
               </div>
-              <h3 className="text-xl font-semibold text-yp-dark mb-3 font-sf-pro">
+              <h3 className="text-xl font-semibold text-yp-dark mb-3 font-comfortaa">
                 Rate and Review
               </h3>
-              <p className="text-gray-600 font-sf-text">
+              <p className="text-gray-600 font-roboto">
                 Businesses need your feedback, both good and bad, so they can improve or get props for a job well done.
               </p>
             </div>
@@ -605,10 +605,10 @@ export const WriteReviewPage = () => {
               <div className="bg-gray-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
                 <FileText className="w-10 h-10 text-yp-blue" />
               </div>
-              <h3 className="text-xl font-semibold text-yp-dark mb-3 font-sf-pro">
+              <h3 className="text-xl font-semibold text-yp-dark mb-3 font-comfortaa">
                 Post It
               </h3>
-              <p className="text-gray-600 font-sf-text">
+              <p className="text-gray-600 font-roboto">
                 Share your experiences and feel good knowing that you are making a difference in your community!
               </p>
             </div>

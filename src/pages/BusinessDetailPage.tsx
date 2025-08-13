@@ -91,7 +91,7 @@ export const BusinessDetailPage = () => {
   
   if (!business) {
     return (
-      <div className="min-h-screen bg-background font-sf-pro">
+      <div className="min-h-screen bg-background font-roboto">
         <Header />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <h1 className="text-2xl font-semibold text-yp-dark">Business not found</h1>
@@ -101,13 +101,13 @@ export const BusinessDetailPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background font-sf-pro">
+    <div className="min-h-screen bg-background font-roboto">
       <Header />
       
       {/* Breadcrumb */}
       <div className="bg-white border-b border-gray-200 py-2">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center text-sm text-yp-blue font-sf-text">
+          <div className="flex items-center text-sm text-yp-blue font-roboto">
             <Link to="/" className="hover:underline">Home</Link>
             <ChevronRight className="w-4 h-4 mx-1 text-gray-400" />
             <Link to={`/${city}/${category}`} className="hover:underline">
@@ -124,18 +124,18 @@ export const BusinessDetailPage = () => {
             <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
               <div className="text-center mb-4">
                 <Phone className="w-8 h-8 text-yp-dark mx-auto mb-2" />
-                <div className="text-2xl font-semibold text-yp-dark font-sf-pro">
+                <div className="text-2xl font-semibold text-yp-dark font-comfortaa">
                   {business.phone}
                 </div>
               </div>
               
               <div className="space-y-3">
-                <Button className="w-full bg-yp-blue hover:bg-yp-blue/90 text-white font-sf-text">
+                <Button className="w-full bg-yp-blue hover:bg-yp-blue/90 text-white font-roboto">
                   <Globe className="w-4 h-4 mr-2" />
                   Visit Website
                 </Button>
                 
-                <Button variant="outline" className="w-full font-sf-text">
+                <Button variant="outline" className="w-full font-roboto">
                   <Star className="w-4 h-4 mr-2" />
                   Write a Review
                 </Button>
@@ -146,22 +146,22 @@ export const BusinessDetailPage = () => {
             <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
               <div className="flex items-center mb-3">
                 <Building className="w-6 h-6 text-gray-400 mr-3" />
-                <h3 className="font-semibold text-yp-dark font-sf-pro">Is this your business?</h3>
+                <h3 className="font-semibold text-yp-dark font-comfortaa">Is this your business?</h3>
               </div>
-              <p className="text-sm text-gray-600 font-sf-text mb-3">Customize this page</p>
-              <Button className="w-full bg-yp-blue hover:bg-yp-blue/90 text-white font-sf-text">
-                Claim This Business
+              <p className="text-sm text-gray-600 font-roboto mb-3">Customize this page</p>
+              <Button className="w-full bg-yp-blue hover:bg-yp-blue/90 text-white font-roboto">
+                Claim This Listing
               </Button>
             </div>
 
             {/* Hours */}
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="font-semibold text-yp-dark font-sf-pro mb-4">Hours</h3>
+              <h3 className="font-semibold text-yp-dark font-comfortaa mb-4">Hours</h3>
               <div className="space-y-2">
-                <div className="text-sm font-sf-text">
+                <div className="text-sm font-roboto">
                   <span className="font-medium">Regular Hours</span>
                 </div>
-                <div className="flex justify-between text-sm font-sf-text">
+                <div className="flex justify-between text-sm font-roboto">
                   <span>{business.hours.regular}</span>
                   <span>{business.hours.schedule}</span>
                 </div>
@@ -173,10 +173,10 @@ export const BusinessDetailPage = () => {
           <div className="lg:col-span-2">
             {/* Business Header */}
             <div className="mb-6">
-              <h1 className="text-3xl font-semibold text-yp-dark font-sf-pro mb-2">
+              <h1 className="text-3xl font-semibold text-yp-dark font-comfortaa mb-2">
                 {business.name}
               </h1>
-              <p className="text-lg text-gray-600 font-sf-text mb-3">
+              <p className="text-lg text-gray-600 font-roboto mb-3">
                 {business.subcategories.join(", ")}
               </p>
               
@@ -192,7 +192,7 @@ export const BusinessDetailPage = () => {
                       }`}
                     />
                   ))}
-                  <span className="ml-2 text-blue-600 font-sf-text cursor-pointer hover:underline">
+                  <span className="ml-2 text-blue-600 font-roboto cursor-pointer hover:underline">
                     Be the first to review!
                   </span>
                 </div>
@@ -200,17 +200,17 @@ export const BusinessDetailPage = () => {
 
               <div className="flex items-center mb-4">
                 <Clock className="w-4 h-4 mr-2 text-green-600" />
-                <span className="text-green-600 font-sf-text">
+                <span className="text-green-600 font-roboto">
                   {business.openStatus}
                 </span>
-                <span className="text-gray-600 font-sf-text ml-2">
+                <span className="text-gray-600 font-roboto ml-2">
                   {business.openDetails}
                 </span>
               </div>
 
               <div className="flex items-center">
                 <Users className="w-4 h-4 mr-2 text-gray-500" />
-                <span className="text-sm text-gray-600 font-sf-text">
+                <span className="text-sm text-gray-600 font-roboto">
                   {business.yearsInBusiness} Years in Business
                 </span>
               </div>
@@ -218,21 +218,21 @@ export const BusinessDetailPage = () => {
 
             {/* More Info Section */}
             <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-              <h2 className="text-xl font-semibold text-yp-dark font-sf-pro mb-4">More Info</h2>
+              <h2 className="text-xl font-semibold text-yp-dark font-comfortaa mb-4">More Info</h2>
               
               <div className="space-y-4">
                 <div>
-                  <h3 className="font-medium text-yp-dark font-sf-pro mb-2">General Info</h3>
-                  <p className="text-sm text-gray-600 font-sf-text leading-relaxed">
+                  <h3 className="font-medium text-yp-dark font-comfortaa mb-2">General Info</h3>
+                  <p className="text-sm text-gray-600 font-roboto leading-relaxed">
                     {business.description}
                   </p>
                 </div>
 
                 <div>
-                  <h3 className="font-medium text-yp-dark font-sf-pro mb-2">Extra Phones</h3>
+                  <h3 className="font-medium text-yp-dark font-comfortaa mb-2">Extra Phones</h3>
                   <div className="space-y-1">
                     {business.extraPhones.map((phone, index) => (
-                      <p key={index} className="text-sm text-gray-600 font-sf-text">
+                      <p key={index} className="text-sm text-gray-600 font-roboto">
                         toll free: {phone}
                       </p>
                     ))}
@@ -240,17 +240,17 @@ export const BusinessDetailPage = () => {
                 </div>
 
                 <div>
-                  <h3 className="font-medium text-yp-dark font-sf-pro mb-2">Accreditation</h3>
-                  <p className="text-sm text-gray-600 font-sf-text">
+                  <h3 className="font-medium text-yp-dark font-comfortaa mb-2">Accreditation</h3>
+                  <p className="text-sm text-gray-600 font-roboto">
                     {business.accreditation}
                   </p>
                 </div>
 
                 <div>
-                  <h3 className="font-medium text-yp-dark font-sf-pro mb-2">Other Link</h3>
+                  <h3 className="font-medium text-yp-dark font-comfortaa mb-2">Other Link</h3>
                   <div className="space-y-1">
                     {business.otherLinks.map((link, index) => (
-                      <a key={index} href={`https://${link}`} className="block text-sm text-yp-blue hover:underline font-sf-text">
+                      <a key={index} href={`https://${link}`} className="block text-sm text-yp-blue hover:underline font-roboto">
                         {link}
                       </a>
                     ))}
@@ -258,10 +258,10 @@ export const BusinessDetailPage = () => {
                 </div>
 
                 <div>
-                  <h3 className="font-medium text-yp-dark font-sf-pro mb-2">Categories</h3>
+                  <h3 className="font-medium text-yp-dark font-comfortaa mb-2">Categories</h3>
                   <div className="flex flex-wrap gap-2">
                     {business.subcategories.map((category, index) => (
-                      <a key={index} href="#" className="text-sm text-yp-blue hover:underline font-sf-text">
+                      <a key={index} href="#" className="text-sm text-yp-blue hover:underline font-roboto">
                         {category}
                       </a>
                     )).reduce((prev, curr, index) => 
@@ -276,10 +276,10 @@ export const BusinessDetailPage = () => {
             {/* Gallery Section */}
             <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
               <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold text-yp-dark font-sf-pro">Gallery</h2>
+                <h2 className="text-xl font-semibold text-yp-dark font-comfortaa">Gallery</h2>
                 <div className="flex items-center space-x-4">
-                  <span className="text-sm text-gray-600 font-sf-text">Be the first to add a photo!</span>
-                  <Button variant="outline" size="sm" className="font-sf-text">
+                  <span className="text-sm text-gray-600 font-roboto">Be the first to add a photo!</span>
+                  <Button variant="outline" size="sm" className="font-roboto">
                     <Camera className="w-4 h-4 mr-2" />
                     Add Photos
                   </Button>
@@ -288,22 +288,22 @@ export const BusinessDetailPage = () => {
               <div className="bg-gray-100 rounded-lg h-48 flex items-center justify-center">
                 <div className="text-center text-gray-500">
                   <Camera className="w-12 h-12 mx-auto mb-2" />
-                  <p className="text-sm font-sf-text">No photos available</p>
+                  <p className="text-sm font-roboto">No photos available</p>
                 </div>
               </div>
             </div>
 
             {/* Reviews Section */}
             <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-yp-dark font-sf-pro mb-4">Reviews</h2>
+              <h2 className="text-xl font-semibold text-yp-dark font-comfortaa mb-4">Reviews</h2>
               <div className="text-center py-8">
                 <div className="flex items-center justify-center mb-4">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className="w-8 h-8 text-gray-300" />
                   ))}
                 </div>
-                <p className="text-gray-600 font-sf-text mb-4">Be the first to review this business!</p>
-                <Button className="bg-yp-blue hover:bg-yp-blue/90 text-white font-sf-text">
+                <p className="text-gray-600 font-roboto mb-4">Be the first to review this business!</p>
+                <Button className="bg-yp-blue hover:bg-yp-blue/90 text-white font-roboto">
                   Write the First Review
                 </Button>
               </div>
