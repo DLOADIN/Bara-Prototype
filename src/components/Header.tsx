@@ -55,7 +55,20 @@ export const Header = () => {
         if (error) {
           console.error('Error fetching cities:', error);
         } else {
-          setCities(data || []);
+          // Type assertion to handle the Supabase response structure
+          const typedData = (data as unknown) as Array<{
+            id: string;
+            name: string;
+            country_id: string;
+            latitude: number | null;
+            longitude: number | null;
+            population: number | null;
+            countries: {
+              name: string;
+              code: string;
+            } | null;
+          }>;
+          setCities(typedData || []);
         }
       } catch (error) {
         console.error('Error fetching cities:', error);
