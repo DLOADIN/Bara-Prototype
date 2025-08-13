@@ -103,7 +103,7 @@ export const HeroSection = () => {
         
         {/* Content Overlay */}
         <div className="relative z-10 flex flex-col items-center justify-center h-full px-4">
-          <h1 className="text-4xl md:text-5xl font-sf-pro font-bold text-yp-dark text-center mb-8">
+          <h1 className="text-4xl md:text-5xl font-comfortaa font-bold text-yp-dark text-center mb-8">
             {t('homepage.hero.title')}<sup className="text-sm">℠</sup>
           </h1>
           

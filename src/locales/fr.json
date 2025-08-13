@@ -50,7 +50,9 @@
     },
     "categories": {
       "title": "Parcourir les Catégories",
-      "viewMore": "Voir Plus"
+      "viewMore": "Voir Plus",
+      "viewLess": "Voir Moins",
+      "viewAllCategories": "Voir Toutes les Catégories"
     },
     "businesses": {
       "title": "Entreprises en Vedette",
@@ -131,6 +133,15 @@
   },
   "footer": {
     "localCommunities": "Communautés Locales",
+    "cities": "Villes",
+    "kigaliRwanda": "Kigali, Rwanda",
+    "nairobiKenya": "Nairobi, Kenya",
+    "kampalaUganda": "Kampala, Ouganda",
+    "darEsSalaamTanzania": "Dar es Salaam, Tanzanie",
+    "addisAbabaEthiopia": "Addis-Abeba, Éthiopie",
+    "accraGhana": "Accra, Ghana",
+    "lagosNigeria": "Lagos, Nigeria",
+    "capeTownSouthAfrica": "Le Cap, Afrique du Sud",
     "rwandafulRwanda": "Rwanda Magnifique",
     "beautifulBotswana": "Botswana Magnifique",
     "kenyafulKenya": "Kenya Magnifique",

@@ -50,7 +50,9 @@
     },
     "categories": {
       "title": "Tazama Kategoria",
-      "viewMore": "Ona Zaidi"
+      "viewMore": "Ona Zaidi",
+      "viewLess": "Ona Chache",
+      "viewAllCategories": "Ona Kategoria Zote"
     },
     "businesses": {
       "title": "Biashara Zilizochaguliwa",
@@ -130,7 +132,16 @@
     }
   },
   "footer": {
-    "localCommunities": "Jumuiya za Mitaani",
+    "localCommunities": "Jumuiya za Kikazi",
+    "cities": "Miji",
+    "kigaliRwanda": "Kigali, Rwanda",
+    "nairobiKenya": "Nairobi, Kenya",
+    "kampalaUganda": "Kampala, Uganda",
+    "darEsSalaamTanzania": "Dar es Salaam, Tanzania",
+    "addisAbabaEthiopia": "Addis Ababa, Ethiopia",
+    "accraGhana": "Accra, Ghana",
+    "lagosNigeria": "Lagos, Nigeria",
+    "capeTownSouthAfrica": "Cape Town, Afrika Kusini",
     "rwandafulRwanda": "Rwanda Nzuri",
     "beautifulBotswana": "Botswana Nzuri",
     "kenyafulKenya": "Kenya Nzuri",

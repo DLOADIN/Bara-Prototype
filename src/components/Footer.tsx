@@ -8,47 +8,47 @@ const Footer = () => {
     <footer className="bg-gray-100 text-gray-700">
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-4 py-12">
-        {/* Three Column Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+        {/* Four Column Layout */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 mb-8">
           
           {/* About Column */}
           <div>
-            <h3 className="text-lg font-bold text-gray-800 mb-4 pb-2 border-b-2 border-yellow-400">
+            <h3 className="text-lg font-bold text-gray-800 mb-4 pb-2 border-b-2 border-yellow-400 font-comfortaa">
               {t('footer.about')}
             </h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/about" className="text-gray-600 hover:text-gray-800 transition-colors">
+                <Link to="/about" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto">
                   {t('footer.aboutUs')}
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-gray-600 hover:text-gray-800 transition-colors">
+                <Link to="/contact" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto">
                   {t('footer.contactUs')}
                 </Link>
               </li>
               <li>
-                <Link to="/advertise" className="text-gray-600 hover:text-gray-800 transition-colors">
+                <Link to="/advertise" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto">
                   {t('footer.advertiseWithUs')}
                 </Link>
               </li>
               <li>
-                <Link to="/blog" className="text-gray-600 hover:text-gray-800 transition-colors">
+                <Link to="/blog" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto">
                   {t('footer.corporateBlog')}
                 </Link>
               </li>
               <li>
-                <Link to="/advertising-choices" className="text-gray-600 hover:text-gray-800 transition-colors">
+                <Link to="/advertising-choices" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto">
                   {t('footer.advertisingChoices')}
                 </Link>
               </li>
               <li>
-                <Link to="/become-partner" className="text-gray-600 hover:text-gray-800 transition-colors">
+                <Link to="/become-partner" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto">
                   {t('footer.becomeNetworkPartner')}
                 </Link>
               </li>
               <li>
-                <Link to="/marketing-solutions" className="text-gray-600 hover:text-gray-800 transition-colors">
+                <Link to="/marketing-solutions" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto">
                   {t('footer.marketingSolutions')}
                 </Link>
               </li>
@@ -57,58 +57,139 @@ const Footer = () => {
 
           {/* Site Directory Column */}
           <div>
-            <h3 className="text-lg font-bold text-gray-800 mb-4 pb-2 border-b-2 border-yellow-400">
+            <h3 className="text-lg font-bold text-gray-800 mb-4 pb-2 border-b-2 border-yellow-400 font-comfortaa">
               {t('footer.siteDirectory')}
             </h3>
             <ul className="space-y-2">
               <li>
-                <Link to="/articles" className="text-gray-600 hover:text-gray-800 transition-colors">
+                <Link to="/articles" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto">
                   {t('footer.articles')}
                 </Link>
               </li>
               <li>
-                <Link to="/find-business" className="text-gray-600 hover:text-gray-800 transition-colors">
+                <Link to="/find-business" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto">
                   {t('footer.findBusiness')}
                 </Link>
               </li>
               <li>
-                <Link to="/mobile-app" className="text-gray-600 hover:text-gray-800 transition-colors">
+                <Link to="/mobile-app" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto">
                   {t('footer.ypMobileApp')}
                 </Link>
               </li>
               <li>
-                <Link to="/gas-guru" className="text-gray-600 hover:text-gray-800 transition-colors">
+                <Link to="/gas-guru" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto">
                   {t('footer.gasGuruMobileApp')}
                 </Link>
               </li>
               <li>
-                <Link to="/sitemap" className="text-gray-600 hover:text-gray-800 transition-colors">
+                <Link to="/sitemap" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto">
                   {t('footer.siteMap')}
                 </Link>
               </li>
               <li>
-                <Link to="/categories" className="text-gray-600 hover:text-gray-800 transition-colors">
+                <Link to="/categories" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto">
                   {t('footer.categories')}
                 </Link>
               </li>
               <li>
-                <Link to="/restaurants" className="text-gray-600 hover:text-gray-800 transition-colors">
+                <Link to="/restaurants" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto">
                   {t('footer.browseRestaurants')}
                 </Link>
               </li>
             </ul>
           </div>
 
+          {/* Cities Column */}
+          <div>
+            <h3 className="text-lg font-bold text-gray-800 mb-4 pb-2 border-b-2 border-yellow-400 font-comfortaa">
+              {t('footer.cities')}
+            </h3>
+            <div className="grid grid-cols-1 gap-2">
+              <div>
+                <Link 
+                  to="/cities/kigali" 
+                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto"
+                >
+                  <span className="mr-2">🇷🇼</span>
+                  {t('footer.kigaliRwanda')}
+                </Link>
+              </div>
+              <div>
+                <Link 
+                  to="/cities/nairobi" 
+                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto"
+                >
+                  <span className="mr-2">🇰🇪</span>
+                  {t('footer.nairobiKenya')}
+                </Link>
+              </div>
+              <div>
+                <Link 
+                  to="/cities/kampala" 
+                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto"
+                >
+                  <span className="mr-2">🇺🇬</span>
+                  {t('footer.kampalaUganda')}
+                </Link>
+              </div>
+              <div>
+                <Link 
+                  to="/cities/dar-es-salaam" 
+                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto"
+                >
+                  <span className="mr-2">🇹🇿</span>
+                  {t('footer.darEsSalaamTanzania')}
+                </Link>
+              </div>
+              <div>
+                <Link 
+                  to="/cities/addis-ababa" 
+                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto"
+                >
+                  <span className="mr-2">🇪🇹</span>
+                  {t('footer.addisAbabaEthiopia')}
+                </Link>
+              </div>
+              <div>
+                <Link 
+                  to="/cities/accra" 
+                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto"
+                >
+                  <span className="mr-2">🇬🇭</span>
+                  {t('footer.accraGhana')}
+                </Link>
+              </div>
+              <div>
+                <Link 
+                  to="/cities/lagos" 
+                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto"
+                >
+                  <span className="mr-2">🇳🇬</span>
+                  {t('footer.lagosNigeria')}
+                </Link>
+              </div>
+              <div>
+                <Link 
+                  to="/cities/cape-town" 
+                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto"
+                >
+                  <span className="mr-2">🇿🇦</span>
+                  {t('footer.capeTownSouthAfrica')}
+                </Link>
+              </div>
+            </div>
+          </div>
+
           {/* Local Communities Column */}
           <div>
-            <h3 className="text-lg font-bold text-gray-800 mb-4 pb-2 border-b-2 border-yellow-400">
+            <h3 className="text-lg font-bold text-gray-800 mb-4 pb-2 border-b-2 border-yellow-400 font-comfortaa">
               {t('footer.localCommunities')}
             </h3>
             <div className="grid grid-cols-1 gap-2">
               <div>
                 <Link 
                   to="https://afri-nexus-listings-xw16.vercel.app/" 
-                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center"
+                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto"
                 >
                   <span className="mr-2">🇷🇼</span>
                   {t('footer.rwandafulRwanda')}
@@ -117,7 +198,7 @@ const Footer = () => {
               <div>
                 <Link 
                   to="/communities/beautiful-botswana" 
-                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center"
+                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto"
                 >
                   <span className="mr-2">🇧🇼</span>
                   {t('footer.beautifulBotswana')}
@@ -126,7 +207,7 @@ const Footer = () => {
               <div>
                 <Link 
                   to="/communities/kenyaful-kenya" 
-                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center"
+                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto"
                 >
                   <span className="mr-2">🇰🇪</span>
                   {t('footer.kenyafulKenya')}
@@ -135,7 +216,7 @@ const Footer = () => {
               <div>
                 <Link 
                   to="/communities/ugandaful-uganda" 
-                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center"
+                  className="text-gray-600 hover:text-gray-800 transition-colors font-roboto"
                 >
                   <span className="mr-2">🇺🇬</span>
                   {t('footer.ugandafulUganda')}
@@ -144,7 +225,7 @@ const Footer = () => {
               <div>
                 <Link 
                   to="/communities/tanzaniaful-tanzania" 
-                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center"
+                  className="text-gray-600 hover:text-gray-800 transition-colors font-roboto"
                 >
                   <span className="mr-2">🇹🇿</span>
                   {t('footer.tanzaniafulTanzania')}
@@ -153,7 +234,7 @@ const Footer = () => {
               <div>
                 <Link 
                   to="/communities/ethiopiaful-ethiopia" 
-                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center"
+                  className="text-gray-600 hover:text-gray-800 transition-colors font-roboto"
                 >
                   <span className="mr-2">🇪🇹</span>
                   {t('footer.ethiopiafulEthiopia')}
@@ -162,7 +243,7 @@ const Footer = () => {
               <div>
                 <Link 
                   to="/communities/ghanaful-ghana" 
-                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center"
+                  className="text-gray-600 hover:text-gray-800 transition-colors font-roboto"
                 >
                   <span className="mr-2">🇬🇭</span>
                   {t('footer.ghanafulGhana')}
@@ -171,7 +252,7 @@ const Footer = () => {
               <div>
                 <Link 
                   to="/communities/nigeriaful-nigeria" 
-                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center"
+                  className="text-gray-600 hover:text-gray-800 transition-colors font-roboto"
                 >
                   <span className="mr-2">🇳🇬</span>
                   {t('footer.nigeriafulNigeria')}
@@ -199,9 +280,9 @@ const Footer = () => {
         {/* Copyright Information */}
         <div className="border-t border-gray-300 pt-4">
           <div className="text-center text-sm text-gray-500 space-y-1">
-            <p>{t('footer.copyright')}</p>
-            <p>{t('footer.trademark')}</p>
-            <p>{t('footer.otherMarks')}</p>
+            <p className="font-roboto">{t('footer.copyright')}</p>
+            <p className="font-roboto">{t('footer.trademark')}</p>
+            <p className="font-roboto">{t('footer.otherMarks')}</p>
           </div>
         </div>
       </div>

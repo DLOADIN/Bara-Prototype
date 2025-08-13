@@ -50,7 +50,9 @@
     },
     "categories": {
       "title": "Explorar Categorías",
-      "viewMore": "Ver Más"
+      "viewMore": "Ver Más",
+      "viewLess": "Ver Menos",
+      "viewAllCategories": "Ver Todas las Categorías"
     },
     "businesses": {
       "title": "Negocios Destacados",
@@ -131,9 +133,18 @@
   },
   "footer": {
     "localCommunities": "Comunidades Locales",
-    "rwandafulRwanda": "Rwanda Hermoso",
-    "beautifulBotswana": "Botswana Hermoso",
-    "kenyafulKenya": "Kenya Hermoso",
+    "cities": "Ciudades",
+    "kigaliRwanda": "Kigali, Ruanda",
+    "nairobiKenya": "Nairobi, Kenia",
+    "kampalaUganda": "Kampala, Uganda",
+    "darEsSalaamTanzania": "Dar es Salaam, Tanzania",
+    "addisAbabaEthiopia": "Addis Abeba, Etiopía",
+    "accraGhana": "Accra, Ghana",
+    "lagosNigeria": "Lagos, Nigeria",
+    "capeTownSouthAfrica": "Ciudad del Cabo, Sudáfrica",
+    "rwandafulRwanda": "Ruanda Hermoso",
+    "beautifulBotswana": "Botsuana Hermoso",
+    "kenyafulKenya": "Kenia Hermoso",
     "ugandafulUganda": "Uganda Hermoso",
     "tanzaniafulTanzania": "Tanzania Hermoso",
     "ethiopiafulEthiopia": "Etiopía Hermoso",

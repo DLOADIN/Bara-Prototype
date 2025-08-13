@@ -59,7 +59,7 @@ export const QASection = () => {
 
           {/* Right Side - Popular Topics */}
           <div className="order-1 md:order-2">
-            <h3 className="text-xl md:text-2xl font-sf-pro font-bold text-yp-dark mb-4 md:mb-6 text-center md:text-left">
+            <h3 className="text-xl md:text-2xl font-comfortaa font-bold text-yp-dark mb-4 md:mb-6 text-center md:text-left">
               {t('qa.browsePopular')}
             </h3>
             
