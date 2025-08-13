@@ -149,13 +149,13 @@ export const CategoryGrid = () => {
         <h2 className="text-2xl font-sf-pro font-bold text-yp-dark text-center mb-8">
           {t('homepage.categories.title')}
         </h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-10 gap-4 md:gap-6">
+        <div className="flex flex-wrap justify-center gap-4 md:gap-6">
           {categories.map((category) => {
             const IconComponent = iconMap[category.slug] || Home;
             const translatedName = t(`categories.${category.slug}`);
             
             return (
-              <div key={category.id} className="text-center">
+              <div key={category.id} className="text-center flex-none">
                 <button 
                   onClick={() => handleCategoryClick(category.slug)}
                   className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-2 md:mb-3 bg-white border-2 border-yp-gray-medium rounded-full flex items-center justify-center hover:border-yp-blue hover:bg-yp-gray-light transition-all duration-200 group"
@@ -170,7 +170,7 @@ export const CategoryGrid = () => {
           })}
           
           {/* More Categories Button */}
-          <div className="text-center">
+          <div className="text-center flex-none">
             <button 
               onClick={handleViewAllCategories}
               className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-2 md:mb-3 bg-white border-2 border-yp-gray-medium rounded-full flex items-center justify-center hover:border-yp-blue hover:bg-yp-gray-light transition-all duration-200 group"
