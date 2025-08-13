@@ -216,6 +216,11 @@
     "tours": "Tours",
     "transportation": "Transport",
     "universities": "Universités",
-    "utilities": "Services Publics"
+    "utilities": "Services Publics",
+    "auto-repair": "Réparation Auto",
+    "coffee-shops": "Cafés",
+    "gyms-fitness": "Salles de Sport",
+    "beauty-salons": "Salons de Beauté",
+    "pet-services": "Services pour Animaux"
   }
 } 

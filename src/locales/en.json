@@ -240,6 +240,11 @@
     "tours": "Tours",
     "transportation": "Transportation",
     "universities": "Universities",
-    "utilities": "Utilities"
+    "utilities": "Utilities",
+    "auto-repair": "Auto Repair",
+    "coffee-shops": "Coffee Shops",
+    "gyms-fitness": "Gyms & Fitness",
+    "beauty-salons": "Beauty Salons",
+    "pet-services": "Pet Services"
   }
 } 

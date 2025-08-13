@@ -80,7 +80,12 @@ const iconMap: { [key: string]: any } = {
   'tours': Car,
   'transportation': Truck,
   'universities': GraduationCap,
-  'utilities': Zap
+  'utilities': Zap,
+  'auto-repair': Wrench,
+  'coffee-shops': Coffee,
+  'gyms-fitness': Users,
+  'beauty-salons': Scissors,
+  'pet-services': Heart
 };
 
 interface Category {
@@ -102,8 +107,8 @@ export const CategoryGrid = () => {
   const [visibleCategories, setVisibleCategories] = useState<Category[]>([]);
   const [isExpanding, setIsExpanding] = useState(false);
 
-  // Number of categories to show initially
-  const INITIAL_CATEGORIES = 10;
+  // Number of categories to show initially - increased to show more categories
+  const INITIAL_CATEGORIES = 15; // Show 15 categories initially instead of 10
   const ANIMATION_DELAY = 100; // milliseconds between each category animation
 
   useEffect(() => {
@@ -117,8 +122,9 @@ export const CategoryGrid = () => {
         if (error) {
           console.error('Error fetching categories:', error);
         } else {
+          console.log('Fetched categories:', data?.length, data); // Debug log
           setCategories(data || []);
-          // Initially show only the first few categories
+          // Initially show more categories
           setVisibleCategories(data?.slice(0, INITIAL_CATEGORIES) || []);
         }
       } catch (error) {
@@ -177,6 +183,35 @@ export const CategoryGrid = () => {
     );
   }
 
+  // Handle case where no categories are loaded
+  if (categories.length === 0) {
+    return (
+      <section className="py-12 bg-background">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <h2 className="text-2xl font-comfortaa font-bold text-yp-dark text-center mb-8">
+              {t('homepage.categories.title')}
+            </h2>
+            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
+              <p className="text-yellow-800 font-roboto">
+                No categories found. Please check your database connection.
+              </p>
+              <p className="text-yellow-600 font-roboto text-sm mt-2">
+                Expected categories: Restaurants, Hotels, Banks, Hospitals, Schools, Shopping, Dentists, Auto Repair, Lawyers, Pharmacies, Museums, Coffee Shops, Gyms & Fitness, Beauty Salons, Pet Services, Airports, Bars, Clinics, Real Estate, Transportation
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  // Debug information
+  console.log('Total categories:', categories.length);
+  console.log('Visible categories:', visibleCategories.length);
+  console.log('Show all:', showAll);
+  console.log('Categories data:', categories.map(c => ({ slug: c.slug, name: c.name })));
+
   return (
     <section className="py-12 bg-background">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -184,10 +219,16 @@ export const CategoryGrid = () => {
           {t('homepage.categories.title')}
         </h2>
         
+        {/* Debug info - remove in production */}
+        <div className="text-center mb-4 text-sm text-gray-500">
+          Showing {visibleCategories.length} of {categories.length} categories
+        </div>
+        
         <div className="flex flex-wrap justify-center gap-4 md:gap-6">
           {visibleCategories.map((category, index) => {
             const IconComponent = iconMap[category.slug] || Home;
-            const translatedName = t(`categories.${category.slug}`);
+            // Use the category name directly if translation is not available
+            const translatedName = t(`categories.${category.slug}`, { defaultValue: category.name });
             
             return (
               <div 
@@ -211,7 +252,7 @@ export const CategoryGrid = () => {
             );
           })}
           
-          {/* Toggle Button */}
+          {/* Toggle Button - only show if there are more categories to display */}
           {categories.length > INITIAL_CATEGORIES && (
             <div className="text-center flex-none animate-in fade-in-0 slide-in-from-bottom-2 duration-500">
               <button 

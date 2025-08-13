@@ -84,7 +84,12 @@ const iconMap: { [key: string]: any } = {
   'tours': Car,
   'transportation': Truck,
   'universities': GraduationCap,
-  'utilities': Zap
+  'utilities': Zap,
+  'auto-repair': Wrench,
+  'coffee-shops': Coffee,
+  'gyms-fitness': Users,
+  'beauty-salons': Scissors,
+  'pet-services': Heart
 };
 
 interface Category {
@@ -197,7 +202,8 @@ export const CategoriesPage = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filteredCategories.map((category) => {
             const IconComponent = iconMap[category.slug] || Home;
-            const translatedName = t(`categories.${category.slug}`);
+            // Use the category name directly if translation is not available
+            const translatedName = t(`categories.${category.slug}`, { defaultValue: category.name });
             
             return (
               <div 
@@ -215,7 +221,7 @@ export const CategoriesPage = () => {
                 {/* Category Content */}
                 <div className="px-6 pb-6">
                   <h3 className="font-roboto font-semibold text-lg text-yp-dark mb-2 text-center group-hover:text-yp-blue transition-colors duration-200">
-                    {category.name}
+                    {translatedName}
                   </h3>
                   
                   {category.description && (
