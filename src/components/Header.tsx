@@ -10,6 +10,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { LanguageSelector } from "./LanguageSelector";
+import { AdminNavLink } from "./AdminNavLink";
 import { db } from "@/lib/supabase";
 
 interface City {
@@ -118,6 +119,9 @@ export const Header = () => {
                 {t('navigation.writeReview')}
               </Button>
             </Link>
+
+            {/* Admin Link */}
+            <AdminNavLink />
 
             {/* Search by City Dropdown */}
             <DropdownMenu>

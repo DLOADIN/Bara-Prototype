@@ -12,6 +12,8 @@ dist
 dist-ssr
 *.local
 newtxt.txt
+.env
+ADMIN_DASHBOARD_README.md
 
 # Editor directories and files
 .vscode/*

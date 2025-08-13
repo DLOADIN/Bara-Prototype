@@ -9,6 +9,12 @@ import { ListingsPage } from "./pages/ListingsPage";
 import { WriteReviewPage } from "./pages/WriteReviewPage";
 import { BusinessDetailPage } from "./pages/BusinessDetailPage";
 import { CategoriesPage } from "./pages/CategoriesPage";
+import { AdminDashboard } from "./pages/admin/AdminDashboard";
+import { AdminCities } from "./pages/admin/AdminCities";
+import { AdminCountries } from "./pages/admin/AdminCountries";
+import { AdminBusinesses } from "./pages/admin/AdminBusinesses";
+import { AdminReviews } from "./pages/admin/AdminReviews";
+import { AdminAuthGuard } from "./components/admin/AdminAuthGuard";
 
 const queryClient = new QueryClient();
 
@@ -24,6 +30,34 @@ const App = () => (
           <Route path="/categories" element={<CategoriesPage />} />
           <Route path="/:city/:category" element={<ListingsPage />} />
           <Route path="/:city/:category/:businessId" element={<BusinessDetailPage />} />
+          
+          {/* Admin Routes - Protected by AdminAuthGuard */}
+          <Route path="/admin" element={
+            <AdminAuthGuard>
+              <AdminDashboard />
+            </AdminAuthGuard>
+          } />
+          <Route path="/admin/cities" element={
+            <AdminAuthGuard>
+              <AdminCities />
+            </AdminAuthGuard>
+          } />
+          <Route path="/admin/countries" element={
+            <AdminAuthGuard>
+              <AdminCountries />
+            </AdminAuthGuard>
+          } />
+          <Route path="/admin/businesses" element={
+            <AdminAuthGuard>
+              <AdminBusinesses />
+            </AdminAuthGuard>
+          } />
+          <Route path="/admin/reviews" element={
+            <AdminAuthGuard>
+              <AdminReviews />
+            </AdminAuthGuard>
+          } />
+          
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>

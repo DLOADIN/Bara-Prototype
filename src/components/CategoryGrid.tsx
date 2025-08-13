@@ -255,11 +255,11 @@ export const CategoryGrid = () => {
           {/* Toggle Button - only show if there are more categories to display */}
           {categories.length > INITIAL_CATEGORIES && (
             <div className="text-center flex-none animate-in fade-in-0 slide-in-from-bottom-2 duration-500">
-              <button 
+            <button 
                 onClick={toggleCategories}
                 disabled={isExpanding}
                 className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-2 md:mb-3 bg-gradient-to-br from-yp-blue to-yp-green border-2 border-transparent rounded-full flex items-center justify-center hover:from-yp-blue/90 hover:to-yp-green/90 transition-all duration-300 group hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
+            >
                 {isExpanding ? (
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
                 ) : showAll ? (
@@ -267,11 +267,11 @@ export const CategoryGrid = () => {
                 ) : (
                   <MoreHorizontal className="w-6 h-6 md:w-8 md:h-8 text-white group-hover:scale-110 transition-transform duration-300" />
                 )}
-              </button>
+            </button>
               <h3 className="font-roboto font-medium text-xs md:text-sm text-yp-dark mb-2 transition-colors duration-300">
                 {showAll ? t('homepage.categories.viewLess') : t('homepage.categories.viewMore')}
-              </h3>
-            </div>
+            </h3>
+          </div>
           )}
         </div>
 
