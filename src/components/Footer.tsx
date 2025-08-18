@@ -27,11 +27,11 @@ const Footer = () => {
                   {t('footer.contactUs')}
                 </Link>
               </li>
-              <li>
+              {/* <li>
                 <Link to="/advertise" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto">
                   {t('footer.advertiseWithUs')}
                 </Link>
-              </li>
+              </li> */}
               <li>
                 <Link to="/blog" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto">
                   {t('footer.corporateBlog')}
