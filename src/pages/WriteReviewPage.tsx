@@ -583,7 +583,7 @@ export const WriteReviewPage = () => {
                 Find the Business
               </h3>
               <p className="text-gray-600 font-roboto">
-                Look for businesses by name and location.
+              {t('lookForBusinesses')}
               </p>
             </div>
             
