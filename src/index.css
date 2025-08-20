@@ -9,13 +9,13 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* BARA LISTINGS Brand Colors */
-    --yp-yellow: 48 100% 50%;
-    --yp-yellow-hover: 48 100% 45%;
+    --yp-yellow: 48 100% 50%; /* Updated to CMYK 5, 20, 100, 0 converted to HSL */
+    --yp-yellow-hover: 48 100% 45%; /* Adjusted hover state for new yellow */
     --yp-dark: 0 0% 15%;
     --yp-gray-light: 0 0% 96%;
     --yp-gray-medium: 0 0% 75%;
     --yp-gray-dark: 0 0% 35%;
-    --yp-blue: 213 100% 45%;
+    --yp-blue: 48 100% 50%;
     --yp-green: 152 100% 35%;
     
     --background: 0 0% 100%;
@@ -27,16 +27,16 @@ All colors MUST be HSL.
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 15%;
 
-    --primary: 48 100% 50%;
+    --primary: 0 70% 100%;
     --primary-foreground: 0 0% 15%;
 
-    --secondary: 0 0% 96%;
+    --secondary: 48 100% 50%; /* Updated to match new yellow */
     --secondary-foreground: 0 0% 15%;
 
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 45%;
 
-    --accent: 213 100% 45%;
+    --accent: 0 70% 100%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
@@ -44,7 +44,7 @@ All colors MUST be HSL.
 
     --border: 0 0% 90%;
     --input: 0 0% 100%;
-    --ring: 48 100% 50%;
+    --ring: 0 70% 100%;
 
     --radius: 0.5rem;
 

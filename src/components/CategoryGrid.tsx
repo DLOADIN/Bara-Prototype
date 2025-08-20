@@ -192,11 +192,11 @@ export const CategoryGrid = () => {
             <h2 className="text-2xl font-comfortaa font-bold text-yp-dark text-center mb-8">
               {t('homepage.categories.title')}
             </h2>
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-6">
-              <p className="text-yellow-800 font-roboto">
+            <div className="bg-[#f0f4e8] border border-[#70905a] rounded-lg p-6">
+              <p className="text-[#4a6039] font-roboto">
                 No categories found. Please check your database connection.
               </p>
-              <p className="text-yellow-600 font-roboto text-sm mt-2">
+              <p className="text-[#70905a] font-roboto text-sm mt-2">
                 Expected categories: Restaurants, Hotels, Banks, Hospitals, Schools, Shopping, Dentists, Auto Repair, Lawyers, Pharmacies, Museums, Coffee Shops, Gyms & Fitness, Beauty Salons, Pet Services, Airports, Bars, Clinics, Real Estate, Transportation
               </p>
             </div>

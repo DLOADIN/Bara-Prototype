@@ -135,7 +135,7 @@ export const Header = () => {
               <DropdownMenuContent className="w-56 bg-background border border-border shadow-lg">
                 {loading ? (
                   <div className="text-center py-4">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-yp-blue mx-auto"></div>
+                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#e64600] mx-auto"></div>
                     <p className="text-xs text-yp-gray-dark mt-1">{t('common.loading')}</p>
                   </div>
                 ) : (
@@ -242,7 +242,7 @@ export const Header = () => {
                   </h3>
                   {loading ? (
                     <div className="text-center py-4">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-yp-blue mx-auto"></div>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#e64600] mx-auto"></div>
                       <p className="text-xs text-gray-500 mt-1">{t('common.loading')}</p>
                     </div>
                   ) : (

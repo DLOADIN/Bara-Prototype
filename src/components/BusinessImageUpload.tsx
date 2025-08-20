@@ -159,7 +159,7 @@ export const BusinessImageUpload = ({
             className={`border-2 border-dashed border-gray-300 rounded-lg p-6 text-center transition-colors ${
               images.length >= maxImages 
                 ? 'border-gray-200 bg-gray-50' 
-                : 'border-blue-300 bg-blue-50 hover:border-blue-400 hover:bg-blue-100'
+                : 'border-[#e64600]/30 bg-[#e64600]/5 hover:border-[#e64600]/40 hover:bg-[#e64600]/10'
             }`}
             onDragOver={handleDragOver}
             onDrop={handleDrop}
@@ -172,7 +172,7 @@ export const BusinessImageUpload = ({
               </div>
             ) : (
               <>
-                <Upload className="w-12 h-12 mx-auto mb-2 text-blue-500" />
+                <Upload className="w-12 h-12 mx-auto mb-2 text-[#e64600]" />
                 <p className="text-sm text-gray-600 mb-2">
                   Drag and drop images here, or click to select
                 </p>
@@ -248,4 +248,4 @@ export const BusinessImageUpload = ({
       </Card>
     </div>
   );
-}; 
+};

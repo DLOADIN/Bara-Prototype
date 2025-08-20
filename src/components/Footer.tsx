@@ -13,7 +13,7 @@ const Footer = () => {
           
           {/* About Column */}
           <div>
-            <h3 className="text-lg font-bold text-gray-800 mb-4 pb-2 border-b-2 border-yellow-400 font-comfortaa">
+            <h3 className="text-lg font-bold text-gray-800 mb-4 pb-2 border-b-2 border-[#70905a] font-comfortaa">
               {t('footer.about')}
             </h3>
             <ul className="space-y-2">
@@ -57,7 +57,7 @@ const Footer = () => {
 
           {/* Site Directory Column */}
           <div>
-            <h3 className="text-lg font-bold text-gray-800 mb-4 pb-2 border-b-2 border-yellow-400 font-comfortaa">
+            <h3 className="text-lg font-bold text-gray-800 mb-4 pb-2 border-b-2 border-[#70905a] font-comfortaa">
               {t('footer.siteDirectory')}
             </h3>
             <ul className="space-y-2">
@@ -101,7 +101,7 @@ const Footer = () => {
 
           {/* Cities Column */}
           <div>
-            <h3 className="text-lg font-bold text-gray-800 mb-4 pb-2 border-b-2 border-yellow-400 font-comfortaa">
+            <h3 className="text-lg font-bold text-gray-800 mb-4 pb-2 border-b-2 border-[#70905a] font-comfortaa">
               {t('footer.cities')}
             </h3>
             <div className="grid grid-cols-1 gap-2">
@@ -182,7 +182,7 @@ const Footer = () => {
 
           {/* Local Communities Column */}
           <div>
-            <h3 className="text-lg font-bold text-gray-800 mb-4 pb-2 border-b-2 border-yellow-400 font-comfortaa">
+            <h3 className="text-lg font-bold text-gray-800 mb-4 pb-2 border-b-2 border-[#70905a] font-comfortaa">
               {t('footer.localCommunities')}
             </h3>
             <div className="grid grid-cols-1 gap-2">
@@ -265,13 +265,13 @@ const Footer = () => {
         {/* Legal Links */}
         {/* <div className="border-t border-gray-300 pt-6 pb-4">
           <div className="flex flex-wrap justify-center gap-6">
-            <Link to="/privacy" className="text-blue-600 hover:text-blue-800 transition-colors">
+            <Link to="/privacy" className="text-[#e64600] hover:text-[#c93e00] transition-colors">
               {t('footer.privacy')}
             </Link>
-            <Link to="/terms" className="text-blue-600 hover:text-blue-800 transition-colors">
+            <Link to="/terms" className="text-[#e64600] hover:text-[#c93e00] transition-colors">
               {t('footer.terms')}
             </Link>
-            <Link to="/legal" className="text-blue-600 hover:text-blue-800 transition-colors">
+            <Link to="/legal" className="text-[#e64600] hover:text-[#c93e00] transition-colors">
               {t('footer.legal')}
             </Link>
           </div>
@@ -290,4 +290,4 @@ const Footer = () => {
   );
 };
 
-export default Footer; 
+export default Footer;
