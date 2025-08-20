@@ -133,15 +133,17 @@
     "cancel": "Annuler",
     "submitting": "Soumission...",
     "characterCount": "caractères",
-    "outOf5": "sur 5"
-    "helpFinding": "PLACEHOLDER_TRANSLATION",
-    "writeShare": "PLACEHOLDER_TRANSLATION",
-    "reviewingBusiness": "PLACEHOLDER_TRANSLATION",
-    "addPhotos": "PLACEHOLDER_TRANSLATION",
-    "findBusiness": "PLACEHOLDER_TRANSLATION",
-    "feedbackImprove": "PLACEHOLDER_TRANSLATION",
-    "postReview": "PLACEHOLDER_TRANSLATION",
-    "shareExperience": "PLACEHOLDER_TRANSLATION"
+    "outOf5": "sur 5",
+    "helpFinding": "Aide à la recherche",
+    "writeShare": "Écrire et partager",
+    "reviewingBusiness": "Évaluer une entreprise",
+    "addPhotos": "Ajouter des photos",
+    "findBusiness": "Trouver une entreprise",
+    "feedbackImprove": "Commentaires pour améliorer",
+    "feedbackMessage": "Les entreprises ont besoin de vos commentaires, qu'ils soient positifs ou négatifs, afin qu'elles puissent s'améliorer ou recevoir des éloges pour un travail bien fait",
+    "shareMessage": "Partagez vos expériences et sentez-vous bien en sachant que vous faites une différence dans votre communauté !",
+    "postReview": "Publier un avis",
+    "shareExperience": "Partager votre expérience"
   },
   "auth": {
     "login": {
@@ -299,5 +301,11 @@
     "total": "Total",
     "active": "Actif",
     "inactive": "Inactif"
-  }
+  },
+  "lookForBusinesses": "Recherchez des entreprises par nom et emplacement.",
+  "findBusiness": "Trouver l'Entreprise",
+  "sentenceOne": "Évaluez et Écrivez une Revue",
+  "sentenceTwo": "Publiquez votre Revue",
+  "ReviewMessageOne": "Avis",
+  "reviewMessage": "Évaluez une Entreprise et Aidez les Autres à Se Rendre compte de sa Qualité!"
 } 

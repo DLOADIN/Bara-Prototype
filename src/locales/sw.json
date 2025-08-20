@@ -136,12 +136,16 @@
     "submitting": "Inawasilisha...",
     "characterCount": "herufi",
     "outOf5": "kati ya 5",
-    "helpFinding": "PLACEHOLDER_TRANSLATION",
-    "writeShare": "PLACEHOLDER_TRANSLATION",
-    "findBusiness": "PLACEHOLDER_TRANSLATION",
-    "feedbackImprove": "PLACEHOLDER_TRANSLATION",
-    "postReview": "PLACEHOLDER_TRANSLATION",
-    "shareExperience": "PLACEHOLDER_TRANSLATION"
+    "helpFinding": "Msaada wa kupata",
+    "writeShare": "Andika na ushiriki",
+    "ReviewingBusiness": "Kupitia Biashara",
+    "AddPhotos": "Ongeza picha",
+    "findBusiness": "Tafuta Biashara",
+    "feedbackImprove": "Maoni ya Kuboresha",
+    "feedbackMessage": "Biashara zinahitaji maoni yako, mazuri na mabaya, ili ziweze kuboresha au kupata sifa kwa kazi iliyofanyika vizuri",
+    "shareMessage": "Shiriki uzoefu wako na ujisikie vizuri ukijua kuwa unaleta mabadiliko katika jamii yako!",
+    "postReview": "Chapisha Tathmini",
+    "shareExperience": "Shiriki Uzoefu Wako"
   },
   "auth": {
     "login": {
@@ -300,5 +304,11 @@
     "active": "Inafanya Kazi",
     "inactive": "Haifanyi Kazi"
   },
-  "lookForBusinesses": "Tafuta biashara kwa jina na mahali."
+  "lookForBusinesses": "Tafuta Biashara kwa Jina na Mahali.",
+  "findBusiness": "Pata Biashara",
+  "sentenceOne": "Kadiria na Hakiki",
+  "sentenceTwo": "Chapisha",
+  "ReviewMessageOne": "Hakiki",
+  "reviewMessage": " Biashara na Wasaidie Wengine!"
+
 }

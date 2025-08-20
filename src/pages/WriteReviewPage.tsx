@@ -295,8 +295,7 @@ export const WriteReviewPage = () => {
           </div>
           
           <h1 className="text-4xl font-bold text-yp-dark mb-4 font-comfortaa">
-            <span className="text-yp-blue">Review</span> a Business and Help Others!
-          </h1>
+            <span className="text-yp-blue">{t('ReviewMessageOne')} </span>{t('reviewMessage')}</h1>
           <p className="text-xl text-gray-600 mb-2 font-roboto">
             {t('reviews.helpFinding')}
           </p>
@@ -580,7 +579,7 @@ export const WriteReviewPage = () => {
                 <Store className="w-10 h-10 text-yp-blue" />
               </div>
               <h3 className="text-xl font-semibold text-yp-dark mb-3 font-comfortaa">
-                Find the Business
+                {t('findBusiness')}
               </h3>
               <p className="text-gray-600 font-roboto">
               {t('lookForBusinesses')}
@@ -593,10 +592,10 @@ export const WriteReviewPage = () => {
                 <MessageSquare className="w-10 h-10 text-yp-blue" />
               </div>
               <h3 className="text-xl font-semibold text-yp-dark mb-3 font-comfortaa">
-                Rate and Review
+                {t('sentenceOne')}
               </h3>
               <p className="text-gray-600 font-roboto">
-                Businesses need your feedback, both good and bad, so they can improve or get props for a job well done.
+                {t('reviews.feedbackMessage')}
               </p>
             </div>
             
@@ -606,17 +605,16 @@ export const WriteReviewPage = () => {
                 <FileText className="w-10 h-10 text-yp-blue" />
               </div>
               <h3 className="text-xl font-semibold text-yp-dark mb-3 font-comfortaa">
-                Post It
+                {t('sentenceTwo')}
               </h3>
               <p className="text-gray-600 font-roboto">
-                Share your experiences and feel good knowing that you are making a difference in your community!
+                {t('reviews.shareMessage')}
               </p>
             </div>
           </div>
         </div>
       </div>
       )}
-      
       <Footer />
     </div>
   );

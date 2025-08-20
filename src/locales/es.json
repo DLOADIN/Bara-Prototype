@@ -134,14 +134,16 @@
     "submitting": "Enviando...",
     "characterCount": "caracteres",
     "outOf5": "de 5",
-    "helpFinding": "PLACEHOLDER_TRANSLATION",
-    "writeShare": "PLACEHOLDER_TRANSLATION",
-    "reviewingBusiness": "PLACEHOLDER_TRANSLATION",
-    "addPhotos": "PLACEHOLDER_TRANSLATION",
-    "findBusiness": "PLACEHOLDER_TRANSLATION",
-    "feedbackImprove": "PLACEHOLDER_TRANSLATION",
-    "postReview": "PLACEHOLDER_TRANSLATION",
-    "shareExperience": "PLACEHOLDER_TRANSLATION"
+    "helpFinding": "Ayuda para encontrar",
+    "writeShare": "Escribir y compartir",
+    "reviewingBusiness": "Reseñar un negocio",
+    "addPhotos": "Agregar fotos",
+    "findBusiness": "Encontrar un negocio",
+    "feedbackImprove": "Comentarios para mejorar",
+    "feedbackMessage": "Las empresas necesitan tus comentarios, tanto buenos como malos, para que puedan mejorar o recibir reconocimiento por un trabajo bien hecho",
+    "shareMessage": "¡Comparte tus experiencias y siéntete bien sabiendo que estás marcando una diferencia en tu comunidad!",
+    "postReview": "Publicar una reseña",
+    "shareExperience": "Compartir tu experiencia"
   },
   "auth": {
     "login": {
@@ -299,5 +301,12 @@
     "total": "Total",
     "active": "Activo",
     "inactive": "Inactivo"
-  }
+  },
+  "lookForBusinesses": "Busca empresas por nombre y ubicación.",
+  "findBusiness": "Encontrar el Negocio",
+  "sentenceOne": "Califica y Escribe una Reseña",
+  "sentenceTwo": "Publica tu Reseña",
+  "ReviewMessageOne": "Reseña",
+  "reviewMessage": "un Negocio y Ayuda a Otros!"
+
 } 

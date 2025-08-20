@@ -108,6 +108,8 @@
     "postReview": "Post It",
     "shareExperience": "Share your experiences and feel good knowing that you are making a difference in your community!",
     "reviewingBusiness": "Reviewing:",
+    "feedbackMessage": "Businesses need your feedback, both good and bad, so they can improve or get props for a job well done",
+    "shareMessage": "Share your experiences and feel good knowing that you are making a difference in your community!",
     "addPhotos": "Add Photos (Optional)",
     "rating": "Rating",
     "helpful": "Helpful",
@@ -358,5 +360,10 @@
     "stars": "Stars",
     "outOf5Stars": "out of 5 stars"
   },
-  "lookForBusinesses": "Look for businesses by name and location."
+  "lookForBusinesses": "Look for businesses by name and location.",
+  "findBusiness": "Find the Business",
+  "sentenceOne": "Rate and Review",
+  "sentenceTwo": "Post It",
+  "ReviewMessageOne":"Review",
+  "reviewMessage": " a Business and Help Others!"
 }
