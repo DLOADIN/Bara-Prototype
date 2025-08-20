@@ -298,10 +298,10 @@ export const WriteReviewPage = () => {
             <span className="text-yp-blue">Review</span> a Business and Help Others!
           </h1>
           <p className="text-xl text-gray-600 mb-2 font-roboto">
-            Other people need your help finding good businesses.
+            {t('reviews.helpFinding')}
           </p>
           <p className="text-xl text-gray-600 mb-8 font-roboto">
-            Write a review and share your experience.
+            {t('reviews.writeShare')}
           </p>
           
           {/* Search Form */}
@@ -423,7 +423,7 @@ export const WriteReviewPage = () => {
             <Card className="mb-6">
               <CardHeader>
                 <CardTitle className="text-xl font-comfortaa">
-                  Reviewing: {selectedBusiness.name}
+ {t('reviews.reviewingBusiness')} {selectedBusiness.name}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -530,7 +530,7 @@ export const WriteReviewPage = () => {
               {/* Image Upload */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
-                  Add Photos (Optional)
+                  {t('reviews.addPhotos')}
                 </label>
                 <BusinessImageUpload
                   businessId={selectedBusiness.id}

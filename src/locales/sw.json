@@ -130,10 +130,18 @@
     "submissionError": "Hitilafu ya Kuwasilisha",
     "submissionFailed": "Kuwasilisha tathmini kulishindwa",
     "backToSearch": "Rudi kwenye Utafutaji",
+    "reviewingBusiness": "PLACEHOLDER_TRANSLATION",
+    "addPhotos": "PLACEHOLDER_TRANSLATION",
     "cancel": "Ghairi",
     "submitting": "Inawasilisha...",
     "characterCount": "herufi",
-    "outOf5": "kati ya 5"
+    "outOf5": "kati ya 5",
+    "helpFinding": "PLACEHOLDER_TRANSLATION",
+    "writeShare": "PLACEHOLDER_TRANSLATION",
+    "findBusiness": "PLACEHOLDER_TRANSLATION",
+    "feedbackImprove": "PLACEHOLDER_TRANSLATION",
+    "postReview": "PLACEHOLDER_TRANSLATION",
+    "shareExperience": "PLACEHOLDER_TRANSLATION"
   },
   "auth": {
     "login": {

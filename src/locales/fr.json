@@ -134,6 +134,14 @@
     "submitting": "Soumission...",
     "characterCount": "caractères",
     "outOf5": "sur 5"
+    "helpFinding": "PLACEHOLDER_TRANSLATION",
+    "writeShare": "PLACEHOLDER_TRANSLATION",
+    "reviewingBusiness": "PLACEHOLDER_TRANSLATION",
+    "addPhotos": "PLACEHOLDER_TRANSLATION",
+    "findBusiness": "PLACEHOLDER_TRANSLATION",
+    "feedbackImprove": "PLACEHOLDER_TRANSLATION",
+    "postReview": "PLACEHOLDER_TRANSLATION",
+    "shareExperience": "PLACEHOLDER_TRANSLATION"
   },
   "auth": {
     "login": {

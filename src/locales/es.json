@@ -133,7 +133,15 @@
     "cancel": "Cancelar",
     "submitting": "Enviando...",
     "characterCount": "caracteres",
-    "outOf5": "de 5"
+    "outOf5": "de 5",
+    "helpFinding": "PLACEHOLDER_TRANSLATION",
+    "writeShare": "PLACEHOLDER_TRANSLATION",
+    "reviewingBusiness": "PLACEHOLDER_TRANSLATION",
+    "addPhotos": "PLACEHOLDER_TRANSLATION",
+    "findBusiness": "PLACEHOLDER_TRANSLATION",
+    "feedbackImprove": "PLACEHOLDER_TRANSLATION",
+    "postReview": "PLACEHOLDER_TRANSLATION",
+    "shareExperience": "PLACEHOLDER_TRANSLATION"
   },
   "auth": {
     "login": {
