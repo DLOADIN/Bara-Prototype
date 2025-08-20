@@ -313,7 +313,7 @@ export const ListingsPage = () => {
                 />
               </div>
             </div>
-            <Button className="bg-yp-blue hover:bg-yp-blue/90 text-white px-8 font-roboto">
+            <Button className="bg-yp-blue hover:bg-[#4e3c28] text-white px-8 font-roboto">
               Find
             </Button>
           </div>

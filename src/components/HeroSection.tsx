@@ -170,7 +170,7 @@ export const HeroSection = () => {
               {/* Search Button */}
               <Button 
                 onClick={handleSearch}
-                className="bg-yp-blue hover:bg-yp-blue-dark text-white font-roboto font-semibold px-8 h-12"
+                className="bg-yp-blue hover:bg-[#4e3c28] text-white font-roboto font-semibold px-8 h-12"
               >
                 {t('homepage.hero.searchButton')}
               </Button>

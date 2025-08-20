@@ -162,7 +162,7 @@ export const CountriesManagement = () => {
           </div>
           <Button 
             onClick={() => setShowAddForm(true)}
-            className="bg-yp-blue hover:bg-yp-blue/90"
+            className="bg-yp-blue hover:bg-[#4e3c28]"
           >
             <Plus className="w-4 h-4 mr-2" />
             Add New Country
@@ -236,7 +236,7 @@ export const CountriesManagement = () => {
               <div className="flex space-x-3 mt-6">
                 <Button 
                   onClick={editingCountry ? handleEditCountry : handleAddCountry}
-                  className="bg-yp-blue hover:bg-yp-blue/90"
+                  className="bg-yp-blue hover:bg-[#4e3c28]"
                 >
                   {editingCountry ? 'Update Country' : 'Add Country'}
                 </Button>
@@ -270,7 +270,7 @@ export const CountriesManagement = () => {
                 </thead>
                 <tbody>
                   {filteredCountries.map((country) => (
-                    <tr key={country.id} className="border-b border-gray-100 hover:bg-gray-50">
+                    <tr key={country.id} className="border-b border-gray-100 hover:bg-[#B284BE]">
                       <td className="py-3 px-4">
                         <div className="flex items-center space-x-3">
                           <div className="w-8 h-8 bg-green-100 rounded-full flex items-center justify-center">
@@ -400,4 +400,4 @@ export const CountriesManagement = () => {
       </div>
     </AdminLayout>
   );
-}; 
+};

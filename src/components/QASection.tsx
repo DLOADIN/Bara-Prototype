@@ -68,9 +68,9 @@ export const QASection = () => {
                 <button
                   key={topic.name}
                   onClick={() => handleTopicClick(topic.name)}
-                  className="text-left p-3 md:p-4 bg-white border border-yp-gray-medium rounded-lg hover:border-[#e64600] hover:bg-yp-gray-light transition-all duration-200 group"
+                  className="text-left p-3 md:p-4 bg-white border border-yp-gray-medium rounded-lg hover:border-[#4e3c28] hover:bg-yp-gray-light transition-all duration-200 group"
                 >
-                  <h4 className="font-roboto font-semibold text-[#e64600] group-hover:text-[#e64600]/80 text-sm md:text-base">
+                  <h4 className="font-roboto font-semibold text-[#e64600] group-hover:text-[#4e3c28] text-sm md:text-base">
                     {topic.name}
                   </h4>
                   <p className="font-roboto text-xs md:text-sm text-yp-gray-dark mt-1">

@@ -551,7 +551,7 @@ export const WriteReviewPage = () => {
                 <Button 
                   onClick={handleSubmitReview}
                   disabled={isSubmitting || reviewForm.rating === 0 || !reviewForm.title.trim() || !reviewForm.content.trim()}
-                  className="bg-yp-blue hover:bg-yp-blue/90 text-white font-roboto"
+                  className="bg-yp-blue hover:bg-[#4e3c28] text-white font-roboto"
                 >
                   {isSubmitting ? (
                     <>

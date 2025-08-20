@@ -30,7 +30,7 @@ export const LanguageSelector = () => {
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="font-roboto flex items-center gap-2">
+        <Button variant="ghost" className="font-roboto flex items-center gap-2 hover:bg-[#B284BE] hover:text-white">
           <Globe className="w-4 h-4" />
           <span className="text-lg">{currentLanguage.flag}</span>
           <span className="hidden sm:inline">{currentLanguage.code.toUpperCase()}</span>

@@ -184,7 +184,7 @@ export const CitiesManagement = () => {
           </div>
           <Button 
             onClick={() => setShowAddForm(true)}
-            className="bg-yp-blue hover:bg-yp-blue/90"
+            className="bg-yp-blue hover:bg-[#4e3c28]"
           >
             <Plus className="w-4 h-4 mr-2" />
             Add New City
@@ -276,7 +276,7 @@ export const CitiesManagement = () => {
               <div className="flex space-x-3 mt-6">
                 <Button 
                   onClick={editingCity ? handleEditCity : handleAddCity}
-                  className="bg-yp-blue hover:bg-yp-blue/90"
+                  className="bg-yp-blue hover:bg-[#4e3c28]"
                 >
                   {editingCity ? 'Update City' : 'Add City'}
                 </Button>
@@ -309,7 +309,7 @@ export const CitiesManagement = () => {
                 </thead>
                 <tbody>
                   {filteredCities.map((city) => (
-                    <tr key={city.id} className="border-b border-gray-100 hover:bg-gray-50">
+                    <tr key={city.id} className="border-b border-gray-100 hover:bg-[#4e3c28]/10">
                       <td className="py-3 px-4">
                         <div className="flex items-center space-x-3">
                           <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
@@ -352,7 +352,7 @@ export const CitiesManagement = () => {
                             variant="ghost"
                             size="sm"
                             onClick={() => handleDeleteCity(city.id)}
-                            className="text-red-600 hover:text-red-700"
+                            className="text-red-600 hover:text-[#4e3c28]"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>
@@ -383,4 +383,4 @@ export const CitiesManagement = () => {
       </div>
     </AdminLayout>
   );
-}; 
+};

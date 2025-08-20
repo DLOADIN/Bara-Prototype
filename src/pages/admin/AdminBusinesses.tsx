@@ -191,7 +191,7 @@ export const AdminBusinesses = () => {
           <p className="text-gray-600 font-roboto">Manage and moderate business listings</p>
         </div>
         
-        <Button className="bg-yp-blue hover:bg-yp-blue/90">
+        <Button className="bg-yp-blue hover:bg-[#4e3c28]">
           <Plus className="w-4 h-4 mr-2" />
           Add Business
         </Button>
@@ -270,7 +270,7 @@ export const AdminBusinesses = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="p-1 h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
+                    className="p-1 h-8 w-8 text-red-600 hover:text-red-700 hover:bg-[#4e3c28]/10"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
@@ -327,4 +327,4 @@ export const AdminBusinesses = () => {
       )}
     </AdminLayout>
   );
-}; 
+};

@@ -115,7 +115,7 @@ export const Header = () => {
             </Button> */}
             
             <Link to="/writeareview">
-              <Button variant="ghost" className="font-roboto">
+              <Button variant="default" className="font-roboto hover:bg-[#B284BE] hover:text-white">
                 <Star className="w-4 h-4 mr-1" />
                 {t('navigation.writeReview')}
               </Button>
@@ -125,34 +125,33 @@ export const Header = () => {
             <AdminNavLink />
 
             {/* Search by City Dropdown */}
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" className="font-roboto">
-                  {t('navigation.searchByCity')}
-                  <ChevronDown className="w-4 h-4 ml-1" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent className="w-56 bg-background border border-border shadow-lg">
-                {loading ? (
-                  <div className="text-center py-4">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#e64600] mx-auto"></div>
-                    <p className="text-xs text-yp-gray-dark mt-1">{t('common.loading')}</p>
-                  </div>
-                ) : (
-                  cities.map((city) => (
-                    <DropdownMenuItem
-                      key={city.id}
-                      onClick={() => setSelectedCity(formatCityDisplay(city))}
-                      className={`font-roboto ${
-                        selectedCity === formatCityDisplay(city) ? "bg-yp-gray-light" : ""
-                      }`}
-                    >
-                      {formatCityDisplay(city)}
-                    </DropdownMenuItem>
-                  ))
-                )}
-              </DropdownMenuContent>
-            </DropdownMenu>
+           <DropdownMenu>
+  <DropdownMenuTrigger asChild>
+    <Button variant="default" className="font-roboto hover:bg-[#B284BE] hover:text-white">
+      {t('navigation.searchByCity')}
+      <ChevronDown className="w-4 h-4 ml-1" />
+    </Button>
+  </DropdownMenuTrigger>
+  <DropdownMenuContent className="w-56 border border-border shadow-lg">
+    {loading ? (
+      <div className="text-center py-4 hover:bg-[#B284BE] hover:text-white">
+        <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#B284BE] mx-auto"></div>
+        <p className="text-xs mt-1">{t('common.loading')}</p>
+      </div>
+    ) : (
+      cities.map((city) => (
+        <DropdownMenuItem
+          key={city.id}
+          onClick={() => setSelectedCity(formatCityDisplay(city))}
+          className="font-roboto hover:bg-[#B284BE] hover:text-white"
+        >
+          {formatCityDisplay(city)}
+        </DropdownMenuItem>
+      ))
+    )}
+  </DropdownMenuContent>
+</DropdownMenu>
+
 
             {/* Language Selector */}
             <LanguageSelector />
@@ -242,7 +241,7 @@ export const Header = () => {
                   </h3>
                   {loading ? (
                     <div className="text-center py-4">
-                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#e64600] mx-auto"></div>
+                      <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#4e3c28] mx-auto"></div>
                       <p className="text-xs text-gray-500 mt-1">{t('common.loading')}</p>
                     </div>
                   ) : (
@@ -252,7 +251,7 @@ export const Header = () => {
                           key={city.id}
                           variant="ghost"
                           className={`w-full justify-start font-roboto h-12 ${
-                            selectedCity === formatCityDisplay(city) ? "bg-yp-blue text-white" : ""
+                            selectedCity === formatCityDisplay(city) ? "bg-[#4e3c28] text-white" : ""
                           }`}
                           onClick={() => handleCitySelect(city)}
                         >

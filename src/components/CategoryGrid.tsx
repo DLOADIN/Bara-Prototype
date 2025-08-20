@@ -241,9 +241,9 @@ export const CategoryGrid = () => {
               >
                 <button 
                   onClick={() => handleCategoryClick(category.slug)}
-                  className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-2 md:mb-3 bg-white border-2 border-yp-gray-medium rounded-full flex items-center justify-center hover:border-yp-blue hover:bg-yp-gray-light transition-all duration-300 group hover:scale-110"
+                  className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-2 md:mb-3 bg-white border-2 border-yp-gray-medium rounded-full flex items-center justify-center hover:border-[#4e3c28] hover:bg-yp-gray-light transition-all duration-300 group hover:scale-110"
                 >
-                  <IconComponent className="w-6 h-6 md:w-8 md:h-8 text-yp-gray-dark group-hover:text-yp-blue transition-colors duration-300" />
+                  <IconComponent className="w-6 h-6 md:w-8 md:h-8 text-yp-gray-dark group-hover:text-[#4e3c28] transition-colors duration-300" />
                 </button>
                 <h3 className="font-roboto font-medium text-xs md:text-sm text-yp-dark mb-2 transition-colors duration-300">
                   {translatedName}
@@ -258,7 +258,7 @@ export const CategoryGrid = () => {
             <button 
                 onClick={toggleCategories}
                 disabled={isExpanding}
-                className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-2 md:mb-3 bg-gradient-to-br from-yp-blue to-yp-green border-2 border-transparent rounded-full flex items-center justify-center hover:from-yp-blue/90 hover:to-yp-green/90 transition-all duration-300 group hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-2 md:mb-3 bg-gradient-to-br from-yp-blue to-yp-green border-2 border-transparent rounded-full flex items-center justify-center hover:from-[#4e3c28] hover:to-[#4e3c28]/80 transition-all duration-300 group hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
             >
                 {isExpanding ? (
                   <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
@@ -279,7 +279,7 @@ export const CategoryGrid = () => {
         <div className="text-center mt-8">
           <button
             onClick={handleViewAllCategories}
-            className="inline-flex items-center px-6 py-3 bg-yp-blue hover:bg-yp-blue/90 text-white font-roboto font-medium rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg"
+            className="inline-flex items-center px-6 py-3 bg-yp-blue hover:bg-[#4e3c28] text-white font-roboto font-medium rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg"
           >
             <span>{t('homepage.categories.viewAllCategories')}</span>
             <ChevronUp className="w-4 h-4 ml-2 rotate-90 transition-transform duration-300 group-hover:translate-x-1" />

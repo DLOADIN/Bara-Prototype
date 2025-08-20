@@ -204,7 +204,7 @@ export const AdminDashboard = () => {
           <CardContent>
             <div className="space-y-4">
               {recentActivities.map((activity) => (
-                <div key={activity.id} className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-50 transition-colors duration-200">
+                <div key={activity.id} className="flex items-start space-x-3 p-3 rounded-lg hover:bg-[#B284BE] transition-colors duration-200">
                   <div className="w-2 h-2 bg-yp-blue rounded-full mt-2"></div>
                   <div className="flex-1">
                     <p className="text-sm font-roboto font-medium text-gray-900">

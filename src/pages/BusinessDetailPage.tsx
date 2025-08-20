@@ -130,7 +130,7 @@ export const BusinessDetailPage = () => {
               </div>
               
               <div className="space-y-3">
-                <Button className="w-full bg-yp-blue hover:bg-yp-blue/90 text-white font-roboto">
+                <Button className="w-full bg-yp-blue hover:bg-[#4e3c28] text-white font-roboto">
                   <Globe className="w-4 h-4 mr-2" />
                   Visit Website
                 </Button>
@@ -149,7 +149,7 @@ export const BusinessDetailPage = () => {
                 <h3 className="font-semibold text-yp-dark font-comfortaa">Is this your business?</h3>
               </div>
               <p className="text-sm text-gray-600 font-roboto mb-3">Customize this page</p>
-              <Button className="w-full bg-yp-blue hover:bg-yp-blue/90 text-white font-roboto">
+              <Button className="w-full bg-yp-blue hover:bg-[#4e3c28] text-white font-roboto">
                 Claim This Listing
               </Button>
             </div>
@@ -303,7 +303,7 @@ export const BusinessDetailPage = () => {
                   ))}
                 </div>
                 <p className="text-gray-600 font-roboto mb-4">Be the first to review this business!</p>
-                <Button className="bg-yp-blue hover:bg-yp-blue/90 text-white font-roboto">
+                <Button className="bg-yp-blue hover:bg-[#4e3c28] text-white font-roboto">
                   Write the First Review
                 </Button>
               </div>

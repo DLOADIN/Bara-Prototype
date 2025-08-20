@@ -220,7 +220,7 @@ export const CategoriesPage = () => {
 
                 {/* Category Content */}
                 <div className="px-6 pb-6">
-                  <h3 className="font-roboto font-semibold text-lg text-yp-dark mb-2 text-center group-hover:text-yp-blue transition-colors duration-200">
+                  <h3 className="font-roboto font-semibold text-lg text-yp-dark mb-2 text-center group-hover:text-[#4e3c28] transition-colors duration-200">
                     {translatedName}
                   </h3>
                   
@@ -261,4 +261,4 @@ export const CategoriesPage = () => {
       <Footer />
     </div>
   );
-}; 
+};
