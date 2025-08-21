@@ -448,21 +448,111 @@ export const BusinessesManagement = () => {
         {/* Businesses Table */}
         <Card>
           <CardHeader>
-            <CardTitle className="font-roboto">
+            <CardTitle className="font-roboto text-base sm:text-lg">
               Businesses ({filteredBusinesses.length})
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="overflow-x-auto">
+            {/* Mobile Cards View */}
+            <div className="block lg:hidden space-y-4">
+              {filteredBusinesses.map((business) => (
+                <div key={business.id} className="border border-gray-200 rounded-lg p-4 space-y-3">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
+                      <Building2 className="w-4 h-4 text-blue-600" />
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="font-medium font-roboto text-sm sm:text-base">{business.name}</div>
+                      {business.description && (
+                        <div className="text-xs sm:text-sm text-gray-600 font-roboto truncate">
+                          {business.description}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                  
+                  <div className="grid grid-cols-2 gap-2 text-xs sm:text-sm">
+                    <div>
+                      <span className="text-gray-500">Category:</span>
+                      <Badge variant="outline" className="ml-1 text-xs">
+                        {business.categories?.name || 'Unknown'}
+                      </Badge>
+                    </div>
+                    <div>
+                      <span className="text-gray-500">Location:</span>
+                      <div className="flex items-center space-x-1 mt-1">
+                        <MapPin className="w-3 h-3 text-gray-400" />
+                        <span className="font-roboto">{business.cities?.name || 'Unknown'}</span>
+                      </div>
+                    </div>
+                  </div>
+                  
+                  <div className="space-y-1 text-xs sm:text-sm">
+                    {business.phone && (
+                      <div className="flex items-center space-x-2">
+                        <Phone className="w-3 h-3 text-gray-400" />
+                        <span>{business.phone}</span>
+                      </div>
+                    )}
+                    {business.email && (
+                      <div className="flex items-center space-x-2">
+                        <Mail className="w-3 h-3 text-gray-400" />
+                        <span className="truncate">{business.email}</span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="flex items-center justify-between pt-2">
+                    <Badge variant={business.is_active ? "default" : "secondary"} className="text-xs">
+                      {business.is_active ? "Active" : "Inactive"}
+                    </Badge>
+                    <div className="flex space-x-2">
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => {
+                          setEditingBusiness(business);
+                          setFormData({
+                            name: business.name,
+                            description: business.description || "",
+                            phone: business.phone || "",
+                            email: business.email || "",
+                            website: business.website || "",
+                            address: business.address || "",
+                            city_id: business.city_id,
+                            category_id: business.category_id,
+                            is_active: business.is_active
+                          });
+                        }}
+                        className="h-8 px-2"
+                      >
+                        <Edit className="w-3 h-3" />
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleDeleteBusiness(business.id)}
+                        className="h-8 px-2 text-red-600 hover:text-red-700"
+                      >
+                        <Trash2 className="w-3 h-3" />
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Desktop Table View */}
+            <div className="hidden lg:block overflow-x-auto">
               <table className="w-full">
                 <thead>
                   <tr className="border-b border-gray-200">
-                    <th className="text-left py-3 px-4 font-medium text-gray-900 font-roboto">Business</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-900 font-roboto">Category</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-900 font-roboto">Location</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-900 font-roboto">Contact</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-900 font-roboto">Status</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-900 font-roboto">Actions</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-900 font-roboto text-sm">Business</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-900 font-roboto text-sm">Category</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-900 font-roboto text-sm">Location</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-900 font-roboto text-sm">Contact</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-900 font-roboto text-sm">Status</th>
+                    <th className="text-left py-3 px-4 font-medium text-gray-900 font-roboto text-sm">Actions</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -470,11 +560,11 @@ export const BusinessesManagement = () => {
                     <tr key={business.id} className="border-b border-gray-100 hover:bg-gray-100">
                       <td className="py-3 px-4">
                         <div className="flex items-center space-x-3">
-                          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
+                          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
                             <Building2 className="w-4 h-4 text-blue-600" />
                           </div>
-                          <div>
-                            <div className="font-medium font-roboto">{business.name}</div>
+                          <div className="min-w-0">
+                            <div className="font-medium font-roboto text-sm">{business.name}</div>
                             {business.description && (
                               <div className="text-sm text-gray-600 font-roboto truncate max-w-xs">
                                 {business.description}
@@ -484,14 +574,14 @@ export const BusinessesManagement = () => {
                         </div>
                       </td>
                       <td className="py-3 px-4">
-                        <Badge variant="outline">
+                        <Badge variant="outline" className="text-xs">
                           {business.categories?.name || 'Unknown'}
                         </Badge>
                       </td>
                       <td className="py-3 px-4">
                         <div className="flex items-center space-x-2">
                           <MapPin className="w-4 h-4 text-gray-400" />
-                          <span className="font-roboto">{business.cities?.name || 'Unknown'}</span>
+                          <span className="font-roboto text-sm">{business.cities?.name || 'Unknown'}</span>
                         </div>
                       </td>
                       <td className="py-3 px-4">
@@ -499,33 +589,27 @@ export const BusinessesManagement = () => {
                           {business.phone && (
                             <div className="flex items-center space-x-2 text-sm">
                               <Phone className="w-3 h-3 text-gray-400" />
-                              <span className="font-roboto">{business.phone}</span>
+                              <span>{business.phone}</span>
                             </div>
                           )}
                           {business.email && (
                             <div className="flex items-center space-x-2 text-sm">
                               <Mail className="w-3 h-3 text-gray-400" />
-                              <span className="font-roboto">{business.email}</span>
-                            </div>
-                          )}
-                          {business.website && (
-                            <div className="flex items-center space-x-2 text-sm">
-                              <Globe className="w-3 h-3 text-gray-400" />
-                              <span className="font-roboto truncate max-w-xs">{business.website}</span>
+                              <span className="truncate max-w-32">{business.email}</span>
                             </div>
                           )}
                         </div>
                       </td>
                       <td className="py-3 px-4">
-                        <Badge variant={business.is_active ? "default" : "secondary"}>
+                        <Badge variant={business.is_active ? "default" : "secondary"} className="text-xs">
                           {business.is_active ? "Active" : "Inactive"}
                         </Badge>
                       </td>
                       <td className="py-3 px-4">
-                        <div className="flex items-center space-x-2">
+                        <div className="flex space-x-2">
                           <Button
-                            variant="ghost"
                             size="sm"
+                            variant="outline"
                             onClick={() => {
                               setEditingBusiness(business);
                               setFormData({
@@ -540,16 +624,17 @@ export const BusinessesManagement = () => {
                                 is_active: business.is_active
                               });
                             }}
+                            className="h-8 px-2"
                           >
-                            <Edit className="w-4 h-4" />
+                            <Edit className="w-3 h-3" />
                           </Button>
                           <Button
-                            variant="ghost"
                             size="sm"
+                            variant="outline"
                             onClick={() => handleDeleteBusiness(business.id)}
-                            className="text-red-600"
+                            className="h-8 px-2 text-red-600 hover:text-red-700"
                           >
-                            <Trash2 className="w-4 h-4" />
+                            <Trash2 className="w-3 h-3" />
                           </Button>
                         </div>
                       </td>
@@ -558,23 +643,23 @@ export const BusinessesManagement = () => {
                 </tbody>
               </table>
             </div>
-
-            {filteredBusinesses.length === 0 && (
-              <div className="text-center py-12">
-                <Building2 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 font-roboto mb-2">
-                  No businesses found
-                </h3>
-                <p className="text-gray-600 font-roboto">
-                  {searchTerm || selectedCity || selectedCategory
-                    ? 'Try adjusting your search criteria' 
-                    : 'Get started by adding your first business'
-                  }
-                </p>
-              </div>
-            )}
           </CardContent>
         </Card>
+
+        {filteredBusinesses.length === 0 && (
+          <div className="text-center py-12">
+            <Building2 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <h3 className="text-lg font-medium text-gray-900 font-roboto mb-2">
+              No businesses found
+            </h3>
+            <p className="text-gray-600 font-roboto">
+              {searchTerm || selectedCity || selectedCategory
+                ? 'Try adjusting your search criteria' 
+                : 'Get started by adding your first business'
+              }
+            </p>
+          </div>
+        )}
       </div>
     </AdminLayout>
   );

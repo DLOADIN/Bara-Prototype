@@ -179,22 +179,22 @@ export const HeroSection = () => {
   return (
     <section className="relative">
       {/* Hero Image Background */}
-      <div className="relative h-[70vh] bg-cover bg-center bg-no-repeat" 
+      <div className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] lg:h-[75vh] bg-cover bg-center bg-no-repeat" 
            style={{ backgroundImage: `url(${heroImage})` }}>
         <div className="absolute inset-0 bg-black bg-opacity-20"></div>
         
         {/* Content Overlay */}
-        <div className="relative z-10 flex flex-col items-center justify-center h-full px-4">
-          <h1 className="text-4xl md:text-5xl font-comfortaa font-bold text-yp-dark text-center mb-8">
-            {t('homepage.hero.title')}<sup className="text-sm">℠</sup>
+        <div className="relative z-10 flex flex-col items-center justify-center h-full px-3 sm:px-4 md:px-6 lg:px-8">
+          <h1 className="text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-comfortaa font-bold text-yp-dark text-center mb-4 sm:mb-6 md:mb-8 px-2 leading-tight">
+            {t('homepage.hero.title')}<sup className="text-xs sm:text-sm md:text-base">℠</sup>
           </h1>
           
           {/* Search Form */}
-          <div className="w-full max-w-3xl bg-white rounded-lg shadow-lg p-6">
-            <div className="flex flex-col md:flex-row gap-4">
+          <div className="w-full max-w-xs sm:max-w-md md:max-w-2xl lg:max-w-3xl bg-white rounded-lg shadow-lg p-3 sm:p-4 md:p-6">
+            <div className="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:gap-3 md:gap-4">
               {/* Business Search Input */}
-              <div className="flex-1 relative search-container">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-yp-gray-dark w-5 h-5" />
+              <div className="flex-1 relative search-container min-w-0">
+                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-yp-gray-dark w-4 h-4 sm:w-5 sm:h-5" />
                 <Input
                   type="text"
                   placeholder={t('homepage.hero.searchPlaceholder')}
@@ -203,21 +203,21 @@ export const HeroSection = () => {
                   onFocus={() => {
                     if (searchResults.length > 0) setIsSearchOpen(true);
                   }}
-                  className="pl-10 h-12 font-roboto border-yp-gray-medium focus:border-yp-blue focus:ring-yp-blue"
+                  className="pl-8 sm:pl-10 h-11 sm:h-12 font-roboto border-yp-gray-medium focus:border-yp-blue focus:ring-yp-blue text-sm sm:text-base rounded-lg"
                 />
                 
                 {/* Search Results Dropdown */}
                 {isSearchOpen && (searchResults.length > 0 || searchLoading) && (
-                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-yp-gray-medium rounded-lg shadow-lg z-50 max-h-80 overflow-y-auto">
+                  <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-yp-gray-medium rounded-lg shadow-lg z-50 max-h-60 sm:max-h-80 overflow-y-auto">
                     {searchLoading ? (
-                      <div className="p-4 text-center">
+                      <div className="p-3 sm:p-4 text-center">
                         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-yp-blue mx-auto"></div>
                         <p className="text-xs text-yp-gray-dark mt-1">{t('common.loading')}</p>
                       </div>
                     ) : (
                       <div className="py-2">
                         {searchResults.length === 0 ? (
-                          <div className="p-4 text-center text-yp-gray-dark">
+                          <div className="p-3 sm:p-4 text-center text-yp-gray-dark">
                             <p className="text-sm">No businesses found</p>
                             <p className="text-xs mt-1">Try a different search term</p>
                           </div>
@@ -230,25 +230,25 @@ export const HeroSection = () => {
                               <div
                                 key={business.id}
                                 onClick={() => handleBusinessClick(business)}
-                                className="flex items-center gap-3 p-3 hover:bg-yp-gray-light cursor-pointer border-b border-yp-gray-light last:border-b-0 transition-colors"
+                                className="flex items-center gap-2 sm:gap-3 p-2 sm:p-3 hover:bg-yp-gray-light cursor-pointer border-b border-yp-gray-light last:border-b-0 transition-colors"
                               >
                                 <div className="flex-shrink-0">
                                   {business.logo_url ? (
                                     <img 
                                       src={business.logo_url} 
                                       alt={business.name}
-                                      className="w-10 h-10 rounded-full object-cover"
+                                      className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover"
                                     />
                                   ) : (
-                                    <div className="w-10 h-10 bg-yp-gray-light rounded-full flex items-center justify-center">
-                                      <Building2 className="w-5 h-5 text-yp-gray-dark" />
+                                    <div className="w-8 h-8 sm:w-10 sm:h-10 bg-yp-gray-light rounded-full flex items-center justify-center">
+                                      <Building2 className="w-4 h-4 sm:w-5 sm:h-5 text-yp-gray-dark" />
                                     </div>
                                   )}
                                 </div>
                                 
                                 <div className="flex-1 min-w-0">
-                                  <h4 className="font-semibold text-yp-dark truncate">{business.name}</h4>
-                                  <p className="text-sm text-yp-gray-dark truncate">
+                                  <h4 className="font-semibold text-yp-dark truncate text-sm sm:text-base">{business.name}</h4>
+                                  <p className="text-xs sm:text-sm text-yp-gray-dark truncate">
                                     {business.category?.name} • {business.city?.name}
                                   </p>
                                   {reviewCount > 0 && (
@@ -279,22 +279,22 @@ export const HeroSection = () => {
               </div>
               
               {/* Location Dropdown */}
-              <div className="flex-1 relative">
+              <div className="flex-1 relative min-w-0">
                 <DropdownMenu open={isLocationOpen} onOpenChange={setIsLocationOpen}>
                   <DropdownMenuTrigger asChild>
                     <div className="relative">
-                      <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-yp-gray-dark w-5 h-5" />
+                      <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-yp-gray-dark w-4 h-4 sm:w-5 sm:h-5" />
                       <Input
                         type="text"
                         placeholder={t('homepage.hero.locationPlaceholder')}
                         value={location}
                         readOnly
-                        className="pl-10 pr-10 h-12 font-roboto border-yp-gray-medium focus:border-yp-blue focus:ring-yp-blue cursor-pointer"
+                        className="pl-8 sm:pl-10 pr-8 sm:pr-10 h-11 sm:h-12 font-roboto border-yp-gray-medium focus:border-yp-blue focus:ring-yp-blue cursor-pointer text-sm sm:text-base rounded-lg"
                       />
-                      <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-yp-gray-dark w-5 h-5" />
+                      <ChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-yp-gray-dark w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-full max-h-60 overflow-y-auto bg-white border border-yp-gray-medium shadow-lg">
+                  <DropdownMenuContent className="w-full max-h-60 overflow-y-auto bg-white border border-yp-gray-medium shadow-lg rounded-lg">
                     <div className="p-2">
                       <h3 className="text-sm font-roboto font-semibold text-yp-dark mb-2 px-2">QUICK LOCATIONS</h3>
                       {loading ? (
@@ -326,7 +326,7 @@ export const HeroSection = () => {
               {/* Search Button */}
               <Button 
                 onClick={handleSearch}
-                className="bg-yp-blue hover:bg-[#4e3c28] text-white font-roboto font-semibold px-8 h-12"
+                className="bg-yp-blue hover:bg-[#4e3c28] text-white font-roboto font-semibold px-4 sm:px-6 md:px-8 h-11 sm:h-12 text-sm sm:text-base w-full sm:w-auto rounded-lg"
               >
                 {t('homepage.hero.searchButton')}
               </Button>
@@ -334,8 +334,6 @@ export const HeroSection = () => {
           </div>
         </div>
       </div>
-      
-
     </section>
   );
 };

@@ -160,28 +160,28 @@ export const AdminDashboard = () => {
   return (
     <AdminLayout title="Dashboard" subtitle="Overview and analytics">
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-3 sm:gap-4 md:gap-6 mb-6 sm:mb-8">
         {statCards.map((stat, index) => (
           <Card key={index} className="hover:shadow-lg transition-shadow duration-200">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-sm font-roboto font-medium text-gray-600">
+              <CardTitle className="text-xs sm:text-sm font-roboto font-medium text-gray-600">
                 {stat.title}
               </CardTitle>
-              <div className={`p-2 rounded-full ${stat.color}`}>
-                <stat.icon className="w-4 h-4 text-white" />
+              <div className={`p-1.5 sm:p-2 rounded-full ${stat.color}`}>
+                <stat.icon className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-comfortaa font-bold text-yp-dark">
+              <div className="text-base sm:text-lg md:text-xl lg:text-2xl font-comfortaa font-bold text-yp-dark">
                 {stat.value}
               </div>
               <div className="flex items-center space-x-1 mt-1">
                 {stat.changeType === "positive" ? (
-                  <TrendingUp className="w-4 h-4 text-green-600" />
+                  <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-green-600" />
                 ) : (
-                  <TrendingDown className="w-4 h-4 text-red-600" />
+                  <TrendingDown className="w-3 h-3 sm:w-4 sm:h-4 text-red-600" />
                 )}
-                <span className={`text-sm font-roboto ${
+                <span className={`text-xs sm:text-sm font-roboto ${
                   stat.changeType === "positive" ? "text-green-600" : "text-red-600"
                 }`}>
                   {stat.change}
@@ -192,32 +192,32 @@ export const AdminDashboard = () => {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
         {/* Recent Activity */}
         <Card>
           <CardHeader>
-            <CardTitle className="font-comfortaa">Recent Activity</CardTitle>
-            <CardDescription className="font-roboto">
+            <CardTitle className="font-comfortaa text-base sm:text-lg">Recent Activity</CardTitle>
+            <CardDescription className="font-roboto text-sm">
               Latest actions and updates
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="space-y-4">
+            <div className="space-y-3 sm:space-y-4">
               {recentActivities.map((activity) => (
-                <div key={activity.id} className="flex items-start space-x-3 p-3 rounded-lg hover:bg-gray-100 transition-colors duration-200">
-                  <div className="w-2 h-2 bg-yp-blue rounded-full mt-2"></div>
-                  <div className="flex-1">
-                    <p className="text-sm font-roboto font-medium text-gray-900">
+                <div key={activity.id} className="flex items-start space-x-2 sm:space-x-3 p-2 sm:p-3 rounded-lg hover:bg-gray-100 transition-colors duration-200">
+                  <div className="w-2 h-2 bg-yp-blue rounded-full mt-2 flex-shrink-0"></div>
+                  <div className="flex-1 min-w-0">
+                    <p className="text-sm font-roboto font-medium text-gray-900 truncate">
                       {activity.action}
                     </p>
-                    <p className="text-sm font-roboto text-gray-600">
+                    <p className="text-sm font-roboto text-gray-600 truncate">
                       {activity.business} • {activity.city}
                     </p>
                     <p className="text-xs font-roboto text-gray-500 mt-1">
                       {activity.time}
                     </p>
                   </div>
-                  <Badge variant="outline" className="text-xs">
+                  <Badge variant="outline" className="text-xs flex-shrink-0">
                     {activity.type}
                   </Badge>
                 </div>
@@ -229,28 +229,28 @@ export const AdminDashboard = () => {
         {/* Quick Actions */}
         <Card>
           <CardHeader>
-            <CardTitle className="font-comfortaa">Quick Actions</CardTitle>
-            <CardDescription className="font-roboto">
+            <CardTitle className="font-comfortaa text-base sm:text-lg">Quick Actions</CardTitle>
+            <CardDescription className="font-roboto text-sm">
               Common administrative tasks
             </CardDescription>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 gap-3">
-              <Button variant="outline" className="h-auto p-4 flex-col space-y-2">
-                <Plus className="w-5 h-5" />
-                <span className="font-roboto text-sm">Add Business</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <Button variant="outline" className="h-auto p-2 sm:p-3 md:p-4 flex-col space-y-2">
+                <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="font-roboto text-xs sm:text-sm">Add Business</span>
               </Button>
-              <Button variant="outline" className="h-auto p-4 flex-col space-y-2">
-                <MapPin className="w-5 h-5" />
-                <span className="font-roboto text-sm">Add City</span>
+              <Button variant="outline" className="h-auto p-2 sm:p-3 md:p-4 flex-col space-y-2">
+                <MapPin className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="font-roboto text-xs sm:text-sm">Add City</span>
               </Button>
-              <Button variant="outline" className="h-auto p-4 flex-col space-y-2">
-                <Globe className="w-5 h-5" />
-                <span className="font-roboto text-sm">Add Country</span>
+              <Button variant="outline" className="h-auto p-2 sm:p-3 md:p-4 flex-col space-y-2">
+                <Globe className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="font-roboto text-xs sm:text-sm">Add Country</span>
               </Button>
-              <Button variant="outline" className="h-auto p-4 flex-col space-y-2">
-                <Eye className="w-5 h-5" />
-                <span className="font-roboto text-sm">View Reports</span>
+              <Button variant="outline" className="h-auto p-2 sm:p-3 md:p-4 flex-col space-y-2">
+                <MessageSquare className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span className="font-roboto text-xs sm:text-sm">View Reviews</span>
               </Button>
             </div>
           </CardContent>

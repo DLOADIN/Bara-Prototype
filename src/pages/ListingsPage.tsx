@@ -244,8 +244,8 @@ export const ListingsPage = () => {
       {/* Search Header */}
       <div className="bg-yp-yellow py-4">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center space-x-4">
-            <div className="flex-1 max-w-md">
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
+            <div className="flex-1 min-w-0">
               <Input
                 type="text"
                 placeholder={`Search ${categoryName}...`}
@@ -255,13 +255,13 @@ export const ListingsPage = () => {
               />
             </div>
             
-            <div className="flex-1 max-w-md">
+            <div className="flex-1 min-w-0">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="default" className="w-full justify-start font-roboto">
                     <MapPin className="w-4 h-4 mr-2 text-gray-500" />
-                    {selectedCity || 'Select a City'}
-                    <ChevronDown className="w-4 h-4 ml-auto" />
+                    <span className="truncate">{selectedCity || 'Select a City'}</span>
+                    <ChevronDown className="w-4 h-4 ml-auto flex-shrink-0" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-[280px] max-h-[300px] overflow-auto">
@@ -284,7 +284,7 @@ export const ListingsPage = () => {
 
             <Button 
               onClick={handleSearch}
-              className="bg-yp-blue text-white px-8 font-roboto"
+              className="bg-yp-blue text-white px-6 sm:px-8 font-roboto w-full sm:w-auto"
             >
               FIND
             </Button>
@@ -295,45 +295,51 @@ export const ListingsPage = () => {
       {/* Filters */}
       <div className="bg-white border-b border-gray-200 py-3">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center space-x-4">
-            <Button 
-              variant={viewMode === 'map' ? 'default' : 'outline'} 
-              size="sm" 
-              onClick={() => setViewMode('map')}
-              className="font-roboto"
-            >
-              <Map className="w-4 h-4 mr-1" />
-              Map View
-            </Button>
-            <Button 
-              variant={viewMode === 'list' ? 'default' : 'outline'} 
-              size="sm" 
-              onClick={() => setViewMode('list')}
-              className="font-roboto"
-            >
-              <Building2 className="w-4 h-4 mr-1" />
-              List View
-            </Button>
-            
-            <Button 
-              variant={selectedFilters.includes('premium') ? 'default' : 'outline'} 
-              size="sm" 
-              onClick={() => toggleFilter('premium')}
-              className="font-roboto"
-            >
-              <Award className="w-4 h-4 mr-1" />
-              Premium
-            </Button>
-            
-            <Button 
-              variant={selectedFilters.includes('verified') ? 'default' : 'outline'} 
-              size="sm" 
-              onClick={() => toggleFilter('verified')}
-              className="font-roboto"
-            >
-              <Users className="w-4 h-4 mr-1" />
-              Verified
-            </Button>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
+            <div className="flex flex-wrap items-center gap-2">
+              <Button 
+                variant={viewMode === 'map' ? 'default' : 'outline'} 
+                size="sm" 
+                onClick={() => setViewMode('map')}
+                className="font-roboto"
+              >
+                <Map className="w-4 h-4 mr-1" />
+                <span className="hidden sm:inline">Map View</span>
+                <span className="sm:hidden">Map</span>
+              </Button>
+              <Button 
+                variant={viewMode === 'list' ? 'default' : 'outline'} 
+                size="sm" 
+                onClick={() => setViewMode('list')}
+                className="font-roboto"
+              >
+                <Building2 className="w-4 h-4 mr-1" />
+                <span className="hidden sm:inline">List View</span>
+                <span className="sm:hidden">List</span>
+              </Button>
+              
+              <Button 
+                variant={selectedFilters.includes('premium') ? 'default' : 'outline'} 
+                size="sm" 
+                onClick={() => toggleFilter('premium')}
+                className="font-roboto"
+              >
+                <Award className="w-4 h-4 mr-1" />
+                <span className="hidden sm:inline">Premium</span>
+                <span className="sm:hidden">Premium</span>
+              </Button>
+              
+              <Button 
+                variant={selectedFilters.includes('verified') ? 'default' : 'outline'} 
+                size="sm" 
+                onClick={() => toggleFilter('verified')}
+                className="font-roboto"
+              >
+                <Users className="w-4 h-4 mr-1" />
+                <span className="hidden sm:inline">Verified</span>
+                <span className="sm:hidden">Verified</span>
+              </Button>
+            </div>
             
             <div className="ml-auto">
               <span className="text-sm text-gray-600 font-roboto">
@@ -380,25 +386,23 @@ export const ListingsPage = () => {
               return (
                 <div 
                   key={business.id} 
-                  className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow cursor-pointer"
+                  className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6 hover:shadow-md transition-shadow cursor-pointer"
                   onClick={() => handleBusinessClick(business)}
                 >
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <div className="flex items-center mb-2">
-                        <h3 className="text-xl font-semibold text-yp-dark font-comfortaa mr-2">
+                  <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start space-y-4 lg:space-y-0">
+                    <div className="flex-1 min-w-0">
+                      <div className="flex flex-col sm:flex-row sm:items-center mb-2 space-y-2 sm:space-y-0">
+                        <h3 className="text-lg sm:text-xl font-semibold text-yp-dark font-comfortaa mr-2 break-words">
                           {business.name}
                         </h3>
-                        <div className="flex items-center pl-2">  
+                        <div className="flex flex-wrap items-center gap-2">  
                         {business.is_premium && (
-                          <Badge variant="default" className="bg-yp-blue text-white text-xs pr-2">
+                          <Badge variant="default" className="bg-yp-blue text-white text-xs">
                             Premium
                           </Badge>
                         )}
-                        </div>
-                        <div className="flex items-center pl-2">  
                         {business.is_verified && (
-                          <Badge variant="secondary" className="text-xs pl-2">
+                          <Badge variant="secondary" className="text-xs">
                             ✓ Verified
                           </Badge>
                         )}
@@ -433,17 +437,17 @@ export const ListingsPage = () => {
                       {/* Business details */}
                       <div className="space-y-1 text-sm text-gray-600 font-roboto">
                         {business.address && (
-                          <div className="flex items-center">
-                            <MapPin className="w-4 h-4 mr-2" />
-                            {business.address}
+                          <div className="flex items-start">
+                            <MapPin className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" />
+                            <span className="break-words">{business.address}</span>
                           </div>
                         )}
                         {business.phone && (
                           <div className="flex items-center">
-                            <Phone className="w-4 h-4 mr-2" />
+                            <Phone className="w-4 h-4 mr-2 flex-shrink-0" />
                             <a 
                               href={`tel:${business.phone}`} 
-                              className="text-yp-blue hover:underline"
+                              className="text-yp-blue hover:underline break-all"
                               onClick={(e) => e.stopPropagation()}
                             >
                               {business.phone}
@@ -451,11 +455,11 @@ export const ListingsPage = () => {
                           </div>
                         )}
                         {business.website && (
-                          <div className="flex items-center">
-                            <Globe className="w-4 h-4 mr-2" />
+                          <div className="flex items-start">
+                            <Globe className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" />
                             <a 
                               href={`https://${business.website}`} 
-                              className="text-yp-blue hover:underline"
+                              className="text-yp-blue hover:underline break-all"
                               target="_blank"
                               rel="noopener noreferrer"
                               onClick={(e) => e.stopPropagation()}
@@ -465,36 +469,35 @@ export const ListingsPage = () => {
                           </div>
                         )}
                         {business.description && (
-                          <p className="text-gray-700 mt-2 line-clamp-2">
+                          <p className="text-gray-700 mt-2 line-clamp-2 break-words">
                             {business.description}
                           </p>
                         )}
                       </div>
                     </div>
                     
-                    <div className="text-right">
-                      <div className="space-y-2">
-                        <Link 
-                          to={city 
-                            ? `/${city}/${actualCategorySlug}/${business.id}`
-                            : `/category/${actualCategorySlug}/${business.id}`
-                          }
+                    <div className="flex flex-col sm:flex-row lg:flex-col gap-2 w-full lg:w-auto">
+                      <Link 
+                        to={city 
+                          ? `/${city}/${actualCategorySlug}/${business.id}`
+                          : `/category/${actualCategorySlug}/${business.id}`
+                        }
+                        onClick={(e) => e.stopPropagation()}
+                        className="w-full sm:w-auto"
+                      >
+                        <Button size="sm" variant="outline" className="font-roboto w-full">
+                          More Info
+                        </Button>
+                      </Link>
+                      <Link to={`/write-review/${business.id}`} className="w-full sm:w-auto">
+                        <Button 
+                          size="sm" 
+                          className="bg-yp-blue text-white font-roboto w-full"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          <Button size="sm" variant="outline" className="font-roboto w-full">
-                            More Info
-                          </Button>
-                        </Link>
-                        <Link to={`/write-review/${business.id}`}>
-                          <Button 
-                            size="sm" 
-                            className="bg-yp-blue text-white font-roboto w-full"
-                            onClick={(e) => e.stopPropagation()}
-                          >
-                            Write Review
-                          </Button>
-                        </Link>
-                      </div>
+                          Write Review
+                        </Button>
+                      </Link>
                     </div>
                   </div>
                 </div>

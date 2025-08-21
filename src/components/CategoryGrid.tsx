@@ -213,18 +213,18 @@ export const CategoryGrid = () => {
   console.log('Categories data:', categories.map(c => ({ slug: c.slug, name: c.name })));
 
   return (
-    <section className="py-12 bg-background">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <h2 className="text-2xl font-comfortaa font-bold text-yp-dark text-center mb-8">
+    <section className="py-8 sm:py-10 md:py-12 bg-background">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-comfortaa font-bold text-yp-dark text-center mb-6 sm:mb-8 px-2">
           {t('homepage.categories.title')}
         </h2>
         
         {/* Debug info - remove in production */}
-        <div className="text-center mb-4 text-sm text-gray-500">
+        <div className="text-center mb-4 text-xs sm:text-sm text-gray-500">
           Showing {visibleCategories.length} of {categories.length} categories
         </div>
         
-        <div className="flex flex-wrap justify-center gap-4 md:gap-6">
+        <div className="flex flex-wrap justify-center gap-2 sm:gap-3 md:gap-4 lg:gap-6">
           {visibleCategories.map((category, index) => {
             const IconComponent = iconMap[category.slug] || Home;
             // Use the category name directly if translation is not available
@@ -241,11 +241,11 @@ export const CategoryGrid = () => {
               >
                 <button 
                   onClick={() => handleCategoryClick(category.slug)}
-                  className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-2 md:mb-3 bg-white border-2 border-yp-gray-medium rounded-full flex items-center justify-center hover:border-[#4e3c28] hover:bg-yp-gray-light transition-all duration-300 group hover:scale-110"
+                  className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 mx-auto mb-2 md:mb-3 bg-white border-2 border-yp-gray-medium rounded-full flex items-center justify-center hover:border-[#4e3c28] hover:bg-yp-gray-light transition-all duration-300 group hover:scale-110 touch-manipulation"
                 >
-                  <IconComponent className="w-6 h-6 md:w-8 md:h-8 text-yp-gray-dark group-hover:text-[#4e3c28] transition-colors duration-300" />
+                  <IconComponent className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-8 lg:h-8 text-yp-gray-dark group-hover:text-[#4e3c28] transition-colors duration-300" />
                 </button>
-                <h3 className="font-roboto font-medium text-xs md:text-sm text-yp-dark mb-2 transition-colors duration-300">
+                <h3 className="font-roboto font-medium text-xs sm:text-sm md:text-base text-yp-dark mb-2 transition-colors duration-300 px-1 leading-tight">
                   {translatedName}
                 </h3>
               </div>
@@ -258,17 +258,17 @@ export const CategoryGrid = () => {
             <button 
                 onClick={toggleCategories}
                 disabled={isExpanding}
-                className="w-14 h-14 md:w-16 md:h-16 mx-auto mb-2 md:mb-3 bg-gradient-to-br from-yp-blue to-yp-green border-2 border-transparent rounded-full flex items-center justify-center hover:from-[#4e3c28] hover:to-[#4e3c28]/80 transition-all duration-300 group hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 lg:w-16 lg:h-16 mx-auto mb-2 md:mb-3 bg-gradient-to-br from-yp-blue to-yp-green border-2 border-transparent rounded-full flex items-center justify-center hover:from-[#4e3c28] hover:to-[#4e3c28]/80 transition-all duration-300 group hover:scale-110 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
             >
                 {isExpanding ? (
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                  <div className="animate-spin rounded-full h-4 w-4 sm:h-5 sm:w-5 md:h-6 md:w-6 border-b-2 border-white"></div>
                 ) : showAll ? (
-                  <ChevronUp className="w-6 h-6 md:w-8 md:h-8 text-white group-hover:scale-110 transition-transform duration-300" />
+                  <ChevronUp className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-8 lg:h-8 text-white group-hover:scale-110 transition-transform duration-300" />
                 ) : (
-                  <MoreHorizontal className="w-6 h-6 md:w-8 md:h-8 text-white group-hover:scale-110 transition-transform duration-300" />
+                  <MoreHorizontal className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6 lg:w-8 lg:h-8 text-white group-hover:scale-110 transition-transform duration-300" />
                 )}
             </button>
-              <h3 className="font-roboto font-medium text-xs md:text-sm text-yp-dark mb-2 transition-colors duration-300">
+              <h3 className="font-roboto font-medium text-xs sm:text-sm md:text-base text-yp-dark mb-2 transition-colors duration-300 px-1 leading-tight">
                 {showAll ? t('homepage.categories.viewLess') : t('homepage.categories.viewMore')}
             </h3>
           </div>
@@ -276,13 +276,13 @@ export const CategoryGrid = () => {
         </div>
 
         {/* View All Categories Button */}
-        <div className="text-center mt-8">
+        <div className="text-center mt-6 sm:mt-8">
           <button
             onClick={handleViewAllCategories}
-            className="inline-flex items-center px-6 py-3 bg-yp-blue hover:bg-[#4e3c28] text-white font-roboto font-medium rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg"
+            className="inline-flex items-center px-3 sm:px-4 md:px-6 py-2 sm:py-3 bg-yp-blue hover:bg-[#4e3c28] text-white font-roboto font-medium rounded-lg transition-all duration-300 hover:scale-105 hover:shadow-lg text-sm sm:text-base touch-manipulation"
           >
             <span>{t('homepage.categories.viewAllCategories')}</span>
-            <ChevronUp className="w-4 h-4 ml-2 rotate-90 transition-transform duration-300 group-hover:translate-x-1" />
+            <ChevronUp className="w-3 h-3 sm:w-4 sm:h-4 ml-2 rotate-90 transition-transform duration-300 group-hover:translate-x-1" />
           </button>
         </div>
       </div>
