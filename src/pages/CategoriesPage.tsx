@@ -4,46 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import Footer from "@/components/Footer";
 import { db } from "@/lib/supabase";
-import { 
-  Users, 
-  UtensilsCrossed, 
-  Stethoscope, 
-  Wrench, 
-  HardHat, 
-  Zap, 
-  Car, 
-  Home, 
-  Scale, 
-  Bed,
-  Plane,
-  Building,
-  Wine,
-  Scissors,
-  BookOpen,
-  Coffee,
-  Film,
-  Heart,
-  Users as UsersIcon,
-  User,
-  Church,
-  Leaf,
-  Palette,
-  Landmark,
-  Hospital,
-  Book,
-  ShoppingBag,
-  Building2,
-  Trees,
-  Pill,
-  Mail,
-  Gamepad2,
-  GraduationCap,
-  Truck,
-  CreditCard,
-  Smartphone,
-  ArrowLeft,
-  Search
-} from "lucide-react";
+import { Users, UtensilsCrossed, Stethoscope, Wrench, HardHat, Zap, Car, Home, Scale, Bed, Plane, Building, Wine, Scissors, BookOpen, Coffee, Film, Heart, Users as UsersIcon, User, Church, Leaf, Palette, Landmark, Hospital, Book, ShoppingBag, Building2, Trees, Pill, Mail, Gamepad2, GraduationCap, Truck, CreditCard, Smartphone, ArrowLeft,Search} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
