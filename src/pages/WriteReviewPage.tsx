@@ -334,7 +334,7 @@ export const WriteReviewPage = () => {
                 <Button 
                   onClick={handleSearch}
                   disabled={isSearching}
-                  className="bg-yp-yellow hover:bg-yp-yellow/90 text-yp-dark px-8 h-12 font-roboto font-semibold"
+                  className="bg-yp-yellow text-yp-dark px-8 h-12 font-roboto font-semibold"
                 >
                   {isSearching ? (
                     <Loader2 className="w-4 h-4 animate-spin" />
@@ -551,7 +551,7 @@ export const WriteReviewPage = () => {
                 <Button 
                   onClick={handleSubmitReview}
                   disabled={isSubmitting || reviewForm.rating === 0 || !reviewForm.title.trim() || !reviewForm.content.trim()}
-                  className="bg-yp-blue hover:bg-[#4e3c28] text-white font-roboto"
+                  className="bg-yp-blue text-white font-roboto"
                 >
                   {isSubmitting ? (
                     <>

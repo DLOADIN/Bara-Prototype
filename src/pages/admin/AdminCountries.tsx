@@ -213,7 +213,7 @@ export const AdminCountries = () => {
         
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-yp-blue hover:bg-[#4e3c28]">
+            <Button className="bg-yp-blue">
               <Plus className="w-4 h-4 mr-2" />
               Add Country
             </Button>

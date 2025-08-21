@@ -226,3 +226,14 @@ All colors MUST be HSL.
     }
   }
 }
+
+/* Global button hover standardization */
+@layer components {
+  .button {
+    transition: background-color 0.3s ease;
+  }
+
+  .button:hover {
+    background-color: #8B4513;
+  }
+}

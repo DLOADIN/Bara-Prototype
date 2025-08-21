@@ -99,7 +99,7 @@ export const BusinessDetailPage = () => {
             <p className="text-gray-600 mb-6">
               {error?.message || 'The business you are looking for could not be found.'}
             </p>
-            <Button onClick={handleBackClick} className="bg-yp-blue hover:bg-[#4e3c28]">
+            <Button onClick={handleBackClick} className="bg-yp-blue">
               Go Back
                 </Button>
               </div>
@@ -123,7 +123,7 @@ export const BusinessDetailPage = () => {
             variant="ghost" 
             size="sm" 
             onClick={handleBackClick}
-            className="p-1 h-auto text-gray-600 hover:text-yp-dark"
+            className="p-1 h-auto text-gray-600"
           >
             <ArrowLeft className="w-4 h-4 mr-1" />
             Back to {categoryName}
@@ -226,7 +226,7 @@ export const BusinessDetailPage = () => {
                       ))
                     : Object.entries(business.services).map(([key, value]) => (
                         <Badge key={key} variant="outline">
-                          {key}: {value}
+                          {key}: {String(value)}
                         </Badge>
                       ))
                   }
@@ -348,7 +348,7 @@ export const BusinessDetailPage = () => {
             {/* Actions */}
             <div className="space-y-3">
               <Link to="/write-review">
-                <Button className="w-full bg-yp-blue hover:bg-[#4e3c28]">
+                <Button className="w-full bg-yp-blue">
                   Write Review
                 </Button>
               </Link>

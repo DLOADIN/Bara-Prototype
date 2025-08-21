@@ -184,7 +184,7 @@ export const CitiesManagement = () => {
           </div>
           <Button 
             onClick={() => setShowAddForm(true)}
-            className="bg-yp-blue hover:bg-[#4e3c28]"
+            className="bg-yp-blue"
           >
             <Plus className="w-4 h-4 mr-2" />
             Add New City
@@ -276,7 +276,7 @@ export const CitiesManagement = () => {
               <div className="flex space-x-3 mt-6">
                 <Button 
                   onClick={editingCity ? handleEditCity : handleAddCity}
-                  className="bg-yp-blue hover:bg-[#4e3c28]"
+                  className="bg-yp-blue"
                 >
                   {editingCity ? 'Update City' : 'Add City'}
                 </Button>
@@ -352,7 +352,7 @@ export const CitiesManagement = () => {
                             variant="ghost"
                             size="sm"
                             onClick={() => handleDeleteCity(city.id)}
-                            className="text-red-600 hover:text-[#4e3c28]"
+                            className="text-red-600"
                           >
                             <Trash2 className="w-4 h-4" />
                           </Button>

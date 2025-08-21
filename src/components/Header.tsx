@@ -115,7 +115,7 @@ export const Header = () => {
             </Button> */}
             
             <Link to="/writeareview">
-              <Button variant="default" className="font-roboto hover:bg-[#B284BE] hover:text-white">
+              <Button variant="default" className="font-roboto">
                 <Star className="w-4 h-4 mr-1" />
                 {t('navigation.writeReview')}
               </Button>
@@ -127,27 +127,27 @@ export const Header = () => {
             {/* Search by City Dropdown */}
            <DropdownMenu>
   <DropdownMenuTrigger asChild>
-    <Button variant="default" className="font-roboto hover:bg-[#B284BE] hover:text-white">
+    <Button variant="default" className="font-roboto">
       {t('navigation.searchByCity')}
       <ChevronDown className="w-4 h-4 ml-1" />
     </Button>
   </DropdownMenuTrigger>
   <DropdownMenuContent className="w-56 border border-border shadow-lg">
     {loading ? (
-      <div className="text-center py-4 hover:bg-[#B284BE] hover:text-white">
+      <div className="text-center py-4">
         <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#B284BE] mx-auto"></div>
         <p className="text-xs mt-1">{t('common.loading')}</p>
       </div>
     ) : (
-      cities.map((city) => (
-        <DropdownMenuItem
-          key={city.id}
-          onClick={() => setSelectedCity(formatCityDisplay(city))}
-          className="font-roboto hover:bg-[#B284BE] hover:text-white"
-        >
-          {formatCityDisplay(city)}
-        </DropdownMenuItem>
-      ))
+              cities.map((city) => (
+          <DropdownMenuItem
+            key={city.id}
+            onClick={() => setSelectedCity(formatCityDisplay(city))}
+            className="font-roboto button"
+          >
+            {formatCityDisplay(city)}
+          </DropdownMenuItem>
+        ))
     )}
   </DropdownMenuContent>
 </DropdownMenu>
@@ -250,7 +250,7 @@ export const Header = () => {
                         <Button
                           key={city.id}
                           variant="ghost"
-                          className={`w-full justify-start font-roboto h-12 ${
+                          className={`w-full justify-start font-roboto h-12 button ${
                             selectedCity === formatCityDisplay(city) ? "bg-[#4e3c28] text-white" : ""
                           }`}
                           onClick={() => handleCitySelect(city)}

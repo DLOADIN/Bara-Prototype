@@ -30,7 +30,7 @@ export const LanguageSelector = () => {
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="font-roboto flex items-center gap-2 hover:bg-[#B284BE] hover:text-white">
+        <Button variant="ghost" className="font-roboto flex items-center gap-2">
           <Globe className="w-4 h-4" />
           <span className="text-lg">{currentLanguage.flag}</span>
           <span className="hidden sm:inline">{currentLanguage.code.toUpperCase()}</span>
@@ -46,7 +46,7 @@ export const LanguageSelector = () => {
             <DropdownMenuItem
               key={language.code}
               onClick={() => handleLanguageChange(language.code)}
-              className={`font-roboto px-3 py-2 cursor-pointer hover:bg-yp-gray-light flex items-center gap-3 ${
+              className={`font-roboto px-3 py-2 cursor-pointer button flex items-center gap-3 ${
                 i18n.language === language.code ? "bg-yp-gray-light text-yp-blue" : "text-yp-dark"
               }`}
             >

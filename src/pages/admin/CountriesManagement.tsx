@@ -162,7 +162,7 @@ export const CountriesManagement = () => {
           </div>
           <Button 
             onClick={() => setShowAddForm(true)}
-            className="bg-yp-blue hover:bg-[#4e3c28]"
+            className="bg-yp-blue"
           >
             <Plus className="w-4 h-4 mr-2" />
             Add New Country
@@ -236,7 +236,7 @@ export const CountriesManagement = () => {
               <div className="flex space-x-3 mt-6">
                 <Button 
                   onClick={editingCountry ? handleEditCountry : handleAddCountry}
-                  className="bg-yp-blue hover:bg-[#4e3c28]"
+                  className="bg-yp-blue"
                 >
                   {editingCountry ? 'Update Country' : 'Add Country'}
                 </Button>

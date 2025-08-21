@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
+import { useParams, Link, useNavigate, useSearchParams } from "react-router-dom";
 import { Header } from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -20,40 +20,53 @@ import {
 export const ListingsPage = () => {
   const { city, category, categorySlug } = useParams();
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
   
   // Determine which category slug to use
   const actualCategorySlug = categorySlug || category;
   
+  // Check if this is a search page
+  const isSearchPage = actualCategorySlug === 'search';
+  
+  // Get search term from URL query params if it's a search page
+  const urlSearchTerm = searchParams.get('q') || '';
+  
   // State for search and filters
-  // Search bar is read-only (users can see but not edit)
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(isSearchPage ? urlSearchTerm : "");
   const [selectedCity, setSelectedCity] = useState<string>(city || "");
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [cities, setCities] = useState<Array<{ id: string; name: string; countries: { code: string } | null; latitude: number | null; longitude: number | null }>>([]);
   const [loadingCities, setLoadingCities] = useState<boolean>(true);
 
-  // Fetch businesses by category
+  // Update search term when URL changes
+  useEffect(() => {
+    if (isSearchPage && urlSearchTerm) {
+      setSearchTerm(urlSearchTerm);
+    }
+  }, [isSearchPage, urlSearchTerm]);
+
+  // Fetch businesses by category (only if not a search page)
   const { 
     data: businesses = [], 
     isLoading: isLoadingCategory, 
     error: categoryError 
   } = useBusinessesByCategory(actualCategorySlug || "", selectedCity || undefined);
 
-  // Search is read-only but functional for display
+  // Search businesses (for search page or when search term is provided)
   const { 
     data: searchResults = [], 
     isLoading: isLoadingSearch, 
     error: searchError 
   } = useBusinessSearch(searchTerm, {
-    category: actualCategorySlug,
+    category: isSearchPage ? undefined : actualCategorySlug, // Don't filter by category on search page
     city: selectedCity || undefined
   });
 
   // Determine which data to display
-  const displayBusinesses = searchTerm ? searchResults : businesses;
-  const isLoading = isLoadingCategory || isLoadingSearch;
-  const error = categoryError || searchError;
+  const displayBusinesses = isSearchPage || searchTerm ? searchResults : businesses;
+  const isLoading = isSearchPage ? isLoadingSearch : (isLoadingCategory || isLoadingSearch);
+  const error = isSearchPage ? searchError : (categoryError || searchError);
   
   const formatTitle = (str: string) => {
     return str?.split('-').map(word => 
@@ -61,7 +74,7 @@ export const ListingsPage = () => {
     ).join(' ') || '';
   };
 
-  const categoryName = formatTitle(actualCategorySlug || '');
+  const categoryName = isSearchPage ? 'Search Results' : formatTitle(actualCategorySlug || '');
   const cityName = formatTitle(city || '');
 
   // Search is read-only, no user input allowed
@@ -210,7 +223,7 @@ export const ListingsPage = () => {
             <p className="text-gray-600 mb-6">
               {error.message || 'An error occurred while loading businesses. Please try again.'}
             </p>
-            <Button onClick={() => window.location.reload()} className="bg-yp-blue hover:bg-[#4e3c28]">
+            <Button onClick={() => window.location.reload()} className="bg-yp-blue">
               Try Again
             </Button>
           </div>
@@ -261,7 +274,7 @@ export const ListingsPage = () => {
             </div>
             <Button 
               onClick={handleSearch}
-              className="bg-yp-blue hover:bg-[#4e3c28] text-white px-8 font-roboto"
+              className="bg-yp-blue text-white px-8 font-roboto"
             >
               Find
             </Button>
@@ -461,7 +474,7 @@ export const ListingsPage = () => {
                         <Link to="/write-review">
                           <Button 
                             size="sm" 
-                            className="bg-yp-blue hover:bg-yp-blue/90 text-white font-roboto w-full"
+                            className="bg-yp-blue text-white font-roboto w-full"
                             onClick={(e) => e.stopPropagation()}
                           >
                             Write Review
