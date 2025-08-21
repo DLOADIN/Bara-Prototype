@@ -253,9 +253,9 @@ export const ListingsPage = () => {
             <div className="flex-1 max-w-md">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="outline" className="w-full justify-start font-roboto">
+                  <Button variant="default" className="w-full justify-start font-roboto">
                     <MapPin className="w-4 h-4 mr-2 text-gray-500" />
-                    {selectedCity || 'Select City'}
+                    {selectedCity || 'Select a City'}
                     <ChevronDown className="w-4 h-4 ml-auto" />
                   </Button>
                 </DropdownMenuTrigger>
@@ -276,7 +276,7 @@ export const ListingsPage = () => {
               onClick={handleSearch}
               className="bg-yp-blue text-white px-8 font-roboto"
             >
-              Find
+              FIND
             </Button>
           </div>
         </div>
@@ -379,16 +379,20 @@ export const ListingsPage = () => {
                         <h3 className="text-xl font-semibold text-yp-dark font-comfortaa mr-2">
                           {business.name}
                         </h3>
+                        <div className="flex items-center pl-2">  
                         {business.is_premium && (
-                          <Badge variant="default" className="bg-yp-blue text-white text-xs">
+                          <Badge variant="default" className="bg-yp-blue text-white text-xs pr-2">
                             Premium
                           </Badge>
                         )}
+                        </div>
+                        <div className="flex items-center pl-2">  
                         {business.is_verified && (
-                          <Badge variant="secondary" className="text-xs">
+                          <Badge variant="secondary" className="text-xs pl-2">
                             ✓ Verified
                           </Badge>
                         )}
+                        </div>
                       </div>
                       
                       <p className="text-gray-600 font-roboto mb-2">
