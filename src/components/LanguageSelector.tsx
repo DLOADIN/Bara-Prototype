@@ -46,7 +46,7 @@ export const LanguageSelector = () => {
             <DropdownMenuItem
               key={language.code}
               onClick={() => handleLanguageChange(language.code)}
-              className={`font-roboto px-3 py-2 cursor-pointer button flex items-center gap-3 ${
+              className={`dropdown-menu-item-override font-roboto px-3 py-2 cursor-pointer button flex items-center gap-3 ${
                 i18n.language === language.code ? "bg-yp-gray-light text-yp-blue" : "text-yp-dark"
               }`}
             >

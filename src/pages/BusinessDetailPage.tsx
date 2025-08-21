@@ -268,7 +268,7 @@ export const BusinessDetailPage = () => {
                   ))}
                 </div>
                 <div className="mt-4">
-                  <Link to="/write-review">
+                  <Link to={`/write-review/${business.id}`}>
                     <Button variant="outline" className="w-full">
                       Write a Review
                     </Button>
@@ -347,7 +347,7 @@ export const BusinessDetailPage = () => {
 
             {/* Actions */}
             <div className="space-y-3">
-              <Link to="/write-review">
+              <Link to={`/write-review/${business.id}`}>
                 <Button className="w-full bg-yp-blue">
                   Write Review
                 </Button>

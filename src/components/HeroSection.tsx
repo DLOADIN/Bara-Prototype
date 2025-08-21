@@ -310,7 +310,7 @@ export const HeroSection = () => {
                               setLocation(formatCityDisplay(city));
                               setIsLocationOpen(false);
                             }}
-                            className={`font-roboto px-2 py-2 cursor-pointer hover:bg-yp-gray-light ${
+                            className={`dropdown-menu-item-override font-roboto px-2 py-2 cursor-pointer hover:bg-yp-gray-light ${
                               location === formatCityDisplay(city) ? "bg-yp-gray-light text-yp-blue" : "text-yp-dark"
                             }`}
                           >

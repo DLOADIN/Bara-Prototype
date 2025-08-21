@@ -115,7 +115,7 @@ export const Header = () => {
             </Button> */}
             
             <Link to="/writeareview">
-              <Button variant="default" className="font-roboto">
+              <Button variant="ghost" className="font-roboto">
                 <Star className="w-4 h-4 mr-1" />
                 {t('navigation.writeReview')}
               </Button>
@@ -143,7 +143,7 @@ export const Header = () => {
           <DropdownMenuItem
             key={city.id}
             onClick={() => setSelectedCity(formatCityDisplay(city))}
-            className="font-roboto button"
+            className="dropdown-menu-item-override font-roboto button"
           >
             {formatCityDisplay(city)}
           </DropdownMenuItem>

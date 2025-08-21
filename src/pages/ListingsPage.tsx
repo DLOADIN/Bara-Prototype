@@ -28,12 +28,16 @@ export const ListingsPage = () => {
   // Check if this is a search page
   const isSearchPage = actualCategorySlug === 'search';
   
+  // Check if we're on a category page (URL starts with /category/)
+  const isCategoryPage = window.location.pathname.startsWith('/category/');
+  
   // Get search term from URL query params if it's a search page
   const urlSearchTerm = searchParams.get('q') || '';
   
   // State for search and filters
   const [searchTerm, setSearchTerm] = useState(isSearchPage ? urlSearchTerm : "");
-  const [selectedCity, setSelectedCity] = useState<string>(city || "");
+  // Only use city from URL if we're not on a category page
+  const [selectedCity, setSelectedCity] = useState<string>(isCategoryPage ? "" : (city || ""));
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [cities, setCities] = useState<Array<{ id: string; name: string; countries: { code: string } | null; latitude: number | null; longitude: number | null }>>([]);
@@ -250,6 +254,7 @@ export const ListingsPage = () => {
                 className="w-full font-roboto bg-gray-50 cursor-not-allowed"
               />
             </div>
+            
             <div className="flex-1 max-w-md">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
@@ -264,7 +269,11 @@ export const ListingsPage = () => {
                     <div className="p-3 text-sm text-gray-500">Loading cities...</div>
                   ) : (
                     cities.map((c) => (
-                      <DropdownMenuItem key={c.id} onClick={() => setSelectedCity(`${c.name}`)}>
+                      <DropdownMenuItem 
+                        key={c.id} 
+                        onClick={() => setSelectedCity(`${c.name}`)}
+                        className="dropdown-menu-item-override cursor-pointer"
+                      >
                         {c.name}{c.countries?.code ? `, ${c.countries.code}` : ''}
                       </DropdownMenuItem>
                     ))
@@ -272,6 +281,7 @@ export const ListingsPage = () => {
                 </DropdownMenuContent>
               </DropdownMenu>
             </div>
+
             <Button 
               onClick={handleSearch}
               className="bg-yp-blue text-white px-8 font-roboto"
@@ -475,7 +485,7 @@ export const ListingsPage = () => {
                             More Info
                           </Button>
                         </Link>
-                        <Link to="/write-review">
+                        <Link to={`/write-review/${business.id}`}>
                           <Button 
                             size="sm" 
                             className="bg-yp-blue text-white font-roboto w-full"

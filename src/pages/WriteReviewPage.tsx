@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { Header } from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -23,7 +23,9 @@ import {
   Loader2,
   ArrowLeft,
   Camera,
-  X
+  X,
+  Edit,
+  Save
 } from "lucide-react";
 import { db, auth } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
@@ -63,6 +65,8 @@ export const WriteReviewPage = () => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const { toast } = useToast();
+  const { businessId } = useParams();
+  const [searchParams] = useSearchParams();
   
   // State management
   const [searchTerm, setSearchTerm] = useState("");
@@ -70,7 +74,12 @@ export const WriteReviewPage = () => {
   const [searchResults, setSearchResults] = useState<Business[]>([]);
   const [selectedBusiness, setSelectedBusiness] = useState<Business | null>(null);
   const [isSearching, setIsSearching] = useState(false);
+  const [isLoadingBusiness, setIsLoadingBusiness] = useState(false);
   const [currentStep, setCurrentStep] = useState<'search' | 'review'>('search');
+  
+  // Business editing state
+  const [isEditingBusiness, setIsEditingBusiness] = useState(false);
+  const [editingBusinessData, setEditingBusinessData] = useState<Partial<Business>>({});
   
   // Review form state
   const [reviewForm, setReviewForm] = useState<ReviewForm>({
@@ -82,6 +91,68 @@ export const WriteReviewPage = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hoveredRating, setHoveredRating] = useState(0);
+
+  // Load business if businessId is provided in URL
+  useEffect(() => {
+    if (businessId) {
+      loadBusinessById(businessId);
+    }
+  }, [businessId]);
+
+  // Load business by ID
+  const loadBusinessById = async (id: string) => {
+    setIsLoadingBusiness(true);
+    try {
+      const { data, error } = await db.businesses()
+        .select(`
+          *,
+          category:categories(name, slug),
+          city:cities(name)
+        `)
+        .eq('id', id)
+        .single();
+
+      if (error) {
+        console.error('Error loading business:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to load business information.',
+          variant: "destructive"
+        });
+        // Redirect back to search if business not found
+        navigate('/writeareview');
+      } else if (data) {
+        setSelectedBusiness(data);
+        setReviewForm(prev => ({ ...prev, business_id: data.id }));
+        setCurrentStep('review');
+        // Initialize editing data
+        setEditingBusinessData({
+          name: data.name,
+          description: data.description,
+          phone: data.phone,
+          website: data.website,
+          address: data.address
+        });
+      } else {
+        toast({
+          title: 'Business Not Found',
+          description: 'The requested business could not be found.',
+          variant: "destructive"
+        });
+        navigate('/writeareview');
+      }
+    } catch (error) {
+      console.error('Error loading business:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to load business information.',
+        variant: "destructive"
+      });
+      navigate('/writeareview');
+    } finally {
+      setIsLoadingBusiness(false);
+    }
+  };
 
   // Search businesses
   const handleSearch = async () => {
@@ -148,8 +219,90 @@ export const WriteReviewPage = () => {
   };
 
   // Handle form input changes
-  const handleInputChange = (field: keyof ReviewForm, value: string | number | string[]) => {
+  const handleInputChange = (field: keyof ReviewForm, value: string | number) => {
     setReviewForm(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Handle business editing
+  const handleEditBusiness = () => {
+    setIsEditingBusiness(true);
+  };
+
+  // Handle business edit input changes
+  const handleBusinessEditChange = (field: keyof Business, value: string) => {
+    setEditingBusinessData(prev => ({ ...prev, [field]: value }));
+  };
+
+  // Save business edits
+  const handleSaveBusinessEdits = async () => {
+    if (!selectedBusiness) return;
+
+    // Validate required fields
+    if (!editingBusinessData.name?.trim()) {
+      toast({
+        title: 'Validation Error',
+        description: 'Business name is required.',
+        variant: "destructive"
+      });
+      return;
+    }
+
+    try {
+      const { error } = await db.businesses()
+        .update({
+          name: editingBusinessData.name || selectedBusiness.name,
+          description: editingBusinessData.description || selectedBusiness.description,
+          phone: editingBusinessData.phone || selectedBusiness.phone,
+          website: editingBusinessData.website || selectedBusiness.website,
+          address: editingBusinessData.address || selectedBusiness.address,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', selectedBusiness.id);
+
+      if (error) {
+        console.error('Error updating business:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to update business information.',
+          variant: "destructive"
+        });
+      } else {
+        // Update local state
+        setSelectedBusiness(prev => prev ? {
+          ...prev,
+          ...editingBusinessData
+        } : null);
+        
+        setIsEditingBusiness(false);
+        toast({
+          title: 'Success',
+          description: 'Business information updated successfully.',
+          variant: "default"
+        });
+      }
+    } catch (error) {
+      console.error('Error updating business:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update business information.',
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Cancel business editing
+  const handleCancelBusinessEdit = () => {
+    setIsEditingBusiness(false);
+    // Reset editing data to original values
+    if (selectedBusiness) {
+      setEditingBusinessData({
+        name: selectedBusiness.name,
+        description: selectedBusiness.description,
+        phone: selectedBusiness.phone,
+        website: selectedBusiness.website,
+        address: selectedBusiness.address
+      });
+    }
   };
 
   // Submit review
@@ -421,37 +574,124 @@ export const WriteReviewPage = () => {
             
             <Card className="mb-6">
               <CardHeader>
-                <CardTitle className="text-xl font-comfortaa">
- {t('reviews.reviewingBusiness')} {selectedBusiness.name}
-                </CardTitle>
+                <div className="flex justify-between items-center">
+                  <CardTitle className="text-xl font-comfortaa">
+                    {t('reviews.reviewingBusiness')} {selectedBusiness.name}
+                  </CardTitle>
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={handleEditBusiness}
+                    className="font-roboto"
+                  >
+                    <Edit className="w-4 h-4 mr-2" />
+                    Edit Business
+                  </Button>
+                </div>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600 font-roboto">
-                  {selectedBusiness.category && (
-                    <div className="flex items-center">
-                      <Store className="w-4 h-4 mr-2" />
-                      {selectedBusiness.category.name}
+                {isEditingBusiness ? (
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
+                        Business Name *
+                      </label>
+                      <Input
+                        type="text"
+                        value={editingBusinessData.name || ''}
+                        onChange={(e) => handleBusinessEditChange('name', e.target.value)}
+                        className="font-roboto"
+                      />
                     </div>
-                  )}
-                  {selectedBusiness.address && (
-                    <div className="flex items-center">
-                      <MapPin className="w-4 h-4 mr-2" />
-                      {selectedBusiness.address}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
+                        Description
+                      </label>
+                      <Textarea
+                        value={editingBusinessData.description || ''}
+                        onChange={(e) => handleBusinessEditChange('description', e.target.value)}
+                        className="font-roboto"
+                        rows={3}
+                      />
                     </div>
-                  )}
-                  {selectedBusiness.phone && (
-                    <div className="flex items-center">
-                      <Phone className="w-4 h-4 mr-2" />
-                      {selectedBusiness.phone}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
+                        Address
+                      </label>
+                      <Input
+                        type="text"
+                        value={editingBusinessData.address || ''}
+                        onChange={(e) => handleBusinessEditChange('address', e.target.value)}
+                        className="font-roboto"
+                      />
                     </div>
-                  )}
-                  {selectedBusiness.website && (
-                    <div className="flex items-center">
-                      <Globe className="w-4 h-4 mr-2" />
-                      {selectedBusiness.website}
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
+                        Phone
+                      </label>
+                      <Input
+                        type="tel"
+                        value={editingBusinessData.phone || ''}
+                        onChange={(e) => handleBusinessEditChange('phone', e.target.value)}
+                        className="font-roboto"
+                      />
                     </div>
-                  )}
-                </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
+                        Website
+                      </label>
+                      <Input
+                        type="url"
+                        value={editingBusinessData.website || ''}
+                        onChange={(e) => handleBusinessEditChange('website', e.target.value)}
+                        className="font-roboto"
+                      />
+                    </div>
+                    <div className="flex space-x-2 pt-2">
+                      <Button
+                        onClick={handleSaveBusinessEdits}
+                        className="bg-yp-blue text-white font-roboto"
+                      >
+                        <Save className="w-4 h-4 mr-2" />
+                        Save Changes
+                      </Button>
+                      <Button
+                        variant="outline"
+                        onClick={handleCancelBusinessEdit}
+                        className="font-roboto"
+                      >
+                        Cancel
+                      </Button>
+                    </div>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm text-gray-600 font-roboto">
+                    {selectedBusiness.category && (
+                      <div className="flex items-center">
+                        <Store className="w-4 h-4 mr-2" />
+                        {selectedBusiness.category.name}
+                      </div>
+                    )}
+                    {selectedBusiness.address && (
+                      <div className="flex items-center">
+                        <MapPin className="w-4 h-4 mr-2" />
+                        {selectedBusiness.address}
+                      </div>
+                    )}
+                    {selectedBusiness.phone && (
+                      <div className="flex items-center">
+                        <Phone className="w-4 h-4 mr-2" />
+                        {selectedBusiness.phone}
+                      </div>
+                    )}
+                    {selectedBusiness.website && (
+                      <div className="flex items-center">
+                        <Globe className="w-4 h-4 mr-2" />
+                        {selectedBusiness.website}
+                      </div>
+                    )}
+                  </div>
+                )}
               </CardContent>
             </Card>
           </div>

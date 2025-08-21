@@ -237,3 +237,26 @@ All colors MUST be HSL.
     background-color: #8B4513;
   }
 }
+
+@layer components {
+  /* Override dropdown menu item hover colors */
+  .dropdown-menu-item-override {
+    background-color: white !important;
+  }
+  
+  .dropdown-menu-item-override:hover {
+    background-color: rgb(255, 230, 0) !important; /* gray-100 */
+  }
+  
+  .dropdown-menu-item-override:focus {
+    background-color: rgb(255, 230, 0) !important; /* gray-100 */
+  }
+  
+  .dropdown-menu-item-override[data-highlighted="true"] {
+    background-color: rgb(255, 230, 0) !important; /* gray-100 */
+  }
+  
+  .dropdown-menu-item-override[data-state="open"] {
+    background-color: rgb(255, 230, 0) !important; /* gray-100 */
+  }
+}
