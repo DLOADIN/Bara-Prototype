@@ -3,6 +3,7 @@ import { HeroSection } from "@/components/HeroSection";
 import { CategoryGrid } from "@/components/CategoryGrid";
 import { BusinessSection } from "@/components/BusinessSection";
 import { QASection } from "@/components/QASection";
+
 import Footer from "@/components/Footer";
 
 const Index = () => {

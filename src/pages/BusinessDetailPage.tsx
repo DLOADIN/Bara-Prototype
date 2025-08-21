@@ -1,82 +1,26 @@
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Phone, Globe, Star, Clock, Building, ChevronRight, Camera, Users } from "lucide-react";
-
-// Extended mock data with more details
-const businessDetails = {
-  1: {
-    name: "Elite Dental Care",
-    category: "Dentists",
-    subcategories: ["Cosmetic Dentistry", "Emergency Services", "General Dentistry"],
-    phone: "(+250) 788 123 456",
-    address: "KN 4 Ave, Kigali, Rwanda",
-    website: "www.elitedentalrw.com",
-    rating: 4.8,
-    reviews: 64,
-    hours: {
-      regular: "Mon - Sun",
-      schedule: "Open 24 Hours"
-    },
-    yearsInBusiness: 15,
-    description: "Elite Dental Care is a premier dental service provider in Kigali, Rwanda. We offer comprehensive dental care with state-of-the-art equipment and experienced professionals. Our services include preventive care, cosmetic dentistry, emergency treatments, and specialized procedures. We are committed to providing exceptional patient care in a comfortable environment.",
-    extraPhones: ["(+250) 788 123 457", "(+250) 788 123 458"],
-    accreditation: "Rwanda Dental Board, East African Dental Association",
-    otherLinks: ["www.elitedentalrw.com/appointments", "www.elitedentalrw.com/services"],
-    isOpen: true,
-    openStatus: "OPEN 24 HOURS",
-    openDetails: "Today: Open 24 Hours"
-  },
-  2: {
-    name: "Elite Auto Service",
-    category: "Auto Repair",
-    subcategories: ["Engine Repair", "Brake Service", "Oil Change"],
-    phone: "(+250) 788 111 222",
-    address: "KN 3 Rd, Kigali, Rwanda",
-    website: "www.eliteautorw.com",
-    rating: 4.8,
-    reviews: 145,
-    hours: {
-      regular: "Mon - Sun",
-      schedule: "Open until 7:00 PM"
-    },
-    yearsInBusiness: 12,
-    description: "Elite Auto Service is your trusted automotive repair center in Kigali. We specialize in comprehensive auto repair services including engine diagnostics, brake systems, transmission repair, and routine maintenance. Our certified technicians use modern equipment to ensure your vehicle runs smoothly and safely.",
-    extraPhones: ["(+250) 788 111 223"],
-    accreditation: "Rwanda Auto Mechanics Association, ISO 9001 Certified",
-    otherLinks: ["www.eliteautorw.com/services", "www.eliteautorw.com/booking"],
-    isOpen: true,
-    openStatus: "OPEN until 7:00 PM",
-    openDetails: "Today: Open until 7:00 PM"
-  },
-  3: {
-    name: "The Hut Restaurant",
-    category: "Restaurants",
-    subcategories: ["Continental", "Local Cuisine", "Fine Dining"],
-    phone: "(+250) 788 777 888",
-    address: "KN 2 Ave, Kigali, Rwanda",
-    website: "www.hutrestaurant.com",
-    rating: 4.7,
-    reviews: 234,
-    hours: {
-      regular: "Mon - Sun",
-      schedule: "Open until 11:00 PM"
-    },
-    yearsInBusiness: 8,
-    description: "The Hut Restaurant offers an exquisite dining experience featuring both continental and traditional Rwandan cuisine. Our menu showcases the finest local ingredients prepared by expert chefs. Perfect for romantic dinners, business meetings, and special celebrations.",
-    extraPhones: ["(+250) 788 777 889"],
-    accreditation: "Rwanda Restaurant Association, Food Safety Certified",
-    otherLinks: ["www.hutrestaurant.com/menu", "www.hutrestaurant.com/reservations"],
-    isOpen: true,
-    openStatus: "OPEN until 11:00 PM",
-    openDetails: "Today: Open until 11:00 PM"
-  }
-};
+import { MapPin, Phone, Globe, Star, Clock, Building, ChevronRight, Camera, Users, ArrowLeft, Award, CheckCircle, Map } from "lucide-react";
+import { useBusinessById } from "@/hooks/useBusinesses";
+import { Business } from "@/lib/businessService";
+import { Skeleton } from "@/components/ui/skeleton";
 
 export const BusinessDetailPage = () => {
-  const { city, category, businessId } = useParams();
+  const { city, category, categorySlug, businessId } = useParams();
+  const navigate = useNavigate();
+  
+  // Determine which category slug to use
+  const actualCategorySlug = categorySlug || category;
+  
+  // Fetch business data
+  const { 
+    data: business, 
+    isLoading, 
+    error 
+  } = useBusinessById(businessId || "");
   
   const formatTitle = (str: string) => {
     return str?.split('-').map(word => 
@@ -85,232 +29,351 @@ export const BusinessDetailPage = () => {
   };
 
   const cityName = formatTitle(city || '');
-  const categoryName = formatTitle(category || '');
+  const categoryName = formatTitle(actualCategorySlug || '');
   
-  const business = businessDetails[Number(businessId) as keyof typeof businessDetails];
-  
-  if (!business) {
+  // Handle back navigation
+  const handleBackClick = () => {
+    if (city) {
+      navigate(`/${city}/${actualCategorySlug}`);
+    } else {
+      navigate(`/category/${actualCategorySlug}`);
+    }
+  };
+
+  // Calculate average rating
+  const getAverageRating = (business: Business) => {
+    if (!business.reviews || business.reviews.length === 0) return 0;
+    const totalRating = business.reviews.reduce((sum, review) => sum + review.rating, 0);
+    return totalRating / business.reviews.length;
+  };
+
+  // Get review count
+  const getReviewCount = (business: Business) => {
+    return business.reviews?.length || 0;
+  };
+
+  // Loading state
+  if (isLoading) {
     return (
       <div className="min-h-screen bg-background font-roboto">
         <Header />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <h1 className="text-2xl font-semibold text-yp-dark">Business not found</h1>
+          <div className="mb-8">
+            <Skeleton className="h-8 w-32 mb-4" />
+            <Skeleton className="h-12 w-96 mb-6" />
+            <Skeleton className="h-6 w-64" />
+          </div>
+          
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div className="lg:col-span-2">
+              <Skeleton className="h-64 w-full mb-6" />
+              <Skeleton className="h-6 w-full mb-4" />
+              <Skeleton className="h-4 w-3/4 mb-2" />
+              <Skeleton className="h-4 w-1/2" />
+            </div>
+            <div>
+              <Skeleton className="h-48 w-full mb-6" />
+              <Skeleton className="h-12 w-full mb-4" />
+              <Skeleton className="h-8 w-full" />
+            </div>
         </div>
+        </div>
+        <Footer />
       </div>
     );
   }
+
+  // Error state
+  if (error || !business) {
+  return (
+    <div className="min-h-screen bg-background font-roboto">
+      <Header />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Building className="w-8 h-8 text-red-600" />
+          </div>
+            <h2 className="text-2xl font-comfortaa font-bold text-yp-dark mb-4">
+              Business Not Found
+            </h2>
+            <p className="text-gray-600 mb-6">
+              {error?.message || 'The business you are looking for could not be found.'}
+            </p>
+            <Button onClick={handleBackClick} className="bg-yp-blue hover:bg-[#4e3c28]">
+              Go Back
+                </Button>
+              </div>
+            </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  const avgRating = getAverageRating(business);
+  const reviewCount = getReviewCount(business);
 
   return (
     <div className="min-h-screen bg-background font-roboto">
       <Header />
       
-      {/* Breadcrumb */}
-      <div className="bg-white border-b border-gray-200 py-2">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center text-sm text-yp-blue font-roboto">
-            <Link to="/" className="hover:underline">Home</Link>
-            <ChevronRight className="w-4 h-4 mx-1 text-gray-400" />
-            <Link to={`/${city}/${category}`} className="hover:underline">
-              {categoryName}, {cityName}
-            </Link>
-          </div>
-        </div>
-      </div>
-
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-          {/* Left Sidebar */}
-          <div className="lg:col-span-1">
-            <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-              <div className="text-center mb-4">
-                <Phone className="w-8 h-8 text-yp-dark mx-auto mb-2" />
-                <div className="text-2xl font-semibold text-yp-dark font-comfortaa">
-                  {business.phone}
-                </div>
-              </div>
-              
-              <div className="space-y-3">
-                <Button className="w-full bg-yp-blue hover:bg-[#4e3c28] text-white font-roboto">
-                  <Globe className="w-4 h-4 mr-2" />
-                  Visit Website
-                </Button>
-                
-                <Button variant="outline" className="w-full font-roboto">
-                  <Star className="w-4 h-4 mr-2" />
-                  Write a Review
-                </Button>
-              </div>
-            </div>
-
-            {/* Is this your business? */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-              <div className="flex items-center mb-3">
-                <Building className="w-6 h-6 text-gray-400 mr-3" />
-                <h3 className="font-semibold text-yp-dark font-comfortaa">Is this your business?</h3>
-              </div>
-              <p className="text-sm text-gray-600 font-roboto mb-3">Customize this page</p>
-              <Button className="w-full bg-yp-blue hover:bg-[#4e3c28] text-white font-roboto">
-                Claim This Listing
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Breadcrumb */}
+        <div className="flex items-center space-x-2 text-sm text-gray-600 mb-6">
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={handleBackClick}
+            className="p-1 h-auto text-gray-600 hover:text-yp-dark"
+          >
+            <ArrowLeft className="w-4 h-4 mr-1" />
+            Back to {categoryName}
               </Button>
-            </div>
-
-            {/* Hours */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h3 className="font-semibold text-yp-dark font-comfortaa mb-4">Hours</h3>
-              <div className="space-y-2">
-                <div className="text-sm font-roboto">
-                  <span className="font-medium">Regular Hours</span>
-                </div>
-                <div className="flex justify-between text-sm font-roboto">
-                  <span>{business.hours.regular}</span>
-                  <span>{business.hours.schedule}</span>
-                </div>
-              </div>
-            </div>
+          <ChevronRight className="w-4 h-4" />
+          <span className="text-yp-dark font-medium">{business.name}</span>
           </div>
 
-          {/* Main Content */}
-          <div className="lg:col-span-2">
             {/* Business Header */}
-            <div className="mb-6">
-              <h1 className="text-3xl font-semibold text-yp-dark font-comfortaa mb-2">
+        <div className="mb-8">
+          <div className="flex items-start justify-between mb-4">
+            <div className="flex-1">
+              <h1 className="text-3xl font-comfortaa font-bold text-yp-dark mb-2">
                 {business.name}
               </h1>
-              <p className="text-lg text-gray-600 font-roboto mb-3">
-                {business.subcategories.join(", ")}
+              <p className="text-lg text-gray-600 mb-3">
+                {business.category?.name || 'Business'}
               </p>
               
-              <div className="flex items-center mb-3">
-                <div className="flex items-center mr-4">
+              {/* Rating and Reviews */}
+              {reviewCount > 0 && (
+                <div className="flex items-center mb-4">
+                  <div className="flex items-center">
                   {[...Array(5)].map((_, i) => (
                     <Star
                       key={i}
                       className={`w-5 h-5 ${
-                        i < Math.floor(business.rating)
+                          i < Math.floor(avgRating)
                           ? 'text-yellow-400 fill-current'
                           : 'text-gray-300'
                       }`}
                     />
                   ))}
-                  <span className="ml-2 text-blue-600 font-roboto cursor-pointer hover:underline">
-                    Be the first to review!
+                  </div>
+                  <span className="ml-2 text-lg text-gray-600">
+                    {avgRating.toFixed(1)} ({reviewCount} reviews)
                   </span>
                 </div>
-              </div>
+              )}
 
-              <div className="flex items-center mb-4">
-                <Clock className="w-4 h-4 mr-2 text-green-600" />
-                <span className="text-green-600 font-roboto">
-                  {business.openStatus}
-                </span>
-                <span className="text-gray-600 font-roboto ml-2">
-                  {business.openDetails}
-                </span>
+              {/* Badges */}
+              <div className="flex flex-wrap gap-2">
+                {business.is_premium && (
+                  <Badge variant="default" className="bg-yp-blue text-white">
+                    <Award className="w-3 h-3 mr-1" />
+                    Premium
+                  </Badge>
+                )}
+                {business.is_verified && (
+                  <Badge variant="secondary">
+                    <CheckCircle className="w-3 h-3 mr-1" />
+                    Verified
+                  </Badge>
+                )}
               </div>
-
-              <div className="flex items-center">
-                <Users className="w-4 h-4 mr-2 text-gray-500" />
-                <span className="text-sm text-gray-600 font-roboto">
-                  {business.yearsInBusiness} Years in Business
-                </span>
+              </div>
               </div>
             </div>
 
-            {/* More Info Section */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-              <h2 className="text-xl font-semibold text-yp-dark font-comfortaa mb-4">More Info</h2>
-              
-              <div className="space-y-4">
-                <div>
-                  <h3 className="font-medium text-yp-dark font-comfortaa mb-2">General Info</h3>
-                  <p className="text-sm text-gray-600 font-roboto leading-relaxed">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+          {/* Main Content */}
+          <div className="lg:col-span-2">
+            {/* Business Images */}
+            {business.images && business.images.length > 0 && (
+              <div className="mb-8">
+                <div className="grid grid-cols-2 gap-4">
+                  {business.images.slice(0, 4).map((image, index) => (
+                    <div key={index} className="aspect-video bg-gray-200 rounded-lg overflow-hidden">
+                      <img 
+                        src={image} 
+                        alt={`${business.name} - Image ${index + 1}`}
+                        className="w-full h-full object-cover"
+                      />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Description */}
+            {business.description && (
+              <div className="mb-8">
+                <h3 className="text-xl font-semibold text-yp-dark mb-3">About</h3>
+                <p className="text-gray-700 leading-relaxed">
                     {business.description}
                   </p>
                 </div>
+            )}
 
-                <div>
-                  <h3 className="font-medium text-yp-dark font-comfortaa mb-2">Extra Phones</h3>
-                  <div className="space-y-1">
-                    {business.extraPhones.map((phone, index) => (
-                      <p key={index} className="text-sm text-gray-600 font-roboto">
-                        toll free: {phone}
-                      </p>
-                    ))}
+            {/* Services */}
+            {business.services && (
+              <div className="mb-8">
+                <h3 className="text-xl font-semibold text-yp-dark mb-3">Services</h3>
+                <div className="flex flex-wrap gap-2">
+                  {Array.isArray(business.services) 
+                    ? business.services.map((service, index) => (
+                        <Badge key={index} variant="outline">
+                          {service}
+                        </Badge>
+                      ))
+                    : Object.entries(business.services).map(([key, value]) => (
+                        <Badge key={key} variant="outline">
+                          {key}: {value}
+                        </Badge>
+                      ))
+                  }
                   </div>
                 </div>
+            )}
 
-                <div>
-                  <h3 className="font-medium text-yp-dark font-comfortaa mb-2">Accreditation</h3>
-                  <p className="text-sm text-gray-600 font-roboto">
-                    {business.accreditation}
-                  </p>
-                </div>
-
-                <div>
-                  <h3 className="font-medium text-yp-dark font-comfortaa mb-2">Other Link</h3>
-                  <div className="space-y-1">
-                    {business.otherLinks.map((link, index) => (
-                      <a key={index} href={`https://${link}`} className="block text-sm text-yp-blue hover:underline font-roboto">
-                        {link}
-                      </a>
+            {/* Reviews Preview */}
+            {business.reviews && business.reviews.length > 0 && (
+              <div className="mb-8">
+                <h3 className="text-xl font-semibold text-yp-dark mb-3">Recent Reviews</h3>
+                <div className="space-y-4">
+                  {business.reviews.slice(0, 3).map((review) => (
+                    <div key={review.id} className="border border-gray-200 rounded-lg p-4">
+                      <div className="flex items-center mb-2">
+                        <div className="flex items-center">
+                          {[...Array(5)].map((_, i) => (
+                            <Star
+                              key={i}
+                              className={`w-4 h-4 ${
+                                i < review.rating
+                                  ? 'text-yellow-400 fill-current'
+                                  : 'text-gray-300'
+                              }`}
+                            />
                     ))}
                   </div>
+                        <span className="ml-2 text-sm text-gray-500">
+                          {new Date(review.created_at).toLocaleDateString()}
+                        </span>
                 </div>
-
-                <div>
-                  <h3 className="font-medium text-yp-dark font-comfortaa mb-2">Categories</h3>
-                  <div className="flex flex-wrap gap-2">
-                    {business.subcategories.map((category, index) => (
-                      <a key={index} href="#" className="text-sm text-yp-blue hover:underline font-roboto">
-                        {category}
-                      </a>
-                    )).reduce((prev, curr, index) => 
-                      index === 0 ? [curr] : [...prev, <span key={`sep-${index}`} className="text-gray-400">, </span>, curr], 
-                      [] as React.ReactNode[]
+                      {review.title && (
+                        <h4 className="font-medium text-yp-dark mb-1">{review.title}</h4>
+                      )}
+                      {review.content && (
+                        <p className="text-gray-700 text-sm">{review.content}</p>
                     )}
                   </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Gallery Section */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
-              <div className="flex justify-between items-center mb-4">
-                <h2 className="text-xl font-semibold text-yp-dark font-comfortaa">Gallery</h2>
-                <div className="flex items-center space-x-4">
-                  <span className="text-sm text-gray-600 font-roboto">Be the first to add a photo!</span>
-                  <Button variant="outline" size="sm" className="font-roboto">
-                    <Camera className="w-4 h-4 mr-2" />
-                    Add Photos
-                  </Button>
-                </div>
-              </div>
-              <div className="bg-gray-100 rounded-lg h-48 flex items-center justify-center">
-                <div className="text-center text-gray-500">
-                  <Camera className="w-12 h-12 mx-auto mb-2" />
-                  <p className="text-sm font-roboto">No photos available</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Reviews Section */}
-            <div className="bg-white border border-gray-200 rounded-lg p-6">
-              <h2 className="text-xl font-semibold text-yp-dark font-comfortaa mb-4">Reviews</h2>
-              <div className="text-center py-8">
-                <div className="flex items-center justify-center mb-4">
-                  {[...Array(5)].map((_, i) => (
-                    <Star key={i} className="w-8 h-8 text-gray-300" />
                   ))}
                 </div>
-                <p className="text-gray-600 font-roboto mb-4">Be the first to review this business!</p>
-                <Button className="bg-yp-blue hover:bg-[#4e3c28] text-white font-roboto">
-                  Write the First Review
+                <div className="mt-4">
+                  <Link to="/write-review">
+                    <Button variant="outline" className="w-full">
+                      Write a Review
+                    </Button>
+                  </Link>
+                </div>
+              </div>
+            )}
+            </div>
+
+          {/* Sidebar */}
+          <div className="lg:col-span-1">
+            {/* Contact Information */}
+            <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+              <h3 className="text-lg font-semibold text-yp-dark mb-4">Contact Information</h3>
+              
+              <div className="space-y-3">
+                {business.phone && (
+                  <div className="flex items-center">
+                    <Phone className="w-4 h-4 text-gray-500 mr-3" />
+                    <a href={`tel:${business.phone}`} className="text-yp-blue hover:underline">
+                      {business.phone}
+                    </a>
+                  </div>
+                )}
+                
+                {business.email && (
+                  <div className="flex items-center">
+                    <Users className="w-4 h-4 text-gray-500 mr-3" />
+                    <a href={`mailto:${business.email}`} className="text-yp-blue hover:underline">
+                      {business.email}
+                    </a>
+                </div>
+                )}
+                
+                {business.website && (
+                  <div className="flex items-center">
+                    <Globe className="w-4 h-4 text-gray-500 mr-3" />
+                    <a 
+                      href={`https://${business.website}`} 
+                      className="text-yp-blue hover:underline"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      {business.website}
+                    </a>
+              </div>
+                )}
+                
+                {business.address && (
+                  <div className="flex items-start">
+                    <MapPin className="w-4 h-4 text-gray-500 mr-3 mt-0.5" />
+                    <span className="text-gray-700">{business.address}</span>
+                </div>
+                )}
+              </div>
+            </div>
+
+            {/* Business Hours */}
+            {business.hours_of_operation && (
+              <div className="bg-white border border-gray-200 rounded-lg p-6 mb-6">
+                <h3 className="text-lg font-semibold text-yp-dark mb-4">Business Hours</h3>
+                <div className="space-y-2">
+                  {typeof business.hours_of_operation === 'string' ? (
+                    <p className="text-gray-700">{business.hours_of_operation}</p>
+                  ) : (
+                    Object.entries(business.hours_of_operation).map(([day, hours]) => (
+                      <div key={day} className="flex justify-between">
+                        <span className="font-medium text-gray-700">{day}</span>
+                        <span className="text-gray-600">{hours as string}</span>
+                      </div>
+                    ))
+                  )}
+                </div>
+                </div>
+            )}
+
+            {/* Actions */}
+            <div className="space-y-3">
+              <Link to="/write-review">
+                <Button className="w-full bg-yp-blue hover:bg-[#4e3c28]">
+                  Write Review
+                </Button>
+              </Link>
+              
+              {business.website && (
+                <a 
+                  href={`https://${business.website}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <Button variant="outline" className="w-full">
+                    Visit Website
+                  </Button>
+                </a>
+              )}
+              
+              <Button variant="outline" className="w-full">
+                <Map className="w-4 h-4 mr-2" />
+                Get Directions
                 </Button>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      
       <Footer />
     </div>
   );

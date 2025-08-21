@@ -1,278 +1,59 @@
-import { useParams, Link } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { Header } from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Phone, Globe, Star, Clock, Filter, RotateCcw } from "lucide-react";
-
-// Category-specific mock data
-const categoryListings = {
-  dentists: [
-    {
-      id: 1,
-      name: "Elite Dental Care",
-      category: "Dentists",
-      phone: "(+250) 788 123 456",
-      address: "KN 4 Ave, Kigali, Rwanda",
-      website: "www.elitedentalrw.com",
-      rating: 4.8,
-      reviews: 64,
-      distance: "0.5 mi",
-      isOpen: true,
-      hours: "Open until 6:00 PM",
-      tags: ["Cosmetic Dentistry", "Emergency Services", "Insurance Accepted"]
-    },
-    {
-      id: 2,
-      name: "SmileCare Clinic",
-      category: "Dentists", 
-      phone: "(+250) 788 234 567",
-      address: "Kimihurura, Kigali, Rwanda",
-      website: "www.smilecarerw.com",
-      rating: 4.5,
-      reviews: 89,
-      distance: "1.2 mi",
-      isOpen: false,
-      hours: "Closed • Opens 8:00 AM",
-      tags: ["Orthodontics", "Children's Dentistry", "Whitening"]
-    },
-    {
-      id: 3,
-      name: "Modern Dental Solutions",
-      category: "Dentists",
-      phone: "(+250) 788 345 678", 
-      address: "Nyarutarama, Kigali, Rwanda",
-      website: "www.moderndentalrw.com",
-      rating: 4.9,
-      reviews: 156,
-      distance: "2.1 mi",
-      isOpen: true,
-      hours: "Open until 7:00 PM",
-      tags: ["Implants", "Root Canal", "Preventive Care"]
-    },
-    {
-      id: 4,
-      name: "Family Dental Clinic",
-      category: "Dentists",
-      phone: "(+250) 788 456 789",
-      address: "Remera, Kigali, Rwanda",
-      website: "www.familydentalrw.com",
-      rating: 4.6,
-      reviews: 112,
-      distance: "1.8 mi",
-      isOpen: true,
-      hours: "Open until 5:30 PM",
-      tags: ["Family Dentistry", "Pediatric Care", "Cleanings"]
-    },
-    {
-      id: 5,
-      name: "Bright Smile Dental",
-      category: "Dentists",
-      phone: "(+250) 788 567 890",
-      address: "Gaculiro, Kigali, Rwanda", 
-      website: "www.brightsmilerw.com",
-      rating: 4.7,
-      reviews: 78,
-      distance: "2.5 mi",
-      isOpen: true,
-      hours: "Open until 6:30 PM",
-      tags: ["Teeth Whitening", "Veneers", "Oral Surgery"]
-    }
-  ],
-  "auto-repair": [
-    {
-      id: 1,
-      name: "Elite Auto Service",
-      category: "Auto Repair",
-      phone: "(+250) 788 111 222",
-      address: "KN 3 Rd, Kigali, Rwanda",
-      website: "www.eliteautorw.com",
-      rating: 4.8,
-      reviews: 145,
-      distance: "0.3 mi",
-      isOpen: true,
-      hours: "Open until 7:00 PM",
-      tags: ["Engine Repair", "Brake Service", "Oil Change"]
-    },
-    {
-      id: 2,
-      name: "Quick Fix Garage",
-      category: "Auto Repair",
-      phone: "(+250) 788 222 333",
-      address: "Kimisagara, Kigali, Rwanda",
-      website: "www.quickfixrw.com",
-      rating: 4.5,
-      reviews: 203,
-      distance: "0.8 mi",
-      isOpen: true,
-      hours: "Open until 6:00 PM",
-      tags: ["Transmission", "AC Repair", "Tire Service"]
-    },
-    {
-      id: 3,
-      name: "Master Mechanics",
-      category: "Auto Repair",
-      phone: "(+250) 788 333 444",
-      address: "Nyabugogo, Kigali, Rwanda",
-      website: "www.mastermechanicsrw.com",
-      rating: 4.9,
-      reviews: 187,
-      distance: "1.1 mi",
-      isOpen: false,
-      hours: "Closed • Opens 7:30 AM",
-      tags: ["Diagnostic", "Body Work", "Paint Service"]
-    },
-    {
-      id: 4,
-      name: "Pro Auto Center",
-      category: "Auto Repair",
-      phone: "(+250) 788 444 555",
-      address: "Kacyiru, Kigali, Rwanda",
-      website: "www.proautorw.com",
-      rating: 4.6,
-      reviews: 134,
-      distance: "1.5 mi",
-      isOpen: true,
-      hours: "Open until 8:00 PM",
-      tags: ["24/7 Service", "Towing", "Emergency Repair"]
-    },
-    {
-      id: 5,
-      name: "City Car Care",
-      category: "Auto Repair", 
-      phone: "(+250) 788 555 666",
-      address: "Gikondo, Kigali, Rwanda",
-      website: "www.citycarcare.com",
-      rating: 4.4,
-      reviews: 98,
-      distance: "2.2 mi",
-      isOpen: true,
-      hours: "Open until 6:30 PM",
-      tags: ["Alignment", "Suspension", "Exhaust"]
-    }
-  ],
-  restaurants: [
-    {
-      id: 1,
-      name: "The Hut Restaurant",
-      category: "Restaurants",
-      phone: "(+250) 788 777 888",
-      address: "KN 2 Ave, Kigali, Rwanda",
-      website: "www.hutrestaurant.com",
-      rating: 4.7,
-      reviews: 234,
-      distance: "0.4 mi",
-      isOpen: true,
-      hours: "Open until 11:00 PM",
-      tags: ["Continental", "Local Cuisine", "Fine Dining"]
-    },
-    {
-      id: 2,
-      name: "Mama's Kitchen",
-      category: "Restaurants",
-      phone: "(+250) 788 888 999",
-      address: "Remera, Kigali, Rwanda",
-      website: "www.mamaskitchen.com",
-      rating: 4.6,
-      reviews: 178,
-      distance: "0.9 mi",
-      isOpen: true,
-      hours: "Open until 10:00 PM",
-      tags: ["Traditional Food", "Family Style", "Takeout"]
-    },
-    {
-      id: 3,
-      name: "Urban Bistro",
-      category: "Restaurants",
-      phone: "(+250) 788 999 111",
-      address: "Nyarutarama, Kigali, Rwanda",
-      website: "www.urbanbistro.com",
-      rating: 4.8,
-      reviews: 156,
-      distance: "1.3 mi",
-      isOpen: false,
-      hours: "Closed • Opens 6:00 AM",
-      tags: ["Breakfast", "Brunch", "Coffee"]
-    },
-    {
-      id: 4,
-      name: "Spice Garden",
-      category: "Restaurants",
-      phone: "(+250) 788 111 333",
-      address: "Kimihurura, Kigali, Rwanda",
-      website: "www.spicegarden.com", 
-      rating: 4.5,
-      reviews: 201,
-      distance: "1.7 mi",
-      isOpen: true,
-      hours: "Open until 9:30 PM",
-      tags: ["Indian Cuisine", "Vegetarian", "Delivery"]
-    }
-  ],
-  lawyers: [
-    {
-      id: 1,
-      name: "Kigali Legal Associates",
-      category: "Lawyers",
-      phone: "(+250) 788 222 444",
-      address: "KN 1 Ave, Kigali, Rwanda",
-      website: "www.kigalilegal.com",
-      rating: 4.9,
-      reviews: 67,
-      distance: "0.6 mi",
-      isOpen: true,
-      hours: "Open until 5:00 PM",
-      tags: ["Corporate Law", "Real Estate", "Litigation"]
-    },
-    {
-      id: 2,
-      name: "Rwanda Law Chambers",
-      category: "Lawyers",
-      phone: "(+250) 788 333 555",
-      address: "Kacyiru, Kigali, Rwanda",
-      website: "www.rwandalaw.com",
-      rating: 4.7,
-      reviews: 89,
-      distance: "1.1 mi",
-      isOpen: true,
-      hours: "Open until 6:00 PM",
-      tags: ["Family Law", "Immigration", "Criminal Defense"]
-    }
-  ],
-  plumbers: [
-    {
-      id: 1,
-      name: "Expert Plumbing Services",
-      category: "Plumbers",
-      phone: "(+250) 788 444 666",
-      address: "Gisozi, Kigali, Rwanda",
-      website: "www.expertplumbing.com",
-      rating: 4.6,
-      reviews: 123,
-      distance: "0.7 mi",
-      isOpen: true,
-      hours: "Open 24 Hours",
-      tags: ["Emergency Service", "Pipe Repair", "Installation"]
-    },
-    {
-      id: 2,
-      name: "Flow Master Plumbing",
-      category: "Plumbers",
-      phone: "(+250) 788 555 777",
-      address: "Kimisagara, Kigali, Rwanda",
-      website: "www.flowmaster.com",
-      rating: 4.8,
-      reviews: 94,
-      distance: "1.4 mi",
-      isOpen: true,
-      hours: "Open until 7:00 PM",
-      tags: ["Drain Cleaning", "Water Heater", "Bathroom Remodel"]
-    }
-  ]
-};
+import { Input } from "@/components/ui/input";
+import { MapPin, Phone, Globe, Star, Search, Map, Building2, Users, Award, ChevronDown } from "lucide-react";
+import { useBusinessesByCategory, useBusinessSearch } from "@/hooks/useBusinesses";
+import { Business } from "@/lib/businessService";
+import { Skeleton } from "@/components/ui/skeleton";
+import { db } from "@/lib/supabase";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 
 export const ListingsPage = () => {
-  const { city, category } = useParams();
+  const { city, category, categorySlug } = useParams();
+  const navigate = useNavigate();
+  
+  // Determine which category slug to use
+  const actualCategorySlug = categorySlug || category;
+  
+  // State for search and filters
+  // Search bar is read-only (users can see but not edit)
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCity, setSelectedCity] = useState<string>(city || "");
+  const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
+  const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
+  const [cities, setCities] = useState<Array<{ id: string; name: string; countries: { code: string } | null; latitude: number | null; longitude: number | null }>>([]);
+  const [loadingCities, setLoadingCities] = useState<boolean>(true);
+
+  // Fetch businesses by category
+  const { 
+    data: businesses = [], 
+    isLoading: isLoadingCategory, 
+    error: categoryError 
+  } = useBusinessesByCategory(actualCategorySlug || "", selectedCity || undefined);
+
+  // Search is read-only but functional for display
+  const { 
+    data: searchResults = [], 
+    isLoading: isLoadingSearch, 
+    error: searchError 
+  } = useBusinessSearch(searchTerm, {
+    category: actualCategorySlug,
+    city: selectedCity || undefined
+  });
+
+  // Determine which data to display
+  const displayBusinesses = searchTerm ? searchResults : businesses;
+  const isLoading = isLoadingCategory || isLoadingSearch;
+  const error = categoryError || searchError;
   
   const formatTitle = (str: string) => {
     return str?.split('-').map(word => 
@@ -280,11 +61,164 @@ export const ListingsPage = () => {
     ).join(' ') || '';
   };
 
+  const categoryName = formatTitle(actualCategorySlug || '');
   const cityName = formatTitle(city || '');
-  const categoryName = formatTitle(category || '');
-  
-  // Get listings for current category
-  const currentListings = categoryListings[category as keyof typeof categoryListings] || [];
+
+  // Search is read-only, no user input allowed
+  const handleSearch = () => {
+    // Search is handled by the hook automatically
+  };
+
+  // Handle filter toggle
+  const toggleFilter = (filter: string) => {
+    setSelectedFilters(prev => 
+      prev.includes(filter) 
+        ? prev.filter(f => f !== filter)
+        : [...prev, filter]
+    );
+  };
+
+  // Handle business click
+  const handleBusinessClick = (business: Business) => {
+    // Increment click count
+    // BusinessService.incrementClickCount(business.id);
+    
+    // Navigate to business detail
+    if (city) {
+      navigate(`/${city}/${actualCategorySlug}/${business.id}`);
+    } else {
+      navigate(`/category/${actualCategorySlug}/${business.id}`);
+    }
+  };
+
+  // Filter businesses based on selected filters
+  const filteredBusinesses = displayBusinesses.filter(business => {
+    if (selectedFilters.includes('premium') && !business.is_premium) return false;
+    if (selectedFilters.includes('verified') && !business.is_verified) return false;
+    if (selectedFilters.includes('24h') && !business.hours_of_operation?.includes('24')) return false;
+    return true;
+  });
+
+  // Calculate average rating for a business
+  const getAverageRating = (business: Business) => {
+    if (!business.reviews || business.reviews.length === 0) return 0;
+    const totalRating = business.reviews.reduce((sum, review) => sum + review.rating, 0);
+    return totalRating / business.reviews.length;
+  };
+
+  // Get review count
+  const getReviewCount = (business: Business) => {
+    return business.reviews?.length || 0;
+  };
+
+  // Load cities with coordinates for proximity filtering
+  useEffect(() => {
+    const fetchCities = async () => {
+      try {
+        const { data, error } = await db.cities()
+          .select(`
+            id,
+            name,
+            latitude,
+            longitude,
+            countries ( code )
+          `)
+          .order('name', { ascending: true });
+        if (!error && data) {
+          const typed = (data as unknown) as Array<{ 
+            id: string; 
+            name: string; 
+            latitude: number | null; 
+            longitude: number | null;
+            countries: { code: string } | null 
+          }>;
+          setCities(typed);
+        }
+      } finally {
+        setLoadingCities(false);
+      }
+    };
+    fetchCities();
+  }, []);
+
+  // Loading skeleton
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-background font-roboto">
+        <Header />
+        
+        {/* Search Header Skeleton */}
+        <div className="bg-yp-yellow py-4">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center space-x-4">
+              <Skeleton className="h-10 flex-1 max-w-md" />
+              <Skeleton className="h-10 flex-1 max-w-md" />
+              <Skeleton className="h-10 w-24" />
+            </div>
+          </div>
+        </div>
+
+        {/* Results Skeleton */}
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+          <div className="space-y-6">
+            {[...Array(5)].map((_, i) => (
+              <div key={i} className="bg-white border border-gray-200 rounded-lg p-6">
+                <div className="flex justify-between items-start">
+                  <div className="flex-1">
+                    <Skeleton className="h-6 w-48 mb-2" />
+                    <Skeleton className="h-4 w-32 mb-3" />
+                    <div className="flex gap-2 mb-3">
+                      <Skeleton className="h-5 w-20" />
+                      <Skeleton className="h-5 w-24" />
+                    </div>
+                    <div className="space-y-2">
+                      <Skeleton className="h-4 w-64" />
+                      <Skeleton className="h-4 w-48" />
+                      <Skeleton className="h-4 w-56" />
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <Skeleton className="h-4 w-16 mb-2" />
+                    <div className="space-y-2">
+                      <Skeleton className="h-8 w-24" />
+                      <Skeleton className="h-8 w-24" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="min-h-screen bg-background font-roboto">
+        <Header />
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="text-center">
+            <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Building2 className="w-8 h-8 text-red-600" />
+            </div>
+            <h2 className="text-2xl font-comfortaa font-bold text-yp-dark mb-4">
+              Error Loading Businesses
+            </h2>
+            <p className="text-gray-600 mb-6">
+              {error.message || 'An error occurred while loading businesses. Please try again.'}
+            </p>
+            <Button onClick={() => window.location.reload()} className="bg-yp-blue hover:bg-[#4e3c28]">
+              Try Again
+            </Button>
+          </div>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background font-roboto">
@@ -295,25 +229,40 @@ export const ListingsPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center space-x-4">
             <div className="flex-1 max-w-md">
-              <input
+              <Input
                 type="text"
-                placeholder={categoryName}
-                className="w-full px-4 py-2 border border-gray-300 rounded-md font-roboto"
-                defaultValue={categoryName}
+                placeholder={`Search ${categoryName}...`}
+                value={searchTerm}
+                readOnly
+                className="w-full font-roboto bg-gray-50 cursor-not-allowed"
               />
             </div>
             <div className="flex-1 max-w-md">
-              <div className="relative">
-                <MapPin className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <input
-                  type="text"
-                  placeholder="City, State"
-                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-md font-roboto"
-                  defaultValue={`${cityName}, Rwanda`}
-                />
-              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="outline" className="w-full justify-start font-roboto">
+                    <MapPin className="w-4 h-4 mr-2 text-gray-500" />
+                    {selectedCity || 'Select City'}
+                    <ChevronDown className="w-4 h-4 ml-auto" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-[280px] max-h-[300px] overflow-auto">
+                  {loadingCities ? (
+                    <div className="p-3 text-sm text-gray-500">Loading cities...</div>
+                  ) : (
+                    cities.map((c) => (
+                      <DropdownMenuItem key={c.id} onClick={() => setSelectedCity(`${c.name}`)}>
+                        {c.name}{c.countries?.code ? `, ${c.countries.code}` : ''}
+                      </DropdownMenuItem>
+                    ))
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
             </div>
-            <Button className="bg-yp-blue hover:bg-[#4e3c28] text-white px-8 font-roboto">
+            <Button 
+              onClick={handleSearch}
+              className="bg-yp-blue hover:bg-[#4e3c28] text-white px-8 font-roboto"
+            >
               Find
             </Button>
           </div>
@@ -324,25 +273,49 @@ export const ListingsPage = () => {
       <div className="bg-white border-b border-gray-200 py-3">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex items-center space-x-4">
-            <Button variant="outline" size="sm" className="font-roboto">
-              <MapPin className="w-4 h-4 mr-1" />
+            <Button 
+              variant={viewMode === 'map' ? 'default' : 'outline'} 
+              size="sm" 
+              onClick={() => setViewMode('map')}
+              className="font-roboto"
+            >
+              <Map className="w-4 h-4 mr-1" />
               Map View
             </Button>
-            <Button variant="outline" size="sm" className="font-roboto">
-              <Filter className="w-4 h-4 mr-1" />
-              All
+            <Button 
+              variant={viewMode === 'list' ? 'default' : 'outline'} 
+              size="sm" 
+              onClick={() => setViewMode('list')}
+              className="font-roboto"
+            >
+              <Building2 className="w-4 h-4 mr-1" />
+              List View
             </Button>
-            <Button variant="outline" size="sm" className="font-roboto">
-              Order Online
+            
+            <Button 
+              variant={selectedFilters.includes('premium') ? 'default' : 'outline'} 
+              size="sm" 
+              onClick={() => toggleFilter('premium')}
+              className="font-roboto"
+            >
+              <Award className="w-4 h-4 mr-1" />
+              Premium
             </Button>
-            <Button variant="outline" size="sm" className="font-roboto">
-              Kid Friendly
+            
+            <Button 
+              variant={selectedFilters.includes('verified') ? 'default' : 'outline'} 
+              size="sm" 
+              onClick={() => toggleFilter('verified')}
+              className="font-roboto"
+            >
+              <Users className="w-4 h-4 mr-1" />
+              Verified
             </Button>
-            <Button variant="outline" size="sm" className="font-roboto">
-              Coupons
-            </Button>
+            
             <div className="ml-auto">
-              <span className="text-sm text-gray-600 font-roboto">Sort: Default</span>
+              <span className="text-sm text-gray-600 font-roboto">
+                {filteredBusinesses.length} businesses found
+              </span>
             </div>
           </div>
         </div>
@@ -350,105 +323,158 @@ export const ListingsPage = () => {
 
       {/* Results */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex items-center mb-4">
-          <Clock className="w-4 h-4 text-gray-500 mr-2" />
-          <span className="text-sm text-gray-600 font-roboto">
-            View all businesses that are OPEN 24 Hours
-          </span>
-          <RotateCcw className="w-4 h-4 text-gray-400 ml-2" />
-        </div>
-
-        <div className="space-y-6">
-          {currentListings.map((listing) => (
-            <div key={listing.id} className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow">
-              <div className="flex justify-between items-start">
-                <div className="flex-1">
-                  <div className="flex items-center mb-2">
-                    <h3 className="text-xl font-semibold text-yp-dark font-comfortaa mr-2">
-                      {listing.name}
-                    </h3>
-                    <div className="flex items-center">
-                      {[...Array(5)].map((_, i) => (
-                        <Star
-                          key={i}
-                          className={`w-4 h-4 ${
-                            i < Math.floor(listing.rating)
-                              ? 'text-yellow-400 fill-current'
-                              : 'text-gray-300'
-                          }`}
-                        />
-                      ))}
-                      <span className="ml-1 text-sm text-gray-600 font-roboto">
-                        ({listing.reviews})
-                      </span>
-                    </div>
-                  </div>
-                  
-                  <p className="text-gray-600 font-roboto mb-2">
-                    {listing.category}
-                  </p>
-                  
-                  <div className="flex flex-wrap gap-2 mb-3">
-                    {listing.tags.map((tag) => (
-                      <Badge key={tag} variant="secondary" className="text-xs font-roboto">
-                        {tag}
-                      </Badge>
-                    ))}
-                  </div>
-                  
-                  <div className="space-y-1 text-sm text-gray-600 font-roboto">
-                    <div className="flex items-center">
-                      <MapPin className="w-4 h-4 mr-2" />
-                      {listing.address}
-                    </div>
-                    <div className="flex items-center">
-                      <Phone className="w-4 h-4 mr-2" />
-                      <a href={`tel:${listing.phone}`} className="text-yp-blue hover:underline">
-                        {listing.phone}
-                      </a>
-                    </div>
-                    <div className="flex items-center">
-                      <Globe className="w-4 h-4 mr-2" />
-                      <a href={`https://${listing.website}`} className="text-yp-blue hover:underline">
-                        {listing.website}
-                      </a>
-                    </div>
-                    <div className="flex items-center">
-                      <Clock className="w-4 h-4 mr-2" />
-                      <span className={listing.isOpen ? 'text-green-600' : 'text-red-600'}>
-                        {listing.hours}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div className="text-right">
-                  <div className="text-sm text-gray-500 font-roboto mb-2">
-                    {listing.distance}
-                  </div>
-                  <div className="space-y-2">
-                    <Link to={`/${city}/${category}/${listing.id}`}>
-                      <Button size="sm" variant="outline" className="font-roboto w-full">
-                        More Info
-                      </Button>
-                    </Link>
-                    <Link to="/write-review">
-                      <Button size="sm" className="bg-yp-blue hover:bg-yp-blue/90 text-white font-roboto w-full">
-                        Write Review
-                      </Button>
-                    </Link>
-                  </div>
-                </div>
-              </div>
+        {filteredBusinesses.length === 0 ? (
+          <div className="text-center py-16">
+            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+              <Search className="w-8 h-8 text-gray-400" />
             </div>
-          ))}
-        </div>
-
-        <div className="mt-8 text-center">
-          <Button variant="outline" className="font-roboto">
-            Load More Results
-          </Button>
-        </div>
+            <h3 className="text-lg font-roboto font-semibold text-gray-900 mb-2">
+              No businesses found
+            </h3>
+            <p className="text-gray-600 mb-6">
+              {searchTerm 
+                ? `No businesses found matching "${searchTerm}"`
+                : `No businesses found in ${categoryName}`
+              }
+            </p>
+            <Button 
+              variant="outline" 
+              onClick={() => {
+                setSearchTerm("");
+                setSelectedCity("");
+                setSelectedFilters([]);
+              }}
+            >
+              Clear Filters
+            </Button>
+          </div>
+        ) : (
+          <div className="space-y-6">
+            {filteredBusinesses.map((business) => {
+              const avgRating = getAverageRating(business);
+              const reviewCount = getReviewCount(business);
+              
+              return (
+                <div 
+                  key={business.id} 
+                  className="bg-white border border-gray-200 rounded-lg p-6 hover:shadow-md transition-shadow cursor-pointer"
+                  onClick={() => handleBusinessClick(business)}
+                >
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <div className="flex items-center mb-2">
+                        <h3 className="text-xl font-semibold text-yp-dark font-comfortaa mr-2">
+                          {business.name}
+                        </h3>
+                        {business.is_premium && (
+                          <Badge variant="default" className="bg-yp-blue text-white text-xs">
+                            Premium
+                          </Badge>
+                        )}
+                        {business.is_verified && (
+                          <Badge variant="secondary" className="text-xs">
+                            ✓ Verified
+                          </Badge>
+                        )}
+                      </div>
+                      
+                      <p className="text-gray-600 font-roboto mb-2">
+                        {business.category?.name || 'Business'}
+                      </p>
+                      
+                      {/* Rating */}
+                      {reviewCount > 0 && (
+                        <div className="flex items-center mb-3">
+                          <div className="flex items-center">
+                            {[...Array(5)].map((_, i) => (
+                              <Star
+                                key={i}
+                                className={`w-4 h-4 ${
+                                  i < Math.floor(avgRating)
+                                    ? 'text-yellow-400 fill-current'
+                                    : 'text-gray-300'
+                                }`}
+                              />
+                            ))}
+                          </div>
+                          <span className="ml-2 text-sm text-gray-600 font-roboto">
+                            {avgRating.toFixed(1)} ({reviewCount} reviews)
+                          </span>
+                        </div>
+                      )}
+                      
+                      {/* Business details */}
+                      <div className="space-y-1 text-sm text-gray-600 font-roboto">
+                        {business.address && (
+                          <div className="flex items-center">
+                            <MapPin className="w-4 h-4 mr-2" />
+                            {business.address}
+                          </div>
+                        )}
+                        {business.phone && (
+                          <div className="flex items-center">
+                            <Phone className="w-4 h-4 mr-2" />
+                            <a 
+                              href={`tel:${business.phone}`} 
+                              className="text-yp-blue hover:underline"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {business.phone}
+                            </a>
+                          </div>
+                        )}
+                        {business.website && (
+                          <div className="flex items-center">
+                            <Globe className="w-4 h-4 mr-2" />
+                            <a 
+                              href={`https://${business.website}`} 
+                              className="text-yp-blue hover:underline"
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {business.website}
+                            </a>
+                          </div>
+                        )}
+                        {business.description && (
+                          <p className="text-gray-700 mt-2 line-clamp-2">
+                            {business.description}
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                    
+                    <div className="text-right">
+                      <div className="space-y-2">
+                        <Link 
+                          to={city 
+                            ? `/${city}/${actualCategorySlug}/${business.id}`
+                            : `/category/${actualCategorySlug}/${business.id}`
+                          }
+                          onClick={(e) => e.stopPropagation()}
+                        >
+                          <Button size="sm" variant="outline" className="font-roboto w-full">
+                            More Info
+                          </Button>
+                        </Link>
+                        <Link to="/write-review">
+                          <Button 
+                            size="sm" 
+                            className="bg-yp-blue hover:bg-yp-blue/90 text-white font-roboto w-full"
+                            onClick={(e) => e.stopPropagation()}
+                          >
+                            Write Review
+                          </Button>
+                        </Link>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
       </div>
       <Footer />
     </div>
