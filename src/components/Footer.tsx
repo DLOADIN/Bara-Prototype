@@ -263,20 +263,12 @@ const Footer = () => {
         </div>
 
         {/* Communities Section */}
-        <div className="border-t border-gray-300 pt-6 sm:pt-8">
+        {/* <div className="border-t border-gray-300 pt-6 sm:pt-8">
           <h3 className="text-lg font-bold text-gray-800 mb-4 pb-2 border-b-2 border-[#70905a] font-comfortaa text-center sm:text-left">
             {t('footer.communities')}
           </h3>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-3 sm:gap-4">
-            <div>
-              <Link 
-                to="/communities/south-africaful-south-africa" 
-                className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
-              >
-                <span className="mr-2">🇿🇦</span>
-                {t('footer.southAfricafulSouthAfrica')}
-              </Link>
-            </div>
+            
             <div>
               <Link 
                 to="/communities/rwandaful-rwanda" 
@@ -350,7 +342,7 @@ const Footer = () => {
               </Link>
             </div>
           </div>
-        </div>
+        </div> */}
 
         {/* Legal Links */}
         {/* <div className="border-t border-gray-300 pt-6 pb-4">

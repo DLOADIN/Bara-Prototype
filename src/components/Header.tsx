@@ -207,9 +207,9 @@ export const Header = () => {
                   </div>
                 ) : (
                   <div className="max-h-80 overflow-y-auto">
-                    <div className="px-2 py-1.5 text-xs text-gray-500 border-b border-gray-100 mb-1">
+                    {/* <div className="px-2 py-1.5 text-xs text-gray-500 border-b border-gray-100 mb-1">
                       {cities.length} cities available
-                    </div>
+                    </div> */}
                     {cities.map((city) => (
                       <DropdownMenuItem
                         key={city.id}
