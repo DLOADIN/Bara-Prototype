@@ -17,6 +17,8 @@ import { AdminBusinesses } from "./pages/admin/AdminBusinesses";
 import { AdminReviews } from "./pages/admin/AdminReviews";
 import { AdminAuthGuard } from "./components/admin/AdminAuthGuard";
 import { GoogleMapsTest } from "./components/GoogleMapsTest";
+import { MapTestPage } from "./pages/MapTestPage";
+import { SimpleMapTest } from "./pages/SimpleMapTest";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +39,8 @@ const App = () => (
           <Route path="/:city/:category/:businessId" element={<BusinessDetailPage />} />
           <Route path="/cities/:citySlug" element={<CityDetailPage />} />
           <Route path="/googlemaps" element={<GoogleMapsTest />} />
+          <Route path="/map-test" element={<MapTestPage />} />
+          <Route path="/simple-map-test" element={<SimpleMapTest />} />
           
           {/* Admin Routes - Protected by AdminAuthGuard */}
           <Route path="/admin" element={

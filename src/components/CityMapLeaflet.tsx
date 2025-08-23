@@ -1,332 +1,358 @@
 import { useEffect, useRef, useState } from 'react';
-import { MapPin, Building, Star, Phone, Globe } from 'lucide-react';
 import L from 'leaflet';
+import 'leaflet/dist/leaflet.css';
 
-// Add TypeScript declarations for Leaflet
-declare global {
-  interface Window {
-    L: typeof L;
-  }
+interface Business {
+  id: string;
+  name: string;
+  description: string | null;
+  address: string | null;
+  phone: string | null;
+  website: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  category?: {
+    name: string;
+    slug: string;
+  };
+  reviews?: Array<{
+    id: string;
+    rating: number;
+    content: string;
+    created_at: string;
+  }>;
 }
 
 interface CityMapLeafletProps {
   cityName: string;
   latitude: number;
   longitude: number;
-  businesses: Array<{
-    id: string;
-    name: string;
-    latitude: number | null;
-    longitude: number | null;
-    category?: { name: string };
-    rating?: number;
-    address?: string;
-  }>;
+  businesses: Business[];
   height?: string;
 }
 
-export const CityMapLeaflet = ({ cityName, latitude, longitude, businesses, height = '400px' }: CityMapLeafletProps) => {
+// Fix for default markers in Leaflet
+delete (L.Icon.Default.prototype as any)._getIconUrl;
+L.Icon.Default.mergeOptions({
+  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon-2x.png',
+  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-icon.png',
+  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
+});
+
+export const CityMapLeaflet = ({ 
+  cityName, 
+  latitude, 
+  longitude, 
+  businesses, 
+  height = "500px" 
+}: CityMapLeafletProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<L.Map | null>(null);
-  const [loading, setLoading] = useState(true);
+  const markersRef = useRef<L.Marker[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [mapLoaded, setMapLoaded] = useState(false);
 
   useEffect(() => {
-    console.log('CityMapLeaflet useEffect triggered with:', { cityName, latitude, longitude, businessesCount: businesses.length });
-    
     if (!mapRef.current) {
-      console.log('Map ref not available yet');
       return;
     }
 
-    if (!latitude || !longitude) {
-      console.log('Invalid coordinates:', { latitude, longitude });
-      setError('Invalid coordinates provided for map');
-      setLoading(false);
-      return;
-    }
+    try {
+      console.log('🗺️ Initializing Leaflet map...');
+      console.log('📍 City:', cityName);
+      console.log('🎯 Coordinates:', { lat: latitude, lng: longitude });
+      console.log('🏢 Businesses:', businesses.length);
 
-    const initializeMap = async () => {
-      try {
-        setLoading(true);
-        setError(null);
-        console.log('Initializing Leaflet map...');
-
-        // Create map instance
-        const map = L.map(mapRef.current!).setView([latitude, longitude], 12);
-        mapInstanceRef.current = map;
-        console.log('Map instance created successfully');
-
-        // Add OpenStreetMap tiles
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
-          maxZoom: 18,
-          minZoom: 8
-        }).addTo(map);
-        console.log('OpenStreetMap tiles added');
-
-        // Custom city center marker icon
-        const cityIcon = L.divIcon({
-          className: 'custom-city-marker',
-          html: `
-            <div style="
-              width: 40px; 
-              height: 40px; 
-              background: #3B82F6; 
-              border: 3px solid #1E40AF; 
-              border-radius: 50%; 
-              display: flex; 
-              align-items: center; 
-              justify-content: center; 
-              color: white; 
-              font-weight: bold; 
-              font-size: 16px;
-              box-shadow: 0 2px 8px rgba(0,0,0,0.3);
-            ">
-              ${cityName.charAt(0).toUpperCase()}
-            </div>
-          `,
-          iconSize: [40, 40],
-          iconAnchor: [20, 20]
-        });
-
-        // Add city center marker
-        const cityMarker = L.marker([latitude, longitude], { icon: cityIcon }).addTo(map);
-        console.log('City marker added at:', [latitude, longitude]);
-        
-        // City info popup
-        const cityPopup = L.popup({
-          maxWidth: 250,
-          className: 'city-popup'
-        }).setContent(`
-          <div style="padding: 8px;">
-            <h3 style="margin: 0 0 8px 0; color: #1F2937; font-size: 16px; font-weight: 600;">
-              ${cityName}
-            </h3>
-            <p style="margin: 0; color: #6B7280; font-size: 14px;">City Center</p>
-            <p style="margin: 5px 0 0 0; color: #6B7280; font-size: 12px;">
-              ${businesses.length} businesses nearby
-            </p>
-          </div>
-        `);
-
-        cityMarker.bindPopup(cityPopup);
-
-        // Custom business marker icon
-        const businessIcon = L.divIcon({
-          className: 'custom-business-marker',
-          html: `
-            <div style="
-              width: 32px; 
-              height: 32px; 
-              background: #10B981; 
-              border: 2px solid #059669; 
-              border-radius: 6px; 
-              display: flex; 
-              align-items: center; 
-              justify-content: center; 
-              color: white; 
-              font-weight: bold; 
-              font-size: 14px;
-              box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-            ">
-              🏢
-            </div>
-          `,
-          iconSize: [32, 32],
-          iconAnchor: [16, 16]
-        });
-
-        // Add business markers
-        let businessMarkersAdded = 0;
-        businesses.forEach((business) => {
-          if (business.latitude && business.longitude) {
-            const businessMarker = L.marker([business.latitude, business.longitude], { 
-              icon: businessIcon 
-            }).addTo(map);
-
-            // Business info popup
-            const businessPopup = L.popup({
-              maxWidth: 280,
-              className: 'business-popup'
-            }).setContent(`
-              <div style="padding: 12px;">
-                <h4 style="margin: 0 0 8px 0; color: #1F2937; font-size: 14px; font-weight: 600;">
-                  ${business.name}
-                </h4>
-                ${business.category ? `
-                  <p style="margin: 0 0 6px 0; color: #6B7280; font-size: 12px;">
-                    📍 ${business.category.name}
-                  </p>
-                ` : ''}
-                ${business.rating ? `
-                  <p style="margin: 0 0 6px 0; color: #6B7280; font-size: 12px;">
-                    ⭐ ${business.rating.toFixed(1)} rating
-                  </p>
-                ` : ''}
-                ${business.address ? `
-                  <p style="margin: 0; color: #6B7280; font-size: 12px;">
-                    🏠 ${business.address}
-                  </p>
-                ` : ''}
-              </div>
-            `);
-
-            businessMarker.bindPopup(businessPopup);
-            businessMarkersAdded++;
-          }
-        });
-        console.log(`Added ${businessMarkersAdded} business markers`);
-
-        // Fit map to show all markers
-        const bounds = L.latLngBounds([
-          [latitude, longitude], // city center
-          ...businesses
-            .filter(b => b.latitude && b.longitude)
-            .map(b => [b.latitude!, b.longitude!])
-        ]);
-        
-        if (bounds.isValid()) {
-          map.fitBounds(bounds, { padding: [20, 20] });
-          console.log('Map bounds set to show all markers');
-        }
-
-        // Force a resize to ensure proper display
-        setTimeout(() => {
-          map.invalidateSize();
-          console.log('Map size invalidated');
-        }, 100);
-
-        setLoading(false);
-        console.log('Map initialization completed successfully');
-      } catch (err) {
-        console.error('Error loading Leaflet map:', err);
-        setError('Failed to load map. Please try again.');
-        setLoading(false);
+      // Check if we have valid coordinates
+      if (!latitude || !longitude) {
+        setError('Invalid coordinates provided for map');
+        setIsLoading(false);
+        return;
       }
-    };
 
-    initializeMap();
+      // Initialize the map
+      const map = L.map(mapRef.current).setView([latitude, longitude], 13);
+
+      // Add OpenStreetMap tiles
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors',
+        maxZoom: 18,
+      }).addTo(map);
+
+      mapInstanceRef.current = map;
+      console.log('✅ Leaflet map initialized successfully');
+
+      // Add city center marker
+      addCityMarker(map);
+      
+      // Add business markers
+      addBusinessMarkers(map);
+      
+      // Fit map to show all markers
+      fitMapToMarkers(map);
+      
+      setMapLoaded(true);
+      setIsLoading(false);
+      console.log('🎉 Map setup completed successfully');
+      
+    } catch (error) {
+      console.error('❌ Error initializing Leaflet map:', error);
+      setError(`Error initializing map: ${error instanceof Error ? error.message : 'Unknown error'}`);
+      setIsLoading(false);
+    }
 
     // Cleanup function
     return () => {
       if (mapInstanceRef.current) {
         mapInstanceRef.current.remove();
         mapInstanceRef.current = null;
-        console.log('Map cleanup completed');
       }
+      markersRef.current = [];
     };
-  }, [latitude, longitude, businesses, cityName]);
+  }, [cityName, latitude, longitude, businesses]);
 
-  // Handle map resize when container changes
-  useEffect(() => {
-    if (mapInstanceRef.current) {
-      setTimeout(() => {
-        mapInstanceRef.current?.invalidateSize();
-      }, 100);
+  const addCityMarker = (map: L.Map) => {
+    try {
+      // Create custom city marker icon
+      const cityIcon = L.divIcon({
+        className: 'custom-city-marker',
+        html: `
+          <div style="
+            width: 40px; 
+            height: 40px; 
+            background: linear-gradient(135deg, #3B82F6, #1E40AF);
+            border: 3px solid #FFFFFF;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            font-weight: bold;
+            color: white;
+            font-size: 16px;
+          ">
+            ${cityName.charAt(0).toUpperCase()}
+          </div>
+        `,
+        iconSize: [40, 40],
+        iconAnchor: [20, 20],
+      });
+
+      const cityMarker = L.marker([latitude, longitude], { icon: cityIcon }).addTo(map);
+
+      // Create popup for city marker
+      const cityPopup = L.popup({
+        maxWidth: 300,
+        className: 'city-popup'
+      }).setContent(`
+        <div style="padding: 8px; font-family: system-ui, -apple-system, sans-serif;">
+          <h3 style="margin: 0 0 8px 0; color: #1F2937; font-size: 18px; font-weight: bold;">
+            ${cityName}
+          </h3>
+          <p style="margin: 0; color: #6B7280; font-size: 14px;">
+            🏙️ City Center
+          </p>
+          <p style="margin: 4px 0 0 0; color: #9CA3AF; font-size: 12px;">
+            📍 ${latitude.toFixed(4)}, ${longitude.toFixed(4)}
+          </p>
+          <p style="margin: 8px 0 0 0; color: #059669; font-size: 12px; font-weight: 500;">
+            🏢 ${businesses.length} businesses nearby
+          </p>
+        </div>
+      `);
+
+      cityMarker.bindPopup(cityPopup);
+      markersRef.current.push(cityMarker);
+      console.log('✅ City marker added successfully');
+    } catch (error) {
+      console.error('❌ Error adding city marker:', error);
     }
-  }, [height]);
+  };
 
+  const addBusinessMarkers = (map: L.Map) => {
+    try {
+      console.log(`🏢 Adding ${businesses.length} business markers...`);
+      
+      businesses.forEach((business, index) => {
+        if (business.latitude && business.longitude) {
+          console.log(`📍 Adding business marker ${index + 1}: ${business.name}`);
+          
+          // Create custom business marker icon
+          const businessIcon = L.divIcon({
+            className: 'custom-business-marker',
+            html: `
+              <div style="
+                width: 36px; 
+                height: 36px; 
+                background: linear-gradient(135deg, #10B981, #059669);
+                border: 2px solid #FFFFFF;
+                border-radius: 50%;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 3px 8px rgba(0,0,0,0.12);
+                font-size: 18px;
+                cursor: pointer;
+              ">
+                🏢
+              </div>
+            `,
+            iconSize: [36, 36],
+            iconAnchor: [18, 18],
+          });
+
+          const businessMarker = L.marker([business.latitude, business.longitude], { 
+            icon: businessIcon 
+          }).addTo(map);
+
+          // Create popup for business
+          const getAverageRating = (business: Business) => {
+            if (!business.reviews || business.reviews.length === 0) return 0;
+            const totalRating = business.reviews.reduce((sum, review) => sum + review.rating, 0);
+            return totalRating / business.reviews.length;
+          };
+
+          const averageRating = getAverageRating(business);
+          const ratingStars = '⭐'.repeat(Math.round(averageRating));
+
+          const businessPopup = L.popup({
+            maxWidth: 350,
+            className: 'business-popup'
+          }).setContent(`
+            <div style="padding: 12px; font-family: system-ui, -apple-system, sans-serif;">
+              <h3 style="margin: 0 0 8px 0; color: #1F2937; font-size: 16px; font-weight: bold;">
+                ${business.name}
+              </h3>
+              ${business.category ? `
+                <p style="margin: 0 0 8px 0; color: #6B7280; font-size: 12px; background: #F3F4F6; padding: 4px 8px; border-radius: 6px; display: inline-block;">
+                  ${business.category.name}
+                </p>
+              ` : ''}
+              ${business.description ? `
+                <p style="margin: 8px 0; color: #4B5563; font-size: 14px; line-height: 1.4;">
+                  ${business.description}
+                </p>
+              ` : ''}
+              ${business.address ? `
+                <p style="margin: 4px 0; color: #6B7280; font-size: 12px;">
+                  📍 ${business.address}
+                </p>
+              ` : ''}
+              ${business.phone ? `
+                <p style="margin: 4px 0; color: #6B7280; font-size: 12px;">
+                  📞 ${business.phone}
+                </p>
+              ` : ''}
+              ${averageRating > 0 ? `
+                <p style="margin: 8px 0 0 0; color: #F59E0B; font-size: 12px; font-weight: 500;">
+                  ${ratingStars} ${averageRating.toFixed(1)} (${business.reviews?.length || 0} reviews)
+                </p>
+              ` : ''}
+            </div>
+          `);
+
+          businessMarker.bindPopup(businessPopup);
+          markersRef.current.push(businessMarker);
+        }
+      });
+      
+      console.log(`✅ Added ${businesses.filter(b => b.latitude && b.longitude).length} business markers`);
+    } catch (error) {
+      console.error('❌ Error adding business markers:', error);
+    }
+  };
+
+  const fitMapToMarkers = (map: L.Map) => {
+    try {
+      if (markersRef.current.length > 0) {
+        console.log('🔍 Fitting map to show all markers...');
+        const group = new L.FeatureGroup(markersRef.current);
+        map.fitBounds(group.getBounds().pad(0.1));
+        console.log('✅ Map bounds fitted successfully');
+      }
+    } catch (error) {
+      console.error('❌ Error fitting map to markers:', error);
+    }
+  };
+
+  // Show error state
   if (error) {
     return (
-      <div className="bg-red-50 border border-red-200 rounded-lg p-6 text-center" style={{ height }}>
-        <div className="text-red-600 mb-2">
-          <MapPin className="w-8 h-8 mx-auto" />
+      <div 
+        style={{ height }} 
+        className="bg-gray-100 rounded-lg flex items-center justify-center border border-gray-200"
+      >
+        <div className="text-center p-6">
+          <div className="text-red-500 text-4xl mb-4">🗺️</div>
+          <h3 className="text-lg font-medium text-gray-900 mb-2">Map Error</h3>
+          <p className="text-gray-600 text-sm mb-4">{error}</p>
+          <div className="text-xs text-gray-500 space-y-1">
+            <p>• Check your internet connection</p>
+            <p>• Verify coordinates are valid</p>
+            <p>• Try refreshing the page</p>
+          </div>
         </div>
-        <h3 className="text-red-800 font-medium mb-2">Map Loading Error</h3>
-        <p className="text-red-700 text-sm">{error}</p>
-        <button 
-          onClick={() => window.location.reload()} 
-          className="mt-3 px-4 py-2 bg-red-600 text-white rounded-md text-sm hover:bg-red-700 transition-colors"
-        >
-          Retry
-        </button>
       </div>
     );
   }
 
-  if (loading) {
+  // Show loading state
+  if (isLoading) {
     return (
-      <div className="bg-gray-100 rounded-lg flex items-center justify-center border border-gray-200" style={{ height }}>
+      <div 
+        style={{ height }} 
+        className="bg-gray-100 rounded-lg flex items-center justify-center border border-gray-200"
+      >
         <div className="text-center">
           <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-3"></div>
-          <p className="text-gray-600 text-sm">Loading OpenStreetMap...</p>
-          <p className="text-gray-500 text-xs mt-1">Powered by Leaflet</p>
+          <p className="text-gray-600 font-medium">Loading map...</p>
+          <p className="text-gray-500 text-sm mt-1">Using OpenStreetMap</p>
         </div>
       </div>
     );
   }
 
+  // Show map
   return (
     <div className="relative">
-      {/* Map Container */}
       <div 
         ref={mapRef} 
-        className="w-full rounded-lg border-2 border-blue-300 shadow-sm"
-        style={{ height }}
+        style={{ height, minHeight: '400px' }} 
+        className="w-full rounded-lg border border-gray-200 shadow-sm"
       />
       
-      {/* Map Controls Overlay */}
-      <div className="absolute top-4 right-4 flex flex-col space-y-2 z-[1000]">
-        <button
-          onClick={() => {
-            if (mapInstanceRef.current) {
-              mapInstanceRef.current.setView([latitude, longitude], 12);
-            }
-          }}
-          className="bg-white p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-          title="Reset to city center"
-        >
-          <MapPin className="w-5 h-5 text-blue-600" />
-        </button>
-        
-        <button
-          onClick={() => {
-            if (mapInstanceRef.current) {
-              mapInstanceRef.current.setZoom(mapInstanceRef.current.getZoom() + 1);
-            }
-          }}
-          className="bg-white p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-          title="Zoom in"
-        >
-          <span className="text-lg font-bold text-gray-700">+</span>
-        </button>
-        
-        <button
-          onClick={() => {
-            if (mapInstanceRef.current) {
-              mapInstanceRef.current.setZoom(mapInstanceRef.current.getZoom() - 1);
-            }
-          }}
-          className="bg-white p-2 rounded-lg shadow-md hover:shadow-lg transition-shadow"
-          title="Zoom out"
-        >
-          <span className="text-lg font-bold text-gray-700">−</span>
-        </button>
-
-        {/* Business Count Badge */}
-        <div className="bg-blue-600 text-white px-3 py-1 rounded-lg text-xs font-medium shadow-md">
-          {businesses.filter(b => b.latitude && b.longitude).length} businesses
+      {/* Business count badge */}
+      <div className="absolute top-4 right-4 bg-white bg-opacity-95 px-4 py-2 rounded-full shadow-lg border border-gray-200 z-[1000]">
+        <div className="flex items-center space-x-2">
+          <span className="text-lg">🏢</span>
+          <span className="text-sm font-medium text-gray-700">
+            {businesses.filter(b => b.latitude && b.longitude).length} businesses
+          </span>
         </div>
       </div>
 
-      {/* Legend */}
-      <div className="absolute bottom-4 left-4 bg-white p-3 rounded-lg shadow-md border border-gray-200 z-[1000]">
-        <div className="text-xs text-gray-600 space-y-2">
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-blue-600 rounded-full"></div>
-            <span>City Center</span>
-          </div>
-          <div className="flex items-center space-x-2">
-            <div className="w-4 h-4 bg-green-600 rounded-lg"></div>
-            <span>Business</span>
-          </div>
-        </div>
+      {/* City name badge */}
+      <div className="absolute top-4 left-4 bg-blue-600 bg-opacity-95 px-4 py-2 rounded-full shadow-lg z-[1000]">
+        <span className="text-sm font-medium text-white">
+          📍 {cityName}
+        </span>
       </div>
 
-      {/* Attribution */}
-      <div className="absolute bottom-2 right-2 bg-white bg-opacity-90 px-2 py-1 rounded text-xs text-gray-600 z-[1000]">
-        © <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noopener noreferrer" className="hover:underline">OpenStreetMap</a> contributors
+      {/* Map loaded indicator */}
+      {mapLoaded && (
+        <div className="absolute bottom-4 left-4 bg-green-600 bg-opacity-95 px-3 py-1 rounded-full shadow-lg z-[1000]">
+          <span className="text-xs font-medium text-white">
+            ✅ OpenStreetMap Loaded
+          </span>
+        </div>
+      )}
+
+      {/* Map provider badge */}
+      <div className="absolute bottom-4 right-4 bg-black bg-opacity-75 px-3 py-1 rounded-full shadow-lg z-[1000]">
+        <span className="text-xs font-medium text-white">
+          🗺️ OpenStreetMap
+        </span>
       </div>
     </div>
   );

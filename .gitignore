@@ -6,12 +6,13 @@ yarn-debug.log*
 yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
-
+.env.local
 node_modules
 dist
 dist-ssr
 *.local
 newtxt.txt
+/.env
 .env
 ADMIN_DASHBOARD_README.md
 
