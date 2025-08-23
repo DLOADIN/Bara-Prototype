@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { CityMapLeaflet } from '@/components/CityMapLeaflet';
+import { CityMapLeafletCallback } from '@/components/CityMapLeafletCallback';
 
 export const SimpleMapTest = () => {
   const [showMap, setShowMap] = useState(false);
@@ -35,7 +35,7 @@ export const SimpleMapTest = () => {
       {showMap && (
         <div className="border border-gray-300 rounded-lg p-4">
           <h2 className="text-xl font-semibold mb-4">Cairo Map Test</h2>
-          <CityMapLeaflet
+          <CityMapLeafletCallback
             cityName="Cairo"
             latitude={30.0444}
             longitude={31.2357}

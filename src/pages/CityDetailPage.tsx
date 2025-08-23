@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { CityMapLeaflet } from "@/components/CityMapLeaflet";
+import { UltraSimpleMap } from "@/components/UltraSimpleMap";
 import { 
   MapPin, 
   Phone, 
@@ -378,13 +378,7 @@ export const CityDetailPage = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
             <h2 className="text-2xl font-bold text-yp-dark font-comfortaa mb-6">City Map & Location</h2>
             
-            <CityMapLeaflet
-              cityName={formatCityName(citySlug || '')}
-              latitude={city.latitude}
-              longitude={city.longitude}
-              businesses={businesses}
-              height="500px"
-            />
+            <UltraSimpleMap />
           </div>
         </div>
       )}

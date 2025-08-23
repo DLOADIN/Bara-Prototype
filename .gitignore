@@ -14,6 +14,14 @@ dist-ssr
 newtxt.txt
 /.env
 .env
+/src/components/CityMapGoogle.tsx
+/src/components/CityMapLeaflet.tsx
+/src/components/CityMapLeafletCallback.tsx
+/src/components/CityMapLeafletInline.tsx
+/src/components/CityMapLeafletRobust.tsx
+/src/components/CityMapLeafletSimple.tsx
+/src/components/SimpleMapTest.tsx
+
 ADMIN_DASHBOARD_README.md
 
 # Editor directories and files

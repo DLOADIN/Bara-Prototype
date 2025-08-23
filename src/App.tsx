@@ -19,6 +19,9 @@ import { AdminAuthGuard } from "./components/admin/AdminAuthGuard";
 import { GoogleMapsTest } from "./components/GoogleMapsTest";
 import { MapTestPage } from "./pages/MapTestPage";
 import { SimpleMapTest } from "./pages/SimpleMapTest";
+import { SimpleMapTest as SimpleMapTestComponent } from "./components/SimpleMapTest";
+import { CityMapLeafletCallback } from "./components/CityMapLeafletCallback";
+import { UltraSimpleMap } from "./components/UltraSimpleMap";
 
 const queryClient = new QueryClient();
 
@@ -41,6 +44,38 @@ const App = () => (
           <Route path="/googlemaps" element={<GoogleMapsTest />} />
           <Route path="/map-test" element={<MapTestPage />} />
           <Route path="/simple-map-test" element={<SimpleMapTest />} />
+        <Route path="/simple-map-test-component" element={<SimpleMapTestComponent />} />
+        <Route path="/callback-map-test" element={
+          <div className="p-8">
+            <h1 className="text-2xl font-bold mb-4">Callback Map Test</h1>
+            <CityMapLeafletCallback
+              cityName="Cairo"
+              latitude={30.0444}
+              longitude={31.2357}
+              businesses={[
+                {
+                  id: 'test-1',
+                  name: 'Test Restaurant',
+                  description: 'A test restaurant',
+                  phone: '+1234567890',
+                  website: 'https://example.com',
+                  address: '123 Test St',
+                  latitude: 30.0444 + 0.001,
+                  longitude: 31.2357 + 0.001,
+                  category: { name: 'Restaurant', slug: 'restaurant' },
+                  reviews: []
+                }
+              ]}
+              height="500px"
+            />
+          </div>
+        } />
+        <Route path="/ultra-simple-map" element={
+          <div className="p-8">
+            <h1 className="text-2xl font-bold mb-4">Ultra Simple Map Test</h1>
+            <UltraSimpleMap />
+          </div>
+        } />
           
           {/* Admin Routes - Protected by AdminAuthGuard */}
           <Route path="/admin" element={
