@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { MapPin, Phone, Globe, Star, Search, Map, Building2, Users, Award, ChevronDown } from "lucide-react";
-import { useBusinessesByCategory, useBusinessSearch } from "@/hooks/useBusinesses";
+import { useBusinessesByCategory, useBusinessSearch, useCitiesByCategory } from "@/hooks/useBusinesses";
 import { Business } from "@/lib/businessService";
 import { Skeleton } from "@/components/ui/skeleton";
 import { db } from "@/lib/supabase";
@@ -42,6 +42,8 @@ export const ListingsPage = () => {
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [cities, setCities] = useState<Array<{ id: string; name: string; countries: { code: string } | null; latitude: number | null; longitude: number | null }>>([]);
   const [loadingCities, setLoadingCities] = useState<boolean>(true);
+  const [categoryCities, setCategoryCities] = useState<Array<{ city_id: string; city_name: string; country_name: string; business_count: number }>>([]);
+  const [loadingCategoryCities, setLoadingCategoryCities] = useState<boolean>(false);
 
   // Update search term when URL changes
   useEffect(() => {
@@ -66,6 +68,12 @@ export const ListingsPage = () => {
     category: isSearchPage ? undefined : actualCategorySlug, // Don't filter by category on search page
     city: selectedCity || undefined
   });
+
+  // Get cities that have businesses in this category
+  const { 
+    data: citiesByCategory = [], 
+    isLoading: isLoadingCitiesByCategory 
+  } = useCitiesByCategory(actualCategorySlug || "");
 
   // Determine which data to display
   const displayBusinesses = isSearchPage || searchTerm ? searchResults : businesses;
@@ -260,13 +268,56 @@ export const ListingsPage = () => {
                 <DropdownMenuTrigger asChild>
                   <Button variant="default" className="w-full justify-start font-roboto">
                     <MapPin className="w-4 h-4 mr-2 text-gray-500" />
-                    <span className="truncate">{selectedCity || 'Select a City'}</span>
+                    <span className="truncate">
+                      {selectedCity 
+                        ? `${selectedCity} (${citiesByCategory.find(c => c.city_name === selectedCity)?.business_count || 0} businesses)`
+                        : 'Select a City'
+                      }
+                    </span>
                     <ChevronDown className="w-4 h-4 ml-auto flex-shrink-0" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-[280px] max-h-[300px] overflow-auto">
-                  {loadingCities ? (
+                  {isLoadingCitiesByCategory ? (
                     <div className="p-3 text-sm text-gray-500">Loading cities...</div>
+                  ) : citiesByCategory.length > 0 ? (
+                    <>
+                      {/* Show cities with businesses in this category */}
+                      <div className="px-3 py-2 text-xs font-semibold text-gray-500 border-b">
+                        Cities with {categoryName} businesses
+                      </div>
+                      {/* Clear filter option */}
+                      <DropdownMenuItem 
+                        onClick={() => setSelectedCity("")}
+                        className="dropdown-menu-item-override cursor-pointer text-blue-600 font-medium"
+                      >
+                        <span>Show all cities</span>
+                      </DropdownMenuItem>
+                      {citiesByCategory.map((city) => (
+                        <DropdownMenuItem 
+                          key={city.city_id} 
+                          onClick={() => setSelectedCity(city.city_name)}
+                          className="dropdown-menu-item-override cursor-pointer flex justify-between items-center"
+                        >
+                          <span>{city.city_name}, {city.country_name}</span>
+                          <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">
+                            {city.business_count} {city.business_count === 1 ? 'business' : 'businesses'}
+                          </span>
+                        </DropdownMenuItem>
+                      ))}
+                      <div className="px-3 py-2 text-xs font-semibold text-gray-500 border-t">
+                        All cities
+                      </div>
+                      {cities.map((c) => (
+                        <DropdownMenuItem 
+                          key={c.id} 
+                          onClick={() => setSelectedCity(`${c.name}`)}
+                          className="dropdown-menu-item-override cursor-pointer"
+                        >
+                          {c.name}{c.countries?.code ? `, ${c.countries.code}` : ''}
+                        </DropdownMenuItem>
+                      ))}
+                    </>
                   ) : (
                     cities.map((c) => (
                       <DropdownMenuItem 
@@ -352,6 +403,46 @@ export const ListingsPage = () => {
 
       {/* Results */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        {/* Category Summary - Show when no city is selected */}
+        {/* {!selectedCity && !isSearchPage && citiesByCategory.length > 0 && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-blue-900 mb-1">
+                  {categoryName} Available in {citiesByCategory.length} Cities
+                </h3>
+                <p className="text-blue-700 text-sm">
+                  Select a city above to see businesses in that location, or browse all {filteredBusinesses.length} businesses below.
+                </p>
+              </div>
+              <div className="text-right">
+                <div className="text-2xl font-bold text-blue-900">{filteredBusinesses.length}</div>
+                <div className="text-sm text-blue-700">Total businesses</div>
+              </div>
+            </div>
+          </div>
+        )} */}
+
+        {/* City-specific summary when a city is selected */}
+        {selectedCity && !isSearchPage && (
+          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h3 className="text-lg font-semibold text-green-900 mb-1">
+                  {categoryName} in {selectedCity}
+                </h3>
+                <p className="text-green-700 text-sm">
+                  Showing {filteredBusinesses.length} businesses in {selectedCity}
+                </p>
+              </div>
+              <div className="text-right">
+                <div className="text-2xl font-bold text-green-900">{filteredBusinesses.length}</div>
+                <div className="text-sm text-green-700">Businesses found</div>
+              </div>
+            </div>
+          </div>
+        )}
+
         {filteredBusinesses.length === 0 ? (
           <div className="text-center py-16">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">

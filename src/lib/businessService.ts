@@ -435,6 +435,160 @@ export class BusinessService {
   }
 
   /**
+   * Get cities that have businesses in a specific category
+   */
+  static async getCitiesByCategory(categorySlug: string): Promise<Array<{
+    city_id: string;
+    city_name: string;
+    country_name: string;
+    business_count: number;
+  }>> {
+    try {
+      console.log('Getting cities for category:', categorySlug);
+      
+      // First get the category ID
+      const { data: categoryData, error: categoryError } = await db.categories()
+        .select('id')
+        .eq('slug', categorySlug)
+        .eq('is_active', true)
+        .single();
+
+      if (categoryError || !categoryData) {
+        console.error('Category not found for cities:', categorySlug);
+        return [];
+      }
+
+      // Get businesses in this category with their city information
+      const { data, error } = await db.businesses()
+        .select(`
+          city_id,
+          cities!businesses_city_id_fkey(
+            id,
+            name,
+            countries!cities_country_id_fkey(name)
+          )
+        `)
+        .eq('status', 'active')
+        .eq('category_id', categoryData.id)
+        .not('city_id', 'is', null);
+
+      if (error) {
+        console.error('Error getting cities by category:', error);
+        return [];
+      }
+
+      // Group by city and count businesses
+      const cityMap = new Map<string, {
+        city_id: string;
+        city_name: string;
+        country_name: string;
+        business_count: number;
+      }>();
+
+      data?.forEach((business: any) => {
+        if (business.city_id && business.cities) {
+          const cityKey = business.city_id;
+          if (cityMap.has(cityKey)) {
+            cityMap.get(cityKey)!.business_count++;
+          } else {
+            cityMap.set(cityKey, {
+              city_id: business.city_id,
+              city_name: business.cities.name,
+              country_name: business.cities.countries?.name || 'Unknown',
+              business_count: 1
+            });
+          }
+        }
+      });
+
+      const result = Array.from(cityMap.values()).sort((a, b) => b.business_count - a.business_count);
+      console.log(`Found ${result.length} cities for category ${categorySlug}`);
+      return result;
+    } catch (error) {
+      console.error('Error in getCitiesByCategory:', error);
+      return [];
+    }
+  }
+
+  /**
+   * Get category statistics including city distribution
+   */
+  static async getCategoryStats(categorySlug: string): Promise<{
+    total_businesses: number;
+    cities_count: number;
+    premium_count: number;
+    verified_count: number;
+    cities: Array<{
+      city_id: string;
+      city_name: string;
+      country_name: string;
+      business_count: number;
+    }>;
+  }> {
+    try {
+      // First get the category ID
+      const { data: categoryData, error: categoryError } = await db.categories()
+        .select('id')
+        .eq('slug', categorySlug)
+        .eq('is_active', true)
+        .single();
+
+      if (categoryError || !categoryData) {
+        console.error('Category not found for stats:', categorySlug);
+        return {
+          total_businesses: 0,
+          cities_count: 0,
+          premium_count: 0,
+          verified_count: 0,
+          cities: []
+        };
+      }
+
+      // Get all businesses in this category
+      const { data: businesses, error } = await db.businesses()
+        .select('*')
+        .eq('status', 'active')
+        .eq('category_id', categoryData.id);
+
+      if (error) {
+        console.error('Error getting category stats:', error);
+        return {
+          total_businesses: 0,
+          cities_count: 0,
+          premium_count: 0,
+          verified_count: 0,
+          cities: []
+        };
+      }
+
+      const total_businesses = businesses?.length || 0;
+      const premium_count = businesses?.filter(b => b.is_premium).length || 0;
+      const verified_count = businesses?.filter(b => b.is_verified).length || 0;
+
+      // Get cities distribution
+      const cities = await this.getCitiesByCategory(categorySlug);
+      const cities_count = cities.length;
+
+      return {
+        total_businesses,
+        cities_count,
+        premium_count,
+        verified_count,
+        cities
+      };
+    } catch (error) {
+      console.error('Error in getCategoryStats:', error);
+      return {
+        total_businesses: 0,
+        cities_count: 0,
+        premium_count: 0,
+        verified_count: 0,
+        cities: []
+      };
+    }
+  }
+
+  /**
    * Increment view count for a business
    */
   static async incrementViewCount(businessId: string): Promise<void> {

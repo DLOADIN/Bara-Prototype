@@ -70,6 +70,28 @@ export const useBusinessCountByCategory = (categorySlug: string) => {
   });
 };
 
+export const useCitiesByCategory = (categorySlug: string) => {
+  return useQuery({
+    queryKey: ['cities', 'category', categorySlug],
+    queryFn: () => BusinessService.getCitiesByCategory(categorySlug),
+    staleTime: 10 * 60 * 1000, // 10 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
+    refetchOnWindowFocus: false,
+    enabled: !!categorySlug,
+  });
+};
+
+export const useCategoryStats = (categorySlug: string) => {
+  return useQuery({
+    queryKey: ['category', 'stats', categorySlug],
+    queryFn: () => BusinessService.getCategoryStats(categorySlug),
+    staleTime: 10 * 60 * 1000, // 10 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
+    refetchOnWindowFocus: false,
+    enabled: !!categorySlug,
+  });
+};
+
 // Hook for real-time business updates (if needed)
 export const useBusinessesRealtime = (params: BusinessSearchParams = {}) => {
   const query = useBusinesses(params);
