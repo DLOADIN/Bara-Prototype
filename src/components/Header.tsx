@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { ChevronDown, Menu, Star, Building, X, Globe, MapPin, Shield, ChevronRight } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,6 +36,7 @@ export const Header = () => {
   const [mobileMenuClosing, setMobileMenuClosing] = useState(false);
   const [citiesExpanded, setCitiesExpanded] = useState(false);
   const { toast } = useToast();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -131,6 +132,9 @@ export const Header = () => {
   const handleCitySelect = (city: City) => {
     setSelectedCity(formatCityDisplay(city));
     closeMobileMenu();
+    // Navigate to city detail page
+    const citySlug = city.name.toLowerCase().replace(/\s+/g, '-');
+    navigate(`/cities/${citySlug}`);
   };
 
   const toggleMobileMenu = () => {
@@ -213,7 +217,7 @@ export const Header = () => {
                     {cities.map((city) => (
                       <DropdownMenuItem
                         key={city.id}
-                        onClick={() => setSelectedCity(formatCityDisplay(city))}
+                        onClick={() => handleCitySelect(city)}
                         className="dropdown-menu-item-override font-roboto button cursor-pointer"
                       >
                         {formatCityDisplay(city)}

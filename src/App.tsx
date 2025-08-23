@@ -9,12 +9,14 @@ import { ListingsPage } from "./pages/ListingsPage";
 import { WriteReviewPage } from "./pages/WriteReviewPage";
 import { BusinessDetailPage } from "./pages/BusinessDetailPage";
 import { CategoriesPage } from "./pages/CategoriesPage";
+import { CityDetailPage } from "./pages/CityDetailPage";
 import { AdminDashboard } from "./pages/admin/AdminDashboard";
 import { AdminCities } from "./pages/admin/AdminCities";
 import { AdminCountries } from "./pages/admin/AdminCountries";
 import { AdminBusinesses } from "./pages/admin/AdminBusinesses";
 import { AdminReviews } from "./pages/admin/AdminReviews";
 import { AdminAuthGuard } from "./components/admin/AdminAuthGuard";
+import { GoogleMapsTest } from "./components/GoogleMapsTest";
 
 const queryClient = new QueryClient();
 
@@ -33,6 +35,8 @@ const App = () => (
           <Route path="/:city/search" element={<ListingsPage />} />
           <Route path="/:city/:category" element={<ListingsPage />} />
           <Route path="/:city/:category/:businessId" element={<BusinessDetailPage />} />
+          <Route path="/cities/:citySlug" element={<CityDetailPage />} />
+          <Route path="/googlemaps" element={<GoogleMapsTest />} />
           
           {/* Admin Routes - Protected by AdminAuthGuard */}
           <Route path="/admin" element={
