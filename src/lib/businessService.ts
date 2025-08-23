@@ -252,6 +252,23 @@ export class BusinessService {
    */
   static async getBusinessesByCategory(categorySlug: string, citySlug?: string): Promise<Business[]> {
     try {
+      console.log('Fetching businesses for category:', categorySlug, 'city:', citySlug);
+      
+      // First, get the category ID from the slug
+      const { data: categoryData, error: categoryError } = await db.categories()
+        .select('id, name, slug')
+        .eq('slug', categorySlug)
+        .eq('is_active', true)
+        .single();
+
+      if (categoryError || !categoryData) {
+        console.error('Category not found:', categorySlug, categoryError);
+        return [];
+      }
+
+      console.log('Found category:', categoryData);
+
+      // Build the main query
       let query = db.businesses()
         .select(`
           *,
@@ -261,15 +278,31 @@ export class BusinessService {
           reviews:reviews(id, rating, title, content, created_at)
         `)
         .eq('status', 'active')
-        .eq('categories.slug', categorySlug);
+        .eq('category_id', categoryData.id);
 
+      // Apply city filter if provided
       if (citySlug) {
         const nearbyCities = await this.getNearbyCities(citySlug);
         if (nearbyCities.length > 1) {
-          // Use OR condition for multiple nearby cities
-          query = query.in('cities.name', nearbyCities);
+          // Use subquery to get city IDs for nearby cities
+          const { data: cityIds } = await db.cities()
+            .select('id')
+            .in('name', nearbyCities);
+          
+          if (cityIds && cityIds.length > 0) {
+            const cityIdArray = cityIds.map(city => city.id);
+            query = query.in('city_id', cityIdArray);
+          }
         } else {
-          query = query.eq('cities.name', citySlug);
+          // Get the specific city ID
+          const { data: cityData } = await db.cities()
+            .select('id')
+            .eq('name', citySlug)
+            .single();
+          
+          if (cityData) {
+            query = query.eq('city_id', cityData.id);
+          }
         }
       }
 
@@ -282,6 +315,7 @@ export class BusinessService {
         throw error;
       }
 
+      console.log(`Found ${data?.length || 0} businesses for category ${categorySlug}`);
       return data || [];
     } catch (error) {
       console.error('Error in getBusinessesByCategory:', error);
@@ -294,6 +328,8 @@ export class BusinessService {
    */
   static async searchBusinesses(searchTerm: string, filters: BusinessFilters = {}): Promise<Business[]> {
     try {
+      console.log('Searching businesses with term:', searchTerm, 'filters:', filters);
+      
       let query = db.businesses()
         .select(`
           *,
@@ -307,15 +343,40 @@ export class BusinessService {
 
       // Apply additional filters
       if (filters.category) {
-        query = query.eq('categories.slug', filters.category);
+        // Get category ID from slug
+        const { data: categoryData } = await db.categories()
+          .select('id')
+          .eq('slug', filters.category)
+          .eq('is_active', true)
+          .single();
+        
+        if (categoryData) {
+          query = query.eq('category_id', categoryData.id);
+        }
       }
 
       if (filters.city) {
         const nearbyCities = await this.getNearbyCities(filters.city);
         if (nearbyCities.length > 1) {
-          query = query.in('cities.name', nearbyCities);
+          // Get city IDs for nearby cities
+          const { data: cityIds } = await db.cities()
+            .select('id')
+            .in('name', nearbyCities);
+          
+          if (cityIds && cityIds.length > 0) {
+            const cityIdArray = cityIds.map(city => city.id);
+            query = query.in('city_id', cityIdArray);
+          }
         } else {
-          query = query.eq('cities.name', filters.city);
+          // Get specific city ID
+          const { data: cityData } = await db.cities()
+            .select('id')
+            .eq('name', filters.city)
+            .single();
+          
+          if (cityData) {
+            query = query.eq('city_id', cityData.id);
+          }
         }
       }
 
@@ -344,10 +405,22 @@ export class BusinessService {
    */
   static async getBusinessCountByCategory(categorySlug: string): Promise<number> {
     try {
+      // First get the category ID
+      const { data: categoryData, error: categoryError } = await db.categories()
+        .select('id')
+        .eq('slug', categorySlug)
+        .eq('is_active', true)
+        .single();
+
+      if (categoryError || !categoryData) {
+        console.error('Category not found for count:', categorySlug);
+        return 0;
+      }
+
       const { count, error } = await db.businesses()
-        .select('id, categories!inner(slug)', { count: 'exact', head: true })
+        .select('id', { count: 'exact', head: true })
         .eq('status', 'active')
-        .eq('categories.slug', categorySlug);
+        .eq('category_id', categoryData.id);
 
       if (error) {
         console.error('Error getting business count:', error);
