@@ -73,7 +73,11 @@ const App = () => (
         <Route path="/ultra-simple-map" element={
           <div className="p-8">
             <h1 className="text-2xl font-bold mb-4">Ultra Simple Map Test</h1>
-            <UltraSimpleMap />
+            <UltraSimpleMap 
+              cityName="Cairo"
+              latitude={30.0444}
+              longitude={31.2357}
+            />
           </div>
         } />
           

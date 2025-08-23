@@ -1,7 +1,18 @@
 import { useEffect, useRef, useState } from 'react';
 
-export const UltraSimpleMap = () => {
+interface UltraSimpleMapProps {
+  cityName?: string;
+  latitude?: number;
+  longitude?: number;
+}
+
+export const UltraSimpleMap = ({ 
+  cityName = "Cairo", 
+  latitude = 30.0444, 
+  longitude = 31.2357 
+}: UltraSimpleMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
+  const mapInstanceRef = useRef<any>(null);
   const [status, setStatus] = useState('Starting...');
   const [error, setError] = useState<string | null>(null);
 
@@ -29,11 +40,18 @@ export const UltraSimpleMap = () => {
           throw new Error('Map container not found');
         }
         
+        // Clean up existing map if it exists
+        if (mapInstanceRef.current) {
+          mapInstanceRef.current.remove();
+        }
+        
         setStatus('Creating map...');
         const map = L.map(mapRef.current, {
-          center: [30.0444, 31.2357], // Cairo
+          center: [latitude, longitude],
           zoom: 13
         });
+        
+        mapInstanceRef.current = map;
         
         setStatus('Adding tiles...');
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -41,12 +59,12 @@ export const UltraSimpleMap = () => {
         }).addTo(map);
         
         setStatus('Adding marker...');
-        L.marker([30.0444, 31.2357])
+        L.marker([latitude, longitude])
           .addTo(map)
-          .bindPopup('Cairo, Egypt');
+          .bindPopup(cityName);
         
         setStatus('Map loaded successfully!');
-        console.log('✅ Ultra simple map loaded');
+        console.log(`✅ Ultra simple map loaded for ${cityName}`);
         
       } catch (err) {
         console.error('❌ Error:', err);
@@ -55,7 +73,15 @@ export const UltraSimpleMap = () => {
     };
 
     loadMap();
-  }, []);
+
+    // Cleanup function
+    return () => {
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove();
+        mapInstanceRef.current = null;
+      }
+    };
+  }, [cityName, latitude, longitude]);
 
   if (error) {
     return (
@@ -68,8 +94,9 @@ export const UltraSimpleMap = () => {
 
   return (
     <div className="space-y-4">
-      <div className="p-2 bg-blue-50 border border-blue-200 rounded">
-        <p className="text-blue-800">Status: {status}</p>
+      <div className="p-2 bg-yp-blue border border-blue-100 rounded">
+        <p className="text-white-800">Status: {status}</p>
+        <p className="text-white-600 text-sm">City: {cityName}</p>
       </div>
       
       <div 
