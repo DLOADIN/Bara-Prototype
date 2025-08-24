@@ -16,11 +16,8 @@ import { AdminCountries } from "./pages/admin/AdminCountries";
 import { AdminBusinesses } from "./pages/admin/AdminBusinesses";
 import { AdminReviews } from "./pages/admin/AdminReviews";
 import { AdminAuthGuard } from "./components/admin/AdminAuthGuard";
-import { GoogleMapsTest } from "./components/GoogleMapsTest";
 import { MapTestPage } from "./pages/MapTestPage";
-import { SimpleMapTest } from "./pages/SimpleMapTest";
-import { SimpleMapTest as SimpleMapTestComponent } from "./components/SimpleMapTest";
-import { CityMapLeafletCallback } from "./components/CityMapLeafletCallback";
+// import { SimpleMapTest } from "./pages/SimpleMapTest";
 import { UltraSimpleMap } from "./components/UltraSimpleMap";
 
 const queryClient = new QueryClient();
@@ -41,11 +38,10 @@ const App = () => (
           <Route path="/:city/:category" element={<ListingsPage />} />
           <Route path="/:city/:category/:businessId" element={<BusinessDetailPage />} />
           <Route path="/cities/:citySlug" element={<CityDetailPage />} />
-          <Route path="/googlemaps" element={<GoogleMapsTest />} />
+          {/* <Route path="/googlemaps" element={<GoogleMapsTest />} /> */}
           <Route path="/map-test" element={<MapTestPage />} />
-          <Route path="/simple-map-test" element={<SimpleMapTest />} />
-        <Route path="/simple-map-test-component" element={<SimpleMapTestComponent />} />
-        <Route path="/callback-map-test" element={
+          {/* <Route path="/simple-map-test" element={<SimpleMapTest />} /> */}
+        {/* <Route path="/callback-map-test" element={
           <div className="p-8">
             <h1 className="text-2xl font-bold mb-4">Callback Map Test</h1>
             <CityMapLeafletCallback
@@ -69,7 +65,7 @@ const App = () => (
               height="500px"
             />
           </div>
-        } />
+        } /> */}
         <Route path="/ultra-simple-map" element={
           <div className="p-8">
             <h1 className="text-2xl font-bold mb-4">Ultra Simple Map Test</h1>
