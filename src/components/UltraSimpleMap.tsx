@@ -95,8 +95,8 @@ export const UltraSimpleMap = ({
   return (
     <div className="space-y-4">
       <div className="p-2 bg-yp-blue border border-blue-100 rounded">
-        <p className="text-white-800">Status: {status}</p>
-        <p className="text-white-600 text-sm">City: {cityName}</p>
+        {/* <p className="text-white-800">Status: {status}</p> */}
+        <p className="text-white-600 text-lg">This Map shows the location of the city {cityName}</p>
       </div>
       
       <div 
