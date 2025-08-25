@@ -189,6 +189,9 @@ export type Database = {
           status: 'pending' | 'active' | 'suspended' | 'premium'
           is_premium: boolean
           is_verified: boolean
+          has_coupons: boolean
+          accepts_orders_online: boolean
+          is_kid_friendly: boolean
           meta_title: string | null
           meta_description: string | null
           view_count: number
@@ -219,6 +222,9 @@ export type Database = {
           status?: 'pending' | 'active' | 'suspended' | 'premium'
           is_premium?: boolean
           is_verified?: boolean
+          has_coupons?: boolean
+          accepts_orders_online?: boolean
+          is_kid_friendly?: boolean
           meta_title?: string | null
           meta_description?: string | null
           view_count?: number
@@ -249,6 +255,9 @@ export type Database = {
           status?: 'pending' | 'active' | 'suspended' | 'premium'
           is_premium?: boolean
           is_verified?: boolean
+          has_coupons?: boolean
+          accepts_orders_online?: boolean
+          is_kid_friendly?: boolean
           meta_title?: string | null
           meta_description?: string | null
           view_count?: number

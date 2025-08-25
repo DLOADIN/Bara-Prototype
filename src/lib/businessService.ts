@@ -15,6 +15,9 @@ export interface Business {
   status: 'pending' | 'active' | 'suspended' | 'premium';
   is_premium: boolean;
   is_verified: boolean;
+  has_coupons: boolean;
+  accepts_orders_online: boolean;
+  is_kid_friendly: boolean;
   latitude: number | null;
   longitude: number | null;
   hours_of_operation: any | null;
@@ -61,6 +64,9 @@ export interface BusinessFilters {
   search?: string;
   is_verified?: boolean;
   is_premium?: boolean;
+  has_coupons?: boolean;
+  accepts_orders_online?: boolean;
+  is_kid_friendly?: boolean;
 }
 
 export interface BusinessSearchParams {
@@ -192,6 +198,19 @@ export class BusinessService {
       // Apply verification filter
       if (params.filters?.is_verified) {
         query = query.eq('is_verified', true);
+      }
+
+      // Apply new business feature filters
+      if (params.filters?.has_coupons) {
+        query = query.eq('has_coupons', true);
+      }
+
+      if (params.filters?.accepts_orders_online) {
+        query = query.eq('accepts_orders_online', true);
+      }
+
+      if (params.filters?.is_kid_friendly) {
+        query = query.eq('is_kid_friendly', true);
       }
 
       // Order by premium status and creation date

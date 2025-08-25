@@ -53,6 +53,11 @@ interface Business {
   city_name?: string;
   country_name?: string;
   status: 'active' | 'pending' | 'suspended';
+  is_premium: boolean;
+  is_verified: boolean;
+  has_coupons: boolean;
+  accepts_orders_online: boolean;
+  is_kid_friendly: boolean;
   rating: number | null;
   review_count: number | null;
   created_at: string;
@@ -283,6 +288,35 @@ export const AdminBusinesses = () => {
                   {business.description}
                 </p>
               )}
+              
+              {/* Business Features Badges */}
+              <div className="flex flex-wrap gap-1 mb-3">
+                {business.is_premium && (
+                  <Badge variant="default" className="text-xs bg-yp-blue">
+                    Premium
+                  </Badge>
+                )}
+                {business.is_verified && (
+                  <Badge variant="secondary" className="text-xs">
+                    ✓ Verified
+                  </Badge>
+                )}
+                {business.has_coupons && (
+                  <Badge variant="outline" className="text-xs border-orange-200 text-orange-700 bg-orange-50">
+                    Coupons
+                  </Badge>
+                )}
+                {business.accepts_orders_online && (
+                  <Badge variant="outline" className="text-xs border-green-200 text-green-700 bg-green-50">
+                    Order Online
+                  </Badge>
+                )}
+                {business.is_kid_friendly && (
+                  <Badge variant="outline" className="text-xs border-blue-200 text-blue-700 bg-blue-50">
+                    Kid Friendly
+                  </Badge>
+                )}
+              </div>
               
               <div className="grid grid-cols-2 gap-4 mb-3">
                 <div className="flex items-center space-x-2 text-sm text-gray-600">

@@ -98,6 +98,11 @@ CREATE TABLE public.businesses (
     is_premium BOOLEAN DEFAULT false,
     is_verified BOOLEAN DEFAULT false,
     
+    -- New Business Features
+    has_coupons BOOLEAN DEFAULT false,
+    accepts_orders_online BOOLEAN DEFAULT false,
+    is_kid_friendly BOOLEAN DEFAULT false,
+    
     -- SEO and Analytics
     meta_title TEXT,
     meta_description TEXT,
@@ -193,6 +198,9 @@ CREATE INDEX idx_businesses_city_id ON public.businesses(city_id);
 CREATE INDEX idx_businesses_category_id ON public.businesses(category_id);
 CREATE INDEX idx_businesses_status ON public.businesses(status);
 CREATE INDEX idx_businesses_is_premium ON public.businesses(is_premium);
+CREATE INDEX idx_businesses_has_coupons ON public.businesses(has_coupons);
+CREATE INDEX idx_businesses_accepts_orders_online ON public.businesses(accepts_orders_online);
+CREATE INDEX idx_businesses_is_kid_friendly ON public.businesses(is_kid_friendly);
 CREATE INDEX idx_reviews_business_id ON public.reviews(business_id);
 CREATE INDEX idx_reviews_user_id ON public.reviews(user_id);
 CREATE INDEX idx_events_city_id ON public.events(city_id);

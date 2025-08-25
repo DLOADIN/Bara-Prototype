@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate, useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Header } from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
@@ -18,6 +19,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 
 export const ListingsPage = () => {
+  const { t } = useTranslation();
   const { city, category, categorySlug } = useParams();
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
@@ -40,6 +42,8 @@ export const ListingsPage = () => {
   const [selectedCity, setSelectedCity] = useState<string>(isCategoryPage ? "" : (city || ""));
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
+  const [sortBy, setSortBy] = useState<'default' | 'distance' | 'rating' | 'name'>('default');
+  const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
   const [cities, setCities] = useState<Array<{ id: string; name: string; countries: { code: string } | null; latitude: number | null; longitude: number | null }>>([]);
   const [loadingCities, setLoadingCities] = useState<boolean>(true);
   const [categoryCities, setCategoryCities] = useState<Array<{ city_id: string; city_name: string; country_name: string; business_count: number }>>([]);
@@ -86,7 +90,7 @@ export const ListingsPage = () => {
     ).join(' ') || '';
   };
 
-  const categoryName = isSearchPage ? 'Search Results' : formatTitle(actualCategorySlug || '');
+  const categoryName = isSearchPage ? t('listings.searchResults') : formatTitle(actualCategorySlug || '');
   const cityName = formatTitle(city || '');
 
   // Search is read-only, no user input allowed
@@ -121,7 +125,35 @@ export const ListingsPage = () => {
     if (selectedFilters.includes('premium') && !business.is_premium) return false;
     if (selectedFilters.includes('verified') && !business.is_verified) return false;
     if (selectedFilters.includes('24h') && !business.hours_of_operation?.includes('24')) return false;
+    if (selectedFilters.includes('coupons') && !business.has_coupons) return false;
+    if (selectedFilters.includes('order-online') && !business.accepts_orders_online) return false;
+    if (selectedFilters.includes('kid-friendly') && !business.is_kid_friendly) return false;
     return true;
+  });
+
+  // Sort businesses based on selected sort option
+  const sortedBusinesses = [...filteredBusinesses].sort((a, b) => {
+    switch (sortBy) {
+      case 'rating':
+        const ratingA = getAverageRating(a);
+        const ratingB = getAverageRating(b);
+        return sortOrder === 'asc' ? ratingA - ratingB : ratingB - ratingA;
+      case 'name':
+        return sortOrder === 'asc' 
+          ? a.name.localeCompare(b.name)
+          : b.name.localeCompare(a.name);
+      case 'distance':
+        // For now, sort by creation date as proxy for distance
+        // In a real implementation, you'd calculate actual distance
+        return sortOrder === 'asc' 
+          ? new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+          : new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+      default:
+        // Default sorting: premium first, then by creation date
+        if (a.is_premium && !b.is_premium) return -1;
+        if (!a.is_premium && b.is_premium) return 1;
+        return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    }
   });
 
   // Calculate average rating for a business
@@ -355,7 +387,7 @@ export const ListingsPage = () => {
                 className="font-roboto"
               >
                 <Map className="w-4 h-4 mr-1" />
-                <span className="hidden sm:inline">Map View</span>
+                <span className="hidden sm:inline">{t('listings.mapView')}</span>
                 <span className="sm:hidden">Map</span>
               </Button>
               <Button 
@@ -365,8 +397,52 @@ export const ListingsPage = () => {
                 className="font-roboto"
               >
                 <Building2 className="w-4 h-4 mr-1" />
-                <span className="hidden sm:inline">List View</span>
+                <span className="hidden sm:inline">{t('listings.listView')}</span>
                 <span className="sm:hidden">List</span>
+              </Button>
+              
+              <Button 
+                variant={selectedFilters.includes('all') ? 'default' : 'outline'} 
+                size="sm" 
+                onClick={() => setSelectedFilters([])}
+                className="font-roboto"
+              >
+                <Building2 className="w-4 h-4 mr-1" />
+                <span className="hidden sm:inline">{t('listings.all')}</span>
+                <span className="sm:hidden">{t('listings.all')}</span>
+              </Button>
+              
+              <Button 
+                variant={selectedFilters.includes('order-online') ? 'default' : 'outline'} 
+                size="sm" 
+                onClick={() => toggleFilter('order-online')}
+                className="font-roboto"
+              >
+                <Globe className="w-4 h-4 mr-1" />
+                <span className="hidden sm:inline">{t('listings.orderOnline')}</span>
+                <span className="sm:hidden">Order</span>
+              </Button>
+              
+              <Button 
+                variant={selectedFilters.includes('kid-friendly') ? 'default' : 'outline'} 
+                size="sm" 
+                onClick={() => toggleFilter('kid-friendly')}
+                className="font-roboto"
+              >
+                <Users className="w-4 h-4 mr-1" />
+                <span className="hidden sm:inline">{t('listings.kidFriendly')}</span>
+                <span className="sm:hidden">Kids</span>
+              </Button>
+              
+              <Button 
+                variant={selectedFilters.includes('coupons') ? 'default' : 'outline'} 
+                size="sm" 
+                onClick={() => toggleFilter('coupons')}
+                className="font-roboto"
+              >
+                <Award className="w-4 h-4 mr-1" />
+                <span className="hidden sm:inline">{t('listings.coupons')}</span>
+                <span className="sm:hidden">{t('listings.coupons')}</span>
               </Button>
               
               <Button 
@@ -376,8 +452,8 @@ export const ListingsPage = () => {
                 className="font-roboto"
               >
                 <Award className="w-4 h-4 mr-1" />
-                <span className="hidden sm:inline">Premium</span>
-                <span className="sm:hidden">Premium</span>
+                <span className="hidden sm:inline">{t('listings.premium')}</span>
+                <span className="sm:hidden">{t('listings.premium')}</span>
               </Button>
               
               <Button 
@@ -387,14 +463,44 @@ export const ListingsPage = () => {
                 className="font-roboto"
               >
                 <Users className="w-4 h-4 mr-1" />
-                <span className="hidden sm:inline">Verified</span>
-                <span className="sm:hidden">Verified</span>
+                <span className="hidden sm:inline">{t('listings.verified')}</span>
+                <span className="sm:hidden">{t('listings.verified')}</span>
               </Button>
             </div>
             
-            <div className="ml-auto">
+            <div className="flex items-center space-x-4 ml-auto">
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-600 font-roboto">{t('listings.sort')}</span>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="font-roboto">
+                      <span className="font-semibold">
+                        {sortBy === 'default' ? t('listings.default') : 
+                         sortBy === 'distance' ? t('listings.distance') : 
+                         sortBy === 'rating' ? t('listings.rating') : t('listings.nameAZ')}
+                      </span>
+                      <ChevronDown className="w-4 h-4 ml-1" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem onClick={() => setSortBy('default')}>
+                      <span className="font-semibold">{t('listings.default')}</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setSortBy('distance')}>
+                      <span className="font-semibold">{t('listings.distance')}</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setSortBy('rating')}>
+                      <span className="font-semibold">{t('listings.rating')}</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setSortBy('name')}>
+                      <span className="font-semibold">{t('listings.nameAZ')}</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              
               <span className="text-sm text-gray-600 font-roboto">
-                {filteredBusinesses.length} businesses found
+                {sortedBusinesses.length} {t('listings.businessesFound')}
               </span>
             </div>
           </div>
@@ -432,29 +538,29 @@ export const ListingsPage = () => {
                   {categoryName} in {selectedCity}
                 </h3>
                 <p className="text-green-700 text-sm">
-                  Showing {filteredBusinesses.length} businesses in {selectedCity}
+                  {t('listings.showingBusinesses')} {sortedBusinesses.length} {t('listings.businessesInCity')} {selectedCity}
                 </p>
               </div>
               <div className="text-right">
-                <div className="text-2xl font-bold text-green-900">{filteredBusinesses.length}</div>
-                <div className="text-sm text-green-700">Businesses found</div>
+                <div className="text-2xl font-bold text-green-900">{sortedBusinesses.length}</div>
+                <div className="text-sm text-green-700">{t('listings.businessesFoundCount')}</div>
               </div>
             </div>
           </div>
         )}
 
-        {filteredBusinesses.length === 0 ? (
+        {sortedBusinesses.length === 0 ? (
           <div className="text-center py-16">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <Search className="w-8 h-8 text-gray-400" />
             </div>
             <h3 className="text-lg font-roboto font-semibold text-gray-900 mb-2">
-              No businesses found
+              {t('listings.noBusinessesFound')}
             </h3>
             <p className="text-gray-600 mb-6">
               {searchTerm 
-                ? `No businesses found matching "${searchTerm}"`
-                : `No businesses found in ${categoryName}`
+                ? `${t('listings.noBusinessesMatching')} "${searchTerm}"`
+                : `${t('listings.noBusinessesInCategory')} ${categoryName}`
               }
             </p>
             <Button 
@@ -465,12 +571,12 @@ export const ListingsPage = () => {
                 setSelectedFilters([]);
               }}
             >
-              Clear Filters
+              {t('listings.clearFilters')}
             </Button>
           </div>
         ) : (
           <div className="space-y-6">
-            {filteredBusinesses.map((business) => {
+            {sortedBusinesses.map((business) => {
               const avgRating = getAverageRating(business);
               const reviewCount = getReviewCount(business);
               
@@ -489,12 +595,27 @@ export const ListingsPage = () => {
                         <div className="flex flex-wrap items-center gap-2">  
                         {business.is_premium && (
                           <Badge variant="default" className="bg-yp-blue text-white text-xs">
-                            Premium
+                            {t('listings.premium')}
                           </Badge>
                         )}
                         {business.is_verified && (
                           <Badge variant="secondary" className="text-xs">
-                            ✓ Verified
+                            ✓ {t('listings.verified')}
+                          </Badge>
+                        )}
+                        {business.has_coupons && (
+                          <Badge variant="outline" className="text-xs border-orange-200 text-orange-700 bg-orange-50">
+                            {t('listings.coupons')}
+                          </Badge>
+                        )}
+                        {business.accepts_orders_online && (
+                          <Badge variant="outline" className="text-xs border-green-200 text-green-700 bg-green-50">
+                            {t('listings.orderOnline')}
+                          </Badge>
+                        )}
+                        {business.is_kid_friendly && (
+                          <Badge variant="outline" className="text-xs border-blue-200 text-blue-700 bg-blue-50">
+                            {t('listings.kidFriendly')}
                           </Badge>
                         )}
                         </div>
@@ -577,7 +698,7 @@ export const ListingsPage = () => {
                         className="w-full sm:w-auto"
                       >
                         <Button size="sm" variant="outline" className="font-roboto w-full">
-                          More Info
+                          {t('listings.moreInfo')}
                         </Button>
                       </Link>
                       <Link to={`/write-review/${business.id}`} className="w-full sm:w-auto">
@@ -586,7 +707,7 @@ export const ListingsPage = () => {
                           className="bg-yp-blue text-white font-roboto w-full"
                           onClick={(e) => e.stopPropagation()}
                         >
-                          Write Review
+                          {t('listings.writeReview')}
                         </Button>
                       </Link>
                     </div>

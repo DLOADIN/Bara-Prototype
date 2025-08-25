@@ -1,10 +1,29 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { AdminLayout } from "@/components/admin/AdminLayout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogDescription, 
+  DialogFooter, 
+  DialogHeader, 
+  DialogTitle,
+  DialogTrigger 
+} from "@/components/ui/dialog";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import { 
   Plus, 
   Search, 
@@ -12,233 +31,317 @@ import {
   Trash2, 
   Building2, 
   MapPin,
-  Filter,
+  Globe,
   Star,
-  Phone,
-  Mail,
-  Globe
+  Eye,
+  CheckCircle,
+  XCircle,
+  AlertTriangle,
+  Save,
+  X
 } from "lucide-react";
 import { db } from "@/lib/supabase";
+import { useToast } from "@/hooks/use-toast";
 
 interface Business {
   id: string;
   name: string;
+  slug: string;
   description: string | null;
+  address: string | null;
   phone: string | null;
   email: string | null;
   website: string | null;
-  address: string | null;
-  city_id: string;
   category_id: string;
-  is_active: boolean;
-  created_at: string;
-  city_name?: string;
   category_name?: string;
-  rating?: number;
-  reviews_count?: number;
-}
-
-interface City {
-  id: string;
-  name: string;
+  city_id: string;
+  city_name?: string;
+  country_name?: string;
+  status: 'active' | 'pending' | 'suspended';
+  is_premium: boolean;
+  is_verified: boolean;
+  has_coupons: boolean;
+  accepts_orders_online: boolean;
+  is_kid_friendly: boolean;
+  rating: number | null;
+  review_count: number | null;
+  created_at: string;
+  owner_id: string | null;
 }
 
 interface Category {
   id: string;
   name: string;
+  slug: string;
+}
+
+interface City {
+  id: string;
+  name: string;
+  country_name?: string;
 }
 
 export const BusinessesManagement = () => {
   const { t } = useTranslation();
+  const { toast } = useToast();
   const [businesses, setBusinesses] = useState<Business[]>([]);
-  const [cities, setCities] = useState<City[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
+  const [cities, setCities] = useState<City[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCity, setSelectedCity] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [editingBusiness, setEditingBusiness] = useState<Business | null>(null);
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
 
   // Form state
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
+  const [editingBusiness, setEditingBusiness] = useState<Business | null>(null);
   const [formData, setFormData] = useState({
     name: "",
     description: "",
+    address: "",
     phone: "",
     email: "",
     website: "",
-    address: "",
-    city_id: "",
     category_id: "",
-    is_active: true
+    city_id: "",
+    status: "pending" as 'active' | 'pending' | 'suspended',
+    is_premium: false,
+    is_verified: false,
+    has_coupons: false,
+    accepts_orders_online: false,
+    is_kid_friendly: false,
   });
 
   useEffect(() => {
     fetchBusinesses();
-    fetchCities();
     fetchCategories();
+    fetchCities();
   }, []);
 
   const fetchBusinesses = async () => {
     try {
-      const { data, error } = await db.businesses()
+      const { data, error } = await db
+        .businesses()
         .select(`
           *,
-          cities!inner(name),
-          categories!inner(name)
+          categories!inner(name, slug),
+          cities!inner(name, countries!inner(name))
         `)
-        .eq('is_active', true)
-        .order('name', { ascending: true });
+        .order('created_at', { ascending: false });
 
-      if (error) {
-        console.error('Error fetching businesses:', error);
-      } else {
-        setBusinesses(data || []);
-      }
+      if (error) throw error;
+      
+      const businessesWithDetails = data?.map(business => ({
+        ...business,
+        category_name: business.categories?.name,
+        city_name: business.cities?.name,
+        country_name: business.cities?.countries?.name
+      })) || [];
+      
+      setBusinesses(businessesWithDetails);
     } catch (error) {
       console.error('Error fetching businesses:', error);
+      toast({
+        title: t('admin.error'),
+        description: t('admin.failedToFetchBusinesses'),
+        variant: "destructive"
+      });
     } finally {
       setLoading(false);
     }
   };
 
-  const fetchCities = async () => {
-    try {
-      const { data, error } = await db.cities()
-        .select('*')
-        .eq('is_active', true)
-        .order('name', { ascending: true });
-
-      if (error) {
-        console.error('Error fetching cities:', error);
-      } else {
-        setCities(data || []);
-      }
-    } catch (error) {
-      console.error('Error fetching cities:', error);
-    }
-  };
-
   const fetchCategories = async () => {
     try {
-      const { data, error } = await db.categories()
+      const { data, error } = await db
+        .categories()
         .select('*')
-        .eq('is_active', true)
-        .order('name', { ascending: true });
+        .order('name');
 
-      if (error) {
-        console.error('Error fetching categories:', error);
-      } else {
+      if (error) throw error;
         setCategories(data || []);
-      }
     } catch (error) {
       console.error('Error fetching categories:', error);
     }
   };
 
-  const handleAddBusiness = async () => {
+  const fetchCities = async () => {
     try {
-      const { error } = await db.businesses().insert([formData]);
+      const { data, error } = await db
+        .cities()
+        .select(`
+          *,
+          countries!inner(name)
+        `)
+        .order('name');
+
+      if (error) throw error;
       
-      if (error) {
-        console.error('Error adding business:', error);
-      } else {
-        setShowAddForm(false);
-        setFormData({
-          name: "",
-          description: "",
-          phone: "",
-          email: "",
-          website: "",
-          address: "",
-          city_id: "",
-          category_id: "",
-          is_active: true
-        });
-        fetchBusinesses();
-      }
+      const citiesWithCountries = data?.map(city => ({
+        ...city,
+        country_name: city.countries?.name
+      })) || [];
+      
+      setCities(citiesWithCountries);
     } catch (error) {
-      console.error('Error adding business:', error);
+      console.error('Error fetching cities:', error);
     }
   };
 
-  const handleEditBusiness = async () => {
-    if (!editingBusiness) return;
+  const openEditDialog = (business: Business) => {
+    setEditingBusiness(business);
+    setFormData({
+      name: business.name,
+      description: business.description || "",
+      address: business.address || "",
+      phone: business.phone || "",
+      email: business.email || "",
+      website: business.website || "",
+      category_id: business.category_id,
+      city_id: business.city_id,
+      status: business.status,
+      is_premium: business.is_premium,
+      is_verified: business.is_verified,
+      has_coupons: business.has_coupons,
+      accepts_orders_online: business.accepts_orders_online,
+      is_kid_friendly: business.is_kid_friendly,
+    });
+    setIsDialogOpen(true);
+  };
 
-    try {
-      const { error } = await db.businesses()
-        .update(formData)
-        .eq('id', editingBusiness.id);
-      
-      if (error) {
-        console.error('Error updating business:', error);
-      } else {
+  const openAddDialog = () => {
         setEditingBusiness(null);
         setFormData({
           name: "",
           description: "",
+      address: "",
           phone: "",
           email: "",
           website: "",
-          address: "",
+      category_id: "",
           city_id: "",
-          category_id: "",
-          is_active: true
+      status: "pending",
+      is_premium: false,
+      is_verified: false,
+      has_coupons: false,
+      accepts_orders_online: false,
+      is_kid_friendly: false,
+    });
+    setIsDialogOpen(true);
+  };
+
+  const handleSubmit = async () => {
+    try {
+      if (!formData.name || !formData.category_id || !formData.city_id) {
+        toast({
+          title: t('admin.validationError'),
+          description: t('admin.pleaseFillRequiredFields'),
+          variant: "destructive"
         });
-        fetchBusinesses();
+        return;
       }
+
+      const businessData = {
+        name: formData.name,
+        slug: formData.name.toLowerCase().replace(/\s+/g, '-').replace(/[^a-z0-9-]/g, ''),
+        description: formData.description || null,
+        address: formData.address || null,
+        phone: formData.phone || null,
+        email: formData.email || null,
+        website: formData.website || null,
+        category_id: formData.category_id,
+        city_id: formData.city_id,
+        status: formData.status,
+        is_premium: formData.is_premium,
+        is_verified: formData.is_verified,
+        has_coupons: formData.has_coupons,
+        accepts_orders_online: formData.accepts_orders_online,
+        is_kid_friendly: formData.is_kid_friendly,
+      };
+
+      if (editingBusiness) {
+        // Update existing business
+        const { error } = await db
+          .businesses()
+          .update(businessData)
+          .eq('id', editingBusiness.id);
+
+        if (error) throw error;
+
+        toast({
+          title: t('admin.success'),
+          description: t('admin.businessUpdatedSuccessfully'),
+        });
+      } else {
+        // Create new business
+        const { error } = await db
+          .businesses()
+          .insert(businessData);
+
+        if (error) throw error;
+
+        toast({
+          title: t('admin.success'),
+          description: t('admin.businessCreatedSuccessfully'),
+        });
+      }
+
+      setIsDialogOpen(false);
+        fetchBusinesses();
     } catch (error) {
-      console.error('Error updating business:', error);
+      console.error('Error saving business:', error);
+      toast({
+        title: t('admin.error'),
+        description: t('admin.failedToSaveBusiness'),
+        variant: "destructive"
+      });
     }
   };
 
-  const handleDeleteBusiness = async (businessId: string) => {
-    if (window.confirm('Are you sure you want to delete this business?')) {
-      try {
-        const { error } = await db.businesses()
-          .update({ is_active: false })
+  const handleDelete = async (businessId: string) => {
+    if (!confirm(t('admin.confirmDeleteBusiness'))) return;
+
+    try {
+      const { error } = await db
+        .businesses()
+        .delete()
           .eq('id', businessId);
         
-        if (error) {
-          console.error('Error deleting business:', error);
-        } else {
+      if (error) throw error;
+
+      toast({
+        title: t('admin.success'),
+        description: t('admin.businessDeletedSuccessfully'),
+      });
+
           fetchBusinesses();
-        }
       } catch (error) {
         console.error('Error deleting business:', error);
-      }
+      toast({
+        title: t('admin.error'),
+        description: t('admin.failedToDeleteBusiness'),
+        variant: "destructive"
+      });
     }
   };
 
   const filteredBusinesses = businesses.filter(business => {
     const matchesSearch = business.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         (business.description && business.description.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesCity = !selectedCity || business.city_id === selectedCity;
-    const matchesCategory = !selectedCategory || business.category_id === selectedCategory;
-    return matchesSearch && matchesCity && matchesCategory;
+                         business.description?.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === "all" || business.status === statusFilter;
+    const matchesCategory = categoryFilter === "all" || business.category_id === categoryFilter;
+    
+    return matchesSearch && matchesStatus && matchesCategory;
   });
-
-  const resetForm = () => {
-    setFormData({
-      name: "",
-      description: "",
-      phone: "",
-      email: "",
-      website: "",
-      address: "",
-      city_id: "",
-      category_id: "",
-      is_active: true
-    });
-    setShowAddForm(false);
-    setEditingBusiness(null);
-  };
 
   if (loading) {
     return (
       <AdminLayout>
         <div className="flex items-center justify-center h-64">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yp-blue"></div>
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-yp-blue mx-auto mb-4"></div>
+            <p className="text-gray-600 font-roboto">{t('admin.loadingBusinesses')}</p>
+          </div>
         </div>
       </AdminLayout>
     );
@@ -248,417 +351,361 @@ export const BusinessesManagement = () => {
     <AdminLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+        <div className="flex items-center justify-between">
           <div>
-            <h1 className="text-2xl font-comfortaa font-bold text-gray-900">
-              Businesses Management
+            <h1 className="text-3xl font-comfortaa font-bold text-yp-dark">
+              {t('admin.businessManagement')}
             </h1>
-            <p className="text-gray-600 font-roboto">
-              Manage business listings and information
+            <p className="text-gray-600 font-roboto mt-1">
+              {t('admin.manageAllBusinesses')}
             </p>
           </div>
-          <Button 
-            onClick={() => setShowAddForm(true)}
-            className="bg-yp-blue"
-          >
+          <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+            <DialogTrigger asChild>
+              <Button onClick={openAddDialog} className="bg-yp-blue hover:bg-yp-blue/90">
             <Plus className="w-4 h-4 mr-2" />
-            Add New Business
+                {t('admin.addBusiness')}
           </Button>
+            </DialogTrigger>
+            <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+              <DialogHeader>
+                <DialogTitle className="font-comfortaa">
+                  {editingBusiness ? t('admin.editBusiness') : t('admin.addNewBusiness')}
+                </DialogTitle>
+                <DialogDescription>
+                  {editingBusiness ? t('admin.updateBusinessInfo') : t('admin.createNewBusinessListing')}
+                </DialogDescription>
+              </DialogHeader>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                {/* Basic Information */}
+                <div className="space-y-4">
+                <div>
+                    <Label htmlFor="name" className="font-roboto">{t('admin.businessName')} *</Label>
+                  <Input
+                      id="name"
+                    value={formData.name}
+                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                      className="font-roboto"
+                  />
+                </div>
+                  
+                <div>
+                    <Label htmlFor="description" className="font-roboto">{t('admin.description')}</Label>
+                    <Textarea
+                      id="description"
+                      value={formData.description}
+                      onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+                      className="font-roboto"
+                      rows={3}
+                    />
+                </div>
+                  
+                <div>
+                    <Label htmlFor="address" className="font-roboto">{t('admin.address')}</Label>
+                    <Input
+                      id="address"
+                      value={formData.address}
+                      onChange={(e) => setFormData({ ...formData, address: e.target.value })}
+                      className="font-roboto"
+                    />
+                </div>
+                  
+                <div>
+                    <Label htmlFor="phone" className="font-roboto">{t('admin.phone')}</Label>
+                  <Input
+                      id="phone"
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                      className="font-roboto"
+                  />
+                </div>
+                  
+                <div>
+                    <Label htmlFor="email" className="font-roboto">{t('admin.email')}</Label>
+                  <Input
+                      id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                      className="font-roboto"
+                  />
+                </div>
+                  
+                <div>
+                    <Label htmlFor="website" className="font-roboto">{t('admin.website')}</Label>
+                  <Input
+                      id="website"
+                    value={formData.website}
+                    onChange={(e) => setFormData({ ...formData, website: e.target.value })}
+                      className="font-roboto"
+                  />
+                </div>
+                </div>
+                
+                {/* Categories and Status */}
+                <div className="space-y-4">
+                  <div>
+                    <Label htmlFor="category" className="font-roboto">{t('admin.category')} *</Label>
+                    <Select value={formData.category_id} onValueChange={(value) => setFormData({ ...formData, category_id: value })}>
+                      <SelectTrigger className="font-roboto">
+                        <SelectValue placeholder={t('admin.selectCategory')} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {categories.map((category) => (
+                          <SelectItem key={category.id} value={category.id} className="font-roboto">
+                            {category.name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="city" className="font-roboto">{t('admin.city')} *</Label>
+                    <Select value={formData.city_id} onValueChange={(value) => setFormData({ ...formData, city_id: value })}>
+                      <SelectTrigger className="font-roboto">
+                        <SelectValue placeholder={t('admin.selectCity')} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {cities.map((city) => (
+                          <SelectItem key={city.id} value={city.id} className="font-roboto">
+                            {city.name}, {city.country_name}
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  <div>
+                    <Label htmlFor="status" className="font-roboto">{t('admin.status')}</Label>
+                    <Select value={formData.status} onValueChange={(value: any) => setFormData({ ...formData, status: value })}>
+                      <SelectTrigger className="font-roboto">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="pending" className="font-roboto">{t('admin.pending')}</SelectItem>
+                        <SelectItem value="active" className="font-roboto">{t('admin.active')}</SelectItem>
+                        <SelectItem value="suspended" className="font-roboto">{t('admin.suspended')}</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  
+                  {/* Business Features */}
+                  <div className="space-y-3">
+                    <Label className="font-roboto">{t('admin.businessFeatures')}</Label>
+                    
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="is_premium" className="font-roboto text-sm">{t('admin.premiumBusiness')}</Label>
+                      <Switch
+                        id="is_premium"
+                        checked={formData.is_premium}
+                        onCheckedChange={(checked) => setFormData({ ...formData, is_premium: checked })}
+                  />
+                </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="is_verified" className="font-roboto text-sm">{t('admin.verifiedBusiness')}</Label>
+                      <Switch
+                        id="is_verified"
+                        checked={formData.is_verified}
+                        onCheckedChange={(checked) => setFormData({ ...formData, is_verified: checked })}
+                  />
+                </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="has_coupons" className="font-roboto text-sm">{t('admin.hasCoupons')}</Label>
+                      <Switch
+                        id="has_coupons"
+                        checked={formData.has_coupons}
+                        onCheckedChange={(checked) => setFormData({ ...formData, has_coupons: checked })}
+                      />
+              </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="accepts_orders_online" className="font-roboto text-sm">{t('admin.acceptsOrdersOnline')}</Label>
+                      <Switch
+                        id="accepts_orders_online"
+                        checked={formData.accepts_orders_online}
+                        onCheckedChange={(checked) => setFormData({ ...formData, accepts_orders_online: checked })}
+                      />
+              </div>
+                    
+                    <div className="flex items-center justify-between">
+                      <Label htmlFor="is_kid_friendly" className="font-roboto text-sm">{t('admin.kidFriendly')}</Label>
+                      <Switch
+                        id="is_kid_friendly"
+                        checked={formData.is_kid_friendly}
+                        onCheckedChange={(checked) => setFormData({ ...formData, is_kid_friendly: checked })}
+                      />
+                    </div>
+                        </div>
+                    </div>
+                  </div>
+                  
+              <DialogFooter>
+                <Button variant="outline" onClick={() => setIsDialogOpen(false)}>
+                  <X className="w-4 h-4 mr-2" />
+                  {t('admin.cancel')}
+                </Button>
+                <Button onClick={handleSubmit} className="bg-yp-blue hover:bg-yp-blue/90">
+                  <Save className="w-4 h-4 mr-2" />
+                  {editingBusiness ? t('admin.update') : t('admin.create')}
+                </Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
         </div>
 
-        {/* Filters and Search */}
-        <Card>
-          <CardContent className="p-6">
+        {/* Search and Filters */}
+        <Card className="mb-6">
+          <CardContent className="p-4">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
-                  placeholder="Search businesses..."
+                  placeholder={t('admin.searchBusinesses')}
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  className="pl-10 font-roboto"
                 />
               </div>
-              <select
-                value={selectedCity}
-                onChange={(e) => setSelectedCity(e.target.value)}
-                className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-yp-blue focus:border-transparent"
-              >
-                <option value="">All Cities</option>
-                {cities.map((city) => (
-                  <option key={city.id} value={city.id}>
-                    {city.name}
-                  </option>
-                ))}
-              </select>
-              <select
-                value={selectedCategory}
-                onChange={(e) => setSelectedCategory(e.target.value)}
-                className="border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-yp-blue focus:border-transparent"
-              >
-                <option value="">All Categories</option>
-                {categories.map((category) => (
-                  <option key={category.id} value={category.id}>
-                    {category.name}
-                  </option>
-                ))}
-              </select>
-              <Button variant="outline" className="flex items-center justify-center">
-                <Filter className="w-4 h-4 mr-2" />
-                Filters
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
-
-        {/* Add/Edit Form */}
-        {(showAddForm || editingBusiness) && (
-          <Card>
-            <CardHeader>
-              <CardTitle className="font-roboto">
-                {editingBusiness ? 'Edit Business' : 'Add New Business'}
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
-                    Business Name
-                  </label>
-                  <Input
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    placeholder="Enter business name"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
-                    Category
-                  </label>
-                  <select
-                    value={formData.category_id}
-                    onChange={(e) => setFormData({ ...formData, category_id: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-yp-blue focus:border-transparent"
-                  >
-                    <option value="">Select a category</option>
-                    {categories.map((category) => (
-                      <option key={category.id} value={category.id}>
-                        {category.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
-                    City
-                  </label>
-                  <select
-                    value={formData.city_id}
-                    onChange={(e) => setFormData({ ...formData, city_id: e.target.value })}
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-yp-blue focus:border-transparent"
-                  >
-                    <option value="">Select a city</option>
-                    {cities.map((city) => (
-                      <option key={city.id} value={city.id}>
-                        {city.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
-                    Phone
-                  </label>
-                  <Input
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    placeholder="Enter phone number"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
-                    Email
-                  </label>
-                  <Input
-                    type="email"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    placeholder="Enter email address"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
-                    Website
-                  </label>
-                  <Input
-                    value={formData.website}
-                    onChange={(e) => setFormData({ ...formData, website: e.target.value })}
-                    placeholder="Enter website URL"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
-                    Address
-                  </label>
-                  <Input
-                    value={formData.address}
-                    onChange={(e) => setFormData({ ...formData, address: e.target.value })}
-                    placeholder="Enter full address"
-                  />
-                </div>
-                <div className="md:col-span-2">
-                  <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
-                    Description
-                  </label>
-                  <textarea
-                    value={formData.description}
-                    onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                    placeholder="Enter business description"
-                    className="w-full border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focus:ring-yp-blue focus:border-transparent font-roboto"
-                    rows={3}
-                  />
-                </div>
-              </div>
-              <div className="flex items-center space-x-4 mt-4">
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="checkbox"
-                    checked={formData.is_active}
-                    onChange={(e) => setFormData({ ...formData, is_active: e.target.checked })}
-                    className="rounded border-gray-300 text-yp-blue focus:ring-yp-blue"
-                  />
-                  <span className="text-sm font-roboto">Active</span>
-                </label>
-              </div>
-              <div className="flex space-x-3 mt-6">
-                <Button 
-                  onClick={editingBusiness ? handleEditBusiness : handleAddBusiness}
-                  className="bg-yp-blue"
-                >
-                  {editingBusiness ? 'Update Business' : 'Add Business'}
-                </Button>
-                <Button variant="outline" onClick={resetForm}>
-                  Cancel
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
-        )}
-
-        {/* Businesses Table */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="font-roboto text-base sm:text-lg">
-              Businesses ({filteredBusinesses.length})
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            {/* Mobile Cards View */}
-            <div className="block lg:hidden space-y-4">
-              {filteredBusinesses.map((business) => (
-                <div key={business.id} className="border border-gray-200 rounded-lg p-4 space-y-3">
-                  <div className="flex items-center space-x-3">
-                    <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                      <Building2 className="w-4 h-4 text-blue-600" />
-                    </div>
-                    <div className="flex-1 min-w-0">
-                      <div className="font-medium font-roboto text-sm sm:text-base">{business.name}</div>
-                      {business.description && (
-                        <div className="text-xs sm:text-sm text-gray-600 font-roboto truncate">
-                          {business.description}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                  
-                  <div className="grid grid-cols-2 gap-2 text-xs sm:text-sm">
-                    <div>
-                      <span className="text-gray-500">Category:</span>
-                      <Badge variant="outline" className="ml-1 text-xs">
-                        {business.categories?.name || 'Unknown'}
+              <Select value={statusFilter} onValueChange={setStatusFilter}>
+                <SelectTrigger className="font-roboto">
+                  <SelectValue placeholder={t('admin.filterByStatus')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all" className="font-roboto">{t('admin.allStatuses')}</SelectItem>
+                  <SelectItem value="active" className="font-roboto">{t('admin.active')}</SelectItem>
+                  <SelectItem value="pending" className="font-roboto">{t('admin.pending')}</SelectItem>
+                  <SelectItem value="suspended" className="font-roboto">{t('admin.suspended')}</SelectItem>
+                </SelectContent>
+              </Select>
+              <Select value={categoryFilter} onValueChange={setCategoryFilter}>
+                <SelectTrigger className="font-roboto">
+                  <SelectValue placeholder={t('admin.filterByCategory')} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all" className="font-roboto">{t('admin.allCategories')}</SelectItem>
+                  {categories.map((category) => (
+                    <SelectItem key={category.id} value={category.id} className="font-roboto">
+                      {category.name}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+              <Badge variant="secondary" className="self-center justify-center">
+                {filteredBusinesses.length} {t('admin.businesses')}
                       </Badge>
                     </div>
-                    <div>
-                      <span className="text-gray-500">Location:</span>
-                      <div className="flex items-center space-x-1 mt-1">
-                        <MapPin className="w-3 h-3 text-gray-400" />
-                        <span className="font-roboto">{business.cities?.name || 'Unknown'}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="space-y-1 text-xs sm:text-sm">
-                    {business.phone && (
-                      <div className="flex items-center space-x-2">
-                        <Phone className="w-3 h-3 text-gray-400" />
-                        <span>{business.phone}</span>
-                      </div>
-                    )}
-                    {business.email && (
-                      <div className="flex items-center space-x-2">
-                        <Mail className="w-3 h-3 text-gray-400" />
-                        <span className="truncate">{business.email}</span>
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div className="flex items-center justify-between pt-2">
-                    <Badge variant={business.is_active ? "default" : "secondary"} className="text-xs">
-                      {business.is_active ? "Active" : "Inactive"}
-                    </Badge>
-                    <div className="flex space-x-2">
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => {
-                          setEditingBusiness(business);
-                          setFormData({
-                            name: business.name,
-                            description: business.description || "",
-                            phone: business.phone || "",
-                            email: business.email || "",
-                            website: business.website || "",
-                            address: business.address || "",
-                            city_id: business.city_id,
-                            category_id: business.category_id,
-                            is_active: business.is_active
-                          });
-                        }}
-                        className="h-8 px-2"
-                      >
-                        <Edit className="w-3 h-3" />
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="outline"
-                        onClick={() => handleDeleteBusiness(business.id)}
-                        className="h-8 px-2 text-red-600 hover:text-red-700"
-                      >
-                        <Trash2 className="w-3 h-3" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-            
-            {/* Desktop Table View */}
-            <div className="hidden lg:block overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-gray-200">
-                    <th className="text-left py-3 px-4 font-medium text-gray-900 font-roboto text-sm">Business</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-900 font-roboto text-sm">Category</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-900 font-roboto text-sm">Location</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-900 font-roboto text-sm">Contact</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-900 font-roboto text-sm">Status</th>
-                    <th className="text-left py-3 px-4 font-medium text-gray-900 font-roboto text-sm">Actions</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {filteredBusinesses.map((business) => (
-                    <tr key={business.id} className="border-b border-gray-100 hover:bg-gray-100">
-                      <td className="py-3 px-4">
-                        <div className="flex items-center space-x-3">
-                          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                            <Building2 className="w-4 h-4 text-blue-600" />
-                          </div>
-                          <div className="min-w-0">
-                            <div className="font-medium font-roboto text-sm">{business.name}</div>
-                            {business.description && (
-                              <div className="text-sm text-gray-600 font-roboto truncate max-w-xs">
-                                {business.description}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </td>
-                      <td className="py-3 px-4">
-                        <Badge variant="outline" className="text-xs">
-                          {business.categories?.name || 'Unknown'}
-                        </Badge>
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className="flex items-center space-x-2">
-                          <MapPin className="w-4 h-4 text-gray-400" />
-                          <span className="font-roboto text-sm">{business.cities?.name || 'Unknown'}</span>
-                        </div>
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className="space-y-1">
-                          {business.phone && (
-                            <div className="flex items-center space-x-2 text-sm">
-                              <Phone className="w-3 h-3 text-gray-400" />
-                              <span>{business.phone}</span>
-                            </div>
-                          )}
-                          {business.email && (
-                            <div className="flex items-center space-x-2 text-sm">
-                              <Mail className="w-3 h-3 text-gray-400" />
-                              <span className="truncate max-w-32">{business.email}</span>
-                            </div>
-                          )}
-                        </div>
-                      </td>
-                      <td className="py-3 px-4">
-                        <Badge variant={business.is_active ? "default" : "secondary"} className="text-xs">
-                          {business.is_active ? "Active" : "Inactive"}
-                        </Badge>
-                      </td>
-                      <td className="py-3 px-4">
-                        <div className="flex space-x-2">
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => {
-                              setEditingBusiness(business);
-                              setFormData({
-                                name: business.name,
-                                description: business.description || "",
-                                phone: business.phone || "",
-                                email: business.email || "",
-                                website: business.website || "",
-                                address: business.address || "",
-                                city_id: business.city_id,
-                                category_id: business.category_id,
-                                is_active: business.is_active
-                              });
-                            }}
-                            className="h-8 px-2"
-                          >
-                            <Edit className="w-3 h-3" />
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleDeleteBusiness(business.id)}
-                            className="h-8 px-2 text-red-600 hover:text-red-700"
-                          >
-                            <Trash2 className="w-3 h-3" />
-                          </Button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
           </CardContent>
         </Card>
 
-            {filteredBusinesses.length === 0 && (
-              <div className="text-center py-12">
+        {/* Businesses Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {filteredBusinesses.map((business) => (
+            <Card key={business.id} className="hover:shadow-lg transition-shadow duration-200">
+              <CardHeader className="pb-3">
+                <div className="flex items-start justify-between">
+                  <div className="flex items-center space-x-2">
+                    <Building2 className="w-5 h-5 text-yp-blue" />
+                    <div className="flex-1">
+                      <CardTitle className="text-lg font-comfortaa line-clamp-2">{business.name}</CardTitle>
+                      <div className="flex items-center space-x-1 mt-1">
+                        <MapPin className="w-4 h-4 text-gray-500" />
+                        <span className="text-sm font-roboto text-gray-600">
+                          {business.city_name}, {business.country_name}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex items-center space-x-1">
+                      <Button
+                      variant="ghost"
+                        size="sm"
+                      className="p-1 h-8 w-8"
+                      onClick={() => openEditDialog(business)}
+                    >
+                      <Edit className="w-4 h-4" />
+                      </Button>
+                      <Button
+                      variant="ghost"
+                        size="sm"
+                      className="p-1 h-8 w-8 text-red-600 hover:text-red-700 hover:bg-[#4e3c28]/10"
+                      onClick={() => handleDelete(business.id)}
+                      >
+                      <Trash2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                  </div>
+              </CardHeader>
+              <CardContent className="pt-0">
+                            {business.description && (
+                  <p className="text-sm font-roboto text-gray-600 mb-3 line-clamp-2">
+                                {business.description}
+                  </p>
+                )}
+                
+                {/* Business Features Badges */}
+                <div className="flex flex-wrap gap-1 mb-3">
+                  
+                  {business.has_coupons && (
+                    <Badge variant="outline" className="text-xs border-orange-200 text-orange-700 bg-orange-50">
+                      {t('businessFeatures.coupons')}
+                    </Badge>
+                  )}
+                  {business.accepts_orders_online && (
+                    <Badge variant="outline" className="text-xs border-green-200 text-green-700 bg-green-50">
+                      {t('businessFeatures.orderOnline')}
+                    </Badge>
+                  )}
+                  {business.is_kid_friendly && (
+                    <Badge variant="outline" className="text-xs border-blue-200 text-blue-700 bg-blue-50">
+                      {t('businessFeatures.kidFriendly')}
+                    </Badge>
+                            )}
+                          </div>
+                
+                <div className="grid grid-cols-2 gap-4 mb-3">
+                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                    <Star className="w-4 h-4 text-yellow-500" />
+                    <span className="font-roboto">{business.rating?.toFixed(1) || "N/A"}</span>
+                        </div>
+                  <div className="flex items-center space-x-2 text-sm text-gray-600">
+                    <Eye className="w-4 h-4" />
+                    <span className="font-roboto">{business.review_count || 0} {t('admin.reviews')}</span>
+                        </div>
+                            </div>
+                
+                <div className="flex items-center justify-between">
+                  <Badge 
+                            variant="outline"
+                    className="font-roboto"
+                  >
+                    <span className="capitalize">{business.status}</span>
+                  </Badge>
+                  <span className="text-xs font-roboto text-gray-500">
+                    {new Date(business.created_at).toLocaleDateString()}
+                  </span>
+            </div>
+          </CardContent>
+        </Card>
+          ))}
+        </div>
+
+        {/* No Results */}
+        {filteredBusinesses.length === 0 && searchTerm && (
+          <Card className="text-center py-12">
+            <CardContent>
                 <Building2 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
-                <h3 className="text-lg font-medium text-gray-900 font-roboto mb-2">
-                  No businesses found
+              <h3 className="text-lg font-comfortaa font-semibold text-gray-900 mb-2">
+                {t('admin.noBusinessesFound')}
                 </h3>
                 <p className="text-gray-600 font-roboto">
-                  {searchTerm || selectedCity || selectedCategory
-                    ? 'Try adjusting your search criteria' 
-                    : 'Get started by adding your first business'
-                  }
+                {t('admin.tryAdjustingSearchTerms')}
                 </p>
-              </div>
+            </CardContent>
+          </Card>
             )}
       </div>
     </AdminLayout>
