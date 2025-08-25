@@ -15,6 +15,7 @@ import { AdminCities } from "./pages/admin/AdminCities";
 import { AdminCountries } from "./pages/admin/AdminCountries";
 import { AdminBusinesses } from "./pages/admin/AdminBusinesses";
 import { AdminReviews } from "./pages/admin/AdminReviews";
+import { AdminSponsoredAds } from "./pages/admin/AdminSponsoredAds";
 import { AdminAuthGuard } from "./components/admin/AdminAuthGuard";
 import { MapTestPage } from "./pages/MapTestPage";
 // import { SimpleMapTest } from "./pages/SimpleMapTest";
@@ -96,6 +97,11 @@ const App = () => (
           <Route path="/admin/businesses" element={
             <AdminAuthGuard>
               <AdminBusinesses />
+            </AdminAuthGuard>
+          } />
+          <Route path="/admin/sponsored-ads" element={
+            <AdminAuthGuard>
+              <AdminSponsoredAds />
             </AdminAuthGuard>
           } />
           <Route path="/admin/reviews" element={

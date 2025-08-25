@@ -28,6 +28,7 @@ export interface Business {
   click_count: number;
   created_at: string;
   updated_at: string;
+  is_sponsored_ad: boolean;
   
   // Joined fields
   category?: {
@@ -67,6 +68,7 @@ export interface BusinessFilters {
   has_coupons?: boolean;
   accepts_orders_online?: boolean;
   is_kid_friendly?: boolean;
+  is_sponsored_ad?: boolean;
 }
 
 export interface BusinessSearchParams {
@@ -85,6 +87,26 @@ export interface City {
   latitude: number | null;
   longitude: number | null;
   countries: { code: string } | null;
+}
+
+export interface AdCampaign {
+  id: string;
+  business_id: string;
+  campaign_name: string;
+  campaign_type: 'featured_listing' | 'top_position' | 'sidebar';
+  target_cities: string[];
+  target_categories: string[];
+  start_date: string;
+  end_date: string;
+  budget: number;
+  spent_amount: number;
+  daily_budget_limit?: number;
+  is_active: boolean;
+  admin_approved: boolean;
+  admin_notes?: string;
+  performance_metrics?: any;
+  created_at: string;
+  updated_at: string;
 }
 
 export class BusinessService {
@@ -211,6 +233,10 @@ export class BusinessService {
 
       if (params.filters?.is_kid_friendly) {
         query = query.eq('is_kid_friendly', true);
+      }
+
+      if (params.filters?.is_sponsored_ad) {
+        query = query.eq('is_sponsored_ad', true);
       }
 
       // Order by premium status and creation date
@@ -401,6 +427,30 @@ export class BusinessService {
 
       if (filters.country) {
         query = query.eq('countries.code', filters.country);
+      }
+
+      if (filters.is_premium) {
+        query = query.eq('is_premium', true);
+      }
+
+      if (filters.is_verified) {
+        query = query.eq('is_verified', true);
+      }
+
+      if (filters.has_coupons) {
+        query = query.eq('has_coupons', true);
+      }
+
+      if (filters.accepts_orders_online) {
+        query = query.eq('accepts_orders_online', true);
+      }
+
+      if (filters.is_kid_friendly) {
+        query = query.eq('is_kid_friendly', true);
+      }
+
+      if (filters.is_sponsored_ad) {
+        query = query.eq('is_sponsored_ad', true);
       }
 
       const { data, error } = await query
@@ -638,6 +688,50 @@ export class BusinessService {
       }
     } catch (error) {
       console.error('Error in incrementClickCount:', error);
+    }
+  }
+
+  /**
+   * Get sponsored businesses for a specific city/category
+   */
+  static async getSponsoredBusinesses(
+    citySlug?: string, 
+    categorySlug?: string
+  ): Promise<Business[]> {
+    try {
+      let query = db.businesses()
+        .select(`
+          *,
+          category:categories!businesses_category_id_fkey(id, name, slug, icon),
+          city:cities!businesses_city_id_fkey(id, name, country_id),
+          country:countries!businesses_country_id_fkey(id, name, code, flag_url),
+          reviews:reviews(id, rating, title, content, created_at)
+        `)
+        .eq('status', 'active')
+        .eq('is_sponsored_ad', true)
+        .eq('admin_approved', true);
+
+      // Filter by city if provided
+      if (citySlug) {
+        query = query.eq('cities.slug', citySlug);
+      }
+
+      // Filter by category if provided
+      if (categorySlug) {
+        query = query.eq('categories.slug', categorySlug);
+      }
+
+      const { data, error } = await query;
+
+      if (error) {
+        console.error('Error fetching sponsored businesses:', error);
+        return [];
+      }
+
+      return data || [];
+    } catch (error) {
+      console.error('Error in getSponsoredBusinesses:', error);
+      return [];
     }
   }
 }

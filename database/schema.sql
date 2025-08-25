@@ -103,12 +103,36 @@ CREATE TABLE public.businesses (
     accepts_orders_online BOOLEAN DEFAULT false,
     is_kid_friendly BOOLEAN DEFAULT false,
     
+    -- Sponsored Advertising
+    is_sponsored_ad BOOLEAN DEFAULT false,
+    
     -- SEO and Analytics
     meta_title TEXT,
     meta_description TEXT,
     view_count INTEGER DEFAULT 0,
     click_count INTEGER DEFAULT 0,
     
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Ad Campaigns table for managing sponsored advertising
+CREATE TABLE public.ad_campaigns (
+    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
+    business_id UUID REFERENCES public.businesses(id) ON DELETE CASCADE,
+    campaign_name TEXT NOT NULL,
+    campaign_type TEXT NOT NULL DEFAULT 'featured_listing', -- 'featured_listing', 'top_position', 'sidebar'
+    target_cities TEXT[], -- Array of city slugs to target
+    target_categories TEXT[], -- Array of category slugs to target
+    start_date TIMESTAMP WITH TIME ZONE NOT NULL,
+    end_date TIMESTAMP WITH TIME ZONE NOT NULL,
+    budget DECIMAL(10, 2) NOT NULL,
+    spent_amount DECIMAL(10, 2) DEFAULT 0,
+    daily_budget_limit DECIMAL(10, 2),
+    is_active BOOLEAN DEFAULT false,
+    admin_approved BOOLEAN DEFAULT false,
+    admin_notes TEXT,
+    performance_metrics JSONB, -- Store clicks, impressions, CTR, etc.
     created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
     updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
@@ -201,6 +225,10 @@ CREATE INDEX idx_businesses_is_premium ON public.businesses(is_premium);
 CREATE INDEX idx_businesses_has_coupons ON public.businesses(has_coupons);
 CREATE INDEX idx_businesses_accepts_orders_online ON public.businesses(accepts_orders_online);
 CREATE INDEX idx_businesses_is_kid_friendly ON public.businesses(is_kid_friendly);
+CREATE INDEX idx_businesses_is_sponsored_ad ON public.businesses(is_sponsored_ad);
+CREATE INDEX idx_ad_campaigns_business_id ON public.ad_campaigns(business_id);
+CREATE INDEX idx_ad_campaigns_is_active ON public.ad_campaigns(is_active);
+CREATE INDEX idx_ad_campaigns_admin_approved ON public.ad_campaigns(admin_approved);
 CREATE INDEX idx_reviews_business_id ON public.reviews(business_id);
 CREATE INDEX idx_reviews_user_id ON public.reviews(user_id);
 CREATE INDEX idx_events_city_id ON public.events(city_id);
@@ -225,4 +253,5 @@ $$ language 'plpgsql';
 CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_businesses_updated_at BEFORE UPDATE ON public.businesses FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
 CREATE TRIGGER update_reviews_updated_at BEFORE UPDATE ON public.reviews FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-CREATE TRIGGER update_products_updated_at BEFORE UPDATE ON public.products FOR EACH ROW EXECUTE FUNCTION update_updated_at_column(); 
+CREATE TRIGGER update_products_updated_at BEFORE UPDATE ON public.products FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
+CREATE TRIGGER update_ad_campaigns_updated_at BEFORE UPDATE ON public.ad_campaigns FOR EACH ROW EXECUTE FUNCTION update_updated_at_column(); 

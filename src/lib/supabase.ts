@@ -19,490 +19,181 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 })
 
 // Database types for TypeScript
-export type Database = {
-  public: {
-    Tables: {
-      users: {
-        Row: {
-          id: string
-          email: string
-          full_name: string | null
-          phone: string | null
-          avatar_url: string | null
-          role: 'user' | 'business_owner' | 'admin'
-          country: string | null
-          city: string | null
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id: string
-          email: string
-          full_name?: string | null
-          phone?: string | null
-          avatar_url?: string | null
-          role?: 'user' | 'business_owner' | 'admin'
-          country?: string | null
-          city?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          email?: string
-          full_name?: string | null
-          phone?: string | null
-          avatar_url?: string | null
-          role?: 'user' | 'business_owner' | 'admin'
-          country?: string | null
-          city?: string | null
-          created_at?: string
-          updated_at?: string
-        }
-      }
-      countries: {
-        Row: {
-          id: string
-          name: string
-          code: string
-          flag_url: string | null
-          wikipedia_url: string | null
-          description: string | null
-          population: number | null
-          capital: string | null
-          currency: string | null
-          language: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          name: string
-          code: string
-          flag_url?: string | null
-          wikipedia_url?: string | null
-          description?: string | null
-          population?: number | null
-          capital?: string | null
-          currency?: string | null
-          language?: string | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          name?: string
-          code?: string
-          flag_url?: string | null
-          wikipedia_url?: string | null
-          description?: string | null
-          population?: number | null
-          capital?: string | null
-          currency?: string | null
-          language?: string | null
-          created_at?: string
-        }
-      }
-      cities: {
-        Row: {
-          id: string
-          name: string
-          country_id: string
-          latitude: number | null
-          longitude: number | null
-          population: number | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          name: string
-          country_id: string
-          latitude?: number | null
-          longitude?: number | null
-          population?: number | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          name?: string
-          country_id?: string
-          latitude?: number | null
-          longitude?: number | null
-          population?: number | null
-          created_at?: string
-        }
-      }
-      categories: {
-        Row: {
-          id: string
-          name: string
-          slug: string
-          icon: string | null
-          description: string | null
-          parent_id: string | null
-          sort_order: number
-          is_active: boolean
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          name: string
-          slug: string
-          icon?: string | null
-          description?: string | null
-          parent_id?: string | null
-          sort_order?: number
-          is_active?: boolean
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          name?: string
-          slug?: string
-          icon?: string | null
-          description?: string | null
-          parent_id?: string | null
-          sort_order?: number
-          is_active?: boolean
-          created_at?: string
-        }
-      }
-      businesses: {
-        Row: {
-          id: string
-          name: string
-          slug: string
-          description: string | null
-          category_id: string | null
-          owner_id: string | null
-          city_id: string | null
-          country_id: string | null
-          phone: string | null
-          email: string | null
-          website: string | null
-          whatsapp: string | null
-          address: string | null
-          latitude: number | null
-          longitude: number | null
-          hours_of_operation: any | null
-          services: any | null
-          images: string[] | null
-          logo_url: string | null
-          status: 'pending' | 'active' | 'suspended' | 'premium'
-          is_premium: boolean
-          is_verified: boolean
-          has_coupons: boolean
-          accepts_orders_online: boolean
-          is_kid_friendly: boolean
-          meta_title: string | null
-          meta_description: string | null
-          view_count: number
-          click_count: number
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          name: string
-          slug: string
-          description?: string | null
-          category_id?: string | null
-          owner_id?: string | null
-          city_id?: string | null
-          country_id?: string | null
-          phone?: string | null
-          email?: string | null
-          website?: string | null
-          whatsapp?: string | null
-          address?: string | null
-          latitude?: number | null
-          longitude?: number | null
-          hours_of_operation?: any | null
-          services?: any | null
-          images?: string[] | null
-          logo_url?: string | null
-          status?: 'pending' | 'active' | 'suspended' | 'premium'
-          is_premium?: boolean
-          is_verified?: boolean
-          has_coupons?: boolean
-          accepts_orders_online?: boolean
-          is_kid_friendly?: boolean
-          meta_title?: string | null
-          meta_description?: string | null
-          view_count?: number
-          click_count?: number
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          name?: string
-          slug?: string
-          description?: string | null
-          category_id?: string | null
-          owner_id?: string | null
-          city_id?: string | null
-          country_id?: string | null
-          phone?: string | null
-          email?: string | null
-          website?: string | null
-          whatsapp?: string | null
-          address?: string | null
-          latitude?: number | null
-          longitude?: number | null
-          hours_of_operation?: any | null
-          services?: any | null
-          images?: string[] | null
-          logo_url?: string | null
-          status?: 'pending' | 'active' | 'suspended' | 'premium'
-          is_premium?: boolean
-          is_verified?: boolean
-          has_coupons?: boolean
-          accepts_orders_online?: boolean
-          is_kid_friendly?: boolean
-          meta_title?: string | null
-          meta_description?: string | null
-          view_count?: number
-          click_count?: number
-          created_at?: string
-          updated_at?: string
-        }
-      }
-      reviews: {
-        Row: {
-          id: string
-          business_id: string
-          user_id: string
-          rating: number
-          title: string | null
-          content: string | null
-          images: string[] | null
-          status: 'pending' | 'approved' | 'rejected'
-          helpful_count: number
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          business_id: string
-          user_id: string
-          rating: number
-          title?: string | null
-          content?: string | null
-          images?: string[] | null
-          status?: 'pending' | 'approved' | 'rejected'
-          helpful_count?: number
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          business_id?: string
-          user_id?: string
-          rating?: number
-          title?: string | null
-          content?: string | null
-          images?: string[] | null
-          status?: 'pending' | 'approved' | 'rejected'
-          helpful_count?: number
-          created_at?: string
-          updated_at?: string
-        }
-      }
-      premium_features: {
-        Row: {
-          id: string
-          business_id: string
-          feature_type: string
-          is_active: boolean
-          expires_at: string | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          business_id: string
-          feature_type: string
-          is_active?: boolean
-          expires_at?: string | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          business_id?: string
-          feature_type?: string
-          is_active?: boolean
-          expires_at?: string | null
-          created_at?: string
-        }
-      }
-      payments: {
-        Row: {
-          id: string
-          business_id: string | null
-          user_id: string | null
-          amount: number
-          currency: string
-          payment_method: string | null
-          status: 'pending' | 'completed' | 'failed' | 'refunded'
-          stripe_payment_intent_id: string | null
-          description: string | null
-          metadata: any | null
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          business_id?: string | null
-          user_id?: string | null
-          amount: number
-          currency?: string
-          payment_method?: string | null
-          status?: 'pending' | 'completed' | 'failed' | 'refunded'
-          stripe_payment_intent_id?: string | null
-          description?: string | null
-          metadata?: any | null
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          business_id?: string | null
-          user_id?: string | null
-          amount?: number
-          currency?: string
-          payment_method?: string | null
-          status?: 'pending' | 'completed' | 'failed' | 'refunded'
-          stripe_payment_intent_id?: string | null
-          description?: string | null
-          metadata?: any | null
-          created_at?: string
-        }
-      }
-      events: {
-        Row: {
-          id: string
-          title: string
-          description: string | null
-          organizer_id: string | null
-          city_id: string | null
-          country_id: string | null
-          venue: string | null
-          address: string | null
-          start_date: string
-          end_date: string
-          images: string[] | null
-          ticket_price: number | null
-          ticket_url: string | null
-          category: string | null
-          tags: string[] | null
-          is_featured: boolean
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          title: string
-          description?: string | null
-          organizer_id?: string | null
-          city_id?: string | null
-          country_id?: string | null
-          venue?: string | null
-          address?: string | null
-          start_date: string
-          end_date: string
-          images?: string[] | null
-          ticket_price?: number | null
-          ticket_url?: string | null
-          category?: string | null
-          tags?: string[] | null
-          is_featured?: boolean
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          title?: string
-          description?: string | null
-          organizer_id?: string | null
-          city_id?: string | null
-          country_id?: string | null
-          venue?: string | null
-          address?: string | null
-          start_date?: string
-          end_date?: string
-          images?: string[] | null
-          ticket_price?: number | null
-          ticket_url?: string | null
-          category?: string | null
-          tags?: string[] | null
-          is_featured?: boolean
-          created_at?: string
-        }
-      }
-      products: {
-        Row: {
-          id: string
-          seller_id: string | null
-          business_id: string | null
-          title: string
-          description: string | null
-          price: number
-          currency: string
-          images: string[] | null
-          category: string | null
-          condition: string | null
-          stock_quantity: number
-          is_active: boolean
-          created_at: string
-          updated_at: string
-        }
-        Insert: {
-          id?: string
-          seller_id?: string | null
-          business_id?: string | null
-          title: string
-          description?: string | null
-          price: number
-          currency?: string
-          images?: string[] | null
-          category?: string | null
-          condition?: string | null
-          stock_quantity?: number
-          is_active?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-        Update: {
-          id?: string
-          seller_id?: string | null
-          business_id?: string | null
-          title?: string
-          description?: string | null
-          price?: number
-          currency?: string
-          images?: string[] | null
-          category?: string | null
-          condition?: string | null
-          stock_quantity?: number
-          is_active?: boolean
-          created_at?: string
-          updated_at?: string
-        }
-      }
-    }
-    Views: {
-      [_ in never]: never
-    }
-    Functions: {
-      increment_business_view: {
-        Args: { business_uuid: string }
-        Returns: void
-      }
-      increment_business_click: {
-        Args: { business_uuid: string }
-        Returns: void
-      }
-    }
-    Enums: {
-      user_role: 'user' | 'business_owner' | 'admin'
-      business_status: 'pending' | 'active' | 'suspended' | 'premium'
-      review_status: 'pending' | 'approved' | 'rejected'
-      payment_status: 'pending' | 'completed' | 'failed' | 'refunded'
-    }
+export type Row<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row'];
+export type Insert<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Insert'];
+export type Update<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Update'];
+
+// Extend the Database interface to include our new fields
+declare module '@supabase/supabase-js' {
+  interface Database {
+    public: {
+      Tables: {
+        businesses: {
+          Row: {
+            id: string;
+            name: string;
+            slug: string;
+            description: string | null;
+            category_id: string | null;
+            owner_id: string | null;
+            city_id: string | null;
+            country_id: string | null;
+            phone: string | null;
+            email: string | null;
+            website: string | null;
+            whatsapp: string | null;
+            address: string | null;
+            latitude: number | null;
+            longitude: number | null;
+            hours_of_operation: any | null;
+            services: any | null;
+            images: string[] | null;
+            logo_url: string | null;
+            status: 'pending' | 'active' | 'suspended' | 'premium';
+            is_premium: boolean;
+            is_verified: boolean;
+            has_coupons: boolean;
+            accepts_orders_online: boolean;
+            is_kid_friendly: boolean;
+            is_sponsored_ad: boolean;
+            meta_title: string | null;
+            meta_description: string | null;
+            view_count: number;
+            click_count: number;
+            created_at: string;
+            updated_at: string;
+          };
+          Insert: {
+            id?: string;
+            name: string;
+            slug: string;
+            description?: string | null;
+            category_id?: string | null;
+            owner_id?: string | null;
+            city_id?: string | null;
+            country_id?: string | null;
+            phone?: string | null;
+            email?: string | null;
+            website?: string | null;
+            whatsapp?: string | null;
+            address?: string | null;
+            latitude?: number | null;
+            longitude?: number | null;
+            hours_of_operation?: any | null;
+            services?: any | null;
+            images?: string[] | null;
+            logo_url?: string | null;
+            status?: 'pending' | 'active' | 'suspended' | 'premium';
+            is_premium?: boolean;
+            is_verified?: boolean;
+            has_coupons?: boolean;
+            accepts_orders_online?: boolean;
+            is_kid_friendly?: boolean;
+            is_sponsored_ad?: boolean;
+            meta_title?: string | null;
+            meta_description?: string | null;
+            view_count?: number;
+            click_count?: number;
+            created_at?: string;
+            updated_at?: string;
+          };
+          Update: {
+            id?: string;
+            name?: string;
+            slug?: string;
+            description?: string | null;
+            category_id?: string | null;
+            owner_id?: string | null;
+            city_id?: string | null;
+            country_id?: string | null;
+            phone?: string | null;
+            email?: string | null;
+            website?: string | null;
+            whatsapp?: string | null;
+            address?: string | null;
+            latitude?: number | null;
+            longitude?: number | null;
+            hours_of_operation?: any | null;
+            services?: any | null;
+            images?: string[] | null;
+            logo_url?: string | null;
+            status?: 'pending' | 'active' | 'suspended' | 'premium';
+            is_premium?: boolean;
+            is_verified?: boolean;
+            has_coupons?: boolean;
+            accepts_orders_online?: boolean;
+            is_kid_friendly?: boolean;
+            is_sponsored_ad?: boolean;
+            meta_title?: string | null;
+            meta_description?: string | null;
+            view_count?: number;
+            click_count?: number;
+            created_at?: string;
+            updated_at?: string;
+          };
+        };
+
+        ad_campaigns: {
+          Row: {
+            id: string;
+            business_id: string;
+            campaign_name: string;
+            campaign_type: 'featured_listing' | 'top_position' | 'sidebar';
+            target_cities: string[];
+            target_categories: string[];
+            start_date: string;
+            end_date: string;
+            budget: number;
+            spent_amount: number;
+            daily_budget_limit: number | null;
+            is_active: boolean;
+            admin_approved: boolean;
+            admin_notes: string | null;
+            performance_metrics: any | null;
+            created_at: string;
+            updated_at: string;
+          };
+          Insert: {
+            id?: string;
+            business_id: string;
+            campaign_name: string;
+            campaign_type?: 'featured_listing' | 'top_position' | 'sidebar';
+            target_cities?: string[];
+            target_categories?: string[];
+            start_date: string;
+            end_date: string;
+            budget: number;
+            spent_amount?: number;
+            daily_budget_limit?: number | null;
+            is_active?: boolean;
+            admin_approved?: boolean;
+            admin_notes?: string | null;
+            performance_metrics?: any | null;
+            created_at?: string;
+            updated_at?: string;
+          };
+          Update: {
+            id?: string;
+            business_id?: string;
+            campaign_name?: string;
+            campaign_type?: 'featured_listing' | 'top_position' | 'sidebar';
+            target_cities?: string[];
+            target_categories?: string[];
+            start_date?: string;
+            end_date?: string;
+            budget?: number;
+            spent_amount?: number;
+            daily_budget_limit?: number | null;
+            is_active?: boolean;
+            admin_approved?: boolean;
+            admin_notes?: string | null;
+            performance_metrics?: any | null;
+            created_at?: string;
+            updated_at?: string;
+          };
+        };
+      };
+    };
   }
 }
 

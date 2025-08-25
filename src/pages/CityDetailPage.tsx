@@ -8,6 +8,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { UltraSimpleMap } from "@/components/UltraSimpleMap";
 import { CityInfo } from "@/components/CityInfo";
+import { FeaturedBusinesses } from "@/components/FeaturedBusinesses";
 import { 
   MapPin, 
   Phone, 
@@ -367,164 +368,158 @@ export const CityDetailPage = () => {
       )}
 
       {/* Business Listings */}
-         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Main Content - Business Listings */}
+          <div className="flex-1">
             <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
               <div className="flex flex-col lg:flex-row gap-4 items-start lg:items-center justify-between">
-                {/* <div className="flex-1 max-w-md">
-                <div className="relative">
-                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                    <Input
-                    placeholder="Search businesses in this city..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
-                    />
-                </div>
-                </div>
-                 */}
                 <div className="flex items-center space-x-4">
-                <select
+                  <select
                     value={selectedCategory}
                     onChange={(e) => setSelectedCategory(e.target.value)}
                     className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-yp-blue focus:border-transparent"
-                >
+                  >
                     <option value="">All Categories</option>
                     {Array.from(new Set(businesses.map(b => b.category?.name).filter(Boolean))).map((categoryName) => (
-                    <option key={categoryName} value={categoryName}>
+                      <option key={categoryName} value={categoryName}>
                         {categoryName}
-                    </option>
+                      </option>
                     ))}
-                </select>
-                
-                <div className="flex border border-gray-300 rounded-lg">
+                  </select>
+                  
+                  <div className="flex border border-gray-300 rounded-lg">
                     <Button
-                    variant={viewMode === 'grid' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => setViewMode('grid')}
-                    className="rounded-r-none"
+                      variant={viewMode === 'grid' ? 'default' : 'ghost'}
+                      size="sm"
+                      onClick={() => setViewMode('grid')}
+                      className="rounded-r-none"
                     >
-                    <Grid3X3 className="w-4 h-4" />
+                      <Grid3X3 className="w-4 h-4" />
                     </Button>
                     <Button
-                    variant={viewMode === 'list' ? 'default' : 'ghost'}
-                    size="sm"
-                    onClick={() => setViewMode('list')}
-                    className="rounded-l-none"
+                      variant={viewMode === 'list' ? 'default' : 'ghost'}
+                      size="sm"
+                      onClick={() => setViewMode('list')}
+                      className="rounded-l-none"
                     >
-                    <List className="w-4 h-4" />
+                      <List className="w-4 h-4" />
                     </Button>
+                  </div>
                 </div>
-                </div>
-              </div> 
-            
-                {/* Results Count */}
-                {/* <div className="mt-4 pt-4 border-t border-gray-200">
-                    <p className="text-sm text-gray-600">
-                    Showing {filteredBusinesses.length} of {businesses.length} businesses in {formatCityName(citySlug || '')}
-                    {selectedCategory && ` • Filtered by: ${selectedCategory}`}
-                    </p>
-                </div> */}
+              </div>
             </div>
 
             {filteredBusinesses.length === 0 ? (
-            <div className="text-center py-12">
+              <div className="text-center py-12">
                 <Building className="w-16 h-16 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-medium text-gray-900 mb-2">No businesses found</h3>
                 <p className="text-gray-600">
-                {searchTerm ? 'Try adjusting your search criteria' : 'No businesses have been added to this city yet'}
+                  {searchTerm ? 'Try adjusting your search criteria' : 'No businesses have been added to this city yet'}
                 </p>
-            </div>
+              </div>
             ) : (
-            <div className={viewMode === 'grid' 
-                ? 'grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6'
+              <div className={viewMode === 'grid' 
+                ? 'grid grid-cols-1 md:grid-cols-2 gap-6'
                 : 'space-y-4'
-            }>
+              }>
                 {filteredBusinesses.map((business) => (
-                <Card key={business.id} className="hover:shadow-lg transition-shadow duration-200">
+                  <Card key={business.id} className="hover:shadow-lg transition-shadow duration-200">
                     <CardHeader className="pb-3">
-                    <div className="flex items-start justify-between">
+                      <div className="flex items-start justify-between">
                         <div className="flex items-center space-x-3">
-                        <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center flex-shrink-0">
                             {business.logo_url ? (
-                            <img 
+                              <img 
                                 src={business.logo_url} 
                                 alt={business.name}
                                 className="w-8 h-8 rounded object-cover"
-                            />
+                              />
                             ) : (
-                            <Building className="w-6 h-6 text-blue-600" />
+                              <Building className="w-6 h-6 text-blue-600" />
                             )}
-                        </div>
-                        <div className="min-w-0">
+                          </div>
+                          <div className="min-w-0">
                             <CardTitle className="text-lg font-semibold text-yp-dark truncate">
-                            {business.name}
+                              {business.name}
                             </CardTitle>
                             {business.category && (
-                            <Badge variant="outline" className="text-xs mt-1">
+                              <Badge variant="outline" className="text-xs mt-1">
                                 {business.category.name}
-                            </Badge>
+                              </Badge>
                             )}
+                          </div>
                         </div>
-                        </div>
-                    </div>
+                      </div>
                     </CardHeader>
                     
                     <CardContent className="pt-0">
-                    {business.description && (
+                      {business.description && (
                         <p className="text-gray-600 text-sm mb-4 line-clamp-2">
-                        {business.description}
+                          {business.description}
                         </p>
-                    )}
-                    
-                    <div className="space-y-2 mb-4">
+                      )}
+                      
+                      <div className="space-y-2 mb-4">
                         {business.address && (
-                        <div className="flex items-center space-x-2 text-sm text-gray-600">
+                          <div className="flex items-center space-x-2 text-sm text-gray-600">
                             <MapPin className="w-4 h-4 text-gray-400" />
                             <span className="truncate">{business.address}</span>
-                        </div>
+                          </div>
                         )}
                         
                         {business.phone && (
-                        <div className="flex items-center space-x-2 text-sm text-gray-600">
+                          <div className="flex items-center space-x-2 text-sm text-gray-600">
                             <Phone className="w-4 h-4 text-gray-400" />
                             <span>{business.phone}</span>
-                        </div>
+                          </div>
                         )}
-                    </div>
-                    
-                    {business.reviews && business.reviews.length > 0 && (
+                      </div>
+                      
+                      {business.reviews && business.reviews.length > 0 && (
                         <div className="flex items-center space-x-2 mb-4">
-                        <Star className="w-4 h-4 text-yellow-500 fill-current" />
-                        <span className="text-sm font-medium text-gray-900">
+                          <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                          <span className="text-sm font-medium text-gray-900">
                             {getAverageRating(business).toFixed(1)}
-                        </span>
-                        <span className="text-sm text-gray-500">
+                          </span>
+                          <span className="text-sm text-gray-500">
                             ({business.reviews.length} reviews)
-                        </span>
+                          </span>
                         </div>
-                    )}
-                    
-                    <div className="flex space-x-2">
+                      )}
+                      
+                      <div className="flex space-x-2">
                         <Link 
-                        to={`/${citySlug}/${business.category?.slug || 'business'}/${business.id}`}
-                        className="flex-1"
+                          to={`/${citySlug}/${business.category?.slug || 'business'}/${business.id}`}
+                          className="flex-1"
                         >
-                        <Button variant="outline" className="w-full text-sm">
+                          <Button variant="outline" className="w-full text-sm">
                             View Details
-                        </Button>
+                          </Button>
                         </Link>
                         <Link to={`/write-review/${business.id}`}>
-                        <Button size="sm" className="bg-yp-blue text-white text-sm">
+                          <Button size="sm" className="bg-yp-blue text-white text-sm">
                             Review
-                        </Button>
+                          </Button>
                         </Link>
-                    </div>
+                      </div>
                     </CardContent>
-                </Card>
+                  </Card>
                 ))}
-            </div>
+              </div>
             )}
-        </div> 
+          </div>
+
+          {/* Right Sidebar - Featured Businesses */}
+          <div className="w-full lg:w-80 flex-shrink-0">
+            <FeaturedBusinesses 
+              citySlug={citySlug} 
+              categorySlug={selectedCategory}
+              maxDisplay={6}
+            />
+          </div>
+        </div>
+      </div>
       
       <Footer />
     </div> 

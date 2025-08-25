@@ -14,7 +14,8 @@ import {
   BarChart3,
   FileText,
   Shield,
-  LogOut
+  LogOut,
+  Megaphone
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -48,6 +49,12 @@ const adminMenuItems = [
     icon: Building2,
     path: "/admin/businesses",
     description: "Manage business listings"
+  },
+  {
+    title: "Sponsored Ads",
+    icon: Megaphone,
+    path: "/admin/sponsored-ads",
+    description: "Manage advertising campaigns"
   },
   {
     title: "Reviews",
