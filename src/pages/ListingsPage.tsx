@@ -380,7 +380,7 @@ export const ListingsPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
             <div className="flex flex-wrap items-center gap-2">
-              <Button 
+              {/* <Button 
                 variant={viewMode === 'map' ? 'default' : 'outline'} 
                 size="sm" 
                 onClick={() => setViewMode('map')}
@@ -389,8 +389,8 @@ export const ListingsPage = () => {
                 <Map className="w-4 h-4 mr-1" />
                 <span className="hidden sm:inline">{t('listings.mapView')}</span>
                 <span className="sm:hidden">Map</span>
-              </Button>
-              <Button 
+              </Button> */}
+              {/* <Button 
                 variant={viewMode === 'list' ? 'default' : 'outline'} 
                 size="sm" 
                 onClick={() => setViewMode('list')}
@@ -399,7 +399,7 @@ export const ListingsPage = () => {
                 <Building2 className="w-4 h-4 mr-1" />
                 <span className="hidden sm:inline">{t('listings.listView')}</span>
                 <span className="sm:hidden">List</span>
-              </Button>
+              </Button> */}
               
               <Button 
                 variant={selectedFilters.includes('all') ? 'default' : 'outline'} 
@@ -445,7 +445,7 @@ export const ListingsPage = () => {
                 <span className="sm:hidden">{t('listings.coupons')}</span>
               </Button>
               
-              <Button 
+              {/* <Button 
                 variant={selectedFilters.includes('premium') ? 'default' : 'outline'} 
                 size="sm" 
                 onClick={() => toggleFilter('premium')}
@@ -454,7 +454,7 @@ export const ListingsPage = () => {
                 <Award className="w-4 h-4 mr-1" />
                 <span className="hidden sm:inline">{t('listings.premium')}</span>
                 <span className="sm:hidden">{t('listings.premium')}</span>
-              </Button>
+              </Button> */}
               
               <Button 
                 variant={selectedFilters.includes('verified') ? 'default' : 'outline'} 
