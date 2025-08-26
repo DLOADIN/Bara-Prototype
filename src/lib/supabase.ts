@@ -26,10 +26,10 @@ export type Update<T extends keyof Database['public']['Tables']> = Database['pub
 // Extend the Database interface to include our new fields
 declare module '@supabase/supabase-js' {
   interface Database {
-    public: {
-      Tables: {
-        businesses: {
-          Row: {
+  public: {
+    Tables: {
+      businesses: {
+        Row: {
             id: string;
             name: string;
             slug: string;
@@ -63,7 +63,7 @@ declare module '@supabase/supabase-js' {
             created_at: string;
             updated_at: string;
           };
-          Insert: {
+        Insert: {
             id?: string;
             name: string;
             slug: string;
@@ -97,7 +97,7 @@ declare module '@supabase/supabase-js' {
             created_at?: string;
             updated_at?: string;
           };
-          Update: {
+        Update: {
             id?: string;
             name?: string;
             slug?: string;
@@ -134,7 +134,7 @@ declare module '@supabase/supabase-js' {
         };
 
         ad_campaigns: {
-          Row: {
+        Row: {
             id: string;
             business_id: string;
             campaign_name: string;
@@ -153,7 +153,7 @@ declare module '@supabase/supabase-js' {
             created_at: string;
             updated_at: string;
           };
-          Insert: {
+        Insert: {
             id?: string;
             business_id: string;
             campaign_name: string;
@@ -172,7 +172,7 @@ declare module '@supabase/supabase-js' {
             created_at?: string;
             updated_at?: string;
           };
-          Update: {
+        Update: {
             id?: string;
             business_id?: string;
             campaign_name?: string;
