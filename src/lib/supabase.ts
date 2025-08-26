@@ -9,9 +9,9 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true
+    autoRefreshToken: false, // Disable Supabase auth since we're using Clerk
+    persistSession: false,   // Disable Supabase session persistence
+    detectSessionInUrl: false // Disable Supabase session detection
   },
   db: {
     schema: 'public'
