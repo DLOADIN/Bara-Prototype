@@ -1,15 +1,13 @@
-import { createRoot } from 'react-dom/client'
-import { ClerkProvider } from '@clerk/clerk-react'
-import App from './App.tsx'
-import './index.css'
-import './lib/i18n' // Initialize i18n
+import { ClerkProvider, ClerkLoaded, ClerkLoading } from '@clerk/clerk-react';
+import { dark } from '@clerk/themes';
 
 // Clerk configuration
-const clerkConfig = {
+export const clerkConfig = {
   publishableKey: import.meta.env.VITE_CLERK_PUBLISHABLE_KEY || '',
   appearance: {
+    baseTheme: dark,
     variables: {
-      colorPrimary: '#3B82F6',
+      colorPrimary: '#3B82F6', // Blue color matching your theme
       colorBackground: '#ffffff',
       colorText: '#1f2937',
       colorInputBackground: '#f9fafb',
@@ -24,8 +22,6 @@ const clerkConfig = {
   }
 };
 
-createRoot(document.getElementById("root")!).render(
-  <ClerkProvider {...clerkConfig}>
-    <App />
-  </ClerkProvider>
-);
+// Clerk components for easy import
+export { ClerkProvider, ClerkLoaded, ClerkLoading };
+export { useUser, useAuth, useClerk } from '@clerk/clerk-react';

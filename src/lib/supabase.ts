@@ -19,9 +19,9 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 })
 
 // Database types for TypeScript
-export type Row<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row'];
-export type Insert<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Insert'];
-export type Update<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Update'];
+// export type Row<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row'];
+// export type Insert<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Insert'];
+// export type Update<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Update'];
 
 // Extend the Database interface to include our new fields
 declare module '@supabase/supabase-js' {
