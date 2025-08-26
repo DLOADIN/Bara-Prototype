@@ -11,6 +11,7 @@ import { useBusinessesByCategory, useBusinessSearch, useCitiesByCategory } from 
 import { Business } from "@/lib/businessService";
 import { Skeleton } from "@/components/ui/skeleton";
 import { db } from "@/lib/supabase";
+import { FeaturedBusinesses } from "@/components/FeaturedBusinesses";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -509,214 +510,227 @@ export const ListingsPage = () => {
 
       {/* Results */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        {/* Category Summary - Show when no city is selected */}
-        {/* {!selectedCity && !isSearchPage && citiesByCategory.length > 0 && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-semibold text-blue-900 mb-1">
-                  {categoryName} Available in {citiesByCategory.length} Cities
-                </h3>
-                <p className="text-blue-700 text-sm">
-                  Select a city above to see businesses in that location, or browse all {filteredBusinesses.length} businesses below.
-                </p>
-              </div>
-              <div className="text-right">
-                <div className="text-2xl font-bold text-blue-900">{filteredBusinesses.length}</div>
-                <div className="text-sm text-blue-700">Total businesses</div>
-              </div>
-            </div>
-          </div>
-        )} */}
-
-        {/* City-specific summary when a city is selected */}
-        {selectedCity && !isSearchPage && (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-semibold text-green-900 mb-1">
-                  {categoryName} in {selectedCity}
-                </h3>
-                <p className="text-green-700 text-sm">
-                  {t('listings.showingBusinesses')} {sortedBusinesses.length} {t('listings.businessesInCity')} {selectedCity}
-                </p>
-              </div>
-              <div className="text-right">
-                <div className="text-2xl font-bold text-green-900">{sortedBusinesses.length}</div>
-                <div className="text-sm text-green-700">{t('listings.businessesFoundCount')}</div>
-              </div>
-            </div>
-          </div>
-        )}
-
-        {sortedBusinesses.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <Search className="w-8 h-8 text-gray-400" />
-            </div>
-            <h3 className="text-lg font-roboto font-semibold text-gray-900 mb-2">
-              {t('listings.noBusinessesFound')}
-            </h3>
-            <p className="text-gray-600 mb-6">
-              {searchTerm 
-                ? `${t('listings.noBusinessesMatching')} "${searchTerm}"`
-                : `${t('listings.noBusinessesInCategory')} ${categoryName}`
-              }
-            </p>
-            <Button 
-              variant="outline" 
-              onClick={() => {
-                setSearchTerm("");
-                setSelectedCity("");
-                setSelectedFilters([]);
-              }}
-            >
-              {t('listings.clearFilters')}
-            </Button>
-          </div>
-        ) : (
-          <div className="space-y-6">
-            {sortedBusinesses.map((business) => {
-              const avgRating = getAverageRating(business);
-              const reviewCount = getReviewCount(business);
-              
-              return (
-                <div 
-                  key={business.id} 
-                  className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6 hover:shadow-md transition-shadow cursor-pointer"
-                  onClick={() => handleBusinessClick(business)}
-                >
-                  <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start space-y-4 lg:space-y-0">
-                    <div className="flex-1 min-w-0">
-                      <div className="flex flex-col sm:flex-row sm:items-center mb-2 space-y-2 sm:space-y-0">
-                        <h3 className="text-lg sm:text-xl font-semibold text-yp-dark font-comfortaa mr-2 break-words">
-                          {business.name}
-                        </h3>
-                        <div className="flex flex-wrap items-center gap-2">  
-                        {business.is_premium && (
-                          <Badge variant="default" className="bg-yp-blue text-white text-xs">
-                            {t('listings.premium')}
-                          </Badge>
-                        )}
-                        {business.is_verified && (
-                          <Badge variant="secondary" className="text-xs">
-                            ✓ {t('listings.verified')}
-                          </Badge>
-                        )}
-                        {business.has_coupons && (
-                          <Badge variant="outline" className="text-xs border-orange-200 text-orange-700 bg-orange-50">
-                            {t('listings.coupons')}
-                          </Badge>
-                        )}
-                        {business.accepts_orders_online && (
-                          <Badge variant="outline" className="text-xs border-green-200 text-green-700 bg-green-50">
-                            {t('listings.orderOnline')}
-                          </Badge>
-                        )}
-                        {business.is_kid_friendly && (
-                          <Badge variant="outline" className="text-xs border-blue-200 text-blue-700 bg-blue-50">
-                            {t('listings.kidFriendly')}
-                          </Badge>
-                        )}
-                        </div>
-                      </div>
-                      
-                      <p className="text-gray-600 font-roboto mb-2">
-                        {business.category?.name || 'Business'}
-                      </p>
-                      
-                      {/* Rating */}
-                      {reviewCount > 0 && (
-                        <div className="flex items-center mb-3">
-                          <div className="flex items-center">
-                            {[...Array(5)].map((_, i) => (
-                              <Star
-                                key={i}
-                                className={`w-4 h-4 ${
-                                  i < Math.floor(avgRating)
-                                    ? 'text-yellow-400 fill-current'
-                                    : 'text-gray-300'
-                                }`}
-                              />
-                            ))}
-                          </div>
-                          <span className="ml-2 text-sm text-gray-600 font-roboto">
-                            {avgRating.toFixed(1)} ({reviewCount} reviews)
-                          </span>
-                        </div>
-                      )}
-                      
-                      {/* Business details */}
-                      <div className="space-y-1 text-sm text-gray-600 font-roboto">
-                        {business.address && (
-                          <div className="flex items-start">
-                            <MapPin className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" />
-                            <span className="break-words">{business.address}</span>
-                          </div>
-                        )}
-                        {business.phone && (
-                          <div className="flex items-center">
-                            <Phone className="w-4 h-4 mr-2 flex-shrink-0" />
-                            <a 
-                              href={`tel:${business.phone}`} 
-                              className="text-yp-blue hover:underline break-all"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              {business.phone}
-                            </a>
-                          </div>
-                        )}
-                        {business.website && (
-                          <div className="flex items-start">
-                            <Globe className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" />
-                            <a 
-                              href={`https://${business.website}`} 
-                              className="text-yp-blue hover:underline break-all"
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              {business.website}
-                            </a>
-                          </div>
-                        )}
-                        {business.description && (
-                          <p className="text-gray-700 mt-2 line-clamp-2 break-words">
-                            {business.description}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                    
-                    <div className="flex flex-col sm:flex-row lg:flex-col gap-2 w-full lg:w-auto">
-                      <Link 
-                        to={city 
-                          ? `/${city}/${actualCategorySlug}/${business.id}`
-                          : `/category/${actualCategorySlug}/${business.id}`
-                        }
-                        onClick={(e) => e.stopPropagation()}
-                        className="w-full sm:w-auto"
-                      >
-                        <Button size="sm" variant="outline" className="font-roboto w-full">
-                          {t('listings.moreInfo')}
-                        </Button>
-                      </Link>
-                      <Link to={`/write-review/${business.id}`} className="w-full sm:w-auto">
-                        <Button 
-                          size="sm" 
-                          className="bg-yp-blue text-white font-roboto w-full"
-                          onClick={(e) => e.stopPropagation()}
-                        >
-                          {t('listings.writeReview')}
-                        </Button>
-                      </Link>
-                    </div>
+        <div className="flex flex-col lg:flex-row gap-8">
+          {/* Main Content - Business Listings */}
+          <div className="flex-1">
+            {/* Category Summary - Show when no city is selected */}
+            {/* {!selectedCity && !isSearchPage && citiesByCategory.length > 0 && (
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-blue-900 mb-1">
+                      {categoryName} Available in {citiesByCategory.length} Cities
+                    </h3>
+                    <p className="text-blue-700 text-sm">
+                      Select a city above to see businesses in that location, or browse all {filteredBusinesses.length} businesses below.
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-blue-900">{filteredBusinesses.length}</div>
+                    <div className="text-sm text-blue-700">Total businesses</div>
                   </div>
                 </div>
-              );
-            })}
+              </div>
+            )} */}
+
+            {/* City-specific summary when a city is selected */}
+            {selectedCity && !isSearchPage && (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-green-900 mb-1">
+                      {categoryName} in {selectedCity}
+                    </h3>
+                    <p className="text-green-700 text-sm">
+                      {t('listings.showingBusinesses')} {sortedBusinesses.length} {t('listings.businessesInCity')} {selectedCity}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-green-900">{sortedBusinesses.length}</div>
+                    <div className="text-sm text-green-700">{t('listings.businessesFoundCount')}</div>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            {sortedBusinesses.length === 0 ? (
+              <div className="text-center py-16">
+                <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Search className="w-8 h-8 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-roboto font-semibold text-gray-900 mb-2">
+                  {t('listings.noBusinessesFound')}
+                </h3>
+                <p className="text-gray-600 mb-6">
+                  {searchTerm 
+                    ? `${t('listings.noBusinessesMatching')} "${searchTerm}"`
+                    : `${t('listings.noBusinessesInCategory')} ${categoryName}`
+                  }
+                </p>
+                <Button 
+                  variant="outline" 
+                  onClick={() => {
+                    setSearchTerm("");
+                    setSelectedCity("");
+                    setSelectedFilters([]);
+                  }}
+                >
+                  {t('listings.clearFilters')}
+                </Button>
+              </div>
+            ) : (
+              <div className="space-y-6">
+                {sortedBusinesses.map((business) => {
+                  const avgRating = getAverageRating(business);
+                  const reviewCount = getReviewCount(business);
+                  
+                  return (
+                    <div 
+                      key={business.id} 
+                      className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6 hover:shadow-md transition-shadow cursor-pointer"
+                      onClick={() => handleBusinessClick(business)}
+                    >
+                      <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start space-y-4 lg:space-y-0">
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-col sm:flex-row sm:items-center mb-2 space-y-2 sm:space-y-0">
+                            <h3 className="text-lg sm:text-xl font-semibold text-yp-dark font-comfortaa mr-2 break-words">
+                              {business.name}
+                            </h3>
+                            <div className="flex flex-wrap items-center gap-2">  
+                            {business.is_premium && (
+                              <Badge variant="default" className="bg-yp-blue text-white text-xs">
+                                {t('listings.premium')}
+                              </Badge>
+                            )}
+                            {business.is_verified && (
+                              <Badge variant="secondary" className="text-xs">
+                                ✓ {t('listings.verified')}
+                              </Badge>
+                            )}
+                            {business.has_coupons && (
+                              <Badge variant="outline" className="text-xs border-orange-200 text-orange-700 bg-orange-50">
+                                {t('listings.coupons')}
+                              </Badge>
+                            )}
+                            {business.accepts_orders_online && (
+                              <Badge variant="outline" className="text-xs border-green-200 text-green-700 bg-green-50">
+                                {t('listings.orderOnline')}
+                              </Badge>
+                            )}
+                            {business.is_kid_friendly && (
+                              <Badge variant="outline" className="text-xs border-blue-200 text-blue-700 bg-blue-50">
+                                {t('listings.kidFriendly')}
+                              </Badge>
+                            )}
+                            </div>
+                          </div>
+                          
+                          <p className="text-gray-600 font-roboto mb-2">
+                            {business.category?.name || 'Business'}
+                          </p>
+                          
+                          {/* Rating */}
+                          {reviewCount > 0 && (
+                            <div className="flex items-center mb-3">
+                              <div className="flex items-center">
+                                {[...Array(5)].map((_, i) => (
+                                  <Star
+                                    key={i}
+                                    className={`w-4 h-4 ${
+                                      i < Math.floor(avgRating)
+                                        ? 'text-yellow-400 fill-current'
+                                        : 'text-gray-300'
+                                    }`}
+                                  />
+                                ))}
+                              </div>
+                              <span className="ml-2 text-sm text-gray-600 font-roboto">
+                                {avgRating.toFixed(1)} ({reviewCount} reviews)
+                              </span>
+                            </div>
+                          )}
+                          
+                          {/* Business details */}
+                          <div className="space-y-1 text-sm text-gray-600 font-roboto">
+                            {business.address && (
+                              <div className="flex items-start">
+                                <MapPin className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" />
+                                <span className="break-words">{business.address}</span>
+                              </div>
+                            )}
+                            {business.phone && (
+                              <div className="flex items-center">
+                                <Phone className="w-4 h-4 mr-2 flex-shrink-0" />
+                                <a 
+                                  href={`tel:${business.phone}`} 
+                                  className="text-yp-blue hover:underline break-all"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  {business.phone}
+                                </a>
+                              </div>
+                            )}
+                            {business.website && (
+                              <div className="flex items-start">
+                                <Globe className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" />
+                                <a 
+                                  href={`https://${business.website}`} 
+                                  className="text-yp-blue hover:underline break-all"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  {business.website}
+                                </a>
+                              </div>
+                            )}
+                            {business.description && (
+                              <p className="text-gray-700 mt-2 line-clamp-2 break-words">
+                                {business.description}
+                              </p>
+                            )}
+                          </div>
+                        </div>
+                        
+                        <div className="flex flex-col sm:flex-row lg:flex-col gap-2 w-full lg:w-auto">
+                          <Link 
+                            to={city 
+                              ? `/${city}/${actualCategorySlug}/${business.id}`
+                              : `/category/${actualCategorySlug}/${business.id}`
+                            }
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-full sm:w-auto"
+                          >
+                            <Button size="sm" variant="outline" className="font-roboto w-full">
+                              {t('listings.moreInfo')}
+                            </Button>
+                          </Link>
+                          <Link to={`/write-review/${business.id}`} className="w-full sm:w-auto">
+                            <Button 
+                              size="sm" 
+                              className="bg-yp-blue text-white font-roboto w-full"
+                              onClick={(e) => e.stopPropagation()}
+                            >
+                              {t('listings.writeReview')}
+                            </Button>
+                          </Link>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
           </div>
-        )}
+
+          {/* Right Sidebar - Featured Businesses */}
+          <div className="w-full lg:w-80 flex-shrink-0">
+            <FeaturedBusinesses
+              citySlug={city}
+              maxDisplay={6}
+            />
+          </div>
+        </div>
       </div>
       <Footer />
     </div>
