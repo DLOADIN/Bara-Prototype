@@ -107,7 +107,7 @@ const Footer = () => {
             <div className="grid grid-cols-1 gap-1.5 sm:gap-2">
               <div>
                 <Link 
-                  to="/cities/kigali" 
+                  to="#" 
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇷🇼</span>
@@ -116,7 +116,7 @@ const Footer = () => {
               </div>
               <div>
                 <Link 
-                  to="/cities/nairobi" 
+                  to="#" 
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇰🇪</span>
@@ -125,7 +125,7 @@ const Footer = () => {
               </div>
               <div>
                 <Link 
-                  to="/cities/kampala" 
+                  to="#" 
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇺🇬</span>
@@ -134,7 +134,7 @@ const Footer = () => {
               </div>
               <div>
                 <Link 
-                  to="/cities/dar-es-salaam" 
+                  to="#" 
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇹🇿</span>
@@ -143,7 +143,7 @@ const Footer = () => {
               </div>
               <div>
                 <Link 
-                  to="/cities/addis-ababa" 
+                  to="#" 
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇪🇹</span>
@@ -152,7 +152,7 @@ const Footer = () => {
               </div>
               <div>
                 <Link 
-                  to="/cities/accra" 
+                  to="#" 
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇬🇭</span>
@@ -161,7 +161,7 @@ const Footer = () => {
               </div>
               <div>
                 <Link 
-                  to="/cities/lagos" 
+                  to="#" 
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇳🇬</span>
@@ -170,7 +170,7 @@ const Footer = () => {
               </div>
               <div>
                 <Link 
-                  to="/cities/cape-town" 
+                  to="#" 
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇿🇦</span>
