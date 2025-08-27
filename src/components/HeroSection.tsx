@@ -13,6 +13,7 @@ import {
 import heroImage from "@/assets/hero-kitchen.jpg";
 import { db } from "@/lib/supabase";
 import { BusinessService, Business } from "@/lib/businessService";
+import { toast } from "sonner";
 
 // Remove the hardcoded allLocations array and replace with Supabase data
 interface City {
@@ -145,15 +146,46 @@ export const HeroSection = () => {
     return () => document.removeEventListener('keydown', handleEscape);
   }, []);
 
-  const handleSearch = () => {
+  const handleSearch = async () => {
     const trimmed = searchTerm.trim();
     if (!trimmed) return;
-    const cityName = location.split(',')[0]?.trim();
-    if (cityName) {
-      const citySlug = cityName.toLowerCase().replace(/\s+/g, '-');
-      navigate(`/${citySlug}/search?q=${encodeURIComponent(trimmed)}`);
-    } else {
-      navigate(`/search?q=${encodeURIComponent(trimmed)}`);
+    
+    try {
+      const cityName = location.split(',')[0]?.trim();
+      const options: { city?: string } = {};
+      if (cityName) {
+        options.city = cityName;
+      }
+      
+      const results = await BusinessService.searchBusinesses(trimmed, options);
+      
+      if (results.length === 0) {
+        toast.error(
+          `No businesses found for "${trimmed}"${cityName ? ` in ${cityName}` : ''}. Please try a different search term.`,
+          {
+            description: "The business you're looking for is not available in our database.",
+            duration: 5000,
+          }
+        );
+        return;
+      }
+      
+      // Navigate to search results if businesses are found
+      if (cityName) {
+        const citySlug = cityName.toLowerCase().replace(/\s+/g, '-');
+        navigate(`/${citySlug}/search?q=${encodeURIComponent(trimmed)}`);
+      } else {
+        navigate(`/search?q=${encodeURIComponent(trimmed)}`);
+      }
+    } catch (error) {
+      console.error('Error searching businesses:', error);
+      toast.error(
+        "Search failed. Please try again.",
+        {
+          description: "There was an error processing your search request.",
+          duration: 4000,
+        }
+      );
     }
   };
 
@@ -340,12 +372,12 @@ export const HeroSection = () => {
               </div>
               
               {/* Search Button */}
-              <Button 
+              {/* <Button 
                 onClick={handleSearch}
                 className="bg-yp-blue hover:bg-[#4e3c28] text-white font-roboto font-semibold px-4 sm:px-6 md:px-8 h-11 sm:h-12 text-sm sm:text-base w-full sm:w-auto rounded-lg"
               >
                 {t('homepage.hero.searchButton')}
-              </Button>
+              </Button> */}
             </div>
           </div>
         </div>
