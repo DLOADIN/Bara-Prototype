@@ -227,7 +227,10 @@ export const db = {
   payments: () => supabase.from('payments'),
   
   // Premium features operations
-  premium_features: () => supabase.from('premium_features')
+  premium_features: () => supabase.from('premium_features'),
+  
+  // Questions operations
+  questions: () => supabase.from('questions')
 }
 
 // Auth helper functions

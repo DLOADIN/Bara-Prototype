@@ -70,6 +70,11 @@
     },
     "claimListing": "Reclamar Tu Anuncio",
     "orCall": "o llama",
+    "toast": {
+      "title": "Llama para más detalles",
+      "description": "Por favor llama a {phoneNumber} para más información sobre reclamar tu anuncio.",
+      "callNow": "Llamar Ahora"
+    },
     "details": {
       "phone": "Teléfono",
       "email": "Correo Electrónico",
@@ -97,6 +102,40 @@
     "findAnswers": "Encuentra respuestas u ofrece soluciones",
     "askQuestion": "Hacer una Pregunta",
     "browsePopular": "Explorar Preguntas y Respuestas Populares"
+  },
+  "questions": {
+    "page": {
+      "title": "Hacer una Pregunta",
+      "subtitle": "Obtén Ayuda de la Comunidad",
+      "description": "Haz tu pregunta y obtén respuestas de nuestra comunidad de expertos y usuarios.",
+      "infoTitle": "Cómo funciona:",
+      "info1": "Envía tu pregunta con un título claro y descripción detallada",
+      "info2": "Los miembros de nuestra comunidad proporcionarán respuestas útiles",
+      "info3": "Recibirás notificaciones por email cuando alguien responda",
+      "footer": "© 2024 Comunidad Bara. Todos los derechos reservados."
+    },
+    "form": {
+      "titleLabel": "Título de la Pregunta",
+      "titlePlaceholder": "Ingresa un título claro y descriptivo para tu pregunta",
+      "contentLabel": "Detalles de la Pregunta",
+      "contentPlaceholder": "Proporciona información detallada sobre tu pregunta. Sé específico para obtener mejores respuestas.",
+      "categoryLabel": "Categoría",
+      "selectCategory": "Selecciona una categoría",
+      "nameLabel": "Tu Nombre",
+      "namePlaceholder": "Ingresa tu nombre completo",
+      "emailLabel": "Dirección de Email",
+      "emailPlaceholder": "Ingresa tu dirección de email",
+      "submit": "Enviar Pregunta",
+      "submitting": "Enviando...",
+      "submitted": "¡Pregunta enviada exitosamente!",
+      "titleRequired": "Por favor ingresa un título para la pregunta",
+      "contentRequired": "Por favor ingresa los detalles de la pregunta",
+      "nameRequired": "Por favor ingresa tu nombre",
+      "emailRequired": "Por favor ingresa tu dirección de email",
+      "categoryRequired": "Por favor selecciona una categoría",
+      "submissionError": "Error al enviar la pregunta. Por favor intenta de nuevo.",
+      "characters": "caracteres"
+    }
   },
   "reviews": {
     "title": "Reseñas",

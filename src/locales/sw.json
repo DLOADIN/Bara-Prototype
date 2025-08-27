@@ -70,6 +70,11 @@
     },
     "claimListing": "Dai Orodha Yako",
     "orCall": "au piga",
+    "toast": {
+      "title": "Piga simu kwa maelezo zaidi",
+      "description": "Tafadhali piga {phoneNumber} kwa maelezo zaidi kuhusu kudai orodha yako.",
+      "callNow": "Piga Sasa"
+    },
     "details": {
       "phone": "Simu",
       "email": "Barua Pepe",
@@ -97,6 +102,40 @@
     "findAnswers": "Pata majibu au toa suluhisho",
     "askQuestion": "Uliza Swali",
     "browsePopular": "Tazama Maswali na Majibu Maarufu"
+  },
+  "questions": {
+    "page": {
+      "title": "Uliza Swali",
+      "subtitle": "Pata Msaada kutoka Jumuiya",
+      "description": "Uliza swali lako na upate majibu kutoka jumuiya yetu ya wataalamu na watumiaji.",
+      "infoTitle": "Jinsi inavyofanya kazi:",
+      "info1": "Wasilisha swali lako na kichwa cha habari cha wazi na maelezo ya kina",
+      "info2": "Wanachama wa jumuiya yetu watatoa majibu muhimu",
+      "info3": "Utapokea arifa za barua pepe wakati mtu anapojibu",
+      "footer": "© 2024 Jumuiya ya Bara. Haki zote zimehifadhiwa."
+    },
+    "form": {
+      "titleLabel": "Kichwa cha Swali",
+      "titlePlaceholder": "Ingiza kichwa cha habari cha wazi na cha kuelezea kwa swali lako",
+      "contentLabel": "Maelezo ya Swali",
+      "contentPlaceholder": "Toa maelezo ya kina kuhusu swali lako. Kuwa mahususi kupata majibu bora.",
+      "categoryLabel": "Jamii",
+      "selectCategory": "Chagua jamii",
+      "nameLabel": "Jina Lako",
+      "namePlaceholder": "Ingiza jina lako kamili",
+      "emailLabel": "Anwani ya Barua Pepe",
+      "emailPlaceholder": "Ingiza anwani yako ya barua pepe",
+      "submit": "Wasilisha Swali",
+      "submitting": "Inawasilisha...",
+      "submitted": "Swali limewasilishwa kwa mafanikio!",
+      "titleRequired": "Tafadhali ingiza kichwa cha swali",
+      "contentRequired": "Tafadhali ingiza maelezo ya swali",
+      "nameRequired": "Tafadhali ingiza jina lako",
+      "emailRequired": "Tafadhali ingiza anwani yako ya barua pepe",
+      "categoryRequired": "Tafadhali chagua jamii",
+      "submissionError": "Imeshindwa kwasilisha swali. Tafadhali jaribu tena.",
+      "characters": "herufi"
+    }
   },
   "reviews": {
     "title": "Tathmini",

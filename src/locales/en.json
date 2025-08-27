@@ -70,6 +70,11 @@
     },
     "claimListing": "Claim Your Listing",
     "orCall": "or call",
+    "toast": {
+      "title": "Call for more details",
+      "description": "Please call {phoneNumber} for more information about claiming your listing.",
+      "callNow": "Call Now"
+    },
     "details": {
       "phone": "Phone",
       "email": "Email",
@@ -97,6 +102,40 @@
     "findAnswers": "Find answers or offer solutions",
     "askQuestion": "Ask a Question",
     "browsePopular": "Browse Popular Questions & Answers"
+  },
+  "questions": {
+    "page": {
+      "title": "Ask a Question",
+      "subtitle": "Get Help from the Community",
+      "description": "Ask your question and get answers from our community of experts and fellow users.",
+      "infoTitle": "How it works:",
+      "info1": "Submit your question with a clear title and detailed description",
+      "info2": "Our community members will provide helpful answers",
+      "info3": "You'll receive email notifications when someone responds",
+      "footer": "© 2024 Bara Community. All rights reserved."
+    },
+    "form": {
+      "titleLabel": "Question Title",
+      "titlePlaceholder": "Enter a clear, descriptive title for your question",
+      "contentLabel": "Question Details",
+      "contentPlaceholder": "Provide detailed information about your question. Be specific to get better answers.",
+      "categoryLabel": "Category",
+      "selectCategory": "Select a category",
+      "nameLabel": "Your Name",
+      "namePlaceholder": "Enter your full name",
+      "emailLabel": "Email Address",
+      "emailPlaceholder": "Enter your email address",
+      "submit": "Submit Question",
+      "submitting": "Submitting...",
+      "submitted": "Question submitted successfully!",
+      "titleRequired": "Please enter a question title",
+      "contentRequired": "Please enter question details",
+      "nameRequired": "Please enter your name",
+      "emailRequired": "Please enter your email address",
+      "categoryRequired": "Please select a category",
+      "submissionError": "Failed to submit question. Please try again.",
+      "characters": "characters"
+    }
   },
   "reviews": {
     "title": "Reviews",

@@ -135,10 +135,11 @@ export const ListingsPage = () => {
   // Sort businesses based on selected sort option
   const sortedBusinesses = [...filteredBusinesses].sort((a, b) => {
     switch (sortBy) {
-      case 'rating':
+      case 'rating': {
         const ratingA = getAverageRating(a);
         const ratingB = getAverageRating(b);
         return sortOrder === 'asc' ? ratingA - ratingB : ratingB - ratingA;
+      }
       case 'name':
         return sortOrder === 'asc' 
           ? a.name.localeCompare(b.name)
@@ -553,6 +554,29 @@ export const ListingsPage = () => {
           </div>
         )}
 
+        {/* Results Summary */}
+        {sortedBusinesses.length > 0 && (
+          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <span className="text-sm font-medium text-blue-900">
+                  Showing {sortedBusinesses.length} {sortedBusinesses.length === 1 ? 'business' : 'businesses'}
+                </span>
+                {selectedCity && (
+                  <span className="text-xs text-blue-700 bg-blue-100 px-2 py-1 rounded-full">
+                    in {selectedCity}
+                  </span>
+                )}
+              </div>
+              <div className="text-right">
+                <span className="text-xs text-blue-700">
+                  Numbered 1 to {sortedBusinesses.length}
+                </span>
+              </div>
+            </div>
+          </div>
+        )}
+
             {sortedBusinesses.length === 0 ? (
           <div className="text-center py-16">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -580,16 +604,20 @@ export const ListingsPage = () => {
           </div>
         ) : (
           <div className="space-y-6">
-                {sortedBusinesses.map((business) => {
+                {sortedBusinesses.map((business, index) => {
               const avgRating = getAverageRating(business);
               const reviewCount = getReviewCount(business);
               
               return (
                 <div 
                   key={business.id} 
-                  className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6 hover:shadow-md transition-shadow cursor-pointer"
+                  className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6 hover:shadow-md transition-shadow cursor-pointer relative"
                   onClick={() => handleBusinessClick(business)}
                 >
+                  {/* Business Number Badge */}
+                  <div className="absolute -top-2 -left-2 w-8 h-8 bg-yp-blue text-white rounded-full flex items-center justify-center text-sm font-bold font-roboto shadow-md">
+                    {index + 1}
+                  </div>
                   <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start space-y-4 lg:space-y-0">
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-col sm:flex-row sm:items-center mb-2 space-y-2 sm:space-y-0">

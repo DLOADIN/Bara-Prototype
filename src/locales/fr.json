@@ -70,6 +70,11 @@
     },
     "claimListing": "Réclamer Votre Annonce",
     "orCall": "ou appelez",
+    "toast": {
+      "title": "Appelez pour plus de détails",
+      "description": "Veuillez appeler {phoneNumber} pour plus d'informations sur la réclamation de votre annonce.",
+      "callNow": "Appeler maintenant"
+    },
     "details": {
       "phone": "Téléphone",
       "email": "Email",
@@ -97,6 +102,40 @@
     "findAnswers": "Trouvez des réponses ou proposez des solutions",
     "askQuestion": "Poser une Question",
     "browsePopular": "Parcourir les Questions et Réponses Populaires"
+  },
+  "questions": {
+    "page": {
+      "title": "Poser une Question",
+      "subtitle": "Obtenir de l'Aide de la Communauté",
+      "description": "Posez votre question et obtenez des réponses de notre communauté d'experts et d'utilisateurs.",
+      "infoTitle": "Comment ça marche :",
+      "info1": "Soumettez votre question avec un titre clair et une description détaillée",
+      "info2": "Les membres de notre communauté fourniront des réponses utiles",
+      "info3": "Vous recevrez des notifications par email quand quelqu'un répond",
+      "footer": "© 2024 Communauté Bara. Tous droits réservés."
+    },
+    "form": {
+      "titleLabel": "Titre de la Question",
+      "titlePlaceholder": "Entrez un titre clair et descriptif pour votre question",
+      "contentLabel": "Détails de la Question",
+      "contentPlaceholder": "Fournissez des informations détaillées sur votre question. Soyez spécifique pour obtenir de meilleures réponses.",
+      "categoryLabel": "Catégorie",
+      "selectCategory": "Sélectionnez une catégorie",
+      "nameLabel": "Votre Nom",
+      "namePlaceholder": "Entrez votre nom complet",
+      "emailLabel": "Adresse Email",
+      "emailPlaceholder": "Entrez votre adresse email",
+      "submit": "Soumettre la Question",
+      "submitting": "Soumission...",
+      "submitted": "Question soumise avec succès !",
+      "titleRequired": "Veuillez entrer un titre de question",
+      "contentRequired": "Veuillez entrer les détails de la question",
+      "nameRequired": "Veuillez entrer votre nom",
+      "emailRequired": "Veuillez entrer votre adresse email",
+      "categoryRequired": "Veuillez sélectionner une catégorie",
+      "submissionError": "Échec de la soumission de la question. Veuillez réessayer.",
+      "characters": "caractères"
+    }
   },
   "reviews": {
     "title": "Avis",

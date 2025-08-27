@@ -2,9 +2,24 @@ import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { MapPin, Link as LinkIcon } from "lucide-react";
 import { Link } from 'react-router-dom'
+import { toast } from "sonner";
 
 export const BusinessSection = () => {
   const { t } = useTranslation();
+
+  const handleClaimListing = () => {
+    toast.info(
+      t('business.toast.title'),
+      {
+        description: t('business.toast.description', { phoneNumber: "(+250) 791 568 519" }),
+        duration: 6000,
+        action: {
+          label: t('business.toast.callNow'),
+          onClick: () => window.open("tel:+250791568519", "_self")
+        }
+      }
+    );
+  };
 
   return (
     <section className="py-6 sm:py-8 md:py-16 bg-yp-gray-light">
@@ -53,11 +68,12 @@ export const BusinessSection = () => {
             </div>
 
             <div className="space-y-3 sm:space-y-4">
-              <Link to="/" className="block">
-                <Button className="w-full md:w-auto bg-yp-blue hover:bg-yp-blue/90 text-white font-roboto font-semibold text-sm sm:text-base md:text-lg px-3 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-3 h-auto rounded-lg">
-                  {t('business.claimListing')}
-                </Button>
-              </Link>
+              <Button 
+                onClick={handleClaimListing}
+                className="w-full md:w-auto bg-yp-blue hover:bg-yp-blue/90 text-white font-roboto font-semibold text-sm sm:text-base md:text-lg px-3 sm:px-4 md:px-6 lg:px-8 py-2 sm:py-3 h-auto rounded-lg"
+              >
+                {t('business.claimListing')}
+              </Button>
               
               <p className="text-xs sm:text-sm md:text-sm font-roboto text-yp-gray-dark">
                 {t('business.orCall')}{" "}
@@ -65,7 +81,7 @@ export const BusinessSection = () => {
                   href="tel:18667940889" 
                   className="text-yp-blue hover:underline font-medium"
                 >
-                  (+250) 791 291 003
+                  (+250) 791 568 519
                 </a>
               </p>
             </div>
