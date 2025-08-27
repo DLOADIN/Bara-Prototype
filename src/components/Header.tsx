@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, Menu, Star, Building, X, Globe, MapPin, Shield, ChevronRight } from "lucide-react";
+import { ChevronDown, Menu, Star, Building, X, Globe, MapPin, Shield, ChevronRight, Pocket } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   DropdownMenu,
@@ -229,6 +229,43 @@ export const Header = () => {
             </DropdownMenu>
 
 
+            {/* Other Apps Dropdown */}
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="font-roboto">
+                  <Pocket className="w-4 h-4 mr-2" />
+                  Other Apps
+                  <ChevronDown className="w-4 h-4 ml-1 transition-transform duration-200" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent 
+                className="w-64 border border-border shadow-lg animate-in fade-in-0 zoom-in-95 data-[state=closed]:animate-out data-[state=closed]:fade-out-0 data-[state=closed]:zoom-out-95"
+                sideOffset={8}
+              >
+                <div className="p-2">
+                  <a 
+                    href="https://afri-nexus-listings-xw16.vercel.app/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="flex items-center p-3 rounded-lg hover:bg-gray-100 transition-colors duration-200 group"
+                  >
+                    <div className="w-10 h-10 bg-yp-blue rounded-lg flex items-center justify-center mr-3 group-hover:bg-yp-blue/90 transition-colors duration-200">
+                      <Globe className="w-5 h-5 text-white" />
+                    </div>
+                    <div className="flex-1">
+                      <h4 className="font-roboto font-semibold text-yp-dark text-sm group-hover:text-yp-blue transition-colors duration-200">
+                        Rwandaful Services
+                      </h4>
+                      {/* <p className="font-roboto text-xs text-yp-gray-dark">
+                        Discover amazing services in Rwanda
+                      </p> */}
+                    </div>
+                    <Globe className="w-4 h-4 text-yp-gray-dark group-hover:text-yp-blue transition-colors duration-200" />
+                  </a>
+                </div>
+              </DropdownMenuContent>
+            </DropdownMenu>
+
             {/* Language Selector */}
             <LanguageSelector />
           </div>
@@ -360,6 +397,25 @@ export const Header = () => {
                       </div>
                     )}
                   </div>
+                </div>
+
+                {/* Other Apps */}
+                <div className="space-y-3">
+                  <h3 className="text-sm font-comfortaa font-semibold text-gray-900 uppercase tracking-wide">
+                    Other Apps
+                  </h3>
+                  <a 
+                    href="https://afri-nexus-listings-xw16.vercel.app/" 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    onClick={closeMobileMenu}
+                    className="block"
+                  >
+                    <Button variant="ghost" className="w-full justify-start font-roboto h-12">
+                      <Pocket className="w-5 h-5 mr-3" />
+                      Rwandaful Services
+                    </Button>
+                  </a>
                 </div>
 
                 {/* Language Selector */}
