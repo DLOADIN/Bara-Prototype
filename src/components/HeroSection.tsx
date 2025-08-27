@@ -75,11 +75,7 @@ export const HeroSection = () => {
             } | null;
           }>;
           setCities(typedData || []);
-          // Set default location to first city if available
-          if (typedData && typedData.length > 0) {
-            const firstCity = typedData[0];
-            setLocation(`${firstCity.name}, ${firstCity.countries?.code || ''}`);
-          }
+          // Do not preselect a default location; allow empty city selection
         }
       } catch (error) {
         console.error('Error fetching cities:', error);
@@ -102,9 +98,12 @@ export const HeroSection = () => {
 
       setSearchLoading(true);
       try {
-        const results = await BusinessService.searchBusinesses(searchTerm, {
-          city: location.split(',')[0]?.trim() // Extract city name from location
-        });
+        const cityName = location.split(',')[0]?.trim();
+        const options: { city?: string } = {};
+        if (cityName) {
+          options.city = cityName;
+        }
+        const results = await BusinessService.searchBusinesses(searchTerm, options);
         setSearchResults(results);
         setIsSearchOpen(true);
       } catch (error) {
@@ -147,13 +146,14 @@ export const HeroSection = () => {
   }, []);
 
   const handleSearch = () => {
-    if (searchTerm.trim() && location) {
-      // Navigate to search results page
-      const cityName = location.split(',')[0]?.trim();
-      if (cityName) {
-        const citySlug = cityName.toLowerCase().replace(/\s+/g, '-');
-        navigate(`/${citySlug}/search?q=${encodeURIComponent(searchTerm.trim())}`);
-      }
+    const trimmed = searchTerm.trim();
+    if (!trimmed) return;
+    const cityName = location.split(',')[0]?.trim();
+    if (cityName) {
+      const citySlug = cityName.toLowerCase().replace(/\s+/g, '-');
+      navigate(`/${citySlug}/search?q=${encodeURIComponent(trimmed)}`);
+    } else {
+      navigate(`/search?q=${encodeURIComponent(trimmed)}`);
     }
   };
 
@@ -297,6 +297,20 @@ export const HeroSection = () => {
                   <DropdownMenuContent className="w-full max-h-60 overflow-y-auto bg-white border border-yp-gray-medium shadow-lg rounded-lg">
                     <div className="p-2">
                       <h3 className="text-sm font-roboto font-semibold text-yp-dark mb-2 px-2">QUICK LOCATIONS</h3>
+                      
+                      {/* Default blank city option for global search */}
+                      <DropdownMenuItem
+                        onClick={() => {
+                          setLocation("");
+                          setIsLocationOpen(false);
+                          navigate("/search");
+                        }}
+                        className={`dropdown-menu-item-override font-roboto px-2 py-2 cursor-pointer hover:bg-yp-gray-light ${
+                          location === "" ? "bg-yp-gray-light text-yp-blue" : "text-yp-dark"
+                        }`}
+                      >
+                      </DropdownMenuItem>
+                      
                       {loading ? (
                         <div className="text-center py-4">
                           <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-yp-blue mx-auto"></div>
@@ -309,6 +323,8 @@ export const HeroSection = () => {
                             onClick={() => {
                               setLocation(formatCityDisplay(city));
                               setIsLocationOpen(false);
+                              const citySlug = city.name.toLowerCase().replace(/\s+/g, '-');
+                              navigate(`/${citySlug}/search`);
                             }}
                             className={`dropdown-menu-item-override font-roboto px-2 py-2 cursor-pointer hover:bg-yp-gray-light ${
                               location === formatCityDisplay(city) ? "bg-yp-gray-light text-yp-blue" : "text-yp-dark"
