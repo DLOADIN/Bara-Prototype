@@ -720,6 +720,10 @@ export const ListingsPage = () => {
                                   <div 
                     key={business.id} 
                     className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 cursor-pointer relative"
+                    style={{ 
+                      '--ad-spacing': '2rem',
+                      '--ad-offset': '550px'
+                    } as React.CSSProperties}
                     onClick={() => handleBusinessClick(business)}
                   >
                   {/* Business Number Badge */}
@@ -871,9 +875,12 @@ export const ListingsPage = () => {
                                 </Button>
                               </a>
                             )}
-                            {/* Sponsored Ad Badge */}
+                            {/* Sponsored Ad Badge - On same line as Order Online button */}
                             {business.is_sponsored_ad && (
-                              <div className="ml-auto bg-gray-200 text-gray-600 text-xs px-3 py-1.5 rounded-full font-medium shadow-sm">
+                              <div className="ml-auto bg-gray-200 text-gray-600 text-xs px-3 py-1.5 rounded-full font-medium shadow-sm" style={{ 
+                                marginLeft: 'var(--ad-spacing, 12rem)',
+                                transform: 'translateX(var(--ad-offset, 0px))'
+                              }}>
                                 Ad
                               </div>
                             )}
