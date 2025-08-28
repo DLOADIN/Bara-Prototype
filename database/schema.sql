@@ -1,257 +1,237 @@
--- BARA APP DATABASE SCHEMA
--- PostgreSQL with Supabase
+-- WARNING: This schema is for context only and is not meant to be run.
+-- Table order and constraints may not be valid for execution.
 
--- Enable necessary extensions
-CREATE EXTENSION IF NOT EXISTS "uuid-ossp";
-CREATE EXTENSION IF NOT EXISTS "pg_trgm";
-
--- Create custom types
-CREATE TYPE user_role AS ENUM ('user', 'business_owner', 'admin');
-CREATE TYPE business_status AS ENUM ('pending', 'active', 'suspended', 'premium');
-CREATE TYPE review_status AS ENUM ('pending', 'approved', 'rejected');
-CREATE TYPE payment_status AS ENUM ('pending', 'completed', 'failed', 'refunded');
-
--- Users table (extends Supabase auth.users)
-CREATE TABLE public.users (
-    id UUID REFERENCES auth.users(id) ON DELETE CASCADE PRIMARY KEY,
-    email TEXT UNIQUE NOT NULL,
-    full_name TEXT,
-    phone TEXT,
-    avatar_url TEXT,
-    role user_role DEFAULT 'user',
-    country TEXT,
-    city TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Countries table
-CREATE TABLE public.countries (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE,
-    code TEXT NOT NULL UNIQUE,
-    flag_url TEXT,
-    wikipedia_url TEXT,
-    description TEXT,
-    population BIGINT,
-    capital TEXT,
-    currency TEXT,
-    language TEXT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Cities table
-CREATE TABLE public.cities (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    name TEXT NOT NULL,
-    country_id UUID REFERENCES public.countries(id) ON DELETE CASCADE,
-    latitude DECIMAL(10, 8),
-    longitude DECIMAL(11, 8),
-    population BIGINT,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    UNIQUE(name, country_id)
-);
-
--- Categories table
-CREATE TABLE public.categories (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    name TEXT NOT NULL UNIQUE,
-    slug TEXT NOT NULL UNIQUE,
-    icon TEXT,
-    description TEXT,
-    parent_id UUID REFERENCES public.categories(id),
-    sort_order INTEGER DEFAULT 0,
-    is_active BOOLEAN DEFAULT true,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Businesses table
-CREATE TABLE public.businesses (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    name TEXT NOT NULL,
-    slug TEXT NOT NULL UNIQUE,
-    description TEXT,
-    category_id UUID REFERENCES public.categories(id),
-    owner_id UUID REFERENCES public.users(id),
-    city_id UUID REFERENCES public.cities(id),
-    country_id UUID REFERENCES public.countries(id),
-    
-    -- Contact Information
-    phone TEXT,
-    email TEXT,
-    website TEXT,
-    whatsapp TEXT,
-    
-    -- Location
-    address TEXT,
-    latitude DECIMAL(10, 8),
-    longitude DECIMAL(11, 8),
-    
-    -- Business Details
-    hours_of_operation JSONB,
-    services JSONB,
-    images TEXT[],
-    logo_url TEXT,
-    
-    -- Status and Features
-    status business_status DEFAULT 'pending',
-    is_premium BOOLEAN DEFAULT false,
-    is_verified BOOLEAN DEFAULT false,
-    
-    -- New Business Features
-    has_coupons BOOLEAN DEFAULT false,
-    accepts_orders_online BOOLEAN DEFAULT false,
-    is_kid_friendly BOOLEAN DEFAULT false,
-    
-    -- Sponsored Advertising
-    is_sponsored_ad BOOLEAN DEFAULT false,
-    
-    -- SEO and Analytics
-    meta_title TEXT,
-    meta_description TEXT,
-    view_count INTEGER DEFAULT 0,
-    click_count INTEGER DEFAULT 0,
-    
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
-
--- Ad Campaigns table for managing sponsored advertising
 CREATE TABLE public.ad_campaigns (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    business_id UUID REFERENCES public.businesses(id) ON DELETE CASCADE,
-    campaign_name TEXT NOT NULL,
-    campaign_type TEXT NOT NULL DEFAULT 'featured_listing', -- 'featured_listing', 'top_position', 'sidebar'
-    target_cities TEXT[], -- Array of city slugs to target
-    target_categories TEXT[], -- Array of category slugs to target
-    start_date TIMESTAMP WITH TIME ZONE NOT NULL,
-    end_date TIMESTAMP WITH TIME ZONE NOT NULL,
-    budget DECIMAL(10, 2) NOT NULL,
-    spent_amount DECIMAL(10, 2) DEFAULT 0,
-    daily_budget_limit DECIMAL(10, 2),
-    is_active BOOLEAN DEFAULT false,
-    admin_approved BOOLEAN DEFAULT false,
-    admin_notes TEXT,
-    performance_metrics JSONB, -- Store clicks, impressions, CTR, etc.
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  business_id uuid,
+  campaign_name text NOT NULL,
+  campaign_type text NOT NULL DEFAULT 'featured_listing'::text,
+  target_cities ARRAY,
+  target_categories ARRAY,
+  start_date timestamp with time zone NOT NULL,
+  end_date timestamp with time zone NOT NULL,
+  budget numeric NOT NULL,
+  spent_amount numeric DEFAULT 0,
+  daily_budget_limit numeric,
+  is_active boolean DEFAULT false,
+  admin_approved boolean DEFAULT false,
+  admin_notes text,
+  performance_metrics jsonb,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT ad_campaigns_pkey PRIMARY KEY (id),
+  CONSTRAINT ad_campaigns_business_id_fkey FOREIGN KEY (business_id) REFERENCES public.businesses(id)
 );
-
--- Reviews table
-CREATE TABLE public.reviews (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    business_id UUID REFERENCES public.businesses(id) ON DELETE CASCADE,
-    user_id UUID REFERENCES public.users(id) ON DELETE CASCADE,
-    rating INTEGER CHECK (rating >= 1 AND rating <= 5) NOT NULL,
-    title TEXT,
-    content TEXT,
-    images TEXT[],
-    status review_status DEFAULT 'pending',
-    helpful_count INTEGER DEFAULT 0,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    UNIQUE(business_id, user_id)
+CREATE TABLE public.admin_users (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  user_id character varying NOT NULL UNIQUE,
+  email character varying NOT NULL UNIQUE,
+  first_name character varying,
+  last_name character varying,
+  role character varying NOT NULL DEFAULT 'admin'::character varying CHECK (role::text = ANY (ARRAY['admin'::character varying, 'super_admin'::character varying]::text[])),
+  permissions ARRAY DEFAULT ARRAY['read'::text, 'write'::text],
+  last_login timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT admin_users_pkey PRIMARY KEY (id)
 );
-
--- Premium Features table
-CREATE TABLE public.premium_features (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    business_id UUID REFERENCES public.businesses(id) ON DELETE CASCADE,
-    feature_type TEXT NOT NULL, -- 'order_online', 'website_link', 'priority_placement', 'analytics'
-    is_active BOOLEAN DEFAULT true,
-    expires_at TIMESTAMP WITH TIME ZONE,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+CREATE TABLE public.businesses (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  name text NOT NULL,
+  slug text NOT NULL UNIQUE,
+  description text,
+  category_id uuid,
+  owner_id uuid,
+  city_id uuid,
+  country_id uuid,
+  phone text,
+  email text,
+  website text,
+  whatsapp text,
+  address text,
+  latitude numeric,
+  longitude numeric,
+  hours_of_operation jsonb,
+  services jsonb,
+  images ARRAY,
+  logo_url text,
+  status USER-DEFINED DEFAULT 'pending'::business_status,
+  is_premium boolean DEFAULT false,
+  is_verified boolean DEFAULT false,
+  meta_title text,
+  meta_description text,
+  view_count integer DEFAULT 0,
+  click_count integer DEFAULT 0,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  has_coupons boolean DEFAULT false,
+  accepts_orders_online boolean DEFAULT false,
+  is_kid_friendly boolean DEFAULT false,
+  is_sponsored_ad boolean DEFAULT false,
+  CONSTRAINT businesses_pkey PRIMARY KEY (id),
+  CONSTRAINT businesses_country_id_fkey FOREIGN KEY (country_id) REFERENCES public.countries(id),
+  CONSTRAINT businesses_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.categories(id),
+  CONSTRAINT businesses_city_id_fkey FOREIGN KEY (city_id) REFERENCES public.cities(id),
+  CONSTRAINT businesses_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public.users(id)
 );
-
--- Payments table
-CREATE TABLE public.payments (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    business_id UUID REFERENCES public.businesses(id),
-    user_id UUID REFERENCES public.users(id),
-    amount DECIMAL(10, 2) NOT NULL,
-    currency TEXT DEFAULT 'USD',
-    payment_method TEXT,
-    status payment_status DEFAULT 'pending',
-    stripe_payment_intent_id TEXT,
-    description TEXT,
-    metadata JSONB,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+CREATE TABLE public.categories (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  name text NOT NULL UNIQUE,
+  slug text NOT NULL UNIQUE,
+  icon text,
+  description text,
+  parent_id uuid,
+  sort_order integer DEFAULT 0,
+  is_active boolean DEFAULT true,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT categories_pkey PRIMARY KEY (id),
+  CONSTRAINT categories_parent_id_fkey FOREIGN KEY (parent_id) REFERENCES public.categories(id)
 );
-
--- Events table
+CREATE TABLE public.cities (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  name text NOT NULL,
+  country_id uuid,
+  latitude numeric,
+  longitude numeric,
+  population bigint,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT cities_pkey PRIMARY KEY (id),
+  CONSTRAINT cities_country_id_fkey FOREIGN KEY (country_id) REFERENCES public.countries(id)
+);
+CREATE TABLE public.countries (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  name text NOT NULL UNIQUE,
+  code text NOT NULL UNIQUE,
+  flag_url text,
+  wikipedia_url text,
+  description text,
+  population bigint,
+  capital text,
+  currency text,
+  language text,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT countries_pkey PRIMARY KEY (id)
+);
 CREATE TABLE public.events (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    title TEXT NOT NULL,
-    description TEXT,
-    organizer_id UUID REFERENCES public.users(id),
-    city_id UUID REFERENCES public.cities(id),
-    country_id UUID REFERENCES public.countries(id),
-    venue TEXT,
-    address TEXT,
-    start_date TIMESTAMP WITH TIME ZONE NOT NULL,
-    end_date TIMESTAMP WITH TIME ZONE NOT NULL,
-    images TEXT[],
-    ticket_price DECIMAL(10, 2),
-    ticket_url TEXT,
-    category TEXT,
-    tags TEXT[],
-    is_featured BOOLEAN DEFAULT false,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  title text NOT NULL,
+  description text,
+  organizer_id uuid,
+  city_id uuid,
+  country_id uuid,
+  venue text,
+  address text,
+  start_date timestamp with time zone NOT NULL,
+  end_date timestamp with time zone NOT NULL,
+  images ARRAY,
+  ticket_price numeric,
+  ticket_url text,
+  category text,
+  tags ARRAY,
+  is_featured boolean DEFAULT false,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT events_pkey PRIMARY KEY (id),
+  CONSTRAINT events_organizer_id_fkey FOREIGN KEY (organizer_id) REFERENCES public.users(id),
+  CONSTRAINT events_city_id_fkey FOREIGN KEY (city_id) REFERENCES public.cities(id),
+  CONSTRAINT events_country_id_fkey FOREIGN KEY (country_id) REFERENCES public.countries(id)
 );
-
--- Marketplace Products table
+CREATE TABLE public.payments (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  business_id uuid,
+  user_id uuid,
+  amount numeric NOT NULL,
+  currency text DEFAULT 'USD'::text,
+  payment_method text,
+  status USER-DEFINED DEFAULT 'pending'::payment_status,
+  stripe_payment_intent_id text,
+  description text,
+  metadata jsonb,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT payments_pkey PRIMARY KEY (id),
+  CONSTRAINT payments_business_id_fkey FOREIGN KEY (business_id) REFERENCES public.businesses(id),
+  CONSTRAINT payments_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
+);
+CREATE TABLE public.premium_features (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  business_id uuid,
+  feature_type text NOT NULL,
+  is_active boolean DEFAULT true,
+  expires_at timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT premium_features_pkey PRIMARY KEY (id),
+  CONSTRAINT premium_features_business_id_fkey FOREIGN KEY (business_id) REFERENCES public.businesses(id)
+);
 CREATE TABLE public.products (
-    id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
-    seller_id UUID REFERENCES public.users(id),
-    business_id UUID REFERENCES public.businesses(id),
-    title TEXT NOT NULL,
-    description TEXT,
-    price DECIMAL(10, 2) NOT NULL,
-    currency TEXT DEFAULT 'USD',
-    images TEXT[],
-    category TEXT,
-    condition TEXT, -- 'new', 'used', 'refurbished'
-    stock_quantity INTEGER DEFAULT 1,
-    is_active BOOLEAN DEFAULT true,
-    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
-    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  seller_id uuid,
+  business_id uuid,
+  title text NOT NULL,
+  description text,
+  price numeric NOT NULL,
+  currency text DEFAULT 'USD'::text,
+  images ARRAY,
+  category text,
+  condition text,
+  stock_quantity integer DEFAULT 1,
+  is_active boolean DEFAULT true,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT products_pkey PRIMARY KEY (id),
+  CONSTRAINT products_seller_id_fkey FOREIGN KEY (seller_id) REFERENCES public.users(id),
+  CONSTRAINT products_business_id_fkey FOREIGN KEY (business_id) REFERENCES public.businesses(id)
 );
-
--- Create indexes for better performance
-CREATE INDEX idx_businesses_city_id ON public.businesses(city_id);
-CREATE INDEX idx_businesses_category_id ON public.businesses(category_id);
-CREATE INDEX idx_businesses_status ON public.businesses(status);
-CREATE INDEX idx_businesses_is_premium ON public.businesses(is_premium);
-CREATE INDEX idx_businesses_has_coupons ON public.businesses(has_coupons);
-CREATE INDEX idx_businesses_accepts_orders_online ON public.businesses(accepts_orders_online);
-CREATE INDEX idx_businesses_is_kid_friendly ON public.businesses(is_kid_friendly);
-CREATE INDEX idx_businesses_is_sponsored_ad ON public.businesses(is_sponsored_ad);
-CREATE INDEX idx_ad_campaigns_business_id ON public.ad_campaigns(business_id);
-CREATE INDEX idx_ad_campaigns_is_active ON public.ad_campaigns(is_active);
-CREATE INDEX idx_ad_campaigns_admin_approved ON public.ad_campaigns(admin_approved);
-CREATE INDEX idx_reviews_business_id ON public.reviews(business_id);
-CREATE INDEX idx_reviews_user_id ON public.reviews(user_id);
-CREATE INDEX idx_events_city_id ON public.events(city_id);
-CREATE INDEX idx_events_start_date ON public.events(start_date);
-CREATE INDEX idx_products_seller_id ON public.products(seller_id);
-CREATE INDEX idx_products_business_id ON public.products(business_id);
-
--- Full-text search indexes
-CREATE INDEX idx_businesses_search ON public.businesses USING GIN (to_tsvector('english', name || ' ' || COALESCE(description, '')));
-CREATE INDEX idx_products_search ON public.products USING GIN (to_tsvector('english', title || ' ' || COALESCE(description, '')));
-CREATE INDEX idx_events_search ON public.events USING GIN (to_tsvector('english', title || ' ' || COALESCE(description, '')));
-
--- Triggers for updated_at timestamps
-CREATE OR REPLACE FUNCTION update_updated_at_column()
-RETURNS TRIGGER AS $$
-BEGIN
-    NEW.updated_at = NOW();
-    RETURN NEW;
-END;
-$$ language 'plpgsql';
-
-CREATE TRIGGER update_users_updated_at BEFORE UPDATE ON public.users FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-CREATE TRIGGER update_businesses_updated_at BEFORE UPDATE ON public.businesses FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-CREATE TRIGGER update_reviews_updated_at BEFORE UPDATE ON public.reviews FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-CREATE TRIGGER update_products_updated_at BEFORE UPDATE ON public.products FOR EACH ROW EXECUTE FUNCTION update_updated_at_column();
-CREATE TRIGGER update_ad_campaigns_updated_at BEFORE UPDATE ON public.ad_campaigns FOR EACH ROW EXECUTE FUNCTION update_updated_at_column(); 
+CREATE TABLE public.questions (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  title character varying NOT NULL,
+  content text NOT NULL,
+  user_name character varying NOT NULL,
+  user_email character varying NOT NULL,
+  category character varying NOT NULL,
+  status character varying DEFAULT 'pending'::character varying CHECK (status::text = ANY (ARRAY['pending'::character varying, 'answered'::character varying, 'closed'::character varying]::text[])),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT questions_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.reviews (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  business_id uuid,
+  user_id uuid,
+  rating integer NOT NULL CHECK (rating >= 1 AND rating <= 5),
+  title text,
+  content text,
+  images ARRAY,
+  status USER-DEFINED DEFAULT 'pending'::review_status,
+  helpful_count integer DEFAULT 0,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT reviews_pkey PRIMARY KEY (id),
+  CONSTRAINT reviews_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id),
+  CONSTRAINT reviews_business_id_fkey FOREIGN KEY (business_id) REFERENCES public.businesses(id)
+);
+CREATE TABLE public.user_logs (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  user_id character varying NOT NULL,
+  user_email character varying NOT NULL,
+  action character varying NOT NULL,
+  resource_type character varying NOT NULL,
+  resource_id character varying,
+  details jsonb,
+  ip_address inet,
+  user_agent text,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT user_logs_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.users (
+  id uuid NOT NULL,
+  email text NOT NULL UNIQUE,
+  full_name text,
+  phone text,
+  avatar_url text,
+  role USER-DEFINED DEFAULT 'user'::user_role,
+  country text,
+  city text,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT users_pkey PRIMARY KEY (id),
+  CONSTRAINT users_id_fkey FOREIGN KEY (id) REFERENCES auth.users(id)
+);

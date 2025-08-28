@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { MapPin, Phone, Globe, Star, Search, Map, Building2, Users, Award, ChevronDown } from "lucide-react";
+import { MapPin, Phone, Globe, Star, Search, Map, Building2, Users, Award, ChevronDown, UtensilsCrossed, Wine, Coffee, Car, Home, Scale, Bed, Plane, Building, Scissors, BookOpen, Film, Stethoscope, User, Church, Leaf, Palette, Landmark, Hospital, Book, ShoppingBag, Trees, Pill, Mail, Gamepad2, GraduationCap, Truck, Zap, Wrench, Heart, Dumbbell, Laptop, Shield, Calculator, Megaphone, Briefcase, Camera, Calendar, Music, Sparkles } from "lucide-react";
 import { useBusinessesByCategory, useBusinessSearch, useCitiesByCategory } from "@/hooks/useBusinesses";
 import { Business } from "@/lib/businessService";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -18,6 +18,161 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+// Category-specific amenities mapping
+const getCategoryAmenities = (categorySlug: string) => {
+  const amenitiesMap: { [key: string]: { icon: any; label: string }[] } = {
+    'restaurants': [
+      { icon: UtensilsCrossed, label: 'Food' },
+      { icon: Wine, label: 'Drinks' }
+    ],
+    'cafes': [
+      { icon: Coffee, label: 'Coffee' },
+      { icon: Wine, label: 'Beverages' }
+    ],
+    'coffee-shops': [
+      { icon: Coffee, label: 'Coffee' },
+      { icon: Wine, label: 'Beverages' }
+    ],
+    'bars': [
+      { icon: Wine, label: 'Drinks' },
+      { icon: UtensilsCrossed, label: 'Snacks' }
+    ],
+    'hotels': [
+      { icon: Bed, label: 'Accommodation' },
+      { icon: Wrench, label: 'Services' }
+    ],
+    'hospitals': [
+      { icon: Stethoscope, label: 'Medical' },
+      { icon: Heart, label: 'Healthcare' }
+    ],
+    'clinics': [
+      { icon: Stethoscope, label: 'Medical' },
+      { icon: Heart, label: 'Healthcare' }
+    ],
+    'dentists': [
+      { icon: Stethoscope, label: 'Dental' },
+      { icon: Heart, label: 'Healthcare' }
+    ],
+    'doctors': [
+      { icon: Stethoscope, label: 'Medical' },
+      { icon: Heart, label: 'Healthcare' }
+    ],
+    'pharmacies': [
+      { icon: Pill, label: 'Medication' },
+      { icon: Heart, label: 'Healthcare' }
+    ],
+    'auto-repair': [
+      { icon: Car, label: 'Automotive' },
+      { icon: Wrench, label: 'Repair' }
+    ],
+    'car-dealerships': [
+      { icon: Car, label: 'Automotive' },
+      { icon: Building, label: 'Sales' }
+    ],
+    'real-estate': [
+      { icon: Home, label: 'Properties' },
+      { icon: Building, label: 'Real Estate' }
+    ],
+    'lawyers': [
+      { icon: Scale, label: 'Legal' },
+      { icon: Building, label: 'Services' }
+    ],
+    'banks': [
+      { icon: Building, label: 'Banking' },
+      { icon: Shield, label: 'Financial' }
+    ],
+    'schools': [
+      { icon: GraduationCap, label: 'Education' },
+      { icon: Book, label: 'Learning' }
+    ],
+    'universities': [
+      { icon: GraduationCap, label: 'Higher Education' },
+      { icon: Book, label: 'Learning' }
+    ],
+    'gyms-fitness': [
+      { icon: Dumbbell, label: 'Fitness' },
+      { icon: Heart, label: 'Health' }
+    ],
+    'beauty-salons': [
+      { icon: Scissors, label: 'Beauty' },
+      { icon: Heart, label: 'Wellness' }
+    ],
+    'salons': [
+      { icon: Scissors, label: 'Beauty' },
+      { icon: Heart, label: 'Wellness' }
+    ],
+    'spas-wellness': [
+      { icon: Heart, label: 'Wellness' },
+      { icon: Sparkles, label: 'Relaxation' }
+    ],
+    'museums': [
+      { icon: Building2, label: 'Culture' },
+      { icon: Palette, label: 'Art' }
+    ],
+    'galleries-art': [
+      { icon: Palette, label: 'Art' },
+      { icon: Building2, label: 'Culture' }
+    ],
+    'cinemas-theatres': [
+      { icon: Film, label: 'Entertainment' },
+      { icon: Users, label: 'Shows' }
+    ],
+    'shopping': [
+      { icon: ShoppingBag, label: 'Retail' },
+      { icon: Building, label: 'Shopping' }
+    ],
+    'markets': [
+      { icon: ShoppingBag, label: 'Retail' },
+      { icon: Building, label: 'Shopping' }
+    ],
+    'airports': [
+      { icon: Plane, label: 'Aviation' },
+      { icon: Building, label: 'Travel' }
+    ],
+    'transportation': [
+      { icon: Truck, label: 'Transport' },
+      { icon: Car, label: 'Vehicles' }
+    ],
+    'tours': [
+      { icon: Map, label: 'Tourism' },
+      { icon: Users, label: 'Guided Tours' }
+    ],
+    'recreation': [
+      { icon: Gamepad2, label: 'Entertainment' },
+      { icon: Users, label: 'Activities' }
+    ],
+    'parks': [
+      { icon: Trees, label: 'Outdoors' },
+      { icon: Heart, label: 'Recreation' }
+    ],
+    'libraries': [
+      { icon: Book, label: 'Books' },
+      { icon: Building, label: 'Learning' }
+    ],
+    'bookstores': [
+      { icon: Book, label: 'Books' },
+      { icon: Building, label: 'Retail' }
+    ],
+    'post-offices': [
+      { icon: Mail, label: 'Mail' },
+      { icon: Building, label: 'Services' }
+    ],
+    'utilities': [
+      { icon: Zap, label: 'Utilities' },
+      { icon: Building, label: 'Services' }
+    ],
+    'services': [
+      { icon: Wrench, label: 'Services' },
+      { icon: Building, label: 'Support' }
+    ]
+  };
+  
+  return amenitiesMap[categorySlug] || [
+    { icon: Building, label: 'Services' },
+    { icon: Heart, label: 'Support' }
+  ];
+};
 
 export const ListingsPage = () => {
   const { t } = useTranslation();
@@ -132,8 +287,13 @@ export const ListingsPage = () => {
     return true;
   });
 
-  // Sort businesses based on selected sort option
+  // Sort businesses: sponsored ads first, then by selected sort option
   const sortedBusinesses = [...filteredBusinesses].sort((a, b) => {
+    // First priority: sponsored ads
+    if (a.is_sponsored_ad && !b.is_sponsored_ad) return -1;
+    if (!a.is_sponsored_ad && b.is_sponsored_ad) return 1;
+    
+    // Second priority: selected sort option
     switch (sortBy) {
       case 'rating': {
         const ratingA = getAverageRating(a);
@@ -333,7 +493,7 @@ export const ListingsPage = () => {
                           onClick={() => setSelectedCity(city.city_name)}
                           className="dropdown-menu-item-override cursor-pointer flex justify-between items-center"
                         >
-                          <span>{city.city_name}, {city.country_name}</span>
+                          <span>{city.city_name}, {city.city_name}</span>
                           <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">
                             {city.business_count} {city.business_count === 1 ? 'business' : 'businesses'}
                           </span>
@@ -382,27 +542,6 @@ export const ListingsPage = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
             <div className="flex flex-wrap items-center gap-2">
-              {/* <Button 
-                variant={viewMode === 'map' ? 'default' : 'outline'} 
-                size="sm" 
-                onClick={() => setViewMode('map')}
-                className="font-roboto"
-              >
-                <Map className="w-4 h-4 mr-1" />
-                <span className="hidden sm:inline">{t('listings.mapView')}</span>
-                <span className="sm:hidden">Map</span>
-              </Button> */}
-              {/* <Button 
-                variant={viewMode === 'list' ? 'default' : 'outline'} 
-                size="sm" 
-                onClick={() => setViewMode('list')}
-                className="font-roboto"
-              >
-                <Building2 className="w-4 h-4 mr-1" />
-                <span className="hidden sm:inline">{t('listings.listView')}</span>
-                <span className="sm:hidden">List</span>
-              </Button> */}
-              
               <Button 
                 variant={selectedFilters.includes('all') ? 'default' : 'outline'} 
                 size="sm" 
@@ -446,17 +585,6 @@ export const ListingsPage = () => {
                 <span className="hidden sm:inline">{t('listings.coupons')}</span>
                 <span className="sm:hidden">{t('listings.coupons')}</span>
               </Button>
-              
-              {/* <Button 
-                variant={selectedFilters.includes('premium') ? 'default' : 'outline'} 
-                size="sm" 
-                onClick={() => toggleFilter('premium')}
-                className="font-roboto"
-              >
-                <Award className="w-4 h-4 mr-1" />
-                <span className="hidden sm:inline">{t('listings.premium')}</span>
-                <span className="sm:hidden">{t('listings.premium')}</span>
-              </Button> */}
               
               <Button 
                 variant={selectedFilters.includes('verified') ? 'default' : 'outline'} 
@@ -514,26 +642,6 @@ export const ListingsPage = () => {
         <div className="flex flex-col lg:flex-row gap-8">
           {/* Main Content - Business Listings */}
           <div className="flex-1">
-        {/* Category Summary - Show when no city is selected */}
-        {/* {!selectedCity && !isSearchPage && citiesByCategory.length > 0 && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
-            <div className="flex items-center justify-between">
-              <div>
-                <h3 className="text-lg font-semibold text-blue-900 mb-1">
-                  {categoryName} Available in {citiesByCategory.length} Cities
-                </h3>
-                <p className="text-blue-700 text-sm">
-                  Select a city above to see businesses in that location, or browse all {filteredBusinesses.length} businesses below.
-                </p>
-              </div>
-              <div className="text-right">
-                <div className="text-2xl font-bold text-blue-900">{filteredBusinesses.length}</div>
-                <div className="text-sm text-blue-700">Total businesses</div>
-              </div>
-            </div>
-          </div>
-        )} */}
-
         {/* City-specific summary when a city is selected */}
         {selectedCity && !isSearchPage && (
           <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
@@ -607,6 +715,7 @@ export const ListingsPage = () => {
                 {sortedBusinesses.map((business, index) => {
               const avgRating = getAverageRating(business);
               const reviewCount = getReviewCount(business);
+              const categoryAmenities = getCategoryAmenities(business.category?.slug || actualCategorySlug || '');
               
               return (
                 <div 
@@ -618,6 +727,14 @@ export const ListingsPage = () => {
                   <div className="absolute -top-2 -left-2 w-8 h-8 bg-yp-blue text-white rounded-full flex items-center justify-center text-sm font-bold font-roboto shadow-md">
                     {index + 1}
                   </div>
+                  
+                  {/* Sponsored Ad Badge */}
+                  {business.is_sponsored_ad && (
+                    <div className="absolute top-4 right-4 bg-gray-200 text-gray-600 text-xs px-2 py-1 rounded-full font-medium">
+                      Ad
+                    </div>
+                  )}
+                  
                   <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start space-y-4 lg:space-y-0">
                     <div className="flex-1 min-w-0">
                       <div className="flex flex-col sm:flex-row sm:items-center mb-2 space-y-2 sm:space-y-0">
@@ -678,6 +795,24 @@ export const ListingsPage = () => {
                         </div>
                       )}
                       
+                      {/* Category Amenities */}
+                      {categoryAmenities.length > 0 && (
+                        <div className="flex items-center mb-3">
+                          <span className="text-sm font-medium text-gray-700 mr-2">Amenities:</span>
+                          <div className="flex items-center gap-2">
+                            {categoryAmenities.map((amenity, idx) => {
+                              const IconComponent = amenity.icon;
+                              return (
+                                <div key={idx} className="flex items-center gap-1 text-gray-600">
+                                  <IconComponent className="w-4 h-4" />
+                                  <span className="text-xs">{amenity.label}</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+                      
                       {/* Business details */}
                       <div className="space-y-1 text-sm text-gray-600 font-roboto">
                         {business.address && (
@@ -714,13 +849,33 @@ export const ListingsPage = () => {
                         )}
                         {business.description && (
                           <p className="text-gray-700 mt-2 line-clamp-2 break-words">
-                            {business.description}
+                            "{business.description}"
                           </p>
+                        )}
+                        
+                        {/* Order Online Button - Only show if business accepts online orders */}
+                        {business.accepts_orders_online && business.website && (
+                          <a 
+                            href={`https://${business.website}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="w-[5vh] sm:w-auto mt-3"
+                          >
+                            <Button 
+                              size="sm" 
+                              className="bg-yellow-500 hover:bg-yellow-600 text-white font-roboto w-full flex items-center gap-2"
+                            >
+                              <Globe className="w-4 h-4" />
+                              Order Online
+                            </Button>
+                          </a>
                         )}
                       </div>
                     </div>
                     
                     <div className="flex flex-col sm:flex-row lg:flex-col gap-2 w-full lg:w-auto">
+                      
                       <Link 
                         to={city 
                           ? `/${city}/${actualCategorySlug}/${business.id}`
