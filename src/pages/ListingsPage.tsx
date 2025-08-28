@@ -452,7 +452,6 @@ export const ListingsPage = () => {
                 type="text"
                 placeholder={`Search ${categoryName}...`}
                 value={searchTerm}
-                readOnly
                 className="w-full font-roboto bg-gray-50 cursor-not-allowed text-sm sm:text-base"
               />
             </div>
@@ -853,32 +852,35 @@ export const ListingsPage = () => {
                           </p>
                         )}
                         
-                        {/* Order Online Button - Only show if business accepts online orders */}
-                        {business.accepts_orders_online && business.website && (
-                          <div className="flex items-center justify-between mt-3">
-                            <a 
-                              href={`https://${business.website}`}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              <Button 
-                                size="sm" 
-                                className="bg-yellow-500 hover:bg-yellow-600 text-white font-roboto h-8 px-3 flex items-center gap-2 text-xs sm:text-sm"
+                        {(business.accepts_orders_online && business.website) || business.is_sponsored_ad ? (
+                          <div className="flex items-center mt-3 w-full">
+                            {/* Order Online Button */}
+                            {business.accepts_orders_online && business.website && (
+                              <a
+                                href={`https://${business.website}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                onClick={(e) => e.stopPropagation()}
                               >
-                                <Globe className="w-4 h-4" />
-                                Order Online
-                              </Button>
-                            </a>
-                            {/* Sponsored Ad Badge - Positioned on the far right */}
+                                <Button
+                                  size="sm"
+                                  className="bg-yellow-500 hover:bg-yellow-600 text-white font-roboto h-8 px-3 flex items-center gap-2 text-xs sm:text-sm"
+                                >
+                                  <Globe className="w-4 h-4" />
+                                  Order Online
+                                </Button>
+                              </a>
+                            )}
+                            {/* Sponsored Ad Badge */}
                             {business.is_sponsored_ad && (
-                              <div className="bg-gray-200 text-gray-600 text-xs px-3 py-1.5 rounded-full font-medium shadow-sm">
+                              <div className="ml-auto bg-gray-200 text-gray-600 text-xs px-3 py-1.5 rounded-full font-medium shadow-sm">
                                 Ad
                               </div>
                             )}
                           </div>
-                        )}
+                        ) : null}
                       </div>
+                      
                     </div>
                     
                     <div className="flex flex-col sm:flex-row lg:flex-col gap-2 w-full lg:w-auto">
