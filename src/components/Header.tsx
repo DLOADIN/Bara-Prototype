@@ -13,6 +13,7 @@ import { LanguageSelector } from "./LanguageSelector";
 import { AdminNavLink } from "./AdminNavLink";
 import { db } from "@/lib/supabase";
 import { useToast } from "@/components/ui/use-toast";
+import { fetchWikipediaCountryInfo } from "@/lib/wikipedia";
 
 interface Country {
   id: string;
@@ -25,6 +26,11 @@ interface Country {
   capital: string | null;
   currency: string | null;
   language: string | null;
+  coat_of_arms_url?: string | null;
+  area?: string | null;
+  gdp?: string | null;
+  timezone?: string | null;
+  wikipedia_description?: string | null;
 }
 
 export const Header = () => {
@@ -182,16 +188,7 @@ export const Header = () => {
                         onClick={() => handleCountrySelect(country)}
                         className="dropdown-menu-item-override font-roboto button cursor-pointer"
                       >
-                        <div className="flex items-center space-x-2">
-                          {country.flag_url && (
-                            <img 
-                              src={country.flag_url} 
-                              alt={`${country.name} flag`}
-                              className="w-4 h-4 rounded-sm"
-                            />
-                          )}
-                          <span>{formatCountryDisplay(country)}</span>
-                        </div>
+                        <span>{formatCountryDisplay(country)}</span>
                       </DropdownMenuItem>
                     ))}
                   </div>
@@ -362,13 +359,6 @@ export const Header = () => {
                             onClick={() => handleCountrySelect(country)}
                           >
                             <div className="flex items-center space-x-3">
-                              {country.flag_url && (
-                                <img 
-                                  src={country.flag_url} 
-                                  alt={`${country.name} flag`}
-                                  className="w-4 h-4 rounded-sm"
-                                />
-                              )}
                               <MapPin className="w-4 h-4" />
                               <span>{formatCountryDisplay(country)}</span>
                             </div>

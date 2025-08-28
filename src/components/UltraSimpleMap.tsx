@@ -4,12 +4,21 @@ interface UltraSimpleMapProps {
   cityName?: string;
   latitude?: number;
   longitude?: number;
+  countryName?: string;
+  countryData?: {
+    name: string;
+    capital?: string | null;
+    latitude?: number | null;
+    longitude?: number | null;
+  };
 }
 
 export const UltraSimpleMap = ({ 
   cityName = "Cairo", 
   latitude = 30.0444, 
-  longitude = 31.2357 
+  longitude = 31.2357,
+  countryName,
+  countryData
 }: UltraSimpleMapProps) => {
   const mapRef = useRef<HTMLDivElement>(null);
   const mapInstanceRef = useRef<any>(null);
@@ -45,10 +54,31 @@ export const UltraSimpleMap = ({
           mapInstanceRef.current.remove();
         }
         
+        // Determine coordinates and location name
+        let mapLatitude = latitude;
+        let mapLongitude = longitude;
+        let locationName = cityName;
+        let zoomLevel = 13;
+        
+        // If country data is provided, use country coordinates
+        if (countryData) {
+          if (countryData.latitude && countryData.longitude) {
+            mapLatitude = countryData.latitude;
+            mapLongitude = countryData.longitude;
+            zoomLevel = 6; // Zoom out for country view
+          }
+          locationName = countryData.name;
+          if (countryData.capital) {
+            locationName = `${countryData.capital}, ${countryData.name}`;
+          }
+        } else if (countryName) {
+          locationName = countryName;
+        }
+        
         setStatus('Creating map...');
         const map = L.map(mapRef.current, {
-          center: [latitude, longitude],
-          zoom: 13
+          center: [mapLatitude, mapLongitude],
+          zoom: zoomLevel
         });
         
         mapInstanceRef.current = map;
@@ -59,12 +89,12 @@ export const UltraSimpleMap = ({
         }).addTo(map);
         
         setStatus('Adding marker...');
-        L.marker([latitude, longitude])
+        L.marker([mapLatitude, mapLongitude])
           .addTo(map)
-          .bindPopup(cityName);
+          .bindPopup(locationName);
         
         setStatus('Map loaded successfully!');
-        console.log(`✅ Ultra simple map loaded for ${cityName}`);
+        console.log(`✅ Ultra simple map loaded for ${locationName}`);
         
       } catch (err) {
         console.error('❌ Error:', err);
@@ -81,7 +111,7 @@ export const UltraSimpleMap = ({
         mapInstanceRef.current = null;
       }
     };
-  }, [cityName, latitude, longitude]);
+  }, [cityName, latitude, longitude, countryName, countryData]);
 
   if (error) {
     return (
@@ -96,7 +126,9 @@ export const UltraSimpleMap = ({
     <div className="space-y-4">
       <div className="p-2 bg-yp-blue border border-blue-100 rounded">
         {/* <p className="text-white-800">Status: {status}</p> */}
-        <p className="text-white-600 text-lg">This Map shows the location of the city {cityName}</p>
+        <p className="text-white-600 text-lg">
+          This Map shows the location of {countryData ? countryData.name : countryName || cityName}
+        </p>
       </div>
       
       <div 
