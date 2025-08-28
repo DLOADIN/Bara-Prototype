@@ -445,23 +445,23 @@ export const ListingsPage = () => {
       
       {/* Search Header */}
       <div className="bg-yp-yellow py-4">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+          <div className="flex flex-col lg:flex-row items-stretch lg:items-center space-y-3 lg:space-y-0 lg:space-x-4">
             <div className="flex-1 min-w-0">
               <Input
                 type="text"
                 placeholder={`Search ${categoryName}...`}
                 value={searchTerm}
                 readOnly
-                className="w-full font-roboto bg-gray-50 cursor-not-allowed"
+                className="w-full font-roboto bg-gray-50 cursor-not-allowed text-sm sm:text-base"
               />
             </div>
             
             <div className="flex-1 min-w-0">
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
-                  <Button variant="default" className="w-full justify-start font-roboto">
-                    <MapPin className="w-4 h-4 mr-2 text-gray-500" />
+                  <Button variant="default" className="w-full justify-start font-roboto text-sm sm:text-base">
+                    <MapPin className="w-4 h-4 mr-2 text-gray-500 flex-shrink-0" />
                     <span className="truncate">
                       {selectedCity 
                         ? `${selectedCity} (${citiesByCategory.find(c => c.city_name === selectedCity)?.business_count || 0} businesses)`
@@ -471,7 +471,7 @@ export const ListingsPage = () => {
                     <ChevronDown className="w-4 h-4 ml-auto flex-shrink-0" />
                   </Button>
                 </DropdownMenuTrigger>
-                <DropdownMenuContent className="w-[280px] max-h-[300px] overflow-auto">
+                <DropdownMenuContent className="w-full sm:w-[280px] max-h-[300px] overflow-auto">
                   {isLoadingCitiesByCategory ? (
                     <div className="p-3 text-sm text-gray-500">Loading cities...</div>
                   ) : citiesByCategory.length > 0 ? (
@@ -493,8 +493,8 @@ export const ListingsPage = () => {
                           onClick={() => setSelectedCity(city.city_name)}
                           className="dropdown-menu-item-override cursor-pointer flex justify-between items-center"
                         >
-                          <span>{city.city_name}, {city.city_name}</span>
-                          <span className="text-xs bg-gray-100 px-2 py-1 rounded-full">
+                          <span className="truncate">{city.city_name}, {city.city_name}</span>
+                          <span className="text-xs bg-gray-100 px-2 py-1 rounded-full flex-shrink-0">
                             {city.business_count} {city.business_count === 1 ? 'business' : 'businesses'}
                           </span>
                         </DropdownMenuItem>
@@ -529,7 +529,7 @@ export const ListingsPage = () => {
 
             <Button 
               onClick={handleSearch}
-              className="bg-yp-blue text-white px-6 sm:px-8 font-roboto w-full sm:w-auto"
+              className="bg-yp-blue text-white px-4 sm:px-6 lg:px-8 font-roboto w-full lg:w-auto text-sm sm:text-base h-10 lg:h-auto"
             >
               FIND
             </Button>
@@ -539,14 +539,14 @@ export const ListingsPage = () => {
 
       {/* Filters */}
       <div className="bg-white border-b border-gray-200 py-3">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
-            <div className="flex flex-wrap items-center gap-2">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
+          <div className="flex flex-col lg:flex-row items-start lg:items-center space-y-3 lg:space-y-0 lg:space-x-4">
+            <div className="flex flex-wrap items-center gap-2 w-full lg:w-auto">
               <Button 
                 variant={selectedFilters.includes('all') ? 'default' : 'outline'} 
                 size="sm" 
                 onClick={() => setSelectedFilters([])}
-                className="font-roboto"
+                className="font-roboto text-xs sm:text-sm"
               >
                 <Building2 className="w-4 h-4 mr-1" />
                 <span className="hidden sm:inline">{t('listings.all')}</span>
@@ -557,7 +557,7 @@ export const ListingsPage = () => {
                 variant={selectedFilters.includes('order-online') ? 'default' : 'outline'} 
                 size="sm" 
                 onClick={() => toggleFilter('order-online')}
-                className="font-roboto"
+                className="font-roboto text-xs sm:text-sm"
               >
                 <Globe className="w-4 h-4 mr-1" />
                 <span className="hidden sm:inline">{t('listings.orderOnline')}</span>
@@ -568,7 +568,7 @@ export const ListingsPage = () => {
                 variant={selectedFilters.includes('kid-friendly') ? 'default' : 'outline'} 
                 size="sm" 
                 onClick={() => toggleFilter('kid-friendly')}
-                className="font-roboto"
+                className="font-roboto text-xs sm:text-sm"
               >
                 <Users className="w-4 h-4 mr-1" />
                 <span className="hidden sm:inline">{t('listings.kidFriendly')}</span>
@@ -579,7 +579,7 @@ export const ListingsPage = () => {
                 variant={selectedFilters.includes('coupons') ? 'default' : 'outline'} 
                 size="sm" 
                 onClick={() => toggleFilter('coupons')}
-                className="font-roboto"
+                className="font-roboto text-xs sm:text-sm"
               >
                 <Award className="w-4 h-4 mr-1" />
                 <span className="hidden sm:inline">{t('listings.coupons')}</span>
@@ -590,7 +590,7 @@ export const ListingsPage = () => {
                 variant={selectedFilters.includes('verified') ? 'default' : 'outline'} 
                 size="sm" 
                 onClick={() => toggleFilter('verified')}
-                className="font-roboto"
+                className="font-roboto text-xs sm:text-sm"
               >
                 <Users className="w-4 h-4 mr-1" />
                 <span className="hidden sm:inline">{t('listings.verified')}</span>
@@ -598,21 +598,21 @@ export const ListingsPage = () => {
               </Button>
             </div>
             
-            <div className="flex items-center space-x-4 ml-auto">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center space-y-2 sm:space-y-0 sm:space-x-4 w-full lg:w-auto lg:ml-auto">
               <div className="flex items-center space-x-2">
-                <span className="text-sm text-gray-600 font-roboto">{t('listings.sort')}</span>
+                <span className="text-xs sm:text-sm text-gray-600 font-roboto">{t('listings.sort')}</span>
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
-                    <Button variant="outline" size="sm" className="font-roboto">
-                      <span className="font-semibold">
+                    <Button variant="outline" size="sm" className="font-roboto text-xs sm:text-sm">
+                      <span className="font-semibold truncate">
                         {sortBy === 'default' ? t('listings.default') : 
                          sortBy === 'distance' ? t('listings.distance') : 
                          sortBy === 'rating' ? t('listings.rating') : t('listings.nameAZ')}
                       </span>
-                      <ChevronDown className="w-4 h-4 ml-1" />
+                      <ChevronDown className="w-4 h-4 ml-1 flex-shrink-0" />
                     </Button>
                   </DropdownMenuTrigger>
-                  <DropdownMenuContent>
+                  <DropdownMenuContent className="w-full sm:w-auto">
                     <DropdownMenuItem onClick={() => setSortBy('default')}>
                       <span className="font-semibold">{t('listings.default')}</span>
                     </DropdownMenuItem>
@@ -629,7 +629,7 @@ export const ListingsPage = () => {
                 </DropdownMenu>
               </div>
               
-              <span className="text-sm text-gray-600 font-roboto">
+              <span className="text-xs sm:text-sm text-gray-600 font-roboto">
                 {sortedBusinesses.length} {t('listings.businessesFound')}
               </span>
             </div>
@@ -638,25 +638,25 @@ export const ListingsPage = () => {
       </div>
 
       {/* Results */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
-        <div className="flex flex-col lg:flex-row gap-8">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6">
+        <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
           {/* Main Content - Business Listings */}
           <div className="flex-1">
         {/* City-specific summary when a city is selected */}
         {selectedCity && !isSearchPage && (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-            <div className="flex items-center justify-between">
+          <div className="bg-green-50 border border-green-200 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
               <div>
-                <h3 className="text-lg font-semibold text-green-900 mb-1">
+                <h3 className="text-base sm:text-lg font-semibold text-green-900 mb-1">
                   {categoryName} in {selectedCity}
                 </h3>
-                <p className="text-green-700 text-sm">
+                <p className="text-green-700 text-xs sm:text-sm">
                       {t('listings.showingBusinesses')} {sortedBusinesses.length} {t('listings.businessesInCity')} {selectedCity}
                 </p>
               </div>
-              <div className="text-right">
-                    <div className="text-2xl font-bold text-green-900">{sortedBusinesses.length}</div>
-                    <div className="text-sm text-green-700">{t('listings.businessesFoundCount')}</div>
+              <div className="text-left sm:text-right">
+                    <div className="text-xl sm:text-2xl font-bold text-green-900">{sortedBusinesses.length}</div>
+                    <div className="text-xs sm:text-sm text-green-700">{t('listings.businessesFoundCount')}</div>
               </div>
             </div>
           </div>
@@ -665,9 +665,9 @@ export const ListingsPage = () => {
         {/* Results Summary */}
         {sortedBusinesses.length > 0 && (
           <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
               <div className="flex items-center space-x-2">
-                <span className="text-sm font-medium text-blue-900">
+                <span className="text-xs sm:text-sm font-medium text-blue-900">
                   Showing {sortedBusinesses.length} {sortedBusinesses.length === 1 ? 'business' : 'businesses'}
                 </span>
                 {selectedCity && (
@@ -676,7 +676,7 @@ export const ListingsPage = () => {
                   </span>
                 )}
               </div>
-              <div className="text-right">
+              <div className="text-left sm:text-right">
                 <span className="text-xs text-blue-700">
                   Numbered 1 to {sortedBusinesses.length}
                 </span>
@@ -718,30 +718,25 @@ export const ListingsPage = () => {
               const categoryAmenities = getCategoryAmenities(business.category?.slug || actualCategorySlug || '');
               
               return (
-                <div 
-                  key={business.id} 
-                  className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6 hover:shadow-md transition-shadow cursor-pointer relative"
-                  onClick={() => handleBusinessClick(business)}
-                >
+                                  <div 
+                    key={business.id} 
+                    className="bg-white border border-gray-200 rounded-lg p-4 sm:p-6 hover:shadow-lg hover:scale-[1.02] transition-all duration-300 cursor-pointer relative"
+                    onClick={() => handleBusinessClick(business)}
+                  >
                   {/* Business Number Badge */}
                   <div className="absolute -top-2 -left-2 w-8 h-8 bg-yp-blue text-white rounded-full flex items-center justify-center text-sm font-bold font-roboto shadow-md">
                     {index + 1}
                   </div>
                   
-                  {/* Sponsored Ad Badge */}
-                  {business.is_sponsored_ad && (
-                    <div className="absolute top-4 right-4 bg-gray-200 text-gray-600 text-xs px-2 py-1 rounded-full font-medium">
-                      Ad
-                    </div>
-                  )}
+
                   
                   <div className="flex flex-col lg:flex-row lg:justify-between lg:items-start space-y-4 lg:space-y-0">
                     <div className="flex-1 min-w-0">
-                      <div className="flex flex-col sm:flex-row sm:items-center mb-2 space-y-2 sm:space-y-0">
-                        <h3 className="text-lg sm:text-xl font-semibold text-yp-dark font-comfortaa mr-2 break-words">
+                      <div className="flex flex-col sm:flex-row sm:items-start mb-2 space-y-2 sm:space-y-0">
+                        <h3 className="text-base sm:text-lg lg:text-xl font-semibold text-yp-dark font-comfortaa mr-2 break-words">
                           {business.name}
                         </h3>
-                        <div className="flex flex-wrap items-center gap-2">  
+                        <div className="flex flex-wrap items-center gap-1 sm:gap-2">  
                         {business.is_premium && (
                           <Badge variant="default" className="bg-yp-blue text-white text-xs">
                                 {t('listings.premium')}
@@ -770,7 +765,7 @@ export const ListingsPage = () => {
                         </div>
                       </div>
                       
-                      <p className="text-gray-600 font-roboto mb-2">
+                      <p className="text-gray-600 font-roboto mb-2 text-sm">
                         {business.category?.name || 'Business'}
                       </p>
                       
@@ -789,32 +784,16 @@ export const ListingsPage = () => {
                               />
                             ))}
                           </div>
-                          <span className="ml-2 text-sm text-gray-600 font-roboto">
+                          <span className="ml-2 text-xs sm:text-sm text-gray-600 font-roboto">
                             {avgRating.toFixed(1)} ({reviewCount} reviews)
                           </span>
                         </div>
                       )}
                       
-                      {/* Category Amenities */}
-                      {categoryAmenities.length > 0 && (
-                        <div className="flex items-center mb-3">
-                          <span className="text-sm font-medium text-gray-700 mr-2">Amenities:</span>
-                          <div className="flex items-center gap-2">
-                            {categoryAmenities.map((amenity, idx) => {
-                              const IconComponent = amenity.icon;
-                              return (
-                                <div key={idx} className="flex items-center gap-1 text-gray-600">
-                                  <IconComponent className="w-4 h-4" />
-                                  <span className="text-xs">{amenity.label}</span>
-                                </div>
-                              );
-                            })}
-                          </div>
-                        </div>
-                      )}
+                      
                       
                       {/* Business details */}
-                      <div className="space-y-1 text-sm text-gray-600 font-roboto">
+                      <div className="space-y-1 text-xs sm:text-sm text-gray-600 font-roboto">
                         {business.address && (
                           <div className="flex items-start">
                             <MapPin className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" />
@@ -847,29 +826,57 @@ export const ListingsPage = () => {
                             </a>
                           </div>
                         )}
+
+
+                        {/* Category Amenities */}
+                      {categoryAmenities.length > 0 && (
+                        <div className="flex flex-col sm:flex-row sm:items-center mb-3 space-y-1 py-2 sm:space-y-0">
+                          <span className="text-xs sm:text-sm font-medium text-gray-700 mr-2">Amenities:</span>
+                          <div className="flex items-center gap-2">
+                            {categoryAmenities.map((amenity, idx) => {
+                              const IconComponent = amenity.icon;
+                              return (
+                                <div key={idx} className="flex items-center gap-1 text-gray-600">
+                                  <IconComponent className="w-4 h-4" />
+                                  <span className="text-xs">{amenity.label}</span>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        </div>
+                      )}
+
+
                         {business.description && (
-                          <p className="text-gray-700 mt-2 line-clamp-2 break-words">
+                          <p className="text-gray-700 mt-2 line-clamp-2 break-words text-sm">
                             "{business.description}"
                           </p>
                         )}
                         
                         {/* Order Online Button - Only show if business accepts online orders */}
                         {business.accepts_orders_online && business.website && (
-                          <a 
-                            href={`https://${business.website}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            onClick={(e) => e.stopPropagation()}
-                            className="w-[5vh] sm:w-auto mt-3"
-                          >
-                            <Button 
-                              size="sm" 
-                              className="bg-yellow-500 hover:bg-yellow-600 text-white font-roboto w-full flex items-center gap-2"
+                          <div className="flex items-center justify-between mt-3">
+                            <a 
+                              href={`https://${business.website}`}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              onClick={(e) => e.stopPropagation()}
                             >
-                              <Globe className="w-4 h-4" />
-                              Order Online
-                            </Button>
-                          </a>
+                              <Button 
+                                size="sm" 
+                                className="bg-yellow-500 hover:bg-yellow-600 text-white font-roboto h-8 px-3 flex items-center gap-2 text-xs sm:text-sm"
+                              >
+                                <Globe className="w-4 h-4" />
+                                Order Online
+                              </Button>
+                            </a>
+                            {/* Sponsored Ad Badge - Positioned on the far right */}
+                            {business.is_sponsored_ad && (
+                              <div className="bg-gray-200 text-gray-600 text-xs px-3 py-1.5 rounded-full font-medium shadow-sm">
+                                Ad
+                              </div>
+                            )}
+                          </div>
                         )}
                       </div>
                     </div>
@@ -884,14 +891,14 @@ export const ListingsPage = () => {
                         onClick={(e) => e.stopPropagation()}
                         className="w-full sm:w-auto"
                       >
-                        <Button size="sm" variant="outline" className="font-roboto w-full">
+                        {/* <Button size="sm" variant="outline" className="font-roboto w-full text-xs sm:text-sm">
                               {t('listings.moreInfo')}
-                        </Button>
+                        </Button> */}
                       </Link>
                       <Link to={`/write-review/${business.id}`} className="w-full sm:w-auto">
                         <Button 
                           size="sm" 
-                          className="bg-yp-blue text-white font-roboto w-full"
+                          className="bg-yp-blue text-white font-roboto w-full text-xs sm:text-sm"
                           onClick={(e) => e.stopPropagation()}
                         >
                               {t('listings.writeReview')}
@@ -907,7 +914,7 @@ export const ListingsPage = () => {
           </div>
 
           {/* Right Sidebar - Featured Businesses */}
-          <div className="w-full lg:w-80 flex-shrink-0">
+          <div className="w-full lg:w-80 flex-shrink-0 mt-6 lg:mt-0">
             <FeaturedBusinesses
               citySlug={city}
               maxDisplay={6}
