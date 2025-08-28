@@ -14,107 +14,72 @@ import { AdminNavLink } from "./AdminNavLink";
 import { db } from "@/lib/supabase";
 import { useToast } from "@/components/ui/use-toast";
 
-interface City {
+interface Country {
   id: string;
   name: string;
-  country_id: string;
-  latitude: number | null;
-  longitude: number | null;
+  code: string;
+  flag_url: string | null;
+  wikipedia_url: string | null;
+  description: string | null;
   population: number | null;
-  countries?: {
-    name: string;
-    code: string;
-  } | null;
+  capital: string | null;
+  currency: string | null;
+  language: string | null;
 }
 
 export const Header = () => {
   const { t } = useTranslation();
-  const [selectedCity, setSelectedCity] = useState("");
-  const [cities, setCities] = useState<City[]>([]);
+  const [selectedCountry, setSelectedCountry] = useState("");
+  const [countries, setCountries] = useState<Country[]>([]);
   const [loading, setLoading] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileMenuClosing, setMobileMenuClosing] = useState(false);
-  const [citiesExpanded, setCitiesExpanded] = useState(false);
+  const [countriesExpanded, setCountriesExpanded] = useState(false);
   const { toast } = useToast();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCities = async () => {
+    const fetchCountries = async () => {
       try {
-        console.log('Fetching cities from database...');
+        console.log('Fetching countries from database...');
         
-        // First try to get all cities
-        let { data, error } = await db.cities()
+        const { data, error } = await db.countries()
           .select(`
             id,
             name,
-            country_id,
-            latitude,
-            longitude,
+            code,
+            flag_url,
+            wikipedia_url,
+            description,
             population,
-            countries (
-              name,
-              code
-            )
+            capital,
+            currency,
+            language
           `)
           .order('name', { ascending: true });
 
-        // If no data or error, try without the countries join
-        if (error || !data || data.length === 0) {
-          console.log('First query failed, trying fallback query...');
-          const fallbackResult = await db.cities()
-            .select('id, name, country_id, latitude, longitude, population')
-            .order('name', { ascending: true });
-          
-          if (fallbackResult.error) {
-            console.error('Fallback query also failed:', fallbackResult.error);
-            throw fallbackResult.error;
-          }
-          
-          // Transform fallback data to match City interface
-          data = fallbackResult.data?.map(city => ({
-            ...city,
-            countries: null
-          }));
-          error = fallbackResult.error;
-        }
-
         if (error) {
-          console.error('Error fetching cities:', error);
+          console.error('Error fetching countries:', error);
           toast({
             title: 'Error',
-            description: 'Failed to load cities. Please try again.',
+            description: 'Failed to load countries. Please try again.',
             variant: "destructive"
           });
         } else {
-          // Type assertion to handle the Supabase response structure
-          const typedData = (data as unknown) as Array<{
-            id: string;
-            name: string;
-            country_id: string;
-            latitude: number | null;
-            longitude: number | null;
-            population: number | null;
-            countries?: {
-              name: string;
-              code: string;
-            } | null;
-          }>;
+          console.log(`Fetched ${data?.length || 0} countries from database:`, data);
           
-          console.log(`Fetched ${typedData?.length || 0} cities from database:`, typedData);
-          
-          if (typedData && typedData.length > 0) {
-            setCities(typedData);
+          if (data && data.length > 0) {
+            setCountries(data);
           } else {
-            console.warn('No cities found in database');
-            setCities([]);
+            console.warn('No countries found in database');
+            setCountries([]);
           }
         }
       } catch (error) {
-        console.error('Error fetching cities:', error);
+        console.error('Error fetching countries:', error);
         toast({
           title: 'Error',
-          description: 'Failed to load cities. Please try again.',
+          description: 'Failed to load countries. Please try again.',
           variant: "destructive"
         });
       } finally {
@@ -122,19 +87,19 @@ export const Header = () => {
       }
     };
 
-    fetchCities();
+    fetchCountries();
   }, []);
 
-  const formatCityDisplay = (city: City) => {
-    return `${city.name}${city.countries?.code ? `, ${city.countries.code}` : ''}`;
+  const formatCountryDisplay = (country: Country) => {
+    return `${country.name} (${country.code})`;
   };
 
-  const handleCitySelect = (city: City) => {
-    setSelectedCity(formatCityDisplay(city));
+  const handleCountrySelect = (country: Country) => {
+    setSelectedCountry(formatCountryDisplay(country));
     closeMobileMenu();
-    // Navigate to city detail page
-    const citySlug = city.name.toLowerCase().replace(/\s+/g, '-');
-    navigate(`/cities/${citySlug}`);
+    // Navigate to country detail page
+    const countrySlug = country.name.toLowerCase().replace(/\s+/g, '-');
+    navigate(`/countries/${countrySlug}`);
   };
 
   const toggleMobileMenu = () => {
@@ -154,8 +119,8 @@ export const Header = () => {
     }, 300);
   };
 
-  const toggleCitiesExpanded = () => {
-    setCitiesExpanded(!citiesExpanded);
+  const toggleCountriesExpanded = () => {
+    setCountriesExpanded(!countriesExpanded);
   };
 
   return (
@@ -189,13 +154,13 @@ export const Header = () => {
             {/* Admin Link */}
             <AdminNavLink />
 
-            {/* Search by City Dropdown */}
+            {/* Search by Country Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="default" className="font-roboto">
-                  {t('navigation.searchByCity')}
+                  {t('navigation.searchByCountry')}
                   <span className="ml-1 text-xs bg-white/20 px-1.5 py-0.5 rounded-full">
-                    {cities.length}
+                    {countries.length}
                   </span>
                   <ChevronDown className="w-4 h-4 ml-1 transition-transform duration-200" />
                 </Button>
@@ -211,16 +176,22 @@ export const Header = () => {
                   </div>
                 ) : (
                   <div className="max-h-80 overflow-y-auto">
-                    {/* <div className="px-2 py-1.5 text-xs text-gray-500 border-b border-gray-100 mb-1">
-                      {cities.length} cities available
-                    </div> */}
-                    {cities.map((city) => (
+                    {countries.map((country) => (
                       <DropdownMenuItem
-                        key={city.id}
-                        onClick={() => handleCitySelect(city)}
+                        key={country.id}
+                        onClick={() => handleCountrySelect(country)}
                         className="dropdown-menu-item-override font-roboto button cursor-pointer"
                       >
-                        {formatCityDisplay(city)}
+                        <div className="flex items-center space-x-2">
+                          {country.flag_url && (
+                            <img 
+                              src={country.flag_url} 
+                              alt={`${country.name} flag`}
+                              className="w-4 h-4 rounded-sm"
+                            />
+                          )}
+                          <span>{formatCountryDisplay(country)}</span>
+                        </div>
                       </DropdownMenuItem>
                     ))}
                   </div>
@@ -350,27 +321,27 @@ export const Header = () => {
                   </Link>
                 </div>
 
-                {/* Cities Section */}
+                {/* Countries Section */}
                 <div className="space-y-3">
                   <button
-                    onClick={toggleCitiesExpanded}
+                    onClick={toggleCountriesExpanded}
                     className="w-full flex items-center justify-between text-left text-sm font-comfortaa font-semibold text-gray-900 uppercase tracking-wide hover:text-yp-blue transition-colors duration-200"
                   >
-                    <span>{t('navigation.searchByCity')}</span>
+                    <span>{t('navigation.searchByCountry')}</span>
                     <div className="flex items-center gap-2">
                       <span className="text-xs text-gray-500 font-normal">
-                        {cities.length} cities
+                        {countries.length} countries
                       </span>
                       <ChevronRight 
                         className={`w-4 h-4 transition-transform duration-200 ${
-                          citiesExpanded ? 'rotate-90' : ''
+                          countriesExpanded ? 'rotate-90' : ''
                         }`} 
                       />
                     </div>
                   </button>
                   
                   <div className={`overflow-hidden transition-all duration-300 ease-in-out ${
-                    citiesExpanded ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'
+                    countriesExpanded ? 'max-h-[800px] opacity-100' : 'max-h-0 opacity-0'
                   }`}>
                     {loading ? (
                       <div className="text-center py-4">
@@ -379,19 +350,28 @@ export const Header = () => {
                       </div>
                     ) : (
                       <div className="space-y-2 pl-4 max-h-[600px] overflow-y-auto">
-                        {cities.map((city) => (
+                        {countries.map((country) => (
                           <Button
-                            key={city.id}
+                            key={country.id}
                             variant="ghost"
                             className={`w-full justify-start font-roboto h-10 text-sm transition-all duration-200 ${
-                              selectedCity === formatCityDisplay(city) 
+                              selectedCountry === formatCountryDisplay(country) 
                                 ? "bg-yp-blue text-white shadow-md" 
                                 : "hover:bg-gray-100 text-gray-700"
                             }`}
-                            onClick={() => handleCitySelect(city)}
+                            onClick={() => handleCountrySelect(country)}
                           >
-                            <MapPin className="w-4 h-4 mr-3" />
-                            {formatCityDisplay(city)}
+                            <div className="flex items-center space-x-3">
+                              {country.flag_url && (
+                                <img 
+                                  src={country.flag_url} 
+                                  alt={`${country.name} flag`}
+                                  className="w-4 h-4 rounded-sm"
+                                />
+                              )}
+                              <MapPin className="w-4 h-4" />
+                              <span>{formatCountryDisplay(country)}</span>
+                            </div>
                           </Button>
                         ))}
                       </div>

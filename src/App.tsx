@@ -11,6 +11,7 @@ import { WriteReviewPage } from "./pages/WriteReviewPage";
 import { BusinessDetailPage } from "./pages/BusinessDetailPage";
 import { CategoriesPage } from "./pages/CategoriesPage";
 import { CityDetailPage } from "./pages/CityDetailPage";
+import { CountryDetailPage } from "./pages/CountryDetailPage";
 import { AskQuestionPage } from "./pages/AskQuestionPage";
 import { SignInPage } from "./pages/SignInPage";
 import { SignUpPage } from "./pages/SignUpPage";
@@ -43,6 +44,7 @@ const AppRoutes = () => {
       <Route path="/:city/:category" element={<ListingsPage />} />
       <Route path="/:city/:category/:businessId" element={<BusinessDetailPage />} />
       <Route path="/cities/:citySlug" element={<CityDetailPage />} />
+      <Route path="/countries/:countrySlug" element={<CountryDetailPage />} />
       
       {/* Authentication Routes */}
       <Route path="/sign-in" element={<SignInPage />} />
