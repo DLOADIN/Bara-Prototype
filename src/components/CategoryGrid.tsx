@@ -40,7 +40,18 @@ import {
   CreditCard,
   Smartphone,
   MoreHorizontal,
-  ChevronUp
+  ChevronUp,
+  // Add missing icons
+  Shield,
+  Calculator,
+  Megaphone,
+  Briefcase,
+  Camera,
+  Calendar,
+  Music,
+  Sparkles,
+  Dumbbell,
+  Laptop
 } from "lucide-react";
 
 // Icon mapping for categories
@@ -83,9 +94,26 @@ const iconMap: { [key: string]: any } = {
   'utilities': Zap,
   'auto-repair': Wrench,
   'coffee-shops': Coffee,
-  'gyms-fitness': Users,
+  'gyms-fitness': Dumbbell,
   'beauty-salons': Scissors,
-  'pet-services': Heart
+  'pet-services': Heart,
+  // Add missing categories
+  'spas-wellness': Heart,
+  'tech-services': Laptop,
+  'car-dealerships': Car,
+  'insurance': Shield,
+  'accounting': Calculator,
+  'marketing': Megaphone,
+  'consulting': Briefcase,
+  'photography': Camera,
+  'event-planning': Calendar,
+  'veterinary': Heart,
+  'dance-studios': Music,
+  'music-schools': Music,
+  'language-schools': BookOpen,
+  'driving-schools': Car,
+  'security-services': Shield,
+  'cleaning-services': Sparkles
 };
 
 interface Category {
