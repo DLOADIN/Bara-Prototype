@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
-import { ChevronDown, Menu, Star, Building, X, Globe, MapPin, Shield, ChevronRight, Pocket } from "lucide-react";
+import { ChevronDown, Menu, Crown, Building, X, Globe, MapPin, Shield, ChevronRight, Pocket } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import {
   DropdownMenu,

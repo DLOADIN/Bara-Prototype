@@ -14,7 +14,7 @@ import {
   Store, 
   MessageSquare, 
   FileText, 
-  Star, 
+  Crown, 
   Phone, 
   Globe, 
   Clock,
@@ -716,7 +716,7 @@ export const WriteReviewPage = () => {
                       onMouseLeave={() => setHoveredRating(0)}
                       className="focus:outline-none"
                     >
-                      <Star
+                      <Crown
                         className={`w-8 h-8 ${
                           star <= (hoveredRating || reviewForm.rating)
                             ? 'text-yellow-400 fill-current'

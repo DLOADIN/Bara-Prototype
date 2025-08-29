@@ -3,7 +3,7 @@ import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Search, MapPin, ChevronDown, Building2, Star } from "lucide-react";
+import { Search, MapPin, ChevronDown, Building2, Crown } from "lucide-react";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -18,8 +18,8 @@ import { toast } from "sonner";
 // Update interface to represent countries instead of cities
 interface Country {
   id: string;
-  name: string;
-  code: string;
+    name: string;
+    code: string;
   flag_emoji?: string;
   flag_url?: string;
   business_count?: number; // Count of businesses in this country
@@ -45,8 +45,8 @@ export const HeroSection = () => {
           .select(`
             country_id,
             countries (
-              id,
-              name,
+            id,
+            name,
               code,
               flag_emoji,
               flag_url
@@ -65,7 +65,7 @@ export const HeroSection = () => {
               const country = business.countries;
               if (countryMap.has(country.id)) {
                 countryMap.get(country.id)!.business_count!++;
-              } else {
+        } else {
                 countryMap.set(country.id, {
                   id: country.id,
                   name: country.name,
@@ -297,7 +297,7 @@ export const HeroSection = () => {
                                   </p>
                                   {reviewCount > 0 && (
                                     <div className="flex items-center gap-1 mt-1">
-                                      <Star className="w-3 h-3 text-yellow-500 fill-current" />
+                                      <Crown className="w-3 h-3 text-yellow-500 fill-current" />
                                       <span className="text-xs text-yp-gray-dark">
                                         {avgRating.toFixed(1)} ({reviewCount})
                                       </span>

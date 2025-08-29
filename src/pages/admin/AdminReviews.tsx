@@ -18,7 +18,7 @@ import {
   CheckCircle, 
   XCircle, 
   AlertTriangle,
-  Star,
+  Crown,
   MessageSquare,
   User,
   Building2,
@@ -182,7 +182,7 @@ export const AdminReviews = () => {
 
   const renderStars = (rating: number) => {
     return Array.from({ length: 5 }, (_, i) => (
-      <Star
+      <Crown
         key={i}
         className={`w-4 h-4 ${
           i < rating ? 'text-yellow-400 fill-current' : 'text-gray-300'
@@ -302,11 +302,11 @@ export const AdminReviews = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all" className="font-roboto">All Ratings</SelectItem>
-                <SelectItem value="5" className="font-roboto">5 Stars</SelectItem>
-                <SelectItem value="4" className="font-roboto">4 Stars</SelectItem>
-                <SelectItem value="3" className="font-roboto">3 Stars</SelectItem>
-                <SelectItem value="2" className="font-roboto">2 Stars</SelectItem>
-                <SelectItem value="1" className="font-roboto">1 Star</SelectItem>
+                <SelectItem value="5" className="font-roboto">5 Crowns</SelectItem>
+                <SelectItem value="4" className="font-roboto">4 Crowns</SelectItem>
+                <SelectItem value="3" className="font-roboto">3 Crowns</SelectItem>
+                <SelectItem value="2" className="font-roboto">2 Crowns</SelectItem>
+                <SelectItem value="1" className="font-roboto">1 Crown</SelectItem>
               </SelectContent>
             </Select>
             <Badge variant="secondary" className="self-center justify-center">

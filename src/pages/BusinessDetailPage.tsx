@@ -3,7 +3,7 @@ import { Header } from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { MapPin, Phone, Globe, Star, Clock, Building, ChevronRight, Camera, Users, ArrowLeft, Award, CheckCircle, Map } from "lucide-react";
+import { MapPin, Phone, Globe, Crown, Clock, Building, ChevronRight, Camera, Users, ArrowLeft, Award, CheckCircle, Map } from "lucide-react";
 import { useBusinessById } from "@/hooks/useBusinesses";
 import { Business } from "@/lib/businessService";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -148,7 +148,7 @@ export const BusinessDetailPage = () => {
                 <div className="flex items-center mb-4">
                   <div className="flex items-center">
                   {[...Array(5)].map((_, i) => (
-                    <Star
+                    <Crown
                       key={i}
                       className={`w-5 h-5 ${
                           i < Math.floor(avgRating)
@@ -244,7 +244,7 @@ export const BusinessDetailPage = () => {
                       <div className="flex items-center mb-2">
                         <div className="flex items-center">
                           {[...Array(5)].map((_, i) => (
-                            <Star
+                            <Crown
                               key={i}
                               className={`w-4 h-4 ${
                                 i < review.rating

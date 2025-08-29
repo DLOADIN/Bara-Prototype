@@ -11,7 +11,7 @@ import { CityInfo } from "@/components/CityInfo";
 import { 
   MapPin, 
   Phone, 
-  Star, 
+  Crown, 
   Building, 
   ArrowLeft,
   Grid3X3,
@@ -846,7 +846,7 @@ export const CountryDetailPage: React.FC = () => {
                   
                   {business.reviews && business.reviews.length > 0 && (
                     <div className="flex items-center space-x-2 mb-4">
-                      <Star className="w-4 h-4 text-yellow-500 fill-current" />
+                      <Crown className="w-4 h-4 text-yellow-500 fill-current" />
                       <span className="text-sm font-medium text-gray-900">
                         {getAverageRating(business).toFixed(1)}
                       </span>

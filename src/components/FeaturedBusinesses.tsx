@@ -8,7 +8,7 @@ import {
   Phone, 
   Globe, 
   MapPin, 
-  Star,
+  Crown,
   ExternalLink,
   Navigation,
   Info
@@ -94,6 +94,8 @@ export const FeaturedBusinesses: React.FC<FeaturedBusinessesProps> = ({
         phone: business.phone,
         email: business.email,
         website: business.website,
+        order_online_url: business.order_online_url,
+        website_visible: business.website_visible !== undefined ? business.website_visible : true,
         address: business.address,
         status: business.status,
         latitude: business.latitude,
@@ -117,6 +119,17 @@ export const FeaturedBusinesses: React.FC<FeaturedBusinessesProps> = ({
           name: 'Business', // We'll get this from a separate query if needed
           slug: 'business',
           icon: '🏢'
+        },
+        country: {
+          id: business.country_id || 'unknown',
+          name: 'Unknown',
+          code: 'UN',
+          flag_url: null
+        },
+        city: {
+          id: business.city_id || 'unknown',
+          name: 'Unknown',
+          country_id: business.country_id || 'unknown'
         },
         reviews: [] // We'll get this from a separate query if needed
       }));
@@ -285,7 +298,7 @@ export const FeaturedBusinesses: React.FC<FeaturedBusinessesProps> = ({
               {/* Rating */}
               {business.reviews && business.reviews.length > 0 && (
                 <div className="flex items-center space-x-2 mb-3">
-                  <Star className="w-3 h-3 text-yellow-500 fill-current" />
+                  <Crown className="w-3 h-3 text-yellow-500 fill-current" />
                   <span className="text-xs font-medium text-gray-900">
                     {getAverageRating(business).toFixed(1)}
                   </span>
@@ -297,19 +310,19 @@ export const FeaturedBusinesses: React.FC<FeaturedBusinessesProps> = ({
 
               {/* Action Links */}
               <div className="flex items-center space-x-2 text-xs">
-                {business.website && (
+                {/* {business.website && (
                   <Link to={business.website} target="_blank" rel="noopener noreferrer">
                     <Button variant="ghost" size="sm" className="h-6 px-2 text-yp-blue hover:text-yp-blue-dark">
                       <Globe className="w-3 h-3 mr-1" />
                       {t('featuredBusinesses.website')}
                     </Button>
                   </Link>
-                )}
+                )} */}
                 
-                <Button variant="ghost" size="sm" className="h-6 px-2 text-yp-blue hover:text-yp-blue-dark">
+                {/* <Button variant="ghost" size="sm" className="h-6 px-2 text-yp-blue hover:text-yp-blue-dark">
                   <Navigation className="w-3 h-3 mr-1" />
                   {t('featuredBusinesses.directions')}
-                </Button>
+                </Button> */}
                 
                 <Link to={`/${citySlug || 'city'}/${business.category?.slug || 'business'}/${business.id}`}>
                   <Button variant="ghost" size="sm" className="h-6 px-2 text-yp-blue hover:text-yp-blue-dark">

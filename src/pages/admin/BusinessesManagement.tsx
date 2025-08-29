@@ -32,7 +32,7 @@ import {
   Building2, 
   MapPin,
   Globe,
-  Star,
+  Crown,
   Eye,
   CheckCircle,
   XCircle,
@@ -668,7 +668,7 @@ export const BusinessesManagement = () => {
                 
                 <div className="grid grid-cols-2 gap-4 mb-3">
                   <div className="flex items-center space-x-2 text-sm text-gray-600">
-                    <Star className="w-4 h-4 text-yellow-500" />
+                    <Crown className="w-4 h-4 text-yellow-500" />
                     <span className="font-roboto">{business.rating?.toFixed(1) || "N/A"}</span>
                         </div>
                   <div className="flex items-center space-x-2 text-sm text-gray-600">

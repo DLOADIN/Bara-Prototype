@@ -430,8 +430,8 @@
     "deleteError": "Delete failed",
     "statusUpdated": "Status updated successfully",
     "reviewFlagged": "Review flagged successfully",
-    "stars": "Stars",
-    "outOf5Stars": "out of 5 stars"
+    "stars": "Crowns",
+    "outOf5Stars": "out of 5 crowns"
   },
   "lookForBusinesses": "Look for businesses by name and location.",
   "findBusiness": "Find the Business",
