@@ -80,7 +80,7 @@
   - Add payment integration placeholders
 
 - [ ] **Rating System Update**
-  - Replace star ratings with crown ratings
+  - Replace crownratings with crown ratings
   - Create crown icon components
   - Update rating display throughout the app
 

@@ -253,7 +253,7 @@
     "searchPlaceholder": "Buscar categorías...",
     "noResults": {
       "title": "No se encontraron categorías",
-      "description": "Intenta ajustar tus términos de búsqueda o explora todas las categorías"
+      "description": "Intenta ajucrowntus términos de búsqueda o explora todas las categorías"
     },
     "airports": "Aeropuertos",
     "banks": "Bancos",
@@ -397,7 +397,7 @@
      "listView": "Vista de Lista",
      "businesses": "Negocios",
      "noBusinessesFound": "No se encontraron negocios",
-     "tryAdjustingSearch": "Intenta ajustar tus términos de búsqueda o filtros.",
+     "tryAdjustingSearch": "Intenta ajucrowntus términos de búsqueda o filtros.",
      "backToCity": "Volver a la Ciudad",
      "cityDescription": "Descripción de la Ciudad",
      "businessCount": "Negocios",
@@ -414,7 +414,7 @@
      "reviews": "reseñas",
      "cities": {
        "kigali": "Kigali, la capital y ciudad más grande de Ruanda, es un brillante ejemplo de transformación urbana en África Oriental. Famosa por sus calles impecablemente limpias, Kigali se ha ganado la reputación de ser una de las capitales más ordenadas del continente. La ciudad es un centro dinámico para los negocios, la tecnología y el turismo, con infraestructura moderna que incluye rascacielos elegantes, carreteras bien mantenidas y un ecosistema tecnológico en auge, a menudo llamado el \"Silicon Valley de África Oriental\". Su vibrante cultura se refleja en mercados animados, danza y música tradicional ruandesa, y festivales anuales como KigaliUp. El rápido desarrollo de Kigali, junto con su compromiso con la sostenibilidad y espacios verdes, como los jardines del Memorial del Genocidio de Kigali, la convierte en un modelo de progreso urbano en la región.",
-       "nairobi": "Nairobi, la capital y ciudad más grande de Kenia, es cariñosamente conocida como la \"Ciudad Verde bajo el Sol\" debido a su exuberante vegetación y clima agradable. Como una importante potencia económica en África Oriental, Nairobi alberga las sedes regionales de numerosas corporaciones multinacionales y la Bolsa de Valores de Nairobi. Su población diversa, proveniente de los muchos grupos étnicos de Kenia, contribuye a un rico tapiz cultural evidente en su cocina, música y festivales como el Festival Internacional de Cine de Nairobi. Nairobi sirve como puerta de entrada a los parques de vida silvestre de renombre mundial de Kenia, como el Maasai Mara y el Parque Nacional de Nairobi, donde los visitantes pueden avistar leones y jirafas con el horizonte de la ciudad de fondo.",
+       "nairobi": "Nairobi, la capital y ciudad más grande de Kenia, es cariñosamente conocida como la \"Ciudad Verde bajo el Sol\" debido a su exuberante vegetación y clima agradable. Como una importante potencia económica en África Oriental, Nairobi alberga las sedes regionales de numerosas corporaciones multinacionales y la Bolsa de Valores de Nairobi. Su población diversa, proveniente de los muchos grupos étnicos de Kenia, contribuye a un rico tapiz cultural evidente en su cocina, música y festivales como el Festival Internacional de Cine de Nairobi. Nairobi sirve como puerta de entrada a los parques de vida silvestre de renombre mundial de Kenia, como el Maasai Mara y el Parque Nacional de Nairobi, donde los visitantes pueden avicrownleones y jirafas con el horizonte de la ciudad de fondo.",
        "kampala": "Kampala, la capital y ciudad más grande de Uganda, está famosamente construida sobre siete colinas, dándole una topografía distintiva y encanto. La ciudad es un vibrante centro comercial y cultural, hogar de mercados bulliciosos como Owino y Nakasero, donde los vendedores venden todo, desde productos frescos hasta artesanías tradicionales. La rica historia de Kampala se muestra en sitios como el Museo de Uganda y las Tumbas de Kasubi, un Sitio del Patrimonio Mundial de la UNESCO. Como centro de educación, alberga la Universidad de Makerere, una de las instituciones más antiguas y prestigiosas de África. Con una economía en crecimiento impulsada por el comercio, la manufactura y los servicios, la población diversa de Kampala y su animada vida nocturna la convierten en un centro urbano dinámico en África Oriental.",
        "dar-es-salaam": "Dar es Salaam, la ciudad más grande y centro económico de Tanzania, prospera a lo largo de la costa del Océano Índico, combinando la belleza costera con la vitalidad urbana. Conocida por sus playas prístinas como Coco Beach y su bullicioso puerto, la ciudad sirve como el puerto principal de Tanzania, facilitando el comercio en África Oriental y más allá. Su cultura diversa, influenciada por comunidades africanas, árabes e indias, es evidente en su cocina, música y festivales como la Semana de la Moda Swahili. El horizonte de Dar es Salaam, salpicado de rascacielos modernos, refleja su sector empresarial en crecimiento, particularmente en finanzas y tecnología, mientras que sitios históricos como el Monumento Askari y el Museo Nacional destacan su rico patrimonio colonial y pre-colonial.",
        "addis-ababa": "Addis Abeba, la capital y ciudad más grande de Etiopía, es el corazón político de África, albergando la sede de la Unión Africana y numerosas misiones diplomáticas. Ubicada en las tierras altas, la ciudad está impregnada de historia, con lugares emblemáticos como la Catedral de la Santísima Trinidad y el Museo Nacional, hogar del famoso fósil Lucy. La cultura diversa de Addis Abeba se refleja en sus vibrantes mercados, ceremonias tradicionales de café y festivales anuales como Meskel. La economía de la ciudad está en auge, con sectores como la manufactura, la tecnología y la hospitalidad impulsando el crecimiento. Su mezcla de tradiciones antiguas y desarrollo moderno hace de Addis Abeba un centro urbano único e influyente en África Oriental.",
@@ -491,7 +491,7 @@
     "businessDeletedSuccessfully": "Negocio eliminado exitosamente",
     "failedToDeleteBusiness": "Error al eliminar el negocio",
     "failedToFetchBusinesses": "Error al cargar los negocios",
-    "tryAdjustingSearchTerms": "Intente ajustar sus términos de búsqueda o filtros.",
+    "tryAdjustingSearchTerms": "Intente ajucrownsus términos de búsqueda o filtros.",
     "reviews": "reseñas",
     "searchBusinesses": "Buscar negocios...",
     "filterByStatus": "Filtrar por estado",

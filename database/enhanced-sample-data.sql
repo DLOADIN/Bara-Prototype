@@ -25,7 +25,7 @@ INSERT INTO public.businesses (id, name, slug, description, category_id, city_id
 ('880e8400-e29b-41d4-a716-446655440023', 'Tamarind Restaurant', 'tamarind-restaurant-nairobi', 'Elegant seafood restaurant with stunning city views', '770e8400-e29b-41d4-a716-446655440001', '660e8400-e29b-41d4-a716-446655440002', '550e8400-e29b-41d4-a716-446655440002', '+254 20 221 0000', 'reservations@tamarind.co.ke', 'www.tamarind.co.ke', 'Herbert Macaulay Way, Nairobi, Kenya', 'active', true, true),
 
 -- Nairobi, Kenya - Hotels
-('880e8400-e29b-41d4-a716-446655440024', 'Nairobi Serena Hotel', 'nairobi-serena-hotel', 'Luxury 5-star hotel in the heart of Nairobi', '770e8400-e29b-41d4-a716-446655440005', '660e8400-e29b-41d4-a716-446655440002', '550e8400-e29b-41d4-a716-446655440002', '+254 20 284 2000', 'reservations@serena.co.ke', 'www.serenahotels.com', 'Central Park Road, Nairobi, Kenya', 'active', true, true),
+('880e8400-e29b-41d4-a716-446655440024', 'Nairobi Serena Hotel', 'nairobi-serena-hotel', 'Luxury 5-crownhotel in the heart of Nairobi', '770e8400-e29b-41d4-a716-446655440005', '660e8400-e29b-41d4-a716-446655440002', '550e8400-e29b-41d4-a716-446655440002', '+254 20 284 2000', 'reservations@serena.co.ke', 'www.serenahotels.com', 'Central Park Road, Nairobi, Kenya', 'active', true, true),
 ('880e8400-e29b-41d4-a716-446655440025', 'Fairmont The Norfolk', 'fairmont-norfolk-nairobi', 'Historic luxury hotel with colonial charm', '770e8400-e29b-41d4-a716-446655440005', '660e8400-e29b-41d4-a716-446655440002', '550e8400-e29b-41d4-a716-446655440002', '+254 20 226 5000', 'norfolk@fairmont.com', 'www.fairmont.com', 'Harry Thuku Road, Nairobi, Kenya', 'active', true, true),
 
 -- Kampala, Uganda - Restaurants

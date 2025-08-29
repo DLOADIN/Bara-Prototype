@@ -152,7 +152,7 @@ export const Header = () => {
             
             <Link to="/writeareview">
               <Button variant="ghost" className="font-roboto">
-                <Star className="w-4 h-4 mr-1" />
+                <Crown className="w-4 h-4 mr-1" />
                 {t('navigation.writeReview')}
               </Button>
             </Link>
@@ -296,7 +296,7 @@ export const Header = () => {
                   </h3>
                   <Link to="/writeareview" onClick={closeMobileMenu}>
                     <Button variant="ghost" className="w-full justify-start font-roboto h-12">
-                      <Star className="w-5 h-5 mr-3" />
+                      <Crown className="w-5 h-5 mr-3" />
                       {t('navigation.writeReview')}
                     </Button>
                   </Link>

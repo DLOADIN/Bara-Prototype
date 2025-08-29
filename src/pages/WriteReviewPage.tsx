@@ -718,7 +718,7 @@ export const WriteReviewPage = () => {
                     >
                       <Crown
                         className={`w-8 h-8 ${
-                          star <= (hoveredRating || reviewForm.rating)
+                          crown<= (hoveredRating || reviewForm.rating)
                             ? 'text-yellow-400 fill-current'
                             : 'text-gray-300'
                         }`}

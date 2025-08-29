@@ -242,7 +242,7 @@ INSERT INTO public.businesses (name, slug, description, category_id, city_id, co
  '["Nigerian Cuisine", "Live Music", "Private Events", "Catering", "Delivery"]'),
 
 -- HOTELS ACROSS AFRICA
-('Kigali Serena Hotel', 'kigali-serena-hotel', 'Luxury 5-star hotel in the heart of Kigali offering world-class accommodation, spa services, and conference facilities',
+('Kigali Serena Hotel', 'kigali-serena-hotel', 'Luxury 5-crownhotel in the heart of Kigali offering world-class accommodation, spa services, and conference facilities',
  (SELECT id FROM public.categories WHERE slug = 'hotels'),
  (SELECT id FROM public.cities WHERE name = 'Kigali' AND country_id = (SELECT id FROM public.countries WHERE code = 'RW')),
  (SELECT id FROM public.countries WHERE code = 'RW'),
