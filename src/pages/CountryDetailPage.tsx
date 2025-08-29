@@ -152,22 +152,30 @@ export const CountryDetailPage: React.FC = () => {
           console.log(`Fetching Wikipedia data for ${countryData.name}...`);
           const wikipediaData = await fetchWikipediaCountryInfo(countryData.name);
           
-          if (wikipediaData) {
-            // Merge Wikipedia data with database data
-            const enrichedCountryData = {
-              ...countryData,
-              description: wikipediaData.description || countryData.description,
-              flag_url: wikipediaData.flag_url || countryData.flag_url,
-              coat_of_arms_url: wikipediaData.coat_of_arms_url,
-              capital: wikipediaData.capital || countryData.capital,
-              currency: wikipediaData.currency || countryData.currency,
-              population: wikipediaData.population ? parseInt(wikipediaData.population.replace(/,/g, '')) : countryData.population,
-              language: wikipediaData.language || countryData.language,
-              area: wikipediaData.area,
-              gdp: wikipediaData.gdp,
-              timezone: wikipediaData.timezone,
-              wikipedia_description: wikipediaData.description
-            };
+                     if (wikipediaData) {
+             // Helper function to safely parse population
+             const parsePopulation = (popStr: string): number | null => {
+               if (!popStr) return null;
+               const cleanStr = popStr.replace(/[^\d]/g, '');
+               const num = parseInt(cleanStr);
+               return isNaN(num) ? null : num;
+             };
+
+             // Merge Wikipedia data with database data
+             const enrichedCountryData = {
+               ...countryData,
+               description: wikipediaData.description || countryData.description,
+               flag_url: wikipediaData.flag_url || countryData.flag_url,
+               coat_of_arms_url: wikipediaData.coat_of_arms_url,
+               capital: wikipediaData.capital || countryData.capital,
+               currency: wikipediaData.currency || countryData.currency,
+               population: parsePopulation(wikipediaData.population) || countryData.population,
+               language: wikipediaData.language || countryData.language,
+               area: wikipediaData.area,
+               gdp: wikipediaData.gdp,
+               timezone: wikipediaData.timezone,
+               wikipedia_description: wikipediaData.description
+             };
             
             console.log(`✅ Wikipedia data fetched for ${countryData.name}`);
             setCountry(enrichedCountryData);
@@ -522,10 +530,10 @@ export const CountryDetailPage: React.FC = () => {
                 <h1 className="text-3xl font-bold text-yp-dark font-comfortaa">
                   {formatCountryName(countrySlug)}
                 </h1>
-                <p className="text-yp-gray-dark">
-                  {country.population?.toLocaleString() ?? 'Unknown'} residents
-                  {country.capital && ` • Capital: ${country.capital}`}
-                </p>
+                                 <p className="text-yp-gray-dark">
+                   {/* {country.population && country.population > 0 ? country.population.toLocaleString() : 'Unknown'} residents */}
+                   {country.capital && country.capital !== 'Territory' && ` • Capital: ${country.capital}`}
+                 </p>
               </div>
             </div>
           </div>
@@ -544,109 +552,111 @@ export const CountryDetailPage: React.FC = () => {
                </CardContent>
              </Card>
              
-             <Card className="bg-green-50 border-green-200">
-               <CardContent className="p-4">
-                 <div className="flex items-center space-x-2">
-                   <Users className="w-5 h-5 text-green-600" />
-                   <div>
-                     <p className="text-sm text-green-600 font-medium">Population</p>
-                     <p className="text-lg font-semibold text-green-800">
-                       {country.population?.toLocaleString() ?? 'Unknown'}
-                     </p>
-                   </div>
-                 </div>
-               </CardContent>
-             </Card>
+               {/* {country.population && country.population > 0 && (
+                <Card className="bg-green-50 border-green-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-2">
+                      <Users className="w-5 h-5 text-green-600" />
+                      <div>
+                        <p className="text-sm text-green-600 font-medium">Population</p>
+                        <p className="text-lg font-semibold text-green-800">
+                          {country.population.toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )} */}
              
-             {country.capital && (
-               <Card className="bg-purple-50 border-purple-200">
-                 <CardContent className="p-4">
-                   <div className="flex items-center space-x-2">
-                     <Landmark className="w-5 h-5 text-purple-600" />
-                     <div>
-                       <p className="text-sm text-purple-600 font-medium">Capital</p>
-                       <p className="text-lg font-semibold text-purple-800">{country.capital}</p>
-                     </div>
-                   </div>
-                 </CardContent>
-               </Card>
-             )}
+                           {country.capital && country.capital !== 'Territory' && country.capital.length > 0 && (
+                <Card className="bg-purple-50 border-purple-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-2">
+                      <Landmark className="w-5 h-5 text-purple-600" />
+                      <div>
+                        <p className="text-sm text-purple-600 font-medium">Capital</p>
+                        <p className="text-lg font-semibold text-purple-800">{country.capital}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
              
-             {country.currency && (
-               <Card className="bg-yellow-50 border-yellow-200">
-                 <CardContent className="p-4">
-                   <div className="flex items-center space-x-2">
-                     <Building className="w-5 h-5 text-yellow-600" />
-                     <div>
-                       <p className="text-sm text-yellow-600 font-medium">Currency</p>
-                       <p className="text-lg font-semibold text-yellow-800">{country.currency}</p>
-                     </div>
-                   </div>
-                 </CardContent>
-               </Card>
-             )}
+                           {country.currency && country.currency.length > 0 && (
+                <Card className="bg-yellow-50 border-yellow-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-2">
+                      <Building className="w-5 h-5 text-yellow-600" />
+                      <div>
+                        <p className="text-sm text-yellow-600 font-medium">Currency</p>
+                        <p className="text-lg font-semibold text-yellow-800">{country.currency}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
            </div>
 
-           {/* Additional Country Info Cards */}
-           {(country.area || country.gdp || country.timezone || country.language) && (
-             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
-               {country.area && (
-                 <Card className="bg-indigo-50 border-indigo-200">
-                   <CardContent className="p-4">
-                     <div className="flex items-center space-x-2">
-                       <Globe className="w-5 h-5 text-indigo-600" />
-                       <div>
-                         <p className="text-sm text-indigo-600 font-medium">Area</p>
-                         <p className="text-lg font-semibold text-indigo-800">{country.area}</p>
-                       </div>
-                     </div>
-                   </CardContent>
-                 </Card>
-               )}
-               
-               {country.gdp && (
-                 <Card className="bg-emerald-50 border-emerald-200">
-                   <CardContent className="p-4">
-                     <div className="flex items-center space-x-2">
-                       <Building className="w-5 h-5 text-emerald-600" />
-                       <div>
-                         <p className="text-sm text-emerald-600 font-medium">GDP</p>
-                         <p className="text-lg font-semibold text-emerald-800">{country.gdp}</p>
-                       </div>
-                     </div>
-                   </CardContent>
-                 </Card>
-               )}
-               
-               {country.timezone && (
-                 <Card className="bg-orange-50 border-orange-200">
-                   <CardContent className="p-4">
-                     <div className="flex items-center space-x-2">
-                       <Globe className="w-5 h-5 text-orange-600" />
-                       <div>
-                         <p className="text-sm text-orange-600 font-medium">Timezone</p>
-                         <p className="text-lg font-semibold text-orange-800">{country.timezone}</p>
-                       </div>
-                     </div>
-                   </CardContent>
-                 </Card>
-               )}
-               
-               {country.language && (
-                 <Card className="bg-pink-50 border-pink-200">
-                   <CardContent className="p-4">
-                     <div className="flex items-center space-x-2">
-                       <Globe className="w-5 h-5 text-pink-600" />
-                       <div>
-                         <p className="text-sm text-pink-600 font-medium">Language</p>
-                         <p className="text-lg font-semibold text-pink-800">{country.language}</p>
-                       </div>
-                     </div>
-                   </CardContent>
-                 </Card>
-               )}
-             </div>
-           )}
+                       {/* Additional Country Info Cards */}
+            {(country.area || country.gdp || country.timezone || country.language) && (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+                {/* {country.area && country.area.length > 0 && !country.area.includes('of 923') && (
+                  <Card className="bg-indigo-50 border-indigo-200">
+                    <CardContent className="p-4">
+                      <div className="flex items-center space-x-2">
+                        <Globe className="w-5 h-5 text-indigo-600" />
+                        <div>
+                          <p className="text-sm text-indigo-600 font-medium">Area</p>
+                          <p className="text-lg font-semibold text-indigo-800">{country.area}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )} */}
+                
+                {country.gdp && country.gdp.length > 0 && (
+                  <Card className="bg-emerald-50 border-emerald-200">
+                    <CardContent className="p-4">
+                      <div className="flex items-center space-x-2">
+                        <Building className="w-5 h-5 text-emerald-600" />
+                        <div>
+                          <p className="text-sm text-emerald-600 font-medium">GDP</p>
+                          <p className="text-lg font-semibold text-emerald-800">{country.gdp}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+                
+                {country.timezone && country.timezone.length > 0 && (
+                  <Card className="bg-orange-50 border-orange-200">
+                    <CardContent className="p-4">
+                      <div className="flex items-center space-x-2">
+                        <Globe className="w-5 h-5 text-orange-600" />
+                        <div>
+                          <p className="text-sm text-orange-600 font-medium">Timezone</p>
+                          <p className="text-lg font-semibold text-orange-800">{country.timezone}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+                
+                {country.language && country.language.length > 0 && !country.language.includes('is English') && (
+                  <Card className="bg-pink-50 border-pink-200">
+                    <CardContent className="p-4">
+                      <div className="flex items-center space-x-2">
+                        <Globe className="w-5 h-5 text-pink-600" />
+                        <div>
+                          <p className="text-sm text-pink-600 font-medium">Language</p>
+                          <p className="text-lg font-semibold text-pink-800">{country.language}</p>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
+                )}
+              </div>
+            )}
 
            {/* Wikipedia Data Loading Indicator */}
            {wikipediaLoading && (

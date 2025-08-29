@@ -68,43 +68,66 @@ export const fetchWikipediaCountryInfo = async (countryName: string): Promise<Wi
       }
     }
 
-    // Extract structured data from description
-    const extractInfo = (text: string) => {
-      const capitalMatch = text.match(/capital[:\s]+([^,\.]+)/i);
-      const currencyMatch = text.match(/currency[:\s]+([^,\.]+)/i);
-      const populationMatch = text.match(/population[:\s]+([^,\.]+)/i);
-      const languageMatch = text.match(/language[:\s]+([^,\.]+)/i);
-      const areaMatch = text.match(/area[:\s]+([^,\.]+)/i);
-      const gdpMatch = text.match(/gdp[:\s]+([^,\.]+)/i);
-      const timezoneMatch = text.match(/timezone[:\s]+([^,\.]+)/i);
+         // Extract structured data from description with better regex patterns
+     const extractInfo = (text: string) => {
+       // Better patterns for extracting information
+       const capitalMatch = text.match(/capital[:\s]+([^,\.\n]+)/i);
+       const currencyMatch = text.match(/currency[:\s]+([^,\.\n]+)/i);
+       
+       // More specific population pattern
+       const populationMatch = text.match(/population[:\s]+([^,\.\n]+(?:million|billion|thousand)?)/i) || 
+                              text.match(/(\d+(?:,\d{3})*(?:\s*million|\s*billion|\s*thousand)?)\s*(?:people|inhabitants|residents)/i);
+       
+       // More specific language pattern
+       const languageMatch = text.match(/language[:\s]+([^,\.\n]+)/i) || 
+                           text.match(/official\s+language[:\s]+([^,\.\n]+)/i);
+       
+       // Better area pattern
+       const areaMatch = text.match(/area[:\s]+([^,\.\n]+(?:square|sq|km|kilometers?|miles?)?)/i) || 
+                        text.match(/(\d+(?:,\d{3})*(?:\s*square\s*kilometers?|\s*sq\s*km|\s*km²))/i);
+       
+       const gdpMatch = text.match(/gdp[:\s]+([^,\.\n]+)/i);
+       const timezoneMatch = text.match(/timezone[:\s]+([^,\.\n]+)/i);
 
-      return {
-        capital: capitalMatch?.[1]?.trim() || '',
-        currency: currencyMatch?.[1]?.trim() || '',
-        population: populationMatch?.[1]?.trim() || '',
-        language: languageMatch?.[1]?.trim() || '',
-        area: areaMatch?.[1]?.trim() || '',
-        gdp: gdpMatch?.[1]?.trim() || '',
-        timezone: timezoneMatch?.[1]?.trim() || ''
-      };
-    };
+       return {
+         capital: capitalMatch?.[1]?.trim() || '',
+         currency: currencyMatch?.[1]?.trim() || '',
+         population: populationMatch?.[1]?.trim() || '',
+         language: languageMatch?.[1]?.trim() || '',
+         area: areaMatch?.[1]?.trim() || '',
+         gdp: gdpMatch?.[1]?.trim() || '',
+         timezone: timezoneMatch?.[1]?.trim() || ''
+       };
+     };
 
     const extractedInfo = extractInfo(description);
 
-    return {
-      name: countryName,
-      description: description.substring(0, 500) + (description.length > 500 ? '...' : ''),
-      flag_url: flagUrl,
-      coat_of_arms_url: coatOfArmsUrl,
-      capital: extractedInfo.capital,
-      currency: extractedInfo.currency,
-      population: extractedInfo.population,
-      code: '', // Will be filled from database
-      language: extractedInfo.language,
-      area: extractedInfo.area,
-      gdp: extractedInfo.gdp,
-      timezone: extractedInfo.timezone
-    };
+         // Clean and format description to one paragraph
+     const cleanDescription = description
+       .replace(/\n+/g, ' ') // Replace newlines with spaces
+       .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+       .trim();
+     
+     // Get first paragraph (up to first period or 300 characters)
+     const firstParagraph = cleanDescription.split('.')[0] + '.';
+     const finalDescription = firstParagraph.length > 300 
+       ? firstParagraph.substring(0, 300) + '...' 
+       : firstParagraph;
+
+     return {
+       name: countryName,
+       description: finalDescription + ' 🌍✨',
+       flag_url: flagUrl,
+       coat_of_arms_url: coatOfArmsUrl,
+       capital: extractedInfo.capital,
+       currency: extractedInfo.currency,
+       population: extractedInfo.population,
+       code: '', // Will be filled from database
+       language: extractedInfo.language,
+       area: extractedInfo.area,
+       gdp: extractedInfo.gdp,
+       timezone: extractedInfo.timezone
+     };
 
   } catch (error) {
     console.error('Error fetching Wikipedia data:', error);
