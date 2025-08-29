@@ -18,6 +18,80 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
   }
 })
 
+// Create an authenticated Supabase client for admin operations
+export const createAuthenticatedSupabaseClient = async (clerkToken: string) => {
+  return createClient(supabaseUrl, supabaseAnonKey, {
+    global: {
+      headers: {
+        Authorization: `Bearer ${clerkToken}`
+      }
+    },
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+      detectSessionInUrl: false
+    },
+    db: {
+      schema: 'public'
+    }
+  })
+}
+
+// Helper function to get authenticated database operations
+export const getAuthenticatedDb = async () => {
+  try {
+    // Get Clerk token
+    const { useAuth } = await import('@clerk/clerk-react');
+    // Note: This function should be called within a component that has access to useAuth
+    // For now, we'll use the regular client
+    console.warn('getAuthenticatedDb: This function needs to be called within a component context');
+    
+    return getAdminDb();
+  } catch (error) {
+    console.error('Error creating authenticated database client:', error);
+    throw error;
+  }
+};
+
+// For now, let's use the regular client but with proper error handling
+// This is a temporary solution until we can properly configure JWT authentication
+export const getAdminDb = () => {
+  return {
+    // Business operations
+    businesses: () => supabase.from('businesses'),
+    
+    // Category operations
+    categories: () => supabase.from('categories'),
+    
+    // City operations
+    cities: () => supabase.from('cities'),
+    
+    // Country operations
+    countries: () => supabase.from('countries'),
+    
+    // Review operations
+    reviews: () => supabase.from('reviews'),
+    
+    // Event operations
+    events: () => supabase.from('events'),
+    
+    // Product operations
+    products: () => supabase.from('products'),
+    
+    // User operations
+    users: () => supabase.from('users'),
+    
+    // Payment operations
+    payments: () => supabase.from('payments'),
+    
+    // Premium features operations
+    premium_features: () => supabase.from('premium_features'),
+    
+    // Questions operations
+    questions: () => supabase.from('questions')
+  };
+};
+
 // Database types for TypeScript
 // export type Row<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Row'];
 // export type Insert<T extends keyof Database['public']['Tables']> = Database['public']['Tables'][T]['Insert'];

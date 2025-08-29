@@ -25,7 +25,7 @@ import {
   Users,
   Building2
 } from "lucide-react";
-import { db } from "@/lib/supabase";
+import { getAdminDb } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 
 interface Country {
@@ -62,6 +62,8 @@ export const AdminCountries = () => {
 
   const fetchCountries = async () => {  
     try {
+      const db = getAdminDb();
+      
       // Fetch countries with counts using separate queries
       const { data: countriesData, error: countriesError } = await db
         .countries()
@@ -69,29 +71,41 @@ export const AdminCountries = () => {
         .eq('is_active', true)
         .order('name');
 
-      if (countriesError) throw countriesError;
+      if (countriesError) {
+        console.error('Countries fetch error:', countriesError);
+        throw countriesError;
+      }
       
       // Get counts for each country
       const countriesWithCounts = await Promise.all(
         (countriesData || []).map(async (country) => {
-          // Get city count
-          const { count: cityCount } = await db
-            .cities()
-            .select('*', { count: 'exact', head: true })
-            .eq('country_id', country.id)
-            .eq('is_active', true);
+          try {
+            // Get city count
+            const { count: cityCount } = await db
+              .cities()
+              .select('*', { count: 'exact', head: true })
+              .eq('country_id', country.id)
+              .eq('is_active', true);
 
-          // Get business count
-          const { count: businessCount } = await db
-            .businesses()
-            .select('*', { count: 'exact', head: true })
-            .eq('country_id', country.id);
+            // Get business count
+            const { count: businessCount } = await db
+              .businesses()
+              .select('*', { count: 'exact', head: true })
+              .eq('country_id', country.id);
 
-          return {
-            ...country,
-            city_count: cityCount || 0,
-            business_count: businessCount || 0
-          };
+            return {
+              ...country,
+              city_count: cityCount || 0,
+              business_count: businessCount || 0
+            };
+          } catch (error) {
+            console.error(`Error getting counts for country ${country.id}:`, error);
+            return {
+              ...country,
+              city_count: 0,
+              business_count: 0
+            };
+          }
         })
       );
       
@@ -100,7 +114,7 @@ export const AdminCountries = () => {
       console.error('Error fetching countries:', error);
       toast({
         title: "Error",
-        description: "Failed to fetch countries",
+        description: "Failed to fetch countries. Please check your connection and try again.",
         variant: "destructive"
       });
     } finally {
@@ -139,11 +153,20 @@ export const AdminCountries = () => {
 
     setIsSubmitting(true);
     try {
-      const { error } = await db
+      const db = getAdminDb();
+      const { data, error } = await db
         .countries()
-        .insert([formData]);
+        .insert([formData])
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Add country error:', error);
+        throw error;
+      }
+
+      if (!data || data.length === 0) {
+        throw new Error('No data returned from insert operation');
+      }
 
       toast({
         title: "Success",
@@ -155,9 +178,17 @@ export const AdminCountries = () => {
       fetchCountries();
     } catch (error) {
       console.error('Error adding country:', error);
+      let errorMessage = "Failed to add country.";
+      
+      if (error && typeof error === 'object' && 'message' in error) {
+        errorMessage = error.message as string;
+      } else if (error && typeof error === 'string') {
+        errorMessage = error;
+      }
+      
       toast({
         title: "Error",
-        description: "Failed to add country. Please check if the country name or code already exists.",
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
@@ -198,12 +229,21 @@ export const AdminCountries = () => {
 
     setIsSubmitting(true);
     try {
-      const { error } = await db
+      const db = getAdminDb();
+      const { data, error } = await db
         .countries()
         .update(formData)
-        .eq('id', selectedCountry.id);
+        .eq('id', selectedCountry.id)
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Update country error:', error);
+        throw error;
+      }
+
+      if (!data || data.length === 0) {
+        throw new Error('No data returned from update operation');
+      }
 
       toast({
         title: "Success",
@@ -216,9 +256,17 @@ export const AdminCountries = () => {
       fetchCountries();
     } catch (error) {
       console.error('Error updating country:', error);
+      let errorMessage = "Failed to update country.";
+      
+      if (error && typeof error === 'object' && 'message' in error) {
+        errorMessage = error.message as string;
+      } else if (error && typeof error === 'string') {
+        errorMessage = error;
+      }
+      
       toast({
         title: "Error",
-        description: "Failed to update country. Please check if the country name or code already exists.",
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
@@ -230,12 +278,21 @@ export const AdminCountries = () => {
     if (!confirm('Are you sure you want to delete this country? This will also affect all associated cities and businesses.')) return;
 
     try {
-      const { error } = await db
+      const db = getAdminDb();
+      const { data, error } = await db
         .countries()
         .update({ is_active: false })
-        .eq('id', countryId);
+        .eq('id', countryId)
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Delete country error:', error);
+        throw error;
+      }
+
+      if (!data || data.length === 0) {
+        throw new Error('No data returned from delete operation');
+      }
 
       toast({
         title: "Success",
@@ -245,9 +302,17 @@ export const AdminCountries = () => {
       fetchCountries();
     } catch (error) {
       console.error('Error deleting country:', error);
+      let errorMessage = "Failed to delete country.";
+      
+      if (error && typeof error === 'object' && 'message' in error) {
+        errorMessage = error.message as string;
+      } else if (error && typeof error === 'string') {
+        errorMessage = error;
+      }
+      
       toast({
         title: "Error",
-        description: "Failed to delete country",
+        description: errorMessage,
         variant: "destructive"
       });
     }

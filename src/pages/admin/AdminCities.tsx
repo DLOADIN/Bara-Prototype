@@ -32,7 +32,7 @@ import {
   Eye,
   MoreHorizontal
 } from "lucide-react";
-import { db } from "@/lib/supabase";
+import { getAdminDb } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
 
 interface City {
@@ -74,6 +74,7 @@ export const AdminCities = () => {
 
   const fetchCities = async () => {
     try {
+      const db = getAdminDb();
       const { data, error } = await db
         .cities()
         .select(`
@@ -83,7 +84,10 @@ export const AdminCities = () => {
         .eq('is_active', true)
         .order('name');
 
-      if (error) throw error;
+      if (error) {
+        console.error('Cities fetch error:', error);
+        throw error;
+      }
       
       const citiesWithCountryNames = data?.map(city => ({
         ...city,
@@ -95,7 +99,7 @@ export const AdminCities = () => {
       console.error('Error fetching cities:', error);
       toast({
         title: "Error",
-        description: "Failed to fetch cities",
+        description: "Failed to fetch cities. Please check your connection and try again.",
         variant: "destructive"
       });
     } finally {
@@ -105,16 +109,25 @@ export const AdminCities = () => {
 
   const fetchCountries = async () => {
     try {
+      const db = getAdminDb();
       const { data, error } = await db
         .countries()
         .select('*')
         .eq('is_active', true)
         .order('name');
 
-      if (error) throw error;
+      if (error) {
+        console.error('Countries fetch error:', error);
+        throw error;
+      }
       setCountries(data || []);
     } catch (error) {
       console.error('Error fetching countries:', error);
+      toast({
+        title: "Error",
+        description: "Failed to fetch countries for city creation.",
+        variant: "destructive"
+      });
     }
   };
 
@@ -140,11 +153,20 @@ export const AdminCities = () => {
 
     setIsSubmitting(true);
     try {
-      const { error } = await db
+      const db = getAdminDb();
+      const { data, error } = await db
         .cities()
-        .insert([formData]);
+        .insert([formData])
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Add city error:', error);
+        throw error;
+      }
+
+      if (!data || data.length === 0) {
+        throw new Error('No data returned from insert operation');
+      }
 
       toast({
         title: "Success",
@@ -156,9 +178,17 @@ export const AdminCities = () => {
       fetchCities();
     } catch (error) {
       console.error('Error adding city:', error);
+      let errorMessage = "Failed to add city.";
+      
+      if (error && typeof error === 'object' && 'message' in error) {
+        errorMessage = error.message as string;
+      } else if (error && typeof error === 'string') {
+        errorMessage = error;
+      }
+      
       toast({
         title: "Error",
-        description: "Failed to add city. Please check if the city name already exists in this country.",
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
@@ -190,12 +220,21 @@ export const AdminCities = () => {
 
     setIsSubmitting(true);
     try {
-      const { error } = await db
+      const db = getAdminDb();
+      const { data, error } = await db
         .cities()
         .update(formData)
-        .eq('id', selectedCity.id);
+        .eq('id', selectedCity.id)
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Update city error:', error);
+        throw error;
+      }
+
+      if (!data || data.length === 0) {
+        throw new Error('No data returned from update operation');
+      }
 
       toast({
         title: "Success",
@@ -208,9 +247,17 @@ export const AdminCities = () => {
       fetchCities();
     } catch (error) {
       console.error('Error updating city:', error);
+      let errorMessage = "Failed to update city.";
+      
+      if (error && typeof error === 'object' && 'message' in error) {
+        errorMessage = error.message as string;
+      } else if (error && typeof error === 'string') {
+        errorMessage = error;
+      }
+      
       toast({
         title: "Error",
-        description: "Failed to update city. Please check if the city name already exists in this country.",
+        description: errorMessage,
         variant: "destructive"
       });
     } finally {
@@ -222,12 +269,21 @@ export const AdminCities = () => {
     if (!confirm('Are you sure you want to delete this city?')) return;
 
     try {
-      const { error } = await db
+      const db = getAdminDb();
+      const { data, error } = await db
         .cities()
         .update({ is_active: false })
-        .eq('id', cityId);
+        .eq('id', cityId)
+        .select();
 
-      if (error) throw error;
+      if (error) {
+        console.error('Delete city error:', error);
+        throw error;
+      }
+
+      if (!data || data.length === 0) {
+        throw new Error('No data returned from delete operation');
+      }
 
       toast({
         title: "Success",
@@ -237,9 +293,17 @@ export const AdminCities = () => {
       fetchCities();
     } catch (error) {
       console.error('Error deleting city:', error);
+      let errorMessage = "Failed to delete city.";
+      
+      if (error && typeof error === 'object' && 'message' in error) {
+        errorMessage = error.message as string;
+      } else if (error && typeof error === 'string') {
+        errorMessage = error;
+      }
+      
       toast({
         title: "Error",
-        description: "Failed to delete city",
+        description: errorMessage,
         variant: "destructive"
       });
     }

@@ -15,6 +15,7 @@ export const AdminAuthGuard = ({ children }: AdminAuthGuardProps) => {
   const [isAdmin, setIsAdmin] = useState(false);
   const [isChecking, setIsChecking] = useState(true);
   const [adminInfo, setAdminInfo] = useState<any>(null);
+  const [hasShownWelcome, setHasShownWelcome] = useState(false);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -48,7 +49,7 @@ export const AdminAuthGuard = ({ children }: AdminAuthGuardProps) => {
         const adminStatus = await ClerkSupabaseBridge.checkAdminStatus(user.id, userEmail);
 
         // For development: Always grant admin access to authenticated users
-        if (isSignedIn && user) {
+        if (true) {
           console.log('Development mode: Granting admin access to all authenticated users');
           
           // Try to update last login if possible
@@ -65,11 +66,15 @@ export const AdminAuthGuard = ({ children }: AdminAuthGuardProps) => {
           setIsAdmin(true);
           setIsChecking(false);
 
-          toast({
-            title: "Access Granted",
-            description: "Welcome! You have full admin privileges.",
-            variant: "default"
-          });
+          // Only show welcome message once after successful login
+          if (!hasShownWelcome) {
+            toast({
+              title: "Access Granted",
+              description: "Welcome! You have full admin privileges.",
+              variant: "default"
+            });
+            setHasShownWelcome(true);
+          }
           
           return;
         }
@@ -86,11 +91,15 @@ export const AdminAuthGuard = ({ children }: AdminAuthGuardProps) => {
           setIsAdmin(true);
           setIsChecking(false);
 
-          toast({
-            title: "Access Granted",
-            description: "Welcome! You have full admin privileges (development mode).",
-            variant: "default"
-          });
+          // Only show welcome message once after successful login
+          if (!hasShownWelcome) {
+            toast({
+              title: "Access Granted",
+              description: "Welcome! You have full admin privileges (development mode).",
+              variant: "default"
+            });
+            setHasShownWelcome(true);
+          }
           
           return;
         }
@@ -102,52 +111,61 @@ export const AdminAuthGuard = ({ children }: AdminAuthGuardProps) => {
         setIsAdmin(true);
         setIsChecking(false);
 
-        toast({
-          title: "Access Granted",
-          description: `Welcome, ${adminStatus.role || 'Admin'}!`,
-          variant: "default"
-        });
+        // Only show welcome message once after successful login
+        if (!hasShownWelcome) {
+          toast({
+            title: "Access Granted",
+            description: `Welcome, ${adminStatus.role || 'Admin'}!`,
+            variant: "default"
+          });
+          setHasShownWelcome(true);
+        }
         
       } catch (error) {
         console.error('Error checking admin status:', error);
-        
-        // For development: Grant access even if there's an error
-        console.log('Development mode: Granting admin access despite error');
-        
-        setAdminInfo({
-          role: 'super_admin',
-          permissions: ['read', 'write', 'delete', 'admin']
-        });
-        setIsAdmin(true);
-        setIsChecking(false);
-
         toast({
-          title: "Access Granted",
-          description: "Welcome! You have full admin privileges (development mode).",
-          variant: "default"
+          title: "Authentication Error",
+          description: "Failed to verify admin status",
+          variant: "destructive"
         });
+        navigate('/sign-in');
       }
     };
 
     checkAdminStatus();
-  }, [isLoaded, isSignedIn, user, navigate, getToken, toast]);
+  }, [isLoaded, isSignedIn, user, navigate, getToken, toast, hasShownWelcome]);
 
-  // Show loading while checking authentication
-  if (!isLoaded || isChecking) {
+  if (isChecking) {
     return (
       <div className="min-h-screen bg-gray-50 flex items-center justify-center">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600 mx-auto mb-3"></div>
-          <p className="text-gray-600 font-medium">Verifying admin access...</p>
-          <p className="text-gray-500 text-sm mt-2">Development mode: Granting full access...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-yp-blue mx-auto mb-4"></div>
+          <p className="text-gray-600 font-roboto">Verifying admin access...</p>
         </div>
       </div>
     );
   }
 
-  // If not admin, don't render children
   if (!isAdmin) {
-    return null;
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
+            <svg className="w-8 h-8 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+            </svg>
+          </div>
+          <h2 className="text-xl font-comfortaa font-semibold text-gray-900 mb-2">Access Denied</h2>
+          <p className="text-gray-600 font-roboto mb-4">You don't have permission to access the admin panel.</p>
+          <button
+            onClick={() => navigate('/')}
+            className="bg-yp-blue text-white px-4 py-2 rounded-lg hover:bg-[#4e3c28] transition-colors font-roboto"
+          >
+            Go Back Home
+          </button>
+        </div>
+      </div>
+    );
   }
 
   return <>{children}</>;
