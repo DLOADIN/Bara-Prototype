@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useClerk } from "@clerk/clerk-react";
 import { AdminSidebar } from "./AdminSidebar";
 import { Button } from "@/components/ui/button";
 import { 
@@ -22,6 +23,41 @@ export const AdminLayout = ({ children, title, subtitle }: AdminLayoutProps) => 
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { t } = useTranslation();
   const location = useLocation();
+  const navigate = useNavigate();
+  const { signOut } = useClerk();
+
+  const handleLogout = async () => {
+    try {
+      // Sign out from Clerk (this will clear the session)
+      await signOut();
+      
+      // Clear any local storage or session data
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('adminUser');
+      sessionStorage.clear();
+      
+      // Clear any cookies if they exist
+      document.cookie.split(";").forEach(function(c) { 
+        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+      });
+      
+      // Redirect to homepage
+      navigate('/');
+      
+      // Force a page reload to clear any remaining state
+      window.location.reload();
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Even if there's an error, try to sign out and redirect
+      try {
+        await signOut();
+      } catch (signOutError) {
+        console.error('Sign out error:', signOutError);
+      }
+      navigate('/');
+      window.location.reload();
+    }
+  };
 
   const getPageTitle = () => {
     if (title) return title;
@@ -115,7 +151,10 @@ export const AdminLayout = ({ children, title, subtitle }: AdminLayoutProps) => 
                       <span>Account Settings</span>
                     </button>
                     <hr className="my-2" />
-                    <button className="w-full flex items-center space-x-3 px-4 py-2 text-left text-red-600 hover:bg-red-50 font-roboto">
+                    <button 
+                      onClick={handleLogout}
+                      className="w-full flex items-center space-x-3 px-4 py-2 text-left text-red-600 hover:bg-red-50 font-roboto"
+                    >
                       <LogOut className="w-4 h-4" />
                       <span>Sign Out</span>
                     </button>

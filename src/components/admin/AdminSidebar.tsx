@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useClerk } from "@clerk/clerk-react";
 import { 
   LayoutDashboard, 
   MapPin, 
@@ -92,10 +93,39 @@ export const AdminSidebar = ({ isOpen, onToggle }: AdminSidebarProps) => {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const location = useLocation();
+  const { signOut } = useClerk();
 
-  const handleLogout = () => {
-    // Implement Clerk logout
-    navigate('/');
+  const handleLogout = async () => {
+    try {
+      // Sign out from Clerk (this will clear the session)
+      await signOut();
+      
+      // Clear any local storage or session data
+      localStorage.removeItem('adminToken');
+      localStorage.removeItem('adminUser');
+      sessionStorage.clear();
+      
+      // Clear any cookies if they exist
+      document.cookie.split(";").forEach(function(c) { 
+        document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+      });
+      
+      // Redirect to homepage
+      navigate('/');
+      
+      // Force a page reload to clear any remaining state
+      window.location.reload();
+    } catch (error) {
+      console.error('Logout error:', error);
+      // Even if there's an error, try to sign out and redirect
+      try {
+        await signOut();
+      } catch (signOutError) {
+        console.error('Sign out error:', signOutError);
+      }
+      navigate('/');
+      window.location.reload();
+    }
   };
 
   return (
