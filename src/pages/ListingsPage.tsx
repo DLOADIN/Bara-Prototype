@@ -200,8 +200,8 @@ export const ListingsPage = () => {
   const [viewMode, setViewMode] = useState<'list' | 'map'>('list');
   const [sortBy, setSortBy] = useState<'default' | 'distance' | 'rating' | 'name'>('default');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
-  const [cities, setCities] = useState<Array<{ id: string; name: string; countries: { code: string } | null; latitude: number | null; longitude: number | null }>>([]);
-  const [loadingCities, setLoadingCities] = useState<boolean>(true);
+  const [countries, setCountries] = useState<Array<{ id: string; name: string; code: string; business_count: number }>>([]);
+  const [loadingCountries, setLoadingCountries] = useState<boolean>(true);
   const [categoryCities, setCategoryCities] = useState<Array<{ city_id: string; city_name: string; country_name: string; business_count: number }>>([]);
   const [loadingCategoryCities, setLoadingCategoryCities] = useState<boolean>(false);
 
@@ -330,34 +330,75 @@ export const ListingsPage = () => {
     return business.reviews?.length || 0;
   };
 
-  // Load cities with coordinates for proximity filtering
+  // Load countries that have businesses
   useEffect(() => {
-    const fetchCities = async () => {
+    const fetchCountries = async () => {
       try {
-        const { data, error } = await db.cities()
+        // First, get all countries from the countries table
+        const { data: allCountries, error: countriesError } = await db.countries()
           .select(`
             id,
             name,
-            latitude,
-            longitude,
-            countries ( code )
+            code
           `)
           .order('name', { ascending: true });
-        if (!error && data) {
-          const typed = (data as unknown) as Array<{ 
-            id: string; 
-            name: string; 
-            latitude: number | null; 
-            longitude: number | null;
-            countries: { code: string } | null 
-          }>;
-          setCities(typed);
+
+        if (countriesError) {
+          console.error('Error fetching countries:', countriesError);
+          return;
         }
+
+        // Then, get business counts for countries that have businesses
+        const { data: businessData, error: businessError } = await db.businesses()
+          .select(`
+            country_id,
+            countries (
+              id,
+              name,
+              code
+            )
+          `)
+          .not('country_id', 'is', null);
+
+        if (businessError) {
+          console.error('Error fetching business data:', businessError);
+          return;
+        }
+
+        // Create an object to count businesses per country
+        const businessCountMap: { [key: string]: number } = {};
+        
+        businessData?.forEach((business: any) => {
+          if (business.countries) {
+            const countryId = business.countries.id;
+            businessCountMap[countryId] = (businessCountMap[countryId] || 0) + 1;
+          }
+        });
+
+        // Combine all countries with their business counts
+        const countriesWithCounts = allCountries?.map(country => ({
+          id: country.id,
+          name: country.name,
+          code: country.code,
+          business_count: businessCountMap[country.id] || 0
+        })) || [];
+
+        // Sort by business count (descending) then by name
+        const sortedCountries = countriesWithCounts.sort((a, b) => {
+          if (b.business_count !== a.business_count) {
+            return b.business_count - a.business_count;
+          }
+          return a.name.localeCompare(b.name);
+        });
+
+        setCountries(sortedCountries);
+      } catch (error) {
+        console.error('Error fetching countries:', error);
       } finally {
-        setLoadingCities(false);
+        setLoadingCountries(false);
       }
     };
-    fetchCities();
+    fetchCountries();
   }, []);
 
   // Loading skeleton
@@ -463,64 +504,44 @@ export const ListingsPage = () => {
                     <MapPin className="w-4 h-4 mr-2 text-gray-500 flex-shrink-0" />
                     <span className="truncate">
                       {selectedCity 
-                        ? `${selectedCity} (${citiesByCategory.find(c => c.city_name === selectedCity)?.business_count || 0} businesses)`
-                        : 'Select a City'
+                        ? `${selectedCity} (${countries.find(c => c.name === selectedCity)?.business_count || 0} businesses)`
+                        : 'Select a Country'
                       }
                     </span>
                     <ChevronDown className="w-4 h-4 ml-auto flex-shrink-0" />
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-full sm:w-[280px] max-h-[300px] overflow-auto">
-                  {isLoadingCitiesByCategory ? (
-                    <div className="p-3 text-sm text-gray-500">Loading cities...</div>
-                  ) : citiesByCategory.length > 0 ? (
+                  {loadingCountries ? (
+                    <div className="p-3 text-sm text-gray-500">Loading countries...</div>
+                  ) : countries.length > 0 ? (
                     <>
-                      {/* Show cities with businesses in this category */}
+                      {/* Show countries with businesses */}
                       <div className="px-3 py-2 text-xs font-semibold text-gray-500 border-b">
-                        Cities with {categoryName} businesses
+                        Countries with businesses
                       </div>
                       {/* Clear filter option */}
                       <DropdownMenuItem 
                         onClick={() => setSelectedCity("")}
                         className="dropdown-menu-item-override cursor-pointer text-blue-600 font-medium"
                       >
-                        <span>Show all cities</span>
+                        <span>Show all countries</span>
                       </DropdownMenuItem>
-                      {citiesByCategory.map((city) => (
+                      {countries.map((country) => (
                         <DropdownMenuItem 
-                          key={city.city_id} 
-                          onClick={() => setSelectedCity(city.city_name)}
+                          key={country.id} 
+                          onClick={() => setSelectedCity(country.name)}
                           className="dropdown-menu-item-override cursor-pointer flex justify-between items-center"
                         >
-                          <span className="truncate">{city.city_name}, {city.city_name}</span>
+                          <span className="truncate">{country.name}</span>
                           <span className="text-xs bg-gray-100 px-2 py-1 rounded-full flex-shrink-0">
-                            {city.business_count} {city.business_count === 1 ? 'business' : 'businesses'}
+                            {country.business_count} {country.business_count === 1 ? 'business' : 'businesses'}
                           </span>
-                        </DropdownMenuItem>
-                      ))}
-                      <div className="px-3 py-2 text-xs font-semibold text-gray-500 border-t">
-                        All cities
-                      </div>
-                      {cities.map((c) => (
-                        <DropdownMenuItem 
-                          key={c.id} 
-                          onClick={() => setSelectedCity(`${c.name}`)}
-                          className="dropdown-menu-item-override cursor-pointer"
-                        >
-                          {c.name}{c.countries?.code ? `, ${c.countries.code}` : ''}
                         </DropdownMenuItem>
                       ))}
                     </>
                   ) : (
-                    cities.map((c) => (
-                      <DropdownMenuItem 
-                        key={c.id} 
-                        onClick={() => setSelectedCity(`${c.name}`)}
-                        className="dropdown-menu-item-override cursor-pointer"
-                      >
-                        {c.name}{c.countries?.code ? `, ${c.countries.code}` : ''}
-                      </DropdownMenuItem>
-                    ))
+                    <div className="p-3 text-sm text-gray-500">No countries found</div>
                   )}
                 </DropdownMenuContent>
               </DropdownMenu>
@@ -661,28 +682,7 @@ export const ListingsPage = () => {
           </div>
         )}
 
-        {/* Results Summary */}
-        {sortedBusinesses.length > 0 && (
-          <div className="bg-blue-50 border border-blue-200 rounded-lg p-3 mb-4">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-              <div className="flex items-center space-x-2">
-                <span className="text-xs sm:text-sm font-medium text-blue-900">
-                  Showing {sortedBusinesses.length} {sortedBusinesses.length === 1 ? 'business' : 'businesses'}
-                </span>
-                {selectedCity && (
-                  <span className="text-xs text-blue-700 bg-blue-100 px-2 py-1 rounded-full">
-                    in {selectedCity}
-                  </span>
-                )}
-              </div>
-              <div className="text-left sm:text-right">
-                <span className="text-xs text-blue-700">
-                  Numbered 1 to {sortedBusinesses.length}
-                </span>
-              </div>
-            </div>
-          </div>
-        )}
+
 
             {sortedBusinesses.length === 0 ? (
           <div className="text-center py-16">
@@ -716,6 +716,12 @@ export const ListingsPage = () => {
               const reviewCount = getReviewCount(business);
               const categoryAmenities = getCategoryAmenities(business.category?.slug || actualCategorySlug || '');
               
+              // Calculate the display number (excluding sponsored ads from numbering)
+              const displayNumber = sortedBusinesses
+                .slice(0, index + 1)
+                .filter(b => !b.is_sponsored_ad)
+                .length;
+              
               return (
                                   <div 
                     key={business.id} 
@@ -726,10 +732,12 @@ export const ListingsPage = () => {
                     } as React.CSSProperties}
                     onClick={() => handleBusinessClick(business)}
                   >
-                  {/* Business Number Badge */}
-                  <div className="absolute -top-2 -left-2 w-8 h-8 bg-yp-blue text-white rounded-full flex items-center justify-center text-sm font-bold font-roboto shadow-md">
-                    {index + 1}
-                  </div>
+                  {/* Business Number Badge - Only show for non-sponsored ads */}
+                  {!business.is_sponsored_ad && (
+                    <div className="absolute -top-2 -left-2 w-8 h-8 bg-yp-blue text-white rounded-full flex items-center justify-center text-sm font-bold font-roboto shadow-md">
+                      {displayNumber}
+                    </div>
+                  )}
                   
 
                   
