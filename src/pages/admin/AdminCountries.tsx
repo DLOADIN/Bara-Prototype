@@ -48,6 +48,7 @@ export const AdminCountries = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     code: "",
@@ -61,24 +62,38 @@ export const AdminCountries = () => {
 
   const fetchCountries = async () => {  
     try {
-      // Fetch countries with counts
-      const { data, error } = await db
+      // Fetch countries with counts using separate queries
+      const { data: countriesData, error: countriesError } = await db
         .countries()
-        .select(`
-          *,
-          cities!inner(count),
-          businesses!inner(count)
-        `)
+        .select('*')
         .eq('is_active', true)
         .order('name');
 
-      if (error) throw error;
+      if (countriesError) throw countriesError;
       
-      const countriesWithCounts = data?.map(country => ({
-        ...country,
-        city_count: country.cities?.length || 0,
-        business_count: country.businesses?.length || 0
-      })) || [];
+      // Get counts for each country
+      const countriesWithCounts = await Promise.all(
+        (countriesData || []).map(async (country) => {
+          // Get city count
+          const { count: cityCount } = await db
+            .cities()
+            .select('*', { count: 'exact', head: true })
+            .eq('country_id', country.id)
+            .eq('is_active', true);
+
+          // Get business count
+          const { count: businessCount } = await db
+            .businesses()
+            .select('*', { count: 'exact', head: true })
+            .eq('country_id', country.id);
+
+          return {
+            ...country,
+            city_count: cityCount || 0,
+            business_count: businessCount || 0
+          };
+        })
+      );
       
       setCountries(countriesWithCounts);
     } catch (error) {
@@ -94,6 +109,35 @@ export const AdminCountries = () => {
   };
 
   const handleAddCountry = async () => {
+    // Validate form data
+    if (!formData.name.trim()) {
+      toast({
+        title: "Error",
+        description: "Country name is required",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!formData.code.trim()) {
+      toast({
+        title: "Error",
+        description: "Country code is required",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (formData.code.length !== 2) {
+      toast({
+        title: "Error",
+        description: "Country code must be exactly 2 characters",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
     try {
       const { error } = await db
         .countries()
@@ -113,15 +157,46 @@ export const AdminCountries = () => {
       console.error('Error adding country:', error);
       toast({
         title: "Error",
-        description: "Failed to add country",
+        description: "Failed to add country. Please check if the country name or code already exists.",
         variant: "destructive"
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleEditCountry = async () => {
     if (!selectedCountry) return;
 
+    // Validate form data
+    if (!formData.name.trim()) {
+      toast({
+        title: "Error",
+        description: "Country name is required",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!formData.code.trim()) {
+      toast({
+        title: "Error",
+        description: "Country code is required",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (formData.code.length !== 2) {
+      toast({
+        title: "Error",
+        description: "Country code must be exactly 2 characters",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
     try {
       const { error } = await db
         .countries()
@@ -143,9 +218,11 @@ export const AdminCountries = () => {
       console.error('Error updating country:', error);
       toast({
         title: "Error",
-        description: "Failed to update country",
+        description: "Failed to update country. Please check if the country name or code already exists.",
         variant: "destructive"
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -213,7 +290,7 @@ export const AdminCountries = () => {
         
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-yp-blue">
+            <Button className="bg-yp-blue hover:bg-[#4e3c28]">
               <Plus className="w-4 h-4 mr-2" />
               Add Country
             </Button>
@@ -259,11 +336,11 @@ export const AdminCountries = () => {
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsAddDialogOpen(false)} className="font-roboto">
+              <Button variant="outline" onClick={() => setIsAddDialogOpen(false)} className="font-roboto" disabled={isSubmitting}>
                 Cancel
               </Button>
-              <Button onClick={handleAddCountry} className="font-roboto">
-                Add Country
+              <Button onClick={handleAddCountry} className="font-roboto" disabled={isSubmitting}>
+                {isSubmitting ? "Adding..." : "Add Country"}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -406,11 +483,11 @@ export const AdminCountries = () => {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)} className="font-roboto">
+            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)} className="font-roboto" disabled={isSubmitting}>
               Cancel
             </Button>
-            <Button onClick={handleEditCountry} className="font-roboto">
-              Update Country
+            <Button onClick={handleEditCountry} className="font-roboto" disabled={isSubmitting}>
+              {isSubmitting ? "Updating..." : "Update Country"}
             </Button>
           </DialogFooter>
         </DialogContent>

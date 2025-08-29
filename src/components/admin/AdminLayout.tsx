@@ -46,26 +46,26 @@ export const AdminLayout = ({ children, title, subtitle }: AdminLayoutProps) => 
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Mobile menu button */}
-      <div className="lg:hidden fixed top-4 left-4 z-50">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => setSidebarOpen(true)}
-          className="bg-white shadow-md"
-        >
-          <Menu className="w-5 h-5" />
-        </Button>
-      </div>
-
+    <div className="min-h-screen bg-gray-50 flex">
       {/* Sidebar */}
       <AdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Main content */}
-      <div className="lg:ml-64">
+      <div className="flex-1 flex flex-col">
+        {/* Mobile menu button */}
+        <div className="lg:hidden fixed top-4 left-4 z-50">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setSidebarOpen(true)}
+            className="bg-white shadow-md"
+          >
+            <Menu className="w-5 h-5" />
+          </Button>
+        </div>
+
         {/* Top header */}
-        <header className="bg-white border-b border-gray-200 px-4 py-4 lg:px-8">
+        <header className="bg-white border-b border-gray-200 px-4 py-4 lg:px-8 flex-shrink-0">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-comfortaa font-bold text-gray-900">
@@ -127,7 +127,7 @@ export const AdminLayout = ({ children, title, subtitle }: AdminLayoutProps) => 
         </header>
 
         {/* Page content */}
-        <main className="p-4 lg:p-8">
+        <main className="flex-1 p-4 lg:p-8 overflow-auto">
           {children}
         </main>
       </div>

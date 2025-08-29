@@ -94,6 +94,7 @@ CREATE TABLE public.cities (
   latitude numeric,
   longitude numeric,
   population bigint,
+  is_active boolean DEFAULT true,
   created_at timestamp with time zone DEFAULT now(),
   CONSTRAINT cities_pkey PRIMARY KEY (id),
   CONSTRAINT cities_country_id_fkey FOREIGN KEY (country_id) REFERENCES public.countries(id)
@@ -102,6 +103,7 @@ CREATE TABLE public.countries (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   name text NOT NULL UNIQUE,
   code text NOT NULL UNIQUE,
+  flag_emoji text,
   flag_url text,
   wikipedia_url text,
   description text,
@@ -109,6 +111,7 @@ CREATE TABLE public.countries (
   capital text,
   currency text,
   language text,
+  is_active boolean DEFAULT true,
   created_at timestamp with time zone DEFAULT now(),
   CONSTRAINT countries_pkey PRIMARY KEY (id)
 );

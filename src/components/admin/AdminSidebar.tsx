@@ -110,7 +110,7 @@ export const AdminSidebar = ({ isOpen, onToggle }: AdminSidebarProps) => {
 
       {/* Sidebar */}
       <div className={cn(
-        "fixed left-0 top-0 z-50 h-full w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0",
+        "fixed left-0 top-0 z-50 h-full w-64 bg-white border-r border-gray-200 transform transition-transform duration-300 ease-in-out lg:relative lg:translate-x-0 lg:flex-shrink-0",
         isOpen ? "translate-x-0" : "-translate-x-full"
       )}>
         {/* Header */}

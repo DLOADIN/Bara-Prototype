@@ -60,6 +60,7 @@ export const AdminCities = () => {
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [selectedCity, setSelectedCity] = useState<City | null>(null);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     country_id: "",
@@ -77,7 +78,7 @@ export const AdminCities = () => {
         .cities()
         .select(`
           *,
-          countries!inner(name)
+          countries(name)
         `)
         .eq('is_active', true)
         .order('name');
@@ -118,6 +119,26 @@ export const AdminCities = () => {
   };
 
   const handleAddCity = async () => {
+    // Validate form data
+    if (!formData.name.trim()) {
+      toast({
+        title: "Error",
+        description: "City name is required",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!formData.country_id) {
+      toast({
+        title: "Error",
+        description: "Please select a country",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
     try {
       const { error } = await db
         .cities()
@@ -137,15 +158,37 @@ export const AdminCities = () => {
       console.error('Error adding city:', error);
       toast({
         title: "Error",
-        description: "Failed to add city",
+        description: "Failed to add city. Please check if the city name already exists in this country.",
         variant: "destructive"
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleEditCity = async () => {
     if (!selectedCity) return;
 
+    // Validate form data
+    if (!formData.name.trim()) {
+      toast({
+        title: "Error",
+        description: "City name is required",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    if (!formData.country_id) {
+      toast({
+        title: "Error",
+        description: "Please select a country",
+        variant: "destructive"
+      });
+      return;
+    }
+
+    setIsSubmitting(true);
     try {
       const { error } = await db
         .cities()
@@ -167,9 +210,11 @@ export const AdminCities = () => {
       console.error('Error updating city:', error);
       toast({
         title: "Error",
-        description: "Failed to update city",
+        description: "Failed to update city. Please check if the city name already exists in this country.",
         variant: "destructive"
       });
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -276,11 +321,11 @@ export const AdminCities = () => {
               </div>
             </div>
             <DialogFooter>
-              <Button variant="outline" onClick={() => setIsAddDialogOpen(false)} className="font-roboto">
+              <Button variant="outline" onClick={() => setIsAddDialogOpen(false)} className="font-roboto" disabled={isSubmitting}>
                 Cancel
               </Button>
-              <Button onClick={handleAddCity} className="font-roboto">
-                Add City
+              <Button onClick={handleAddCity} className="font-roboto" disabled={isSubmitting}>
+                {isSubmitting ? "Adding..." : "Add City"}
               </Button>
             </DialogFooter>
           </DialogContent>
@@ -407,11 +452,11 @@ export const AdminCities = () => {
             </div>
           </div>
           <DialogFooter>
-            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)} className="font-roboto">
+            <Button variant="outline" onClick={() => setIsEditDialogOpen(false)} className="font-roboto" disabled={isSubmitting}>
               Cancel
             </Button>
-            <Button onClick={handleEditCity} className="font-roboto">
-              Update City
+            <Button onClick={handleEditCity} className="font-roboto" disabled={isSubmitting}>
+              {isSubmitting ? "Updating..." : "Update City"}
             </Button>
           </DialogFooter>
         </DialogContent>
