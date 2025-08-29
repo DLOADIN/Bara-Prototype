@@ -364,6 +364,10 @@ export const ListingsPage = () => {
           console.error('Error fetching business data:', businessError);
           return;
         }
+        // else if(!businessError) {
+        //   console.log('Business data fetched successfully');
+        //   return;
+        // }
 
         // Create an object to count businesses per country
         const businessCountMap: { [key: string]: number } = {};
@@ -823,7 +827,7 @@ export const ListingsPage = () => {
                             </a>
                           </div>
                         )}
-                        {business.website && (
+                        {business.website && business.website_visible && (
                           <div className="flex items-start">
                             <Globe className="w-4 h-4 mr-2 mt-0.5 flex-shrink-0" />
                             <a 
@@ -864,15 +868,17 @@ export const ListingsPage = () => {
                           </p>
                         )}
                         
-                        {(business.accepts_orders_online && business.website) || business.is_sponsored_ad ? (
+                        {/* Order Online Button and Sponsored Ad Badge */}
+                        {(business.accepts_orders_online && business.order_online_url) || business.is_sponsored_ad ? (
                           <div className="flex items-center mt-3 w-full">
-                            {/* Order Online Button */}
-                            {business.accepts_orders_online && business.website && (
+                            {/* Order Online Button - Only show if business accepts orders and has order URL */}
+                            {business.accepts_orders_online && business.order_online_url && (
                               <a
-                                href={`https://${business.website}`}
+                                href={business.order_online_url}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 onClick={(e) => e.stopPropagation()}
+                                className="inline-block"
                               >
                                 <Button
                                   size="sm"
@@ -883,13 +889,11 @@ export const ListingsPage = () => {
                                 </Button>
                               </a>
                             )}
-                            {/* Sponsored Ad Badge - On same line as Order Online button */}
+                            
+                            {/* Sponsored Ad Badge - Positioned to the right */}
                             {business.is_sponsored_ad && (
-                              <div className="ml-auto bg-gray-200 text-gray-600 text-xs px-3 py-1.5 rounded-full font-medium shadow-sm" style={{ 
-                                marginLeft: 'var(--ad-spacing, 12rem)',
-                                transform: 'translateX(var(--ad-offset, 0px))'
-                              }}>
-                                Ad
+                              <div className="ml-auto bg-gray-200 text-gray-600 text-xs px-3 py-1.5 rounded-full font-medium shadow-sm">
+                                Sponsored Ad
                               </div>
                             )}
                           </div>

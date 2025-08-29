@@ -11,6 +11,8 @@ export interface Business {
   phone: string | null;
   email: string | null;
   website: string | null;
+  order_online_url: string | null;
+  website_visible: boolean;
   address: string | null;
   status: 'pending' | 'active' | 'suspended' | 'premium';
   is_premium: boolean;
@@ -69,6 +71,7 @@ export interface BusinessFilters {
   accepts_orders_online?: boolean;
   is_kid_friendly?: boolean;
   is_sponsored_ad?: boolean;
+  website_visible?: boolean;
 }
 
 export interface BusinessSearchParams {
