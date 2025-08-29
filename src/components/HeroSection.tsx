@@ -15,18 +15,14 @@ import { db } from "@/lib/supabase";
 import { BusinessService, Business } from "@/lib/businessService";
 import { toast } from "sonner";
 
-// Remove the hardcoded allLocations array and replace with Supabase data
-interface City {
+// Update interface to represent countries instead of cities
+interface Country {
   id: string;
   name: string;
-  country_id: string;
-  latitude: number | null;
-  longitude: number | null;
-  population: number | null;
-  countries: {
-    name: string;
-    code: string;
-  };
+  code: string;
+  flag_emoji?: string;
+  flag_url?: string;
+  business_count?: number; // Count of businesses in this country
 }
 
 export const HeroSection = () => {
@@ -36,56 +32,71 @@ export const HeroSection = () => {
   const [location, setLocation] = useState("");
   const [isLocationOpen, setIsLocationOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
-  const [cities, setCities] = useState<City[]>([]);
+  const [countries, setCountries] = useState<Country[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchResults, setSearchResults] = useState<Business[]>([]);
   const [searchLoading, setSearchLoading] = useState(false);
 
   useEffect(() => {
-    const fetchCities = async () => {
+    const fetchCountries = async () => {
       try {
-        const { data, error } = await db.cities()
+        // Fetch countries that have businesses, with business count
+        const { data, error } = await db.businesses()
           .select(`
-            id,
-            name,
             country_id,
-            latitude,
-            longitude,
-            population,
             countries (
+              id,
               name,
-              code
+              code,
+              flag_emoji,
+              flag_url
             )
           `)
-          .order('name', { ascending: true });
+          .not('country_id', 'is', null);
 
         if (error) {
-          console.error('Error fetching cities:', error);
+          console.error('Error fetching countries:', error);
         } else {
-          // Type assertion to handle the Supabase response structure
-          const typedData = (data as unknown) as Array<{
-            id: string;
-            name: string;
-            country_id: string;
-            latitude: number | null;
-            longitude: number | null;
-            population: number | null;
-            countries: {
-              name: string;
-              code: string;
-            } | null;
-          }>;
-          setCities(typedData || []);
-          // Do not preselect a default location; allow empty city selection
+          // Process the data to get unique countries with business counts
+          const countryMap = new Map<string, Country>();
+          
+          data?.forEach((business: any) => {
+            if (business.countries) {
+              const country = business.countries;
+              if (countryMap.has(country.id)) {
+                countryMap.get(country.id)!.business_count!++;
+              } else {
+                countryMap.set(country.id, {
+                  id: country.id,
+                  name: country.name,
+                  code: country.code,
+                  flag_emoji: country.flag_emoji,
+                  flag_url: country.flag_url,
+                  business_count: 1
+                });
+              }
+            }
+          });
+
+          // Convert to array and sort by business count (descending) then by name
+          const countriesArray = Array.from(countryMap.values())
+            .sort((a, b) => {
+              if (b.business_count! !== a.business_count!) {
+                return b.business_count! - a.business_count!;
+              }
+              return a.name.localeCompare(b.name);
+            });
+
+          setCountries(countriesArray);
         }
       } catch (error) {
-        console.error('Error fetching cities:', error);
+        console.error('Error fetching countries:', error);
       } finally {
         setLoading(false);
       }
     };
 
-    fetchCities();
+    fetchCountries();
   }, []);
 
   // Search businesses as user types
@@ -99,10 +110,10 @@ export const HeroSection = () => {
 
       setSearchLoading(true);
       try {
-        const cityName = location.split(',')[0]?.trim();
-        const options: { city?: string } = {};
-        if (cityName) {
-          options.city = cityName;
+        const countryName = location.split(',')[0]?.trim();
+        const options: { country?: string } = {};
+        if (countryName) {
+          options.country = countryName;
         }
         const results = await BusinessService.searchBusinesses(searchTerm, options);
         setSearchResults(results);
@@ -151,17 +162,17 @@ export const HeroSection = () => {
     if (!trimmed) return;
     
     try {
-      const cityName = location.split(',')[0]?.trim();
-      const options: { city?: string } = {};
-      if (cityName) {
-        options.city = cityName;
+      const countryName = location.split(',')[0]?.trim();
+      const options: { country?: string } = {};
+      if (countryName) {
+        options.country = countryName;
       }
       
       const results = await BusinessService.searchBusinesses(trimmed, options);
       
       if (results.length === 0) {
         toast.error(
-          `No businesses found for "${trimmed}"${cityName ? ` in ${cityName}` : ''}. Please try a different search term.`,
+          `No businesses found for "${trimmed}"${countryName ? ` in ${countryName}` : ''}. Please try a different search term.`,
           {
             description: "The business you're looking for is not available in our database.",
             duration: 5000,
@@ -171,9 +182,9 @@ export const HeroSection = () => {
       }
       
       // Navigate to search results if businesses are found
-      if (cityName) {
-        const citySlug = cityName.toLowerCase().replace(/\s+/g, '-');
-        navigate(`/${citySlug}/search?q=${encodeURIComponent(trimmed)}`);
+      if (countryName) {
+        const countrySlug = countryName.toLowerCase().replace(/\s+/g, '-');
+        navigate(`/${countrySlug}/search?q=${encodeURIComponent(trimmed)}`);
       } else {
         navigate(`/search?q=${encodeURIComponent(trimmed)}`);
       }
@@ -191,15 +202,16 @@ export const HeroSection = () => {
 
   const handleBusinessClick = (business: Business) => {
     // Navigate to business detail page
-    const cityName = business.city?.name?.toLowerCase().replace(/\s+/g, '-') || 'unknown';
+    const countryName = business.country?.name?.toLowerCase().replace(/\s+/g, '-') || 'unknown';
     const categorySlug = business.category?.slug || 'business';
-    navigate(`/${cityName}/${categorySlug}/${business.id}`);
+    navigate(`/${countryName}/${categorySlug}/${business.id}`);
     setIsSearchOpen(false);
     setSearchTerm("");
   };
 
-  const formatCityDisplay = (city: City) => {
-    return `${city.name}, ${city.countries?.code || ''}`;
+  const formatCountryDisplay = (country: Country) => {
+    const flag = country.flag_emoji || (country.flag_url ? '🏳️' : '');
+    return `${flag} ${country.name}`;
   };
 
   const getAverageRating = (business: Business) => {
@@ -281,7 +293,7 @@ export const HeroSection = () => {
                                 <div className="flex-1 min-w-0">
                                   <h4 className="font-semibold text-yp-dark truncate text-sm sm:text-base">{business.name}</h4>
                                   <p className="text-xs sm:text-sm text-yp-gray-dark truncate">
-                                    {business.category?.name} • {business.city?.name}
+                                    {business.category?.name} • {business.country?.name}
                                   </p>
                                   {reviewCount > 0 && (
                                     <div className="flex items-center gap-1 mt-1">
@@ -330,8 +342,8 @@ export const HeroSection = () => {
                     <div className="p-2">
                       <h3 className="text-sm font-roboto font-semibold text-yp-dark mb-2 px-2">QUICK LOCATIONS</h3>
                       
-                      {/* Default blank city option for global search */}
-                      <DropdownMenuItem
+                      {/* Default blank country option for global search */}
+                      {/* <DropdownMenuItem
                         onClick={() => {
                           setLocation("");
                           setIsLocationOpen(false);
@@ -341,7 +353,8 @@ export const HeroSection = () => {
                           location === "" ? "bg-yp-gray-light text-yp-blue" : "text-yp-dark"
                         }`}
                       >
-                      </DropdownMenuItem>
+                        Global Search
+                      </DropdownMenuItem> */}
                       
                       {loading ? (
                         <div className="text-center py-4">
@@ -349,20 +362,20 @@ export const HeroSection = () => {
                           <p className="text-xs text-yp-gray-dark mt-1">{t('common.loading')}</p>
                         </div>
                       ) : (
-                        cities.map((city) => (
+                        countries.map((country) => (
                           <DropdownMenuItem
-                            key={city.id}
+                            key={country.id}
                             onClick={() => {
-                              setLocation(formatCityDisplay(city));
+                              setLocation(country.name);
                               setIsLocationOpen(false);
-                              const citySlug = city.name.toLowerCase().replace(/\s+/g, '-');
-                              navigate(`/${citySlug}/search`);
+                              const countrySlug = country.name.toLowerCase().replace(/\s+/g, '-');
+                              navigate(`/${countrySlug}/search`);
                             }}
                             className={`dropdown-menu-item-override font-roboto px-2 py-2 cursor-pointer hover:bg-yp-gray-light ${
-                              location === formatCityDisplay(city) ? "bg-yp-gray-light text-yp-blue" : "text-yp-dark"
+                              location === country.name ? "bg-yp-gray-light text-yp-blue" : "text-yp-dark"
                             }`}
                           >
-                            {formatCityDisplay(city)}
+                            {formatCountryDisplay(country)}
                           </DropdownMenuItem>
                         ))
                       )}

@@ -165,9 +165,6 @@ export const Header = () => {
               <DropdownMenuTrigger asChild>
                 <Button variant="default" className="font-roboto">
                   {t('navigation.searchByCountry')}
-                  <span className="ml-1 text-xs bg-white/20 px-1.5 py-0.5 rounded-full">
-                    {countries.length}
-                  </span>
                   <ChevronDown className="w-4 h-4 ml-1 transition-transform duration-200" />
                 </Button>
               </DropdownMenuTrigger>
@@ -325,16 +322,11 @@ export const Header = () => {
                     className="w-full flex items-center justify-between text-left text-sm font-comfortaa font-semibold text-gray-900 uppercase tracking-wide hover:text-yp-blue transition-colors duration-200"
                   >
                     <span>{t('navigation.searchByCountry')}</span>
-                    <div className="flex items-center gap-2">
-                      <span className="text-xs text-gray-500 font-normal">
-                        {countries.length} countries
-                      </span>
-                      <ChevronRight 
-                        className={`w-4 h-4 transition-transform duration-200 ${
-                          countriesExpanded ? 'rotate-90' : ''
-                        }`} 
-                      />
-                    </div>
+                    <ChevronRight 
+                      className={`w-4 h-4 transition-transform duration-200 ${
+                        countriesExpanded ? 'rotate-90' : ''
+                      }`} 
+                    />
                   </button>
                   
                   <div className={`overflow-hidden transition-all duration-300 ease-in-out ${
