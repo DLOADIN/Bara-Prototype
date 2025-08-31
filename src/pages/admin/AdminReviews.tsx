@@ -579,9 +579,9 @@ export const AdminReviews = () => {
                 {reviews.map((review) => (
                   <TableRow key={review.id} className="hover:bg-gray-50">
                     <TableCell>
-                      <div className="flex items-center space-x-1">
-                        {renderStars(review.rating)}
-                      </div>
+                    <div className="flex items-center space-x-1">
+                      {renderStars(review.rating)}
+                    </div>
                     </TableCell>
                     <TableCell className="font-medium max-w-[200px] truncate">
                       {review.title}
@@ -592,21 +592,21 @@ export const AdminReviews = () => {
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge 
-                        variant="outline" 
-                        className={`font-roboto ${getStatusColor(review.status)}`}
-                      >
-                        <div className="flex items-center space-x-1">
-                          {getStatusIcon(review.status)}
-                          <span className="capitalize">{review.status}</span>
-                        </div>
-                      </Badge>
-                      {review.is_flagged && (
+                    <Badge 
+                      variant="outline" 
+                      className={`font-roboto ${getStatusColor(review.status)}`}
+                    >
+                      <div className="flex items-center space-x-1">
+                        {getStatusIcon(review.status)}
+                        <span className="capitalize">{review.status}</span>
+                      </div>
+                    </Badge>
+                    {review.is_flagged && (
                         <Badge variant="destructive" className="ml-2 font-roboto">
-                          <Flag className="w-3 h-3 mr-1" />
-                          Flagged
-                        </Badge>
-                      )}
+                        <Flag className="w-3 h-3 mr-1" />
+                        Flagged
+                      </Badge>
+                    )}
                     </TableCell>
                     <TableCell className="max-w-[150px] truncate" title={review.user_email}>
                       {review.user_email}
@@ -615,65 +615,65 @@ export const AdminReviews = () => {
                       <div className="max-w-[200px]">
                         <div className="font-medium truncate" title={review.business_name}>
                           {review.business_name}
-                        </div>
+                  </div>
                         <div className="text-sm text-gray-500 truncate">
                           {review.business_category}
-                        </div>
+                    </div>
                         <div className="text-xs text-gray-400 truncate">
                           {review.city_name}, {review.country_name}
-                        </div>
-                      </div>
+                    </div>
+                  </div>
                     </TableCell>
                     <TableCell className="text-sm text-gray-600">
                       {new Date(review.created_at).toLocaleDateString()}
                     </TableCell>
                     <TableCell>
                       <div className="flex flex-col space-y-1">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => openViewDialog(review)}
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => openViewDialog(review)}
                           className="font-roboto text-xs"
-                        >
+                  >
                           <Eye className="w-3 h-3 mr-1" />
-                          View
-                        </Button>
-                        
-                        {review.status === 'pending' && (
-                          <>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleStatusChange(review.id, 'approved')}
+                    View
+                  </Button>
+                  
+                  {review.status === 'pending' && (
+                    <>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleStatusChange(review.id, 'approved')}
                               className="text-green-600 border-green-200 hover:bg-green-50 font-roboto text-xs"
-                            >
+                      >
                               <CheckCircle className="w-3 h-3 mr-1" />
-                              Approve
-                            </Button>
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              onClick={() => handleStatusChange(review.id, 'rejected')}
+                        Approve
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => handleStatusChange(review.id, 'rejected')}
                               className="text-red-600 border-red-200 hover:bg-red-50 font-roboto text-xs"
-                            >
+                      >
                               <XCircle className="w-3 h-3 mr-1" />
-                              Reject
-                            </Button>
-                          </>
-                        )}
-                        
-                        {!review.is_flagged && (
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={() => handleFlagReview(review.id, 'Inappropriate content')}
+                        Reject
+                      </Button>
+                    </>
+                  )}
+                  
+                  {!review.is_flagged && (
+                    <Button
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleFlagReview(review.id, 'Inappropriate content')}
                             className="text-orange-600 border-orange-200 hover:bg-orange-50 font-roboto text-xs"
-                          >
+                    >
                             <Flag className="w-3 h-3 mr-1" />
-                            Flag
-                          </Button>
-                        )}
-                      </div>
+                      Flag
+                    </Button>
+                  )}
+                </div>
                     </TableCell>
                   </TableRow>
                 ))}
@@ -740,9 +740,9 @@ export const AdminReviews = () => {
                   </PaginationItem>
                 </PaginationContent>
               </Pagination>
-            </div>
-          </CardContent>
-        </Card>
+              </div>
+            </CardContent>
+          </Card>
       )}
 
       {/* No Results */}

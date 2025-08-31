@@ -21,6 +21,7 @@ import { AdminCountries } from "./pages/admin/AdminCountries";
 import { AdminBusinesses } from "./pages/admin/AdminBusinesses";
 import { AdminReviews } from "./pages/admin/AdminReviews";
 import { AdminSponsoredAds } from "./pages/admin/AdminSponsoredAds";
+import { AdminUsers } from "./pages/admin/AdminUsers";
 import { AdminAuthGuard } from "./components/admin/AdminAuthGuard";
 import { MapTestPage } from "./pages/MapTestPage";
 // import { SimpleMapTest } from "./pages/SimpleMapTest";
@@ -118,6 +119,11 @@ const AppRoutes = () => {
       <Route path="/admin/reviews" element={
         <AdminAuthGuard>
           <AdminReviews />
+        </AdminAuthGuard>
+      } />
+      <Route path="/admin/users" element={
+        <AdminAuthGuard>
+          <AdminUsers />
         </AdminAuthGuard>
       } />
       

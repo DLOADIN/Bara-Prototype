@@ -306,6 +306,10 @@
     "reviews": "Reviews",
     "users": "Users",
     "settings": "Settings",
+    "pages": {
+      "users": "Users Management",
+      "usersSubtitle": "Manage user accounts and permissions"
+    },
     "statistics": "Statistics",
     "recentActivity": "Recent Activity",
     "quickActions": "Quick Actions",
@@ -378,8 +382,35 @@
     "totalCities": "Total Cities",
     "totalCountries": "Total Countries",
     "totalReviews": "Total Reviews",
+    "users": {
+      "title": "Users Management",
+      "adminUsers": "Admin Users",
+      "addUser": "Add User",
+      "searchPlaceholder": "Search users...",
+      "tabs": {
+        "users": "Users",
+        "logs": "Activity Logs"
+      },
+      "table": {
+        "name": "Name",
+        "email": "Email",
+        "role": "Role",
+        "permissions": "Permissions",
+        "lastLogin": "Last Login",
+        "actions": "Actions",
+        "user": "User",
+        "action": "Action",
+        "resource": "Resource",
+        "details": "Details",
+        "timestamp": "Timestamp"
+      },
+      "activityLogs": "Activity Logs"
+    },
     "latestActions": "Latest actions and updates",
     "commonTasks": "Common administrative tasks",
+    "common": {
+      "refresh": "Refresh"
+    },
     "viewReports": "View Reports",
     "allSystemsOperational": "All systems operational",
     "capacityUsed": "capacity used",
