@@ -319,10 +319,6 @@ export const AdminUsers = () => {
               <Download className="w-4 h-4 mr-2" />
               Export CSV
             </Button>
-            <Button size="sm">
-              <Plus className="w-4 h-4 mr-2" />
-              {t('admin.users.addUser')}
-            </Button>
           </div>
         </div>
 
