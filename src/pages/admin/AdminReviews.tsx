@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -12,6 +12,23 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination";
 import { 
   Search, 
   Eye, 
@@ -23,7 +40,10 @@ import {
   User,
   Building2,
   Flag,
-  MoreHorizontal
+  Printer,
+  Download,
+  ChevronDown,
+  ChevronUp
 } from "lucide-react";
 import { db } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
@@ -51,26 +71,80 @@ export const AdminReviews = () => {
   const { toast } = useToast();
   const [reviews, setReviews] = useState<Review[]>([]);
   const [loading, setLoading] = useState(true);
+  const [filterLoading, setFilterLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [ratingFilter, setRatingFilter] = useState<string>("all");
   const [selectedReview, setSelectedReview] = useState<Review | null>(null);
   const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
+  const [sortField, setSortField] = useState<string>("created_at");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("desc");
+  
+  const printRef = useRef<HTMLDivElement>(null);
+  const recordsPerPage = 15;
 
   useEffect(() => {
     fetchReviews();
-  }, []);
+  }, [currentPage, sortField, sortDirection, statusFilter, ratingFilter, searchTerm]);
+
+  // Debounce search term
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      if (searchTerm !== "") {
+        setCurrentPage(1);
+        setFilterLoading(true);
+        fetchReviews();
+      }
+    }, 500);
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
 
   const fetchReviews = async () => {
     try {
-      const { data, error } = await db
+      setLoading(true);
+      
+      // Build the query
+      let query = db
         .reviews()
         .select(`
           *,
           users!inner(email),
           businesses!inner(name, categories!inner(name, slug), cities!inner(name, countries!inner(name)))
-        `)
-        .order('created_at', { ascending: false });
+        `);
+
+      // Apply filters
+      if (statusFilter !== "all") {
+        query = query.eq('status', statusFilter);
+      }
+      
+      if (ratingFilter !== "all") {
+        query = query.eq('rating', parseInt(ratingFilter));
+      }
+
+      // Apply search filter
+      if (searchTerm.trim() !== "") {
+        query = query.or(`title.ilike.%${searchTerm}%,content.ilike.%${searchTerm}%`);
+      }
+
+      // Get total count for pagination - using a separate count query
+      const { count, error: countError } = await db
+        .reviews()
+        .select('id', { count: 'exact', head: true });
+      if (countError) throw countError;
+      
+      setTotalCount(count || 0);
+      setTotalPages(Math.ceil((count || 0) / recordsPerPage));
+
+      // Apply sorting and pagination
+      const { data, error } = await query
+        .order(sortField, { ascending: sortDirection === "asc" })
+        .range((currentPage - 1) * recordsPerPage, currentPage * recordsPerPage - 1);
 
       if (error) throw error;
       
@@ -93,6 +167,7 @@ export const AdminReviews = () => {
       });
     } finally {
       setLoading(false);
+      setFilterLoading(false);
     }
   };
 
@@ -154,6 +229,22 @@ export const AdminReviews = () => {
     setIsViewDialogOpen(true);
   };
 
+  const handleSort = (field: string) => {
+    if (sortField === field) {
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+    setCurrentPage(1);
+    setFilterLoading(true);
+  };
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    setFilterLoading(true);
+  };
+
   const getStatusIcon = (status: string) => {
     switch (status) {
       case 'approved':
@@ -191,17 +282,87 @@ export const AdminReviews = () => {
     ));
   };
 
-  const filteredReviews = reviews.filter(review => {
-    const matchesSearch = review.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         review.content.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         review.business_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         review.user_email?.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesStatus = statusFilter === "all" || review.status === statusFilter;
-    const matchesRating = ratingFilter === "all" || review.rating.toString() === ratingFilter;
-    
-    return matchesSearch && matchesStatus && matchesRating;
-  });
+  const handlePrint = () => {
+    if (printRef.current) {
+      const printWindow = window.open('', '_blank');
+      if (printWindow) {
+        printWindow.document.write(`
+          <html>
+            <head>
+              <title>Reviews Report</title>
+              <style>
+                body { font-family: Arial, sans-serif; margin: 20px; }
+                table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+                th, td { border: 1px solid #ddd; padding: 8px; text-align: left; }
+                th { background-color: #f2f2f2; font-weight: bold; }
+                .header { text-align: center; margin-bottom: 20px; }
+                .stats { display: flex; justify-content: space-around; margin-bottom: 20px; }
+                .stat-item { text-align: center; }
+                @media print { body { margin: 0; } }
+              </style>
+            </head>
+            <body>
+              <div class="header">
+                <h1>Reviews Management Report</h1>
+                <p>Generated on: ${new Date().toLocaleDateString()}</p>
+              </div>
+              <div class="stats">
+                <div class="stat-item">
+                  <h3>Total Reviews</h3>
+                  <p>${totalCount}</p>
+                </div>
+                <div class="stat-item">
+                  <h3>Pending</h3>
+                  <p>${reviews.filter(r => r.status === 'pending').length}</p>
+                </div>
+                <div class="stat-item">
+                  <h3>Approved</h3>
+                  <p>${reviews.filter(r => r.status === 'approved').length}</p>
+                </div>
+                <div class="stat-item">
+                  <h3>Flagged</h3>
+                  <p>${reviews.filter(r => r.is_flagged).length}</p>
+                </div>
+              </div>
+              ${printRef.current.innerHTML}
+            </body>
+          </html>
+        `);
+        printWindow.document.close();
+        printWindow.print();
+      }
+    }
+  };
+
+  const exportToCSV = () => {
+    const headers = ['ID', 'Title', 'Rating', 'Status', 'User Email', 'Business Name', 'Category', 'City', 'Country', 'Created Date', 'Flagged'];
+    const csvContent = [
+      headers.join(','),
+      ...reviews.map(review => [
+        review.id,
+        `"${review.title?.replace(/"/g, '""')}"`,
+        review.rating,
+        review.status,
+        review.user_email,
+        `"${review.business_name?.replace(/"/g, '""')}"`,
+        review.business_category,
+        review.city_name,
+        review.country_name,
+        new Date(review.created_at).toLocaleDateString(),
+        review.is_flagged ? 'Yes' : 'No'
+      ].join(','))
+    ].join('\n');
+
+    const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    const url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', `reviews_${new Date().toISOString().split('T')[0]}.csv`);
+    link.style.visibility = 'hidden';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  };
 
   if (loading) {
     return (
@@ -216,14 +377,14 @@ export const AdminReviews = () => {
   return (
     <AdminLayout title="Reviews Management" subtitle="Moderate and manage user reviews">
       {/* Header Stats */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
+      {/* <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-6">
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center space-x-2">
               <MessageSquare className="w-5 h-5 text-blue-600" />
               <div>
                 <p className="text-sm font-roboto text-gray-600">Total Reviews</p>
-                <p className="text-2xl font-comfortaa font-bold text-gray-900">{reviews.length}</p>
+                <p className="text-2xl font-comfortaa font-bold text-gray-900">{totalCount}</p>
               </div>
             </div>
           </CardContent>
@@ -270,12 +431,12 @@ export const AdminReviews = () => {
             </div>
           </CardContent>
         </Card>
-      </div>
+      </div> */}
 
-      {/* Search and Filters */}
+      {/* Search, Filters, and Actions */}
       <Card className="mb-6">
         <CardContent className="p-4">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-7 gap-4 items-end">
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
@@ -285,7 +446,11 @@ export const AdminReviews = () => {
                 className="pl-10 font-roboto"
               />
             </div>
-            <Select value={statusFilter} onValueChange={setStatusFilter}>
+            <Select value={statusFilter} onValueChange={(value) => { 
+              setStatusFilter(value); 
+              setCurrentPage(1); 
+              setFilterLoading(true);
+            }}>
               <SelectTrigger className="font-roboto">
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
@@ -296,7 +461,11 @@ export const AdminReviews = () => {
                 <SelectItem value="rejected" className="font-roboto">Rejected</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={ratingFilter} onValueChange={setRatingFilter}>
+            <Select value={ratingFilter} onValueChange={(value) => { 
+              setRatingFilter(value); 
+              setCurrentPage(1); 
+              setFilterLoading(true);
+            }}>
               <SelectTrigger className="font-roboto">
                 <SelectValue placeholder="Filter by rating" />
               </SelectTrigger>
@@ -309,133 +478,275 @@ export const AdminReviews = () => {
                 <SelectItem value="1" className="font-roboto">1 Crown</SelectItem>
               </SelectContent>
             </Select>
-            <Badge variant="secondary" className="self-center justify-center">
-              {filteredReviews.length} reviews
-            </Badge>
+            <Button
+              variant="outline"
+              onClick={handlePrint}
+              className="font-roboto"
+            >
+              <Printer className="w-4 h-4 mr-2" />
+              Print
+            </Button>
+            <Button
+              variant="outline"
+              onClick={exportToCSV}
+              className="font-roboto"
+            >
+              <Download className="w-4 h-4 mr-2" />
+              Export CSV
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSearchTerm("");
+                setStatusFilter("all");
+                setRatingFilter("all");
+                setCurrentPage(1);
+                setFilterLoading(true);
+              }}
+              className="font-roboto"
+            >
+              Reset Filters
+            </Button>
           </div>
         </CardContent>
       </Card>
 
-      {/* Reviews List */}
-      <div className="space-y-4">
-        {filteredReviews.map((review) => (
-          <Card key={review.id} className="hover:shadow-lg transition-shadow duration-200">
-            <CardContent className="p-6">
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
-                  {/* Review Header */}
-                  <div className="flex items-center space-x-3 mb-3">
-                    <div className="flex items-center space-x-1">
-                      {renderStars(review.rating)}
-                    </div>
-                    <Badge 
-                      variant="outline" 
-                      className={`font-roboto ${getStatusColor(review.status)}`}
-                    >
-                      <div className="flex items-center space-x-1">
-                        {getStatusIcon(review.status)}
-                        <span className="capitalize">{review.status}</span>
-                      </div>
-                    </Badge>
-                    {review.is_flagged && (
-                      <Badge variant="destructive" className="font-roboto">
-                        <Flag className="w-3 h-3 mr-1" />
-                        Flagged
-                      </Badge>
-                    )}
-                  </div>
-
-                  {/* Review Title and Content */}
-                  <h3 className="text-lg font-comfortaa font-semibold text-gray-900 mb-2">
-                    {review.title}
-                  </h3>
-                  <p className="text-gray-700 font-roboto mb-4 line-clamp-3">
-                    {review.content}
-                  </p>
-
-                  {/* Review Metadata */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm text-gray-600 font-roboto">
-                    <div className="flex items-center space-x-2">
-                      <User className="w-4 h-4" />
-                      <span>{review.user_email}</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Building2 className="w-4 h-4" />
-                      <span>{review.business_name}</span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <MessageSquare className="w-4 h-4" />
-                      <span>{new Date(review.created_at).toLocaleDateString()}</span>
-                    </div>
-                  </div>
-
-                  {/* Business Details */}
-                  <div className="mt-3 text-sm text-gray-500 font-roboto">
-                    <span>{review.business_category}</span>
-                    {review.city_name && (
-                      <span className="mx-2">•</span>
-                    )}
-                    {review.city_name && (
-                      <span>{review.city_name}, {review.country_name}</span>
-                    )}
-                  </div>
-                </div>
-
-                {/* Action Buttons */}
-                <div className="flex flex-col space-y-2 ml-4">
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => openViewDialog(review)}
-                    className="font-roboto"
-                  >
-                    <Eye className="w-4 h-4 mr-2" />
-                    View
-                  </Button>
-                  
-                  {review.status === 'pending' && (
-                    <>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleStatusChange(review.id, 'approved')}
-                        className="text-green-600 border-green-200 hover:bg-green-50 font-roboto"
-                      >
-                        <CheckCircle className="w-4 h-4 mr-2" />
-                        Approve
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleStatusChange(review.id, 'rejected')}
-                        className="text-red-600 border-red-200 hover:bg-red-50 font-roboto"
-                      >
-                        <XCircle className="w-4 h-4 mr-2" />
-                        Reject
-                      </Button>
-                    </>
-                  )}
-                  
-                  {!review.is_flagged && (
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      onClick={() => handleFlagReview(review.id, 'Inappropriate content')}
-                      className="text-orange-600 border-orange-200 hover:bg-orange-50 font-roboto"
-                    >
-                      <Flag className="w-4 h-4 mr-2" />
-                      Flag
-                    </Button>
-                  )}
-                </div>
+      {/* Reviews Table */}
+      <div ref={printRef}>
+        <Card className="mb-6">
+          <CardContent className="p-0">
+            {filterLoading && (
+              <div className="flex items-center justify-center p-8">
+                <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-yp-blue"></div>
+                <span className="ml-2 text-gray-600">Loading...</span>
               </div>
-            </CardContent>
-          </Card>
-        ))}
+            )}
+            {!filterLoading && (
+              <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead 
+                    className="cursor-pointer hover:bg-gray-50"
+                    onClick={() => handleSort('rating')}
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span>Rating</span>
+                      {sortField === 'rating' && (
+                        sortDirection === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
+                      )}
+                    </div>
+                  </TableHead>
+                  <TableHead 
+                    className="cursor-pointer hover:bg-gray-50"
+                    onClick={() => handleSort('title')}
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span>Title</span>
+                      {sortField === 'title' && (
+                        sortDirection === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
+                      )}
+                    </div>
+                  </TableHead>
+                  <TableHead>Content</TableHead>
+                  <TableHead 
+                    className="cursor-pointer hover:bg-gray-50"
+                    onClick={() => handleSort('status')}
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span>Status</span>
+                      {sortField === 'status' && (
+                        sortDirection === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
+                      )}
+                    </div>
+                  </TableHead>
+                  <TableHead>User</TableHead>
+                  <TableHead>Business</TableHead>
+                  <TableHead 
+                    className="cursor-pointer hover:bg-gray-50"
+                    onClick={() => handleSort('created_at')}
+                  >
+                    <div className="flex items-center space-x-1">
+                      <span>Date</span>
+                      {sortField === 'created_at' && (
+                        sortDirection === 'asc' ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />
+                      )}
+                    </div>
+                  </TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {reviews.map((review) => (
+                  <TableRow key={review.id} className="hover:bg-gray-50">
+                    <TableCell>
+                      <div className="flex items-center space-x-1">
+                        {renderStars(review.rating)}
+                      </div>
+                    </TableCell>
+                    <TableCell className="font-medium max-w-[200px] truncate">
+                      {review.title}
+                    </TableCell>
+                    <TableCell className="max-w-[300px]">
+                      <div className="truncate" title={review.content}>
+                        {review.content}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge 
+                        variant="outline" 
+                        className={`font-roboto ${getStatusColor(review.status)}`}
+                      >
+                        <div className="flex items-center space-x-1">
+                          {getStatusIcon(review.status)}
+                          <span className="capitalize">{review.status}</span>
+                        </div>
+                      </Badge>
+                      {review.is_flagged && (
+                        <Badge variant="destructive" className="ml-2 font-roboto">
+                          <Flag className="w-3 h-3 mr-1" />
+                          Flagged
+                        </Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="max-w-[150px] truncate" title={review.user_email}>
+                      {review.user_email}
+                    </TableCell>
+                    <TableCell>
+                      <div className="max-w-[200px]">
+                        <div className="font-medium truncate" title={review.business_name}>
+                          {review.business_name}
+                        </div>
+                        <div className="text-sm text-gray-500 truncate">
+                          {review.business_category}
+                        </div>
+                        <div className="text-xs text-gray-400 truncate">
+                          {review.city_name}, {review.country_name}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="text-sm text-gray-600">
+                      {new Date(review.created_at).toLocaleDateString()}
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex flex-col space-y-1">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => openViewDialog(review)}
+                          className="font-roboto text-xs"
+                        >
+                          <Eye className="w-3 h-3 mr-1" />
+                          View
+                        </Button>
+                        
+                        {review.status === 'pending' && (
+                          <>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleStatusChange(review.id, 'approved')}
+                              className="text-green-600 border-green-200 hover:bg-green-50 font-roboto text-xs"
+                            >
+                              <CheckCircle className="w-3 h-3 mr-1" />
+                              Approve
+                            </Button>
+                            <Button
+                              variant="outline"
+                              size="sm"
+                              onClick={() => handleStatusChange(review.id, 'rejected')}
+                              className="text-red-600 border-red-200 hover:bg-red-50 font-roboto text-xs"
+                            >
+                              <XCircle className="w-3 h-3 mr-1" />
+                              Reject
+                            </Button>
+                          </>
+                        )}
+                        
+                        {!review.is_flagged && (
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handleFlagReview(review.id, 'Inappropriate content')}
+                            className="text-orange-600 border-orange-200 hover:bg-orange-50 font-roboto text-xs"
+                          >
+                            <Flag className="w-3 h-3 mr-1" />
+                            Flag
+                          </Button>
+                        )}
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+                              </TableBody>
+              </Table>
+            )}
+          </CardContent>
+        </Card>
       </div>
 
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <Card className="mb-6">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="text-sm text-gray-600 font-roboto">
+                Showing {((currentPage - 1) * recordsPerPage) + 1} to {Math.min(currentPage * recordsPerPage, totalCount)} of {totalCount} reviews
+              </div>
+              <Pagination>
+                <PaginationContent>
+                  <PaginationItem>
+                    <PaginationPrevious 
+                      onClick={() => handlePageChange(currentPage - 1)}
+                      className={currentPage === 1 ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    />
+                  </PaginationItem>
+                  
+                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                    let pageNum;
+                    if (totalPages <= 5) {
+                      pageNum = i + 1;
+                    } else if (currentPage <= 3) {
+                      pageNum = i + 1;
+                    } else if (currentPage >= totalPages - 2) {
+                      pageNum = totalPages - 4 + i;
+                    } else {
+                      pageNum = currentPage - 2 + i;
+                    }
+                    
+                    return (
+                      <PaginationItem key={pageNum}>
+                        <PaginationLink
+                          onClick={() => handlePageChange(pageNum)}
+                          isActive={currentPage === pageNum}
+                          className="cursor-pointer"
+                        >
+                          {pageNum}
+                        </PaginationLink>
+                      </PaginationItem>
+                    );
+                  })}
+                  
+                  {totalPages > 5 && currentPage < totalPages - 2 && (
+                    <PaginationItem>
+                      <PaginationEllipsis />
+                    </PaginationItem>
+                  )}
+                  
+                  <PaginationItem>
+                    <PaginationNext 
+                      onClick={() => handlePageChange(currentPage + 1)}
+                      className={currentPage === totalPages ? 'pointer-events-none opacity-50' : 'cursor-pointer'}
+                    />
+                  </PaginationItem>
+                </PaginationContent>
+              </Pagination>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* No Results */}
-      {filteredReviews.length === 0 && searchTerm && (
+      {reviews.length === 0 && (
         <Card className="text-center py-12">
           <CardContent>
             <MessageSquare className="w-12 h-12 text-gray-400 mx-auto mb-4" />
@@ -443,7 +754,7 @@ export const AdminReviews = () => {
               No reviews found
             </h3>
             <p className="text-gray-600 font-roboto">
-              Try adjusting your search terms or filters.
+              Try adjusting your filters or search terms.
             </p>
           </CardContent>
         </Card>

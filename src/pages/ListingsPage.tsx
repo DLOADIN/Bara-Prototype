@@ -6,7 +6,7 @@ import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { MapPin, Phone, Globe, Crown, Search, Map, Building2, Users, Award, ChevronDown, UtensilsCrossed, Wine, Coffee, Car, Home, Scale, Bed, Plane, Building, Scissors, BookOpen, Film, Stethoscope, User, Church, Leaf, Palette, Landmark, Hospital, Book, ShoppingBag, Trees, Pill, Mail, Gamepad2, GraduationCap, Truck, Zap, Wrench, Heart, Dumbbell, Laptop, Shield, Calculator, Megaphone, Briefcase, Camera, Calendar, Music, Sparkles } from "lucide-react";
+import { MapPin, Phone, Globe, Crown, Search, Map, Building2, Users, Award, ChevronDown, UtensilsCrossed, Wine, Coffee, Car, Home, Scale, Bed, Plane, Building, Scissors, BookOpen, Film, Stethoscope, User, Church, Leaf, Palette, Landmark, Hospital, Book, ShoppingBag, Trees, Pill, Mail, Gamepad2, GraduationCap, Truck, Zap, Wrench, Heart, Dumbbell, Laptop, Shield, Calculator, Megaphone, Briefcase, Camera, Calendar, Music, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 import { useBusinessesByCategory, useBusinessSearch, useCitiesByCategory } from "@/hooks/useBusinesses";
 import { Business } from "@/lib/businessService";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -205,12 +205,26 @@ export const ListingsPage = () => {
   const [categoryCities, setCategoryCities] = useState<Array<{ city_id: string; city_name: string; country_name: string; business_count: number }>>([]);
   const [loadingCategoryCities, setLoadingCategoryCities] = useState<boolean>(false);
 
+  // State for pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+
   // Update search term when URL changes
   useEffect(() => {
     if (isSearchPage && urlSearchTerm) {
       setSearchTerm(urlSearchTerm);
     }
   }, [isSearchPage, urlSearchTerm]);
+
+  // Reset to first page when filters change
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedCity, selectedFilters, sortBy, sortOrder]);
+
+  // Reset to first page when items per page changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [itemsPerPage]);
 
   // Fetch businesses by category (only if not a search page)
   const { 
@@ -317,6 +331,21 @@ export const ListingsPage = () => {
         return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
     }
   });
+
+  // Pagination logic
+  const totalPages = Math.ceil(sortedBusinesses.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentPageBusinesses = sortedBusinesses.slice(startIndex, endIndex);
+
+  // Calculate the display number for each business (considering pagination)
+  const getDisplayNumber = (businessIndex: number) => {
+    const globalIndex = startIndex + businessIndex;
+    return sortedBusinesses
+      .slice(0, globalIndex + 1)
+      .filter(b => !b.is_sponsored_ad)
+      .length;
+  };
 
   // Calculate average rating for a business
   const getAverageRating = (business: Business) => {
@@ -715,16 +744,13 @@ export const ListingsPage = () => {
           </div>
         ) : (
           <div className="space-y-6">
-                {sortedBusinesses.map((business, index) => {
+                {currentPageBusinesses.map((business, index) => {
               const avgRating = getAverageRating(business);
               const reviewCount = getReviewCount(business);
               const categoryAmenities = getCategoryAmenities(business.category?.slug || actualCategorySlug || '');
               
               // Calculate the display number (excluding sponsored ads from numbering)
-              const displayNumber = sortedBusinesses
-                .slice(0, index + 1)
-                .filter(b => !b.is_sponsored_ad)
-                .length;
+              const displayNumber = getDisplayNumber(index);
               
               return (
                                   <div 
@@ -932,9 +958,138 @@ export const ListingsPage = () => {
             })}
           </div>
         )}
-          </div>
 
-          {/* Right Sidebar - Featured Businesses */}
+        {/* Pagination Component */}
+        {totalPages > 1 && (
+          <>
+            {/* Page Info and Items Per Page */}
+            <div className="flex flex-col sm:flex-row justify-center sm:justify-between items-center mt-6 mb-2 px-4">
+              <div className="text-sm text-gray-600 font-roboto mb-2 sm:mb-0">
+                Showing {startIndex + 1}-{Math.min(endIndex, sortedBusinesses.length)} of {sortedBusinesses.length} businesses
+                {totalPages > 1 && (
+                  <span className="ml-2">• Page {currentPage} of {totalPages}</span>
+                )}
+              </div>
+              
+              {/* Items Per Page Dropdown */}
+              <div className="flex items-center space-x-2">
+                <span className="text-sm text-gray-600 font-roboto">Show:</span>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" size="sm" className="h-8 px-3">
+                      {itemsPerPage}
+                      <ChevronDown className="w-3 h-3 ml-1" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent>
+                    <DropdownMenuItem onClick={() => setItemsPerPage(10)}>
+                      10 per page
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setItemsPerPage(20)}>
+                      20 per page
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setItemsPerPage(50)}>
+                      50 per page
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+            </div>
+
+            <div className="flex justify-center items-center space-x-2 mt-4">
+              {/* Previous Page Button */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                disabled={currentPage === 1}
+                className="flex items-center space-x-1"
+              >
+                <ChevronLeft className="w-4 h-4" />
+                <span className="hidden sm:inline">Previous</span>
+              </Button>
+
+              {/* Page Numbers */}
+              <div className="flex items-center space-x-1">
+                {/* First page */}
+                {currentPage > 3 && (
+                  <>
+                    <Button
+                      variant={currentPage === 1 ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setCurrentPage(1)}
+                      className="w-10 h-10"
+                    >
+                      1
+                    </Button>
+                    {currentPage > 4 && (
+                      <span className="px-2 text-gray-500">...</span>
+                    )}
+                  </>
+                )}
+
+                {/* Pages around current page */}
+                {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                  let pageNum;
+                  if (currentPage <= 3) {
+                    pageNum = i + 1;
+                  } else if (currentPage >= totalPages - 2) {
+                    pageNum = totalPages - 4 + i;
+                  } else {
+                    pageNum = currentPage - 2 + i;
+                  }
+                  
+                  if (pageNum > 0 && pageNum <= totalPages) {
+                    return (
+                      <Button
+                        key={pageNum}
+                        variant={currentPage === pageNum ? "default" : "outline"}
+                        size="sm"
+                        onClick={() => setCurrentPage(pageNum)}
+                        className="w-10 h-10"
+                      >
+                        {pageNum}
+                      </Button>
+                    );
+                  }
+                  return null;
+                })}
+
+                {/* Last page */}
+                {currentPage < totalPages - 2 && (
+                  <>
+                    {currentPage < totalPages - 3 && (
+                      <span className="px-2 text-gray-500">...</span>
+                    )}
+                    <Button
+                      variant={currentPage === totalPages ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setCurrentPage(totalPages)}
+                      className="w-10 h-10"
+                    >
+                      {totalPages}
+                    </Button>
+                  </>
+                )}
+              </div>
+
+              {/* Next Page Button */}
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                disabled={currentPage === totalPages}
+                className="flex items-center space-x-1"
+              >
+                <span className="hidden sm:inline">Next</span>
+                <ChevronRight className="w-4 h-4" />
+              </Button>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Right Sidebar - Featured Businesses */}
           <div className="w-full lg:w-80 flex-shrink-0 mt-6 lg:mt-0">
             <FeaturedBusinesses
               citySlug={city}
