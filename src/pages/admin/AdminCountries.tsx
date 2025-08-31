@@ -154,9 +154,32 @@ export const AdminCountries = () => {
     setIsSubmitting(true);
     try {
       const db = getAdminDb();
+      
+      // Check if country already exists
+      const { data: existingCountry } = await db
+        .countries()
+        .select('id')
+        .or(`name.eq.${formData.name.trim()},code.eq.${formData.code.toUpperCase()}`)
+        .eq('is_active', true)
+        .single();
+
+      if (existingCountry) {
+        toast({
+          title: "Error",
+          description: "A country with this name or code already exists",
+          variant: "destructive"
+        });
+        return;
+      }
+
       const { data, error } = await db
         .countries()
-        .insert([formData])
+        .insert([{
+          name: formData.name.trim(),
+          code: formData.code.toUpperCase(),
+          flag_emoji: formData.flag_emoji || null,
+          is_active: formData.is_active
+        }])
         .select();
 
       if (error) {
@@ -230,9 +253,33 @@ export const AdminCountries = () => {
     setIsSubmitting(true);
     try {
       const db = getAdminDb();
+      
+      // Check if country already exists (excluding current country)
+      const { data: existingCountry } = await db
+        .countries()
+        .select('id')
+        .or(`name.eq.${formData.name.trim()},code.eq.${formData.code.toUpperCase()}`)
+        .eq('is_active', true)
+        .neq('id', selectedCountry.id)
+        .single();
+
+      if (existingCountry) {
+        toast({
+          title: "Error",
+          description: "A country with this name or code already exists",
+          variant: "destructive"
+        });
+        return;
+      }
+
       const { data, error } = await db
         .countries()
-        .update(formData)
+        .update({
+          name: formData.name.trim(),
+          code: formData.code.toUpperCase(),
+          flag_emoji: formData.flag_emoji || null,
+          is_active: formData.is_active
+        })
         .eq('id', selectedCountry.id)
         .select();
 
@@ -275,7 +322,14 @@ export const AdminCountries = () => {
   };
 
   const handleDeleteCountry = async (countryId: string) => {
-    if (!confirm('Are you sure you want to delete this country? This will also affect all associated cities and businesses.')) return;
+    const countryToDelete = countries.find(country => country.id === countryId);
+    if (!countryToDelete) return;
+
+    const confirmed = confirm(
+      `Are you sure you want to delete "${countryToDelete.name}"? This will also affect all associated cities and businesses. This action cannot be undone.`
+    );
+    
+    if (!confirmed) return;
 
     try {
       const db = getAdminDb();
@@ -296,7 +350,7 @@ export const AdminCountries = () => {
 
       toast({
         title: "Success",
-        description: "Country deleted successfully",
+        description: `Country "${countryToDelete.name}" deleted successfully`,
       });
 
       fetchCountries();

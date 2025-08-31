@@ -56,39 +56,58 @@ export const getAuthenticatedDb = async () => {
 // For now, let's use the regular client but with proper error handling
 // This is a temporary solution until we can properly configure JWT authentication
 export const getAdminDb = () => {
+  // Create a client with service role key for admin operations
+  // This bypasses RLS policies for admin operations
+  const adminSupabase = createClient(supabaseUrl, import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY || supabaseAnonKey, {
+    auth: {
+      autoRefreshToken: false,
+      persistSession: false,
+      detectSessionInUrl: false
+    },
+    db: {
+      schema: 'public'
+    }
+  });
+
   return {
     // Business operations
-    businesses: () => supabase.from('businesses'),
+    businesses: () => adminSupabase.from('businesses'),
     
     // Category operations
-    categories: () => supabase.from('categories'),
+    categories: () => adminSupabase.from('categories'),
     
     // City operations
-    cities: () => supabase.from('cities'),
+    cities: () => adminSupabase.from('cities'),
     
     // Country operations
-    countries: () => supabase.from('countries'),
+    countries: () => adminSupabase.from('countries'),
     
     // Review operations
-    reviews: () => supabase.from('reviews'),
+    reviews: () => adminSupabase.from('reviews'),
     
     // Event operations
-    events: () => supabase.from('events'),
+    events: () => adminSupabase.from('events'),
     
     // Product operations
-    products: () => supabase.from('products'),
+    products: () => adminSupabase.from('products'),
     
     // User operations
-    users: () => supabase.from('users'),
+    users: () => adminSupabase.from('users'),
     
     // Payment operations
-    payments: () => supabase.from('payments'),
+    payments: () => adminSupabase.from('payments'),
     
     // Premium features operations
-    premium_features: () => supabase.from('premium_features'),
+    premium_features: () => adminSupabase.from('premium_features'),
     
     // Questions operations
-    questions: () => supabase.from('questions')
+    questions: () => adminSupabase.from('questions'),
+    
+    // Admin users operations
+    admin_users: () => adminSupabase.from('admin_users'),
+    
+    // User logs operations
+    user_logs: () => adminSupabase.from('user_logs')
   };
 };
 

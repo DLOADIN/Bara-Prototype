@@ -423,7 +423,6 @@ export const AdminUsers = () => {
                             </div>
                           </TableHead>
                           <TableHead>Role & Permissions</TableHead>
-                          <TableHead>Contact Info</TableHead>
                           <TableHead 
                             className="cursor-pointer hover:bg-gray-50"
                             onClick={() => handleSort('created_at')}
@@ -435,7 +434,7 @@ export const AdminUsers = () => {
                               )}
                             </div>
                           </TableHead>
-                          <TableHead>Actions</TableHead>
+                          {/* <TableHead>Actions</TableHead> */}
                     </TableRow>
                   </TableHeader>
                   <TableBody>
@@ -476,7 +475,7 @@ export const AdminUsers = () => {
                                 )}
                               </div>
                             </TableCell>
-                            <TableCell>
+                            {/* <TableCell>
                               <div className="space-y-1">
                                 {('phone' in user && user.phone) && (
                                   <div className="flex items-center space-x-2 text-sm">
@@ -497,7 +496,7 @@ export const AdminUsers = () => {
                                   </div>
                                 )}
                           </div>
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell>
                               <div className="space-y-1">
                                 <div className="text-sm">
@@ -511,7 +510,7 @@ export const AdminUsers = () => {
                           )}
                               </div>
                         </TableCell>
-                        <TableCell>
+                        {/* <TableCell>
                           <div className="flex items-center space-x-2">
                             <Button variant="outline" size="sm">
                               <Edit className="w-4 h-4" />
@@ -520,7 +519,7 @@ export const AdminUsers = () => {
                               <Trash2 className="w-4 h-4" />
                             </Button>
                           </div>
-                        </TableCell>
+                        </TableCell> */}
                       </TableRow>
                     ))}
                   </TableBody>

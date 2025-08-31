@@ -154,9 +154,32 @@ export const AdminCities = () => {
     setIsSubmitting(true);
     try {
       const db = getAdminDb();
+      
+      // Check if city already exists
+      const { data: existingCity } = await db
+        .cities()
+        .select('id')
+        .eq('name', formData.name.trim())
+        .eq('country_id', formData.country_id)
+        .eq('is_active', true)
+        .single();
+
+      if (existingCity) {
+        toast({
+          title: "Error",
+          description: "A city with this name already exists in the selected country",
+          variant: "destructive"
+        });
+        return;
+      }
+
       const { data, error } = await db
         .cities()
-        .insert([formData])
+        .insert([{
+          name: formData.name.trim(),
+          country_id: formData.country_id,
+          is_active: formData.is_active
+        }])
         .select();
 
       if (error) {
@@ -221,9 +244,33 @@ export const AdminCities = () => {
     setIsSubmitting(true);
     try {
       const db = getAdminDb();
+      
+      // Check if city already exists (excluding current city)
+      const { data: existingCity } = await db
+        .cities()
+        .select('id')
+        .eq('name', formData.name.trim())
+        .eq('country_id', formData.country_id)
+        .eq('is_active', true)
+        .neq('id', selectedCity.id)
+        .single();
+
+      if (existingCity) {
+        toast({
+          title: "Error",
+          description: "A city with this name already exists in the selected country",
+          variant: "destructive"
+        });
+        return;
+      }
+
       const { data, error } = await db
         .cities()
-        .update(formData)
+        .update({
+          name: formData.name.trim(),
+          country_id: formData.country_id,
+          is_active: formData.is_active
+        })
         .eq('id', selectedCity.id)
         .select();
 
@@ -266,7 +313,14 @@ export const AdminCities = () => {
   };
 
   const handleDeleteCity = async (cityId: string) => {
-    if (!confirm('Are you sure you want to delete this city?')) return;
+    const cityToDelete = cities.find(city => city.id === cityId);
+    if (!cityToDelete) return;
+
+    const confirmed = confirm(
+      `Are you sure you want to delete "${cityToDelete.name}"? This action cannot be undone.`
+    );
+    
+    if (!confirmed) return;
 
     try {
       const db = getAdminDb();
@@ -287,7 +341,7 @@ export const AdminCities = () => {
 
       toast({
         title: "Success",
-        description: "City deleted successfully",
+        description: `City "${cityToDelete.name}" deleted successfully`,
       });
 
       fetchCities();
