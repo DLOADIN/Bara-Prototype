@@ -608,7 +608,7 @@ export const AdminUsers = () => {
                       <TableHead>{t('admin.users.table.user')}</TableHead>
                       <TableHead>{t('admin.users.table.action')}</TableHead>
                       <TableHead>{t('admin.users.table.resource')}</TableHead>
-                      <TableHead>{t('admin.users.table.details')}</TableHead>
+                      {/* <TableHead>{t('admin.users.table.details')}</TableHead> */}
                       <TableHead>{t('admin.users.table.timestamp')}</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -632,7 +632,7 @@ export const AdminUsers = () => {
                             )}
                           </div>
                         </TableCell>
-                        <TableCell>
+                        {/* <TableCell>
                           {log.details ? (
                             <pre className="text-xs text-gray-600 bg-gray-50 p-2 rounded">
                               {JSON.stringify(log.details, null, 2)}
@@ -640,7 +640,7 @@ export const AdminUsers = () => {
                           ) : (
                             <span className="text-sm text-gray-500">No details</span>
                           )}
-                        </TableCell>
+                        </TableCell> */}
                         <TableCell>
                           <div className="flex items-center space-x-2">
                             <Calendar className="w-4 h-4 text-gray-400" />
