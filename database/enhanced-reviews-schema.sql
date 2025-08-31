@@ -58,3 +58,6 @@ CREATE TRIGGER trigger_set_anonymous_flag
   BEFORE INSERT OR UPDATE ON public.reviews
   FOR EACH ROW
   EXECUTE FUNCTION set_anonymous_flag();
+
+
+

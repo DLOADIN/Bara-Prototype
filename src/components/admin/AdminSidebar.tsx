@@ -85,7 +85,7 @@ const adminMenuItems = [
     title: "Settings",
     icon: Settings,
     path: "/admin/settings",
-    description: "System configuration"
+    description: "Account settings and preferences"
   }
 ];
 

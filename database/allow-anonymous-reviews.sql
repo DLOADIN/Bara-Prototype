@@ -17,3 +17,6 @@ CHECK (user_id IS NULL OR user_id ~ '^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-
 -- Update existing reviews that might have invalid user_id references
 -- This is optional and only needed if you have existing data issues
 -- UPDATE public.reviews SET user_id = NULL WHERE user_id NOT IN (SELECT id FROM public.users);
+
+
+

@@ -153,3 +153,6 @@ CHECK (
 This implementation provides a robust, user-friendly review system that supports both authenticated and anonymous users. The database schema is designed for scalability and performance, while the frontend provides an intuitive experience for all users.
 
 The system maintains data integrity while offering flexibility for different user preferences, making it easier for businesses to collect valuable feedback from their customers.
+
+
+
