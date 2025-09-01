@@ -59,8 +59,6 @@ interface ReviewForm {
   title: string;
   content: string;
   images: string[];
-  reviewer_name?: string;
-  reviewer_email?: string;
 }
 
 export const WriteReviewPage = () => {
@@ -89,9 +87,7 @@ export const WriteReviewPage = () => {
     rating: 0,
     title: '',
     content: '',
-    images: [],
-    reviewer_name: '',
-    reviewer_email: ''
+    images: []
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hoveredRating, setHoveredRating] = useState(0);
@@ -369,10 +365,8 @@ export const WriteReviewPage = () => {
         rating: reviewForm.rating,
         title: reviewForm.title,
         content: reviewForm.content,
-        images: reviewForm.images,
-        status: 'pending',
-        reviewer_name: reviewForm.reviewer_name || null,
-        reviewer_email: reviewForm.reviewer_email || null
+        images: reviewForm.images.length > 0 ? reviewForm.images : null,
+        status: 'pending'
       });
 
       if (error) {
@@ -395,9 +389,7 @@ export const WriteReviewPage = () => {
           rating: 0,
           title: '',
           content: '',
-          images: [],
-          reviewer_name: '',
-          reviewer_email: ''
+          images: []
         });
         setSelectedBusiness(null);
         setCurrentStep('search');
@@ -420,15 +412,13 @@ export const WriteReviewPage = () => {
   const handleBackToSearch = () => {
     setCurrentStep('search');
     setSelectedBusiness(null);
-    setReviewForm({
-      business_id: '',
-      rating: 0,
-      title: '',
-      content: '',
-      images: [],
-      reviewer_name: '',
-      reviewer_email: ''
-    });
+            setReviewForm({
+          business_id: '',
+          rating: 0,
+          title: '',
+          content: '',
+          images: []
+        });
   };
 
   return (
@@ -710,7 +700,7 @@ export const WriteReviewPage = () => {
             <CardHeader>
               <CardTitle className="text-xl font-comfortaa">{t('reviews.writeReview')}</CardTitle>
               <p className="text-sm text-gray-600 font-roboto mt-2">
-                You can submit this review anonymously or provide your name and email (optional).
+                Share your experience with this business. Reviews are submitted anonymously.
               </p>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -779,53 +769,17 @@ export const WriteReviewPage = () => {
                 </p>
               </div>
 
-              {/* Anonymous Reviewer Information */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
-                    Your Name (Optional)
-                  </label>
-                  <Input
-                    type="text"
-                    placeholder="Enter your name"
-                    value={reviewForm.reviewer_name || ''}
-                    onChange={(e) => handleInputChange('reviewer_name', e.target.value)}
-                    className="font-roboto"
-                    maxLength={100}
-                  />
-                  <p className="text-xs text-gray-500 mt-1 font-roboto">
-                    Leave blank to submit anonymously
-                  </p>
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
-                    Your Email (Optional)
-                  </label>
-                  <Input
-                    type="email"
-                    placeholder="Enter your email"
-                    value={reviewForm.reviewer_email || ''}
-                    onChange={(e) => handleInputChange('reviewer_email', e.target.value)}
-                    className="font-roboto"
-                    maxLength={100}
-                  />
-                  <p className="text-xs text-gray-500 mt-1 font-roboto">
-                    For review updates (optional)
-                  </p>
-                </div>
-              </div>
-
               {/* Image Upload */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
-                  {t('reviews.addPhotos')}
+                  {t('reviews.addPhotos')} (Optional)
                 </label>
-                <BusinessImageUpload
+                {/* <BusinessImageUpload
                   businessId={selectedBusiness.id}
                   onImagesChange={(imageUrls) => handleInputChange('images', imageUrls)}
                   maxImages={5}
                   className="mb-4"
-                />
+                /> */}
               </div>
 
               {/* Submit Button */}
