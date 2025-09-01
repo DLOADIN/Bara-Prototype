@@ -16,7 +16,8 @@ import {
   FileText,
   Shield,
   LogOut,
-  Megaphone
+  Megaphone,
+  FolderOpen
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -44,6 +45,12 @@ const adminMenuItems = [
     icon: Globe,
     path: "/admin/countries",
     description: "Manage countries"
+  },
+  {
+    title: "Categories",
+    icon: FolderOpen,
+    path: "/admin/categories",
+    description: "Manage business categories"
   },
   {
     title: "Businesses",
@@ -75,12 +82,12 @@ const adminMenuItems = [
   //   path: "/admin/analytics",
   //   description: "Business insights and reports"
   // },
-  {
-    title: "Reports",
-    icon: FileText,
-    path: "/admin/reports",
-    description: "System reports and logs"
-  },
+  // {
+  //   title: "Reports",
+  //   icon: FileText,
+  //   path: "/admin/reports",
+  //   description: "System reports and logs"
+  // },
   {
     title: "Settings",
     icon: Settings,
