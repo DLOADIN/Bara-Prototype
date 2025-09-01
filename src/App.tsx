@@ -22,6 +22,7 @@ import { AdminBusinesses } from "./pages/admin/AdminBusinesses";
 import { AdminReviews } from "./pages/admin/AdminReviews";
 import { AdminSponsoredAds } from "./pages/admin/AdminSponsoredAds";
 import { AdminReports } from "./pages/admin/AdminReports";
+import { AdminCategories } from "./pages/admin/AdminCategories";
 import { AdminUsers } from "./pages/admin/AdminUsers";
 import { AdminSettings } from "./pages/admin/AdminSettings";
 import { AdminAuthGuard } from "./components/admin/AdminAuthGuard";
@@ -116,6 +117,11 @@ const AppRoutes = () => {
       <Route path="/admin/sponsored-ads" element={
         <AdminAuthGuard>
           <AdminSponsoredAds />
+        </AdminAuthGuard>
+      } />
+      <Route path="/admin/categories" element={
+        <AdminAuthGuard>
+          <AdminCategories />
         </AdminAuthGuard>
       } />
       <Route path="/admin/reports" element={
