@@ -97,6 +97,112 @@
       "premium": "Premium"
     }
   },
+  "claimListing": {
+    "page": {
+      "title": "Réclamer Votre Annonce d'Entreprise",
+      "subtitle": "Prenez le contrôle de votre annonce d'entreprise et connectez-vous avec plus de clients",
+      "hero": {
+        "callUs": "Appelez-nous :",
+        "hours": "Lun - Dimanche 24/7"
+      },
+      "benefits": {
+        "title": "Pourquoi Réclamer Votre Annonce ?",
+        "subtitle": "Lorsque vous réclamez votre annonce d'entreprise, vous débloquez des outils puissants pour développer votre entreprise",
+        "fullControl": {
+          "title": "Contrôle Total de l'Entreprise",
+          "description": "Mettez à jour les informations, horaires et services de votre entreprise à tout moment"
+        },
+        "enhancedVisibility": {
+          "title": "Visibilité Améliorée",
+          "description": "Obtenez un placement prioritaire dans les résultats de recherche et les annonces en vedette"
+        },
+        "customerReviews": {
+          "title": "Avis Clients",
+          "description": "Répondez aux avis et gérez votre réputation en ligne"
+        },
+        "verifiedBadge": {
+          "title": "Badge Vérifié",
+          "description": "Obtenez un badge vérifié pour instaurer la confiance avec les clients potentiels"
+        }
+      },
+      "form": {
+        "title": "Réclamer Votre Entreprise",
+        "subtitle": "Remplissez le formulaire ci-dessous pour commencer le processus de réclamation",
+        "formTitle": "Formulaire de Réclamation d'Entreprise",
+        "requiredFields": "Tous les champs marqués d'un * sont obligatoires",
+        "businessName": "Nom de l'Entreprise *",
+        "businessAddress": "Adresse de l'Entreprise *",
+        "contactName": "Votre Nom *",
+        "contactEmail": "Adresse E-mail *",
+        "contactPhone": "Numéro de Téléphone",
+        "website": "Site Web",
+        "reasonForClaim": "Raison de la Réclamation *",
+        "additionalInfo": "Informations Supplémentaires",
+        "placeholders": {
+          "businessName": "Entrez le nom de votre entreprise",
+          "businessAddress": "Entrez l'adresse de votre entreprise",
+          "contactName": "Entrez votre nom complet",
+          "contactEmail": "Entrez votre adresse e-mail",
+          "contactPhone": "Entrez votre numéro de téléphone",
+          "website": "https://votre-site-web.com",
+          "reasonForClaim": "Veuillez expliquer pourquoi vous réclamez cette annonce d'entreprise...",
+          "additionalInfo": "Toute information supplémentaire qui pourrait nous aider à vérifier votre réclamation..."
+        },
+        "submit": "Soumettre la Demande de Réclamation",
+        "submitting": "Soumission..."
+      },
+      "contact": {
+        "title": "Besoin d'Aide ?",
+        "subtitle": "Notre équipe est là pour vous aider à réclamer votre annonce d'entreprise et répondre à toutes vos questions.",
+        "callUs": {
+          "title": "Appelez-nous",
+          "phone": "(+250) 791 568 519",
+          "hours": "Lun - Dimanche 24/7"
+        },
+        "emailUs": {
+          "title": "Écrivez-nous",
+          "email": "support@yellowpages.rw",
+          "response": "Nous répondrons dans les 24 heures"
+        },
+        "processingTime": {
+          "title": "Temps de Traitement",
+          "time": "2-3 Jours Ouvrables",
+          "description": "Pour la vérification de la réclamation"
+        }
+      },
+      "faq": {
+        "title": "Questions Fréquemment Posées",
+        "processingTime": {
+          "question": "Combien de temps faut-il pour traiter une réclamation ?",
+          "answer": "Nous traitons généralement les réclamations en 2-3 jours ouvrables. Vous recevrez une notification par e-mail une fois votre réclamation examinée."
+        },
+        "requiredInfo": {
+          "question": "Quelles informations dois-je fournir ?",
+          "answer": "Vous devez fournir le nom de votre entreprise, l'adresse, les informations de contact et expliquer pourquoi vous réclamez cette annonce. Une documentation supplémentaire peut être demandée pour la vérification."
+        },
+        "cost": {
+          "question": "Y a-t-il un coût pour réclamer mon annonce ?",
+          "answer": "Réclamer votre annonce de base est gratuit. Cependant, des fonctionnalités premium et des options de visibilité améliorée sont disponibles moyennant des frais."
+        },
+        "notListed": {
+          "question": "Et si mon entreprise n'est pas encore listée ?",
+          "answer": "Si votre entreprise n'est pas actuellement listée, vous pouvez toujours soumettre une demande de réclamation et nous vous aiderons à l'ajouter à notre répertoire."
+        }
+      },
+      "validation": {
+        "title": "Erreur de Validation",
+        "requiredFields": "Veuillez remplir tous les champs obligatoires."
+      },
+      "success": {
+        "title": "Demande de Réclamation Soumise",
+        "description": "Votre demande de réclamation a été soumise avec succès. Nous vous contacterons dans les 2-3 jours ouvrables."
+      },
+      "error": {
+        "title": "Erreur",
+        "description": "Échec de la soumission de la demande de réclamation. Veuillez réessayer."
+      }
+    }
+  },
   "qa": {
     "askQuestions": "Posez des questions à la communauté Bara",
     "shareKnowledge": "Partagez vos connaissances pour aider les autres",

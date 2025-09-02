@@ -8,17 +8,8 @@ export const BusinessSection = () => {
   const { t } = useTranslation();
 
   const handleClaimListing = () => {
-    toast.info(
-      t('business.toast.title'),
-      {
-        description: t('business.toast.description', { phoneNumber: "(+250) 791 568 519" }),
-        duration: 6000,
-        action: {
-          label: t('business.toast.callNow'),
-          onClick: () => window.open("tel:+250791568519", "_self")
-        }
-      }
-    );
+    // Navigate to the claim listing page
+    window.location.href = '/claim-listing';
   };
 
   return (

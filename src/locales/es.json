@@ -97,6 +97,112 @@
       "premium": "Premium"
     }
   },
+  "claimListing": {
+    "page": {
+      "title": "Reclamar Tu Anuncio de Negocio",
+      "subtitle": "Toma el control de tu anuncio de negocio y conéctate con más clientes",
+      "hero": {
+        "callUs": "Llámanos:",
+        "hours": "Lunes - Domingo 24/7"
+      },
+      "benefits": {
+        "title": "¿Por Qué Reclamar Tu Anuncio?",
+        "subtitle": "Cuando reclamas tu anuncio de negocio, desbloqueas herramientas poderosas para hacer crecer tu negocio",
+        "fullControl": {
+          "title": "Control Total del Negocio",
+          "description": "Actualiza la información, horarios y servicios de tu negocio en cualquier momento"
+        },
+        "enhancedVisibility": {
+          "title": "Visibilidad Mejorada",
+          "description": "Obtén ubicación prioritaria en resultados de búsqueda y anuncios destacados"
+        },
+        "customerReviews": {
+          "title": "Reseñas de Clientes",
+          "description": "Responde a las reseñas y gestiona tu reputación en línea"
+        },
+        "verifiedBadge": {
+          "title": "Insignia Verificada",
+          "description": "Obtén una insignia verificada para generar confianza con clientes potenciales"
+        }
+      },
+      "form": {
+        "title": "Reclamar Tu Negocio",
+        "subtitle": "Completa el formulario a continuación para comenzar el proceso de reclamación",
+        "formTitle": "Formulario de Reclamación de Negocio",
+        "requiredFields": "Todos los campos marcados con * son obligatorios",
+        "businessName": "Nombre del Negocio *",
+        "businessAddress": "Dirección del Negocio *",
+        "contactName": "Tu Nombre *",
+        "contactEmail": "Dirección de Email *",
+        "contactPhone": "Número de Teléfono",
+        "website": "Sitio Web",
+        "reasonForClaim": "Razón de la Reclamación *",
+        "additionalInfo": "Información Adicional",
+        "placeholders": {
+          "businessName": "Ingresa el nombre de tu negocio",
+          "businessAddress": "Ingresa la dirección de tu negocio",
+          "contactName": "Ingresa tu nombre completo",
+          "contactEmail": "Ingresa tu dirección de email",
+          "contactPhone": "Ingresa tu número de teléfono",
+          "website": "https://tu-sitio-web.com",
+          "reasonForClaim": "Por favor explica por qué estás reclamando este anuncio de negocio...",
+          "additionalInfo": "Cualquier información adicional que pueda ayudarnos a verificar tu reclamación..."
+        },
+        "submit": "Enviar Solicitud de Reclamación",
+        "submitting": "Enviando..."
+      },
+      "contact": {
+        "title": "¿Necesitas Ayuda?",
+        "subtitle": "Nuestro equipo está aquí para ayudarte a reclamar tu anuncio de negocio y responder cualquier pregunta que tengas.",
+        "callUs": {
+          "title": "Llámanos",
+          "phone": "(+250) 791 568 519",
+          "hours": "Lunes - Domingo 24/7"
+        },
+        "emailUs": {
+          "title": "Escríbenos",
+          "email": "support@yellowpages.rw",
+          "response": "Responderemos en 24 horas"
+        },
+        "processingTime": {
+          "title": "Tiempo de Procesamiento",
+          "time": "2-3 Días Laborables",
+          "description": "Para verificación de reclamación"
+        }
+      },
+      "faq": {
+        "title": "Preguntas Frecuentes",
+        "processingTime": {
+          "question": "¿Cuánto tiempo toma procesar una reclamación?",
+          "answer": "Típicamente procesamos reclamaciones en 2-3 días laborables. Recibirás una notificación por email una vez que tu reclamación haya sido revisada."
+        },
+        "requiredInfo": {
+          "question": "¿Qué información necesito proporcionar?",
+          "answer": "Necesitas proporcionar el nombre de tu negocio, dirección, información de contacto y explicar por qué estás reclamando este anuncio. Se puede solicitar documentación adicional para verificación."
+        },
+        "cost": {
+          "question": "¿Hay un costo para reclamar mi anuncio?",
+          "answer": "Reclamar tu anuncio básico es gratuito. Sin embargo, funciones premium y opciones de visibilidad mejorada están disponibles por una tarifa."
+        },
+        "notListed": {
+          "question": "¿Qué pasa si mi negocio no está listado aún?",
+          "answer": "Si tu negocio no está actualmente listado, aún puedes enviar una solicitud de reclamación y te ayudaremos a agregarlo a nuestro directorio."
+        }
+      },
+      "validation": {
+        "title": "Error de Validación",
+        "requiredFields": "Por favor completa todos los campos obligatorios."
+      },
+      "success": {
+        "title": "Solicitud de Reclamación Enviada",
+        "description": "Tu solicitud de reclamación ha sido enviada exitosamente. Te contactaremos en 2-3 días laborables."
+      },
+      "error": {
+        "title": "Error",
+        "description": "Falló el envío de la solicitud de reclamación. Por favor intenta de nuevo."
+      }
+    }
+  },
   "qa": {
     "askQuestions": "Haz preguntas a la comunidad Bara",
     "shareKnowledge": "Comparte tu conocimiento para ayudar a otros",

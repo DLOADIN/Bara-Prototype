@@ -97,6 +97,113 @@
       "premium": "Premium"
     }
   },
+  "claimListing": {
+    "page": {
+      "title": "Dai Orodha Yako ya Biashara",
+      "subtitle": "Chukua udhibiti wa orodha yako ya biashara na uungane na wateja zaidi",
+      "hero": {
+        "callUs": "Utupigie:",
+        "hours": "Jumatatu - Jumapili 24/7"
+      },
+      "benefits": {
+        "title": "Kwa Nini Kudai Orodha Yako?",
+        "subtitle": "Unapodai orodha yako ya biashara, unaweza kufungua zana za nguvu za kukuza biashara yako",
+        "fullControl": {
+          "title": "Udhibiti Kamili wa Biashara",
+          "description": "Sasisha maelezo ya biashara yako, masaa na huduma wakati wowote"
+        },
+        "enhancedVisibility": {
+          "title": "Uonekano Ulioimarishwa",
+          "description": "Pata nafasi ya kipaumbele katika matokeo ya utafutaji na orodha zilizotolewa"
+        },
+        "customerReviews": {
+          "title": "Maoni ya Wateja",
+          "description": "Jibu maoni na udhibiti sifa yako mtandaoni"
+        },
+        "verifiedBadge": {
+          "title": "Badge Iliyothibitishwa",
+          "description": "Pata badge iliyothibitishwa ili kujenga uaminifu na wateja wa uwezo"
+        }
+      },
+      "form": {
+        "title": "Dai Biashara Yako",
+        "subtitle": "Jaza fomu hapa chini kuanza mchakato wa kudai",
+        "formTitle": "Fomu ya Kudai Biashara",
+        "requiredFields": "Sehemu zote zilizowekwa alama * ni muhimu",
+        "businessName": "Jina la Biashara *",
+        "businessAddress": "Anwani ya Biashara *",
+        "contactName": "Jina Lako *",
+        "description": "Weka jina lako kamili",
+        "contactEmail": "Barua Pepe *",
+        "contactPhone": "Nambari ya Simu",
+        "website": "Tovuti",
+        "reasonForClaim": "Sababu ya Kudai *",
+        "additionalInfo": "Maelezo Zaidi",
+        "placeholders": {
+          "businessName": "Weka jina la biashara yako",
+          "businessAddress": "Weka anwani ya biashara yako",
+          "contactName": "Weka jina lako kamili",
+          "contactEmail": "Weka barua pepe yako",
+          "contactPhone": "Weka nambari yako ya simu",
+          "website": "https://tovuti-yako.com",
+          "reasonForClaim": "Tafadhali eleza kwa nini unadai orodha hii ya biashara...",
+          "additionalInfo": "Maelezo yoyote ya ziada ambayo yanaweza kutusaidia kuthibitisha madai yako..."
+        },
+        "submit": "Wasilisha Ombi la Kudai",
+        "submitting": "Inawasilisha..."
+      },
+      "contact": {
+        "title": "Unahitaji Msaada?",
+        "subtitle": "Timu yetu iko hapa kukusaidia kudai orodha yako ya biashara na kujibu maswali yoyote unaweza kuwa nayo.",
+        "callUs": {
+          "title": "Utupigie",
+          "phone": "(+250) 791 568 519",
+          "hours": "Jumatatu - Jumapili 24/7"
+        },
+        "emailUs": {
+          "title": "Tutume barua pepe",
+          "email": "support@yellowpages.rw",
+          "response": "Tutajibu kwa masaa 24"
+        },
+        "processingTime": {
+          "title": "Muda wa Usindikaji",
+          "time": "Siku 2-3 za Kazi",
+          "description": "Kwa uthibitisho wa madai"
+        }
+      },
+      "faq": {
+        "title": "Maswali Yanayoulizwa Sana",
+        "processingTime": {
+          "question": "Inachukua muda gani kusindika madai?",
+          "answer": "Kwa kawaida tunasindika madai kwa siku 2-3 za kazi. Utapokea arifa ya barua pepe mara tu madai yako yatakaporeviewwa."
+        },
+        "requiredInfo": {
+          "question": "Je, maelezo gani ninahitaji kutoa?",
+          "answer": "Unahitaji kutoa jina la biashara yako, anwani, maelezo ya mawasiliano na kueleza kwa nini unadai orodha hii. Maelezo ya ziada yanaweza kuombwa kwa uthibitisho."
+        },
+        "cost": {
+          "question": "Je, kuna gharama ya kudai orodha yangu?",
+          "answer": "Kudai orodha yako ya msingi ni bure. Hata hivyo, vipengele vya premium na chaguzi za uonekano ulioimarishwa zinapatikana kwa ada."
+        },
+        "notListed": {
+          "question": "Je, ikiwa biashara yangu haijatolewa bado?",
+          "answer": "Ikiwa biashara yako haijatolewa kwa sasa, bado unaweza kuwasilisha ombi la kudai na tutakusaidia kuiongeza kwenye orodha yetu."
+        }
+      },
+      "validation": {
+        "title": "Hitilafu ya Uthibitisho",
+        "requiredFields": "Tafadhali jaza sehemu zote muhimu."
+      },
+      "success": {
+        "title": "Ombi la Kudai Limewasilishwa",
+        "description": "Ombi lako la kudai limewasilishwa kwa mafanikio. Tutakupigia simu kwa siku 2-3 za kazi."
+      },
+      "error": {
+        "title": "Hitilafu",
+        "description": "Kushindwa kuwasilisha ombi la kudai. Tafadhali jaribu tena."
+      }
+    }
+  },
   "qa": {
     "askQuestions": "Uliza maswali kwa jumuiya ya Bara",
     "shareKnowledge": "Shiriki maarifa yako kusaidia wengine",
