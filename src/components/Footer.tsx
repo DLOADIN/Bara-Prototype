@@ -31,25 +31,25 @@ const Footer = () => {
                 <Link to="/advertise" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto">
                   {t('footer.advertiseWithUs')}
                 </Link>
-              </li> */}
+              </li> 
               <li>
                 <Link to="/blog" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   {t('footer.corporateBlog')}
                 </Link>
-              </li>
+              </li>*/}
               <li>
-                <Link to="/advertising-choices" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                <Link to="/advertise" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   {t('footer.advertisingChoices')}
                 </Link>
               </li>
               <li>
-                <Link to="/become-partner" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
-                  {t('footer.becomeNetworkPartner')}
+                <Link to="/ask-question" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                  {t('footer.AskUsAnyQuestion')}
                 </Link>
               </li>
               <li>
-                <Link to="/marketing-solutions" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
-                  {t('footer.marketingSolutions')}
+                <Link to="/claim-listing" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                  {t('footer.ClaimYourListing')}
                 </Link>
               </li>
             </ul>
