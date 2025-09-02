@@ -97,6 +97,88 @@
       "premium": "Premium"
     }
   },
+  "about": {
+    "hero": {
+      "title": "About Bara",
+      "subtitle": "Connecting communities with trusted local businesses",
+      "learnMore": "Learn More",
+      "contactUs": "Contact Us"
+    },
+    "overview": {
+      "title": "Our Story",
+      "description": "Bara is Rwanda's premier business directory platform, dedicated to connecting local communities with trusted businesses. We believe in the power of local commerce and strive to make it easier for people to discover and connect with the best services in their area.",
+      "mission": "Our mission is to empower local businesses by providing them with a digital presence while helping consumers make informed decisions about where to shop, dine, and receive services.",
+      "established": "Est. 2024",
+      "location": "Rwanda"
+    },
+    "stats": {
+      "users": "Active Users",
+      "businesses": "Businesses Listed",
+      "cities": "Cities Covered",
+      "satisfaction": "Customer Satisfaction"
+    },
+    "values": {
+      "title": "Our Values",
+      "subtitle": "The principles that guide everything we do",
+      "trust": {
+        "title": "Trust & Reliability",
+        "description": "We build lasting relationships based on transparency and dependability."
+      },
+      "quality": {
+        "title": "Quality Service",
+        "description": "We maintain high standards in everything we do for our community."
+      },
+      "innovation": {
+        "title": "Innovation",
+        "description": "We continuously improve our platform to better serve our users."
+      },
+      "community": {
+        "title": "Community First",
+        "description": "We prioritize the needs and growth of our local communities."
+      },
+      "excellence": {
+        "title": "Excellence",
+        "description": "We strive for excellence in every aspect of our business."
+      },
+      "growth": {
+        "title": "Sustainable Growth",
+        "description": "We support the sustainable development of local businesses."
+      }
+    },
+    "team": {
+      "title": "Our Team",
+      "subtitle": "Meet the dedicated professionals behind Bara",
+      "leadership": {
+        "title": "Leadership Team",
+        "description": "Experienced executives guiding our strategic vision and growth."
+      },
+      "development": {
+        "title": "Development Team",
+        "description": "Skilled developers building innovative solutions for our platform."
+      },
+      "support": {
+        "title": "Customer Support",
+        "description": "Friendly support staff ensuring excellent user experience."
+      }
+    },
+    "contact": {
+      "title": "Get in Touch",
+      "subtitle": "We'd love to hear from you. Reach out to learn more about Bara.",
+      "phone": {
+        "title": "Phone",
+        "hours": "Mon - Sunday 24/7"
+      },
+      "email": {
+        "title": "Email",
+        "response": "Response within 24 hours"
+      },
+      "location": {
+        "title": "Office",
+        "address": "Kigali, Rwanda",
+        "visit": "Visit by appointment"
+      }
+    }
+  },
   "claimListing": {
     "page": {
       "title": "Claim Your Business Listing",

@@ -97,6 +97,88 @@
       "premium": "Premium"
     }
   },
+  "about": {
+    "hero": {
+      "title": "Acerca de Bara",
+      "subtitle": "Conectando comunidades con negocios locales de confianza",
+      "learnMore": "Saber más",
+      "contactUs": "Contáctanos"
+    },
+    "overview": {
+      "title": "Nuestra historia",
+      "description": "Bara es la principal plataforma de directorio de negocios de Ruanda, dedicada a conectar comunidades locales con negocios de confianza. Creemos en el poder del comercio local y nos esforzamos por facilitar que las personas descubran y se conecten con los mejores servicios en su área.",
+      "mission": "Nuestra misión es empoderar a los negocios locales proporcionándoles una presencia digital mientras ayudamos a los consumidores a tomar decisiones informadas sobre dónde comprar, cenar y recibir servicios.",
+      "established": "Est. 2024",
+      "location": "Ruanda"
+    },
+    "stats": {
+      "users": "Usuarios activos",
+      "businesses": "Negocios listados",
+      "cities": "Ciudades cubiertas",
+      "satisfaction": "Satisfacción del cliente"
+    },
+    "values": {
+      "title": "Nuestros valores",
+      "subtitle": "Los principios que guían todo lo que hacemos",
+      "trust": {
+        "title": "Confianza y confiabilidad",
+        "description": "Construimos relaciones duraderas basadas en la transparencia y la confiabilidad."
+      },
+      "quality": {
+        "title": "Servicio de calidad",
+        "description": "Mantenemos altos estándares en todo lo que hacemos para nuestra comunidad."
+      },
+      "innovation": {
+        "title": "Innovación",
+        "description": "Mejoramos continuamente nuestra plataforma para servir mejor a nuestros usuarios."
+      },
+      "community": {
+        "title": "Comunidad primero",
+        "description": "Priorizamos las necesidades y el crecimiento de nuestras comunidades locales."
+      },
+      "excellence": {
+        "title": "Excelencia",
+        "description": "Nos esforzamos por la excelencia en todos los aspectos de nuestro negocio."
+      },
+      "growth": {
+        "title": "Crecimiento sostenible",
+        "description": "Apoyamos el desarrollo sostenible de los negocios locales."
+      }
+    },
+    "team": {
+      "title": "Nuestro equipo",
+      "subtitle": "Conoce a los profesionales dedicados detrás de Bara",
+      "leadership": {
+        "title": "Equipo de liderazgo",
+        "description": "Ejecutivos experimentados guiando nuestra visión estratégica y crecimiento."
+      },
+      "development": {
+        "title": "Equipo de desarrollo",
+        "description": "Desarrolladores calificados construyendo soluciones innovadoras para nuestra plataforma."
+      },
+      "support": {
+        "title": "Soporte al cliente",
+        "description": "Personal de soporte amigable asegurando una excelente experiencia de usuario."
+      }
+    },
+    "contact": {
+      "title": "Ponte en contacto",
+      "subtitle": "Nos encantaría saber de ti. Contáctanos para saber más sobre Bara.",
+      "phone": {
+        "title": "Teléfono",
+        "hours": "Lun - Dom 24/7"
+      },
+      "email": {
+        "title": "Email",
+        "response": "Respuesta en 24 horas"
+      },
+      "location": {
+        "title": "Oficina",
+        "address": "Kigali, Ruanda",
+        "visit": "Visita con cita previa"
+      }
+    }
+  },
   "claimListing": {
     "page": {
       "title": "Reclamar Tu Anuncio de Negocio",

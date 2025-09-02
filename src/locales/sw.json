@@ -97,6 +97,88 @@
       "premium": "Premium"
     }
   },
+  "about": {
+    "hero": {
+      "title": "Kuhusu Bara",
+      "subtitle": "Kuunganisha jamii na biashara za kujiamini za mitaani",
+      "learnMore": "Jifunze zaidi",
+      "contactUs": "Wasiliana nasi"
+    },
+    "overview": {
+      "title": "Hadithi yetu",
+      "description": "Bara ni jukwaa kuu la orodha ya biashara nchini Rwanda, lililojitolea kuunganisha jamii za mitaani na biashara za kujiamini. Tunamini nguvu ya biashara ya mitaani na tunajitahidi kufanya iwe rahisi kwa watu kugundua na kuungana na huduma bora zaidi katika eneo lao.",
+      "mission": "Dhamira yetu ni kuwezesha biashara za mitaani kwa kuwapa uwepo wa kidijitali huku tukisaidia watumiaji kufanya maamuzi ya kujua wapi kununua, kula na kupokea huduma.",
+      "established": "Imeanzishwa 2024",
+      "location": "Rwanda"
+    },
+    "stats": {
+      "users": "Watumiaji walio hai",
+      "businesses": "Biashara zilizoorodheshwa",
+      "cities": "Miji iliyofunikwa",
+      "satisfaction": "Kuridhika kwa wateja"
+    },
+    "values": {
+      "title": "Maadili yetu",
+      "subtitle": "Kanuni zinazongoza kila kitu tunachofanya",
+      "trust": {
+        "title": "Uaminifu na kujiamini",
+        "description": "Tunajenga uhusiano wa kudumu unaozingatia uwazi na kujiamini."
+      },
+      "quality": {
+        "title": "Huduma ya ubora",
+        "description": "Tunadumisha viwango vya juu katika kila kitu tunachofanya kwa jamii yetu."
+      },
+      "innovation": {
+        "title": "Ubunifu",
+        "description": "Tunaendelea kuboresha jukwaa letu ili kuhudumia watumiaji wetu vizuri zaidi."
+      },
+      "community": {
+        "title": "Jamii kwanza",
+        "description": "Tunaweka vipaumbele mahitaji na ukuaji wa jamii zetu za mitaani."
+      },
+      "excellence": {
+        "title": "Ubora",
+        "description": "Tunajitahidi kufikia ubora katika kila kipengele cha biashara yetu."
+      },
+      "growth": {
+        "title": "Ukuaji endelevu",
+        "description": "Tunaunga mkono ukuaji endelevu wa biashara za mitaani."
+      }
+    },
+    "team": {
+      "title": "Timu yetu",
+      "subtitle": "Kutana na wataalamu waliojitolea nyuma ya Bara",
+      "leadership": {
+        "title": "Timu ya uongozi",
+        "description": "Viongozi wenye uzoefu wanaongoza mtazamo wetu wa kimkakati na ukuaji."
+      },
+      "development": {
+        "title": "Timu ya maendeleo",
+        "description": "Wasanidi waliohitimu wanaojenga suluhisho za ubunifu kwa jukwaa letu."
+      },
+      "support": {
+        "title": "Msaada kwa wateja",
+        "description": "Wafanyakazi wa msaada wa kirafiki wanaohakikisha uzoefu bora wa mtumiaji."
+      }
+    },
+    "contact": {
+      "title": "Wasiliana nasi",
+      "subtitle": "Tungependa kusikia kutoka kwako. Wasiliana nasi ili kujifunza zaidi kuhusu Bara.",
+      "phone": {
+        "title": "Simu",
+        "hours": "Jumatatu - Jumapili 24/7"
+      },
+      "email": {
+        "title": "Barua pepe",
+        "response": "Jibu ndani ya masaa 24"
+      },
+      "location": {
+        "title": "Ofisi",
+        "address": "Kigali, Rwanda",
+        "visit": "Tembelea kwa mradi"
+      }
+    }
+  },
   "claimListing": {
     "page": {
       "title": "Dai Orodha Yako ya Biashara",

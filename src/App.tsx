@@ -11,6 +11,7 @@ import { WriteReviewPage } from "./pages/WriteReviewPage";
 import { ClaimListingPage } from "./pages/ClaimListingPage";
 import  AdvertisePage from "./pages/AdvertisePage";
 import  ContactUsPage from "./pages/ContactUsPage";
+import AboutUsPage from "./pages/AboutUsPage";
 import { BusinessDetailPage } from "./pages/BusinessDetailPage";
 import { CategoriesPage } from "./pages/CategoriesPage";
 import { CityDetailPage } from "./pages/CityDetailPage";
@@ -47,6 +48,7 @@ const AppRoutes = () => {
       <Route path="/claim-listing" element={<ClaimListingPage />} />
       <Route path="/advertise" element={<AdvertisePage />} />
       <Route path="/contact-us" element={<ContactUsPage />} />
+      <Route path="/about" element={<AboutUsPage />} />
       <Route path="/ask-question" element={<AskQuestionPage />} />
       <Route path="/categories" element={<CategoriesPage />} />
       <Route path="/category/:categorySlug" element={<ListingsPage />} />
