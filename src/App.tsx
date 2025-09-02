@@ -29,6 +29,7 @@ import { AdminReports } from "./pages/admin/AdminReports";
 import { AdminCategories } from "./pages/admin/AdminCategories";
 import { AdminUsers } from "./pages/admin/AdminUsers";
 import { AdminSettings } from "./pages/admin/AdminSettings";
+import ContactMessagesPage from "./pages/admin/ContactMessagesPage";
 import { AdminAuthGuard } from "./components/admin/AdminAuthGuard";
 import { MapTestPage } from "./pages/MapTestPage";
 // import { SimpleMapTest } from "./pages/SimpleMapTest";
@@ -150,6 +151,11 @@ const AppRoutes = () => {
       <Route path="/admin/settings" element={
         <AdminAuthGuard>
           <AdminSettings />
+        </AdminAuthGuard>
+      } />
+      <Route path="/admin/contact-messages" element={
+        <AdminAuthGuard>
+          <ContactMessagesPage />
         </AdminAuthGuard>
       } />
       

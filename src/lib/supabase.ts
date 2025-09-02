@@ -107,7 +107,13 @@ export const getAdminDb = () => {
     admin_users: () => adminSupabase.from('admin_users'),
     
     // User logs operations
-    user_logs: () => adminSupabase.from('user_logs')
+    user_logs: () => adminSupabase.from('user_logs'),
+    
+    // Contact messages operations
+    contact_messages: () => adminSupabase.from('contact_messages'),
+    
+    // Listing claims operations
+    listing_claims: () => adminSupabase.from('listing_claims')
   };
 };
 
@@ -323,7 +329,13 @@ export const db = {
   premium_features: () => supabase.from('premium_features'),
   
   // Questions operations
-  questions: () => supabase.from('questions')
+  questions: () => supabase.from('questions'),
+  
+  // Contact messages operations
+  contact_messages: () => supabase.from('contact_messages'),
+  
+  // Listing claims operations
+  listing_claims: () => supabase.from('listing_claims')
 }
 
 // Auth helper functions

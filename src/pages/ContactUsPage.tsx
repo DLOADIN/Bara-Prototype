@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -5,6 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Header } from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useContactMessages, ContactMessage } from "@/hooks/useContactMessages";
 import { 
   Phone, 
   Mail, 
@@ -19,6 +21,45 @@ import {
 
 const ContactUsPage = () => {
   const { t } = useTranslation();
+  const { submitContactMessage, loading } = useContactMessages();
+  const [formData, setFormData] = useState<ContactMessage>({
+    first_name: '',
+    last_name: '',
+    email: '',
+    phone: '',
+    subject: '',
+    message: ''
+  });
+
+  const handleInputChange = (field: keyof ContactMessage, value: string) => {
+    setFormData(prev => ({
+      ...prev,
+      [field]: value
+    }));
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Basic validation
+    if (!formData.first_name.trim() || !formData.last_name.trim() || 
+        !formData.email.trim() || !formData.subject.trim() || !formData.message.trim()) {
+      return;
+    }
+
+    const success = await submitContactMessage(formData);
+    if (success) {
+      // Reset form on successful submission
+      setFormData({
+        first_name: '',
+        last_name: '',
+        email: '',
+        phone: '',
+        subject: '',
+        message: ''
+      });
+    }
+  };
 
   return (
     <>
@@ -52,76 +93,108 @@ const ContactUsPage = () => {
                       {t('contact.form.description')}
                     </CardDescription>
                   </CardHeader>
-                  <CardContent className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <form onSubmit={handleSubmit}>
+                    <CardContent className="space-y-6">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
+                            {t('contact.form.firstName')}
+                          </label>
+                          <Input 
+                            placeholder={t('contact.form.firstNamePlaceholder')}
+                            className="font-roboto"
+                            value={formData.first_name}
+                            onChange={(e) => handleInputChange('first_name', e.target.value)}
+                            required
+                          />
+                        </div>
+                        <div>
+                          <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
+                            {t('contact.form.lastName')}
+                          </label>
+                          <Input 
+                            placeholder={t('contact.form.lastNamePlaceholder')}
+                            className="font-roboto"
+                            value={formData.last_name}
+                            onChange={(e) => handleInputChange('last_name', e.target.value)}
+                            required
+                          />
+                        </div>
+                      </div>
+
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
-                          {t('contact.form.firstName')}
+                          {t('contact.form.email')}
                         </label>
                         <Input 
-                          placeholder={t('contact.form.firstNamePlaceholder')}
+                          type="email"
+                          placeholder={t('contact.form.emailPlaceholder')}
                           className="font-roboto"
+                          value={formData.email}
+                          onChange={(e) => handleInputChange('email', e.target.value)}
+                          required
                         />
                       </div>
+
                       <div>
                         <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
-                          {t('contact.form.lastName')}
+                          {t('contact.form.phone')}
                         </label>
                         <Input 
-                          placeholder={t('contact.form.lastNamePlaceholder')}
+                          type="tel"
+                          placeholder={t('contact.form.phonePlaceholder')}
                           className="font-roboto"
+                          value={formData.phone}
+                          onChange={(e) => handleInputChange('phone', e.target.value)}
                         />
                       </div>
-                    </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
-                        {t('contact.form.email')}
-                      </label>
-                      <Input 
-                        type="email"
-                        placeholder={t('contact.form.emailPlaceholder')}
-                        className="font-roboto"
-                      />
-                    </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
+                          {t('contact.form.subject')}
+                        </label>
+                        <Input 
+                          placeholder={t('contact.form.subjectPlaceholder')}
+                          className="font-roboto"
+                          value={formData.subject}
+                          onChange={(e) => handleInputChange('subject', e.target.value)}
+                          required
+                        />
+                      </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
-                        {t('contact.form.phone')}
-                      </label>
-                      <Input 
-                        type="tel"
-                        placeholder={t('contact.form.phonePlaceholder')}
-                        className="font-roboto"
-                      />
-                    </div>
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
+                          {t('contact.form.message')}
+                        </label>
+                        <Textarea 
+                          placeholder={t('contact.form.messagePlaceholder')}
+                          rows={5}
+                          className="font-roboto"
+                          value={formData.message}
+                          onChange={(e) => handleInputChange('message', e.target.value)}
+                          required
+                        />
+                      </div>
 
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
-                        {t('contact.form.subject')}
-                      </label>
-                      <Input 
-                        placeholder={t('contact.form.subjectPlaceholder')}
-                        className="font-roboto"
-                      />
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
-                        {t('contact.form.message')}
-                      </label>
-                      <Textarea 
-                        placeholder={t('contact.form.messagePlaceholder')}
-                        rows={5}
-                        className="font-roboto"
-                      />
-                    </div>
-
-                    <Button className="w-full bg-yp-blue hover:bg-yp-blue/90 font-roboto">
-                      <Send className="w-4 h-4 mr-2" />
-                      {t('contact.form.sendMessage')}
-                    </Button>
-                  </CardContent>
+                      <Button 
+                        type="submit"
+                        className="w-full bg-yp-blue hover:bg-yp-blue/90 font-roboto"
+                        disabled={loading}
+                      >
+                        {loading ? (
+                          <>
+                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                            {t('common.loading')}
+                          </>
+                        ) : (
+                          <>
+                            <Send className="w-4 h-4 mr-2" />
+                            {t('contact.form.sendMessage')}
+                          </>
+                        )}
+                      </Button>
+                    </CardContent>
+                  </form>
                 </Card>
               </div>
 

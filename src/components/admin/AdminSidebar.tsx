@@ -17,7 +17,8 @@ import {
   Shield,
   LogOut,
   Megaphone,
-  FolderOpen
+  FolderOpen,
+  Mail
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -69,6 +70,12 @@ const adminMenuItems = [
     icon: MessageSquare,
     path: "/admin/reviews",
     description: "View and moderate reviews"
+  },
+  {
+    title: "Contact Messages",
+    icon: Mail,
+    path: "/admin/contact-messages",
+    description: "Manage customer inquiries"
   },
   {
     title: "Users",
