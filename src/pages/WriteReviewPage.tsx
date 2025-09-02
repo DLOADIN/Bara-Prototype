@@ -326,14 +326,7 @@ export const WriteReviewPage = () => {
       return;
     }
 
-    if (!reviewForm.title.trim()) {
-      toast({
-        title: t('common.error'),
-        description: t('reviews.titleRequired'),
-        variant: "destructive"
-      });
-      return;
-    }
+
 
     if (!reviewForm.content.trim()) {
       toast({
@@ -363,7 +356,7 @@ export const WriteReviewPage = () => {
         business_id: reviewForm.business_id,
         user_id: userId, // Will be null for anonymous reviews
         rating: reviewForm.rating,
-        title: reviewForm.title,
+        title: reviewForm.title || null, // Allow null title
         content: reviewForm.content,
         images: reviewForm.images.length > 0 ? reviewForm.images : null,
         status: 'pending'
@@ -734,23 +727,7 @@ export const WriteReviewPage = () => {
                 </div>
               </div>
 
-              {/* Review Title */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
-                  {t('reviews.reviewTitle')} *
-                </label>
-                <Input
-                  type="text"
-                  placeholder={t('reviews.reviewTitle')}
-                  value={reviewForm.title}
-                  onChange={(e) => handleInputChange('title', e.target.value)}
-                  className="font-roboto"
-                  maxLength={100}
-                />
-                <p className="text-xs text-gray-500 mt-1 font-roboto">
-                  {reviewForm.title.length}/100 {t('reviews.characterCount')}
-                </p>
-              </div>
+
 
               {/* Review Content */}
               <div>
@@ -793,7 +770,7 @@ export const WriteReviewPage = () => {
                 </Button>
                 <Button 
                   onClick={handleSubmitReview}
-                  disabled={isSubmitting || reviewForm.rating === 0 || !reviewForm.title.trim() || !reviewForm.content.trim()}
+                  disabled={isSubmitting || reviewForm.rating === 0 || !reviewForm.content.trim()}
                   className="bg-yp-blue text-white font-roboto"
                 >
                   {isSubmitting ? (

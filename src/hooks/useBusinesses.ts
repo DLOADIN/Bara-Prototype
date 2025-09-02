@@ -11,10 +11,11 @@ export const useBusinesses = (params: BusinessSearchParams = {}) => {
   });
 };
 
-export const useBusinessesByCategory = (categorySlug: string, citySlug?: string) => {
+// Updated to support country filtering
+export const useBusinessesByCategory = (categorySlug: string, citySlug?: string, countryName?: string) => {
   return useQuery({
-    queryKey: ['businesses', 'category', categorySlug, citySlug],
-    queryFn: () => BusinessService.getBusinessesByCategory(categorySlug, citySlug),
+    queryKey: ['businesses', 'category', categorySlug, citySlug, countryName],
+    queryFn: () => BusinessService.getBusinessesByCategory(categorySlug, citySlug, countryName),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
     refetchOnWindowFocus: false,
@@ -74,6 +75,17 @@ export const useCitiesByCategory = (categorySlug: string) => {
   return useQuery({
     queryKey: ['cities', 'category', categorySlug],
     queryFn: () => BusinessService.getCitiesByCategory(categorySlug),
+    staleTime: 10 * 60 * 1000, // 10 minutes
+    gcTime: 30 * 60 * 1000, // 30 minutes
+    refetchOnWindowFocus: false,
+    enabled: !!categorySlug,
+  });
+};
+
+export const useCountriesByCategory = (categorySlug: string) => {
+  return useQuery({
+    queryKey: ['countries', 'category', categorySlug],
+    queryFn: () => BusinessService.getCountriesByCategory(categorySlug),
     staleTime: 10 * 60 * 1000, // 10 minutes
     gcTime: 30 * 60 * 1000, // 30 minutes
     refetchOnWindowFocus: false,

@@ -298,9 +298,9 @@ export class BusinessService {
   /**
    * Get businesses by category slug
    */
-  static async getBusinessesByCategory(categorySlug: string, citySlug?: string): Promise<Business[]> {
+  static async getBusinessesByCategory(categorySlug: string, citySlug?: string, countryName?: string): Promise<Business[]> {
     try {
-      console.log('Fetching businesses for category:', categorySlug, 'city:', citySlug);
+      console.log('Fetching businesses for category:', categorySlug, 'city:', citySlug, 'country:', countryName);
       
       // First, get the category ID from the slug
       const { data: categoryData, error: categoryError } = await db.categories()
@@ -327,6 +327,11 @@ export class BusinessService {
         `)
         .eq('status', 'active')
         .eq('category_id', categoryData.id);
+
+      // Apply country filter if provided
+      if (countryName) {
+        query = query.eq('countries.name', countryName);
+      }
 
       // Apply city filter if provided
       if (citySlug) {
@@ -363,7 +368,7 @@ export class BusinessService {
         throw error;
       }
 
-      console.log(`Found ${data?.length || 0} businesses for category ${categorySlug}`);
+      console.log(`Found ${data?.length || 0} businesses for category ${categorySlug}${countryName ? ` in ${countryName}` : ''}`);
       return data || [];
     } catch (error) {
       console.error('Error in getBusinessesByCategory:', error);
@@ -468,6 +473,83 @@ export class BusinessService {
       return data || [];
     } catch (error) {
       console.error('Error in searchBusinesses:', error);
+      throw error;
+    }
+  }
+
+  /**
+   * Get countries that have businesses in a specific category
+   */
+  static async getCountriesByCategory(categorySlug: string): Promise<Array<{ id: string; name: string; code: string; business_count: number }>> {
+    try {
+      console.log('Fetching countries for category:', categorySlug);
+      
+      // First, get the category ID from the slug
+      const { data: categoryData, error: categoryError } = await db.categories()
+        .select('id, name, slug')
+        .eq('slug', categorySlug)
+        .eq('is_active', true)
+        .single();
+
+      if (categoryError || !categoryData) {
+        console.error('Category not found:', categorySlug, categoryError);
+        return [];
+      }
+
+      // Get countries that have businesses in this category
+      const { data, error } = await db.businesses()
+        .select(`
+          country_id,
+          countries!businesses_country_id_fkey(
+            id,
+            name,
+            code
+          )
+        `)
+        .eq('status', 'active')
+        .eq('category_id', categoryData.id)
+        .not('country_id', 'is', null);
+
+      if (error) {
+        console.error('Error fetching countries by category:', error);
+        throw error;
+      }
+
+      // Count businesses per country
+      const countryCountMap: { [key: string]: { id: string; name: string; code: string; count: number } } = {};
+      
+      data?.forEach((business: any) => {
+        if (business.countries) {
+          const countryId = business.countries.id;
+          if (!countryCountMap[countryId]) {
+            countryCountMap[countryId] = {
+              id: business.countries.id,
+              name: business.countries.name,
+              code: business.countries.code,
+              count: 0
+            };
+          }
+          countryCountMap[countryId].count++;
+        }
+      });
+
+      // Convert to array and sort by business count (descending) then by name
+      const countriesWithCounts = Object.values(countryCountMap).map(country => ({
+        id: country.id,
+        name: country.name,
+        code: country.code,
+        business_count: country.count
+      })).sort((a, b) => {
+        if (b.business_count !== a.business_count) {
+          return b.business_count - a.business_count;
+        }
+        return a.name.localeCompare(b.name);
+      });
+
+      console.log(`Found ${countriesWithCounts.length} countries with businesses in category ${categorySlug}`);
+      return countriesWithCounts;
+    } catch (error) {
+      console.error('Error in getCountriesByCategory:', error);
       throw error;
     }
   }
