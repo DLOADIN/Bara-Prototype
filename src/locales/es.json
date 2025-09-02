@@ -161,7 +161,7 @@
         },
         "emailUs": {
           "title": "Escríbenos",
-          "email": "support@yellowpages.rw",
+          "email": "advertise@bara.com",
           "response": "Responderemos en 24 horas"
         },
         "processingTime": {
@@ -637,5 +637,154 @@
     "invalidCoordinates": "Por favor, ingresa coordenadas válidas",
     "invalidViewCount": "Por favor, ingresa un conteo de vistas válido",
     "invalidClickCount": "Por favor, ingresa un conteo de clics válido"
+  },
+  "advertise": {
+    "hero": {
+      "title": "Haz Crecer tu Negocio con Bara",
+      "subtitle": "Alcanza a millones de clientes y aumenta tu visibilidad con nuestras poderosas soluciones publicitarias",
+      "getStarted": "Comenzar",
+      "learnMore": "Saber Más"
+    },
+    "stats": {
+      "monthlyVisitors": "Visitantes Mensuales",
+      "businesses": "Negocios Listados",
+      "satisfaction": "Satisfacción del Cliente"
+    },
+    "services": {
+      "title": "Nuestros Servicios Publicitarios",
+      "subtitle": "Elige la solución perfecta para hacer crecer tu negocio y alcanzar más clientes",
+      "premium": {
+        "title": "Listado Premium",
+        "description": "Destácate de la competencia con visibilidad mejorada y ubicación premium",
+        "feature1": "Clasificación de búsqueda mejorada",
+        "feature2": "Ubicación premium en resultados",
+        "feature3": "Presentación detallada del negocio",
+        "cta": "Obtener Listado Premium"
+      },
+      "targeted": {
+        "title": "Publicidad Dirigida",
+        "description": "Alcanza a tus clientes ideales con campañas publicitarias dirigidas con precisión",
+        "feature1": "Segmentación geográfica",
+        "feature2": "Filtrado demográfico",
+        "feature3": "Insights comportamentales",
+        "cta": "Comenzar Publicidad"
+      },
+      "analytics": {
+        "title": "Análisis e Insights",
+        "description": "Rastrea tu rendimiento y optimiza tus campañas con análisis detallados",
+        "feature1": "Datos de rendimiento en tiempo real",
+        "feature2": "Insights sobre comportamiento del cliente",
+        "feature3": "Seguimiento y reportes de ROI",
+        "cta": "Ver Análisis"
+      }
+    },
+    "whyChoose": {
+      "title": "¿Por Qué Elegir Bara para Publicidad?",
+      "subtitle": "Proporcionamos las herramientas y alcance que necesitas para hacer crecer tu negocio efectivamente",
+      "reach": {
+        "title": "Alcance Masivo",
+        "description": "Acceso a millones de clientes potenciales buscando activamente negocios como el tuyo"
+      },
+      "growth": {
+        "title": "Crecimiento Comprobado",
+        "description": "Los negocios ven un aumento promedio del 40% en consultas de clientes en el primer mes"
+      },
+      "local": {
+        "title": "Enfoque Local",
+        "description": "Especializado en conectar negocios locales con clientes locales en tu área"
+      },
+      "visibility": {
+        "title": "Visibilidad Mejorada",
+        "description": "Destácate en los resultados de búsqueda y sé notado por clientes buscando tus servicios"
+      }
+    },
+    "cta": {
+      "title": "¿Listo para Hacer Crecer tu Negocio?",
+      "description": "Únete a miles de negocios que confían en Bara para ayudarlos a alcanzar más clientes y hacer crecer sus ingresos",
+      "primaryButton": "Comenzar Publicidad Hoy",
+      "secondaryButton": "Programar una Consulta"
+    },
+    "contact": {
+      "title": "Ponte en Contacto",
+      "subtitle": "Nuestros expertos publicitarios están aquí para ayudarte a tener éxito",
+      "phone": {
+        "title": "Soporte Telefónico",
+        "hours": "Lun - Domingo 24/7"
+      },
+      "email": {
+        "title": "Soporte por Email",
+        "response": "Respuesta en 24 horas"
+      },
+      "location": {
+        "title": "Visita Nuestra Oficina",
+        "address": "Kigali, Ruanda",
+        "visit": "Programar una reunión"
+      }
+    }
+  },
+  "contact": {
+    "hero": {
+      "title": "Contáctanos",
+      "subtitle": "Estamos aquí para ayudar. Ponte en contacto con nuestro equipo para cualquier pregunta o soporte que necesites."
+    },
+    "form": {
+      "title": "Envíanos un Mensaje",
+      "description": "Completa el formulario a continuación y te responderemos lo antes posible.",
+      "firstName": "Nombre",
+      "firstNamePlaceholder": "Ingresa tu nombre",
+      "lastName": "Apellido",
+      "lastNamePlaceholder": "Ingresa tu apellido",
+      "email": "Email",
+      "emailPlaceholder": "Ingresa tu dirección de email",
+      "phone": "Teléfono",
+      "phonePlaceholder": "Ingresa tu número de teléfono",
+      "subject": "Asunto",
+      "subjectPlaceholder": "¿De qué se trata?",
+      "message": "Mensaje",
+      "messagePlaceholder": "Dinos cómo podemos ayudarte...",
+      "sendMessage": "Enviar Mensaje"
+    },
+    "info": {
+      "general": {
+        "title": "Información General",
+        "phone": "Teléfono",
+        "email": "Email",
+        "address": "Dirección",
+        "addressValue": "Kigali, Ruanda",
+        "hours": "Horario de Atención",
+        "hoursValue": "Lun - Domingo 24/7"
+      },
+      "support": {
+        "title": "Soporte al Cliente",
+        "phone": "Teléfono de Soporte",
+        "phoneHours": "Disponible 24/7",
+        "email": "Email de Soporte",
+        "response": "Respuesta en 2 horas"
+      },
+      "business": {
+        "title": "Consultas Comerciales",
+        "email": "Email Comercial",
+        "description": "Para asociaciones, publicidad y oportunidades comerciales",
+        "learnMore": "Saber Más Sobre Servicios Comerciales"
+      }
+    },
+    "faq": {
+      "title": "Preguntas Frecuentes",
+      "subtitle": "Encuentra respuestas rápidas a preguntas comunes sobre nuestros servicios",
+      "question1": "¿Cómo puedo reclamar mi listado de negocio?",
+      "answer1": "Puedes reclamar tu listado de negocio visitando nuestra página de reclamación y siguiendo el proceso de verificación simple. Te guiaremos a través de cada paso.",
+      "question2": "¿Qué opciones publicitarias ofrecen?",
+      "answer2": "Ofrecemos listados premium, campañas publicitarias dirigidas y herramientas de análisis para ayudarte a alcanzar más clientes y hacer crecer tu negocio.",
+      "question3": "¿Cómo actualizo la información de mi negocio?",
+      "answer3": "Una vez que hayas reclamado tu listado, puedes actualizar fácilmente la información de tu negocio, horarios, fotos y más a través de tu panel de control de negocio.",
+      "question4": "¿Qué soporte proporcionan a los negocios?",
+      "answer4": "Proporcionamos soporte completo incluyendo soporte telefónico, asistencia por email y gerentes de cuenta dedicados para clientes premium."
+    },
+    "cta": {
+      "title": "¿Necesitas Más Ayuda?",
+      "description": "Nuestro equipo está listo para asistirte con cualquier pregunta o preocupación que puedas tener",
+      "primaryButton": "Contactar Soporte",
+      "secondaryButton": "Explorar Centro de Ayuda"
+    }
   }
 } 

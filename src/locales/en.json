@@ -161,7 +161,7 @@
         },
         "emailUs": {
           "title": "Email Us",
-          "email": "support@yellowpages.rw",
+          "email": "advertise@bara.com",
           "response": "We'll respond within 24 hours"
         },
         "processingTime": {
@@ -667,6 +667,155 @@
     "isKidFriendly": "Kid Friendly",
     "isPremium": "Premium Business",
     "isVerified": "Verified Business"
+  },
+  "advertise": {
+    "hero": {
+      "title": "Grow Your Business with Bara",
+      "subtitle": "Reach millions of customers and boost your visibility with our powerful advertising solutions",
+      "getStarted": "Get Started",
+      "learnMore": "Learn More"
+    },
+    "stats": {
+      "monthlyVisitors": "Monthly Visitors",
+      "businesses": "Businesses Listed",
+      "satisfaction": "Customer Satisfaction"
+    },
+    "services": {
+      "title": "Our Advertising Services",
+      "subtitle": "Choose the perfect solution to grow your business and reach more customers",
+      "premium": {
+        "title": "Premium Listing",
+        "description": "Stand out from the competition with enhanced visibility and premium placement",
+        "feature1": "Enhanced search ranking",
+        "feature2": "Premium placement in results",
+        "feature3": "Detailed business showcase",
+        "cta": "Get Premium Listing"
+      },
+      "targeted": {
+        "title": "Targeted Advertising",
+        "description": "Reach your ideal customers with precision-targeted advertising campaigns",
+        "feature1": "Geographic targeting",
+        "feature2": "Demographic filtering",
+        "feature3": "Behavioral insights",
+        "cta": "Start Advertising"
+      },
+      "analytics": {
+        "title": "Analytics & Insights",
+        "description": "Track your performance and optimize your campaigns with detailed analytics",
+        "feature1": "Real-time performance data",
+        "feature2": "Customer behavior insights",
+        "feature3": "ROI tracking & reporting",
+        "cta": "View Analytics"
+      }
+    },
+    "whyChoose": {
+      "title": "Why Choose Bara for Advertising?",
+      "subtitle": "We provide the tools and reach you need to grow your business effectively",
+      "reach": {
+        "title": "Massive Reach",
+        "description": "Access to millions of potential customers actively searching for businesses like yours"
+      },
+      "growth": {
+        "title": "Proven Growth",
+        "description": "Businesses see an average 40% increase in customer inquiries within the first month"
+      },
+      "local": {
+        "title": "Local Focus",
+        "description": "Specialized in connecting local businesses with local customers in your area"
+      },
+      "visibility": {
+        "title": "Enhanced Visibility",
+        "description": "Stand out in search results and get noticed by customers looking for your services"
+      }
+    },
+    "cta": {
+      "title": "Ready to Grow Your Business?",
+      "description": "Join thousands of businesses that trust Bara to help them reach more customers and grow their revenue",
+      "primaryButton": "Start Advertising Today",
+      "secondaryButton": "Schedule a Consultation"
+    },
+    "contact": {
+      "title": "Get in Touch",
+      "subtitle": "Our advertising experts are here to help you succeed",
+      "phone": {
+        "title": "Phone Support",
+        "hours": "Mon - Sunday 24/7"
+      },
+      "email": {
+        "title": "Email Support",
+        "response": "Response within 24 hours"
+      },
+      "location": {
+        "title": "Visit Our Office",
+        "address": "Kigali, Rwanda",
+        "visit": "Schedule a meeting"
+      }
+    }
+  },
+  "contact": {
+    "hero": {
+      "title": "Contact Us",
+      "subtitle": "We're here to help. Get in touch with our team for any questions or support you need."
+    },
+    "form": {
+      "title": "Send us a Message",
+      "description": "Fill out the form below and we'll get back to you as soon as possible.",
+      "firstName": "First Name",
+      "firstNamePlaceholder": "Enter your first name",
+      "lastName": "Last Name",
+      "lastNamePlaceholder": "Enter your last name",
+      "email": "Email",
+      "emailPlaceholder": "Enter your email address",
+      "phone": "Phone",
+      "phonePlaceholder": "Enter your phone number",
+      "subject": "Subject",
+      "subjectPlaceholder": "What is this about?",
+      "message": "Message",
+      "messagePlaceholder": "Tell us how we can help you...",
+      "sendMessage": "Send Message"
+    },
+    "info": {
+      "general": {
+        "title": "General Information",
+        "phone": "Phone",
+        "email": "Email",
+        "address": "Address",
+        "addressValue": "Kigali, Rwanda",
+        "hours": "Business Hours",
+        "hoursValue": "Mon - Sunday 24/7"
+      },
+      "support": {
+        "title": "Customer Support",
+        "phone": "Support Phone",
+        "phoneHours": "Available 24/7",
+        "email": "Support Email",
+        "emailResponse": "Response within 2 hours"
+      },
+      "business": {
+        "title": "Business Inquiries",
+        "email": "Business Email",
+        "description": "For partnerships, advertising, and business opportunities",
+        "learnMore": "Learn More About Business Services"
+      }
+    },
+    "faq": {
+      "title": "Frequently Asked Questions",
+      "subtitle": "Find quick answers to common questions about our services",
+      "question1": "How can I claim my business listing?",
+      "answer1": "You can claim your business listing by visiting our claim page and following the simple verification process. We'll guide you through each step.",
+      "question2": "What advertising options do you offer?",
+      "answer2": "We offer premium listings, targeted advertising campaigns, and analytics tools to help you reach more customers and grow your business.",
+      "question3": "How do I update my business information?",
+      "answer3": "Once you've claimed your listing, you can easily update your business information, hours, photos, and more through your business dashboard.",
+      "question4": "What support do you provide for businesses?",
+      "answer4": "We provide comprehensive support including phone support, email assistance, and dedicated account managers for premium customers."
+    },
+    "cta": {
+      "title": "Need More Help?",
+      "description": "Our team is ready to assist you with any questions or concerns you may have",
+      "primaryButton": "Contact Support",
+      "secondaryButton": "Browse Help Center"
+    }
   }
 }
 

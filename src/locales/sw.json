@@ -162,7 +162,7 @@
         },
         "emailUs": {
           "title": "Tutume barua pepe",
-          "email": "support@yellowpages.rw",
+          "email": "advertise@bara.com",
           "response": "Tutajibu kwa masaa 24"
         },
         "processingTime": {
@@ -640,6 +640,155 @@
     "invalidCoordinates": "Tafadhali weka kuratibu halali",
     "invalidViewCount": "Tafadhali weka idadi halali ya matazamo",
     "invalidClickCount": "Tafadhali weka idadi halali ya kubofya"
+  },
+  "advertise": {
+    "hero": {
+      "title": "Kua Biashara Yako na Bara",
+      "subtitle": "Fikia mamilioni ya wateja na kuongeza mwonekano wako na suluhisho zetu za utangazaji zenye nguvu",
+      "getStarted": "Anza",
+      "learnMore": "Jifunze Zaidi"
+    },
+    "stats": {
+      "monthlyVisitors": "Wageni wa Mwezi",
+      "businesses": "Biashara Zilizoorodheshwa",
+      "satisfaction": "Uridhishaji wa Mteja"
+    },
+    "services": {
+      "title": "Huduma Zetu za Utangazaji",
+      "subtitle": "Chagua suluhisho kamili la kukuza biashara yako na kufikia wateja zaidi",
+      "premium": {
+        "title": "Orodha ya Premium",
+        "description": "Jitokeze kutoka kwa ushindani na mwonekano ulioimarishwa na nafasi ya premium",
+        "feature1": "Uratibu wa utafutaji ulioimarishwa",
+        "feature2": "Nafasi ya premium katika matokeo",
+        "feature3": "Onyesho la kina la biashara",
+        "cta": "Pata Orodha ya Premium"
+      },
+      "targeted": {
+        "title": "Utangazaji Unaolengwa",
+        "description": "Fikia wateja wako bora na kampeni za utangazaji zilizolengwa kwa usahihi",
+        "feature1": "Kulenga kwa kijiografia",
+        "feature2": "Kuchuja kwa demografia",
+        "feature3": "Ufahamu wa tabia",
+        "cta": "Anza Utangazaji"
+      },
+      "analytics": {
+        "title": "Uchambuzi na Ufahamu",
+        "description": "Fuatilia utendaji wako na bora kampeni zako na uchambuzi wa kina",
+        "feature1": "Data ya utendaji ya wakati halisi",
+        "feature2": "Ufahamu wa tabia ya mteja",
+        "feature3": "Ufuatiliaji na ripoti za ROI",
+        "cta": "Ona Uchambuzi"
+      }
+    },
+    "whyChoose": {
+      "title": "Kwa Nini Kuchagua Bara kwa Utangazaji?",
+      "subtitle": "Tunatoa zana na ufikiaji ambao unahitaji kukuza biashara yako kwa ufanisi",
+      "reach": {
+        "title": "Ufikiaji wa Wingi",
+        "description": "Ufikiaji wa mamilioni ya wateja wa uwezo wanaotafuta biashara kama yako kwa bidii"
+      },
+      "growth": {
+        "title": "Ukuaji Uliothibitishwa",
+        "description": "Biashara zinaona ongezeko la wastani wa 40% katika maswali ya wateja katika mwezi wa kwanza"
+      },
+      "local": {
+        "title": "Mwelekeo wa Kienyeji",
+        "description": "Maalum katika kuunganisha biashara za kienyeji na wateja wa kienyeji katika eneo lako"
+      },
+      "visibility": {
+        "title": "Mwonekano Uliomarishwa",
+        "description": "Jitokeze katika matokeo ya utafutaji na uonekane na wateja wanaotafuta huduma zako"
+      }
+    },
+    "cta": {
+      "title": "Tayari Kukuza Biashara Yako?",
+      "description": "Jiunge na maelfu ya biashara zinazomtumaini Bara kuwasaidia kufikia wateja zaidi na kukuza mapato yao",
+      "primaryButton": "Anza Utangazaji Leo",
+      "secondaryButton": "Panga Mashauriano"
+    },
+    "contact": {
+      "title": "Wasiliana Nasi",
+      "subtitle": "Wataalam wetu wa utangazaji wako hapa kukusaidia kufanikiwa",
+      "phone": {
+        "title": "Msaada wa Simu",
+        "hours": "Jumatatu - Jumapili 24/7"
+      },
+      "email": {
+        "title": "Msaada wa Barua Pepe",
+        "response": "Jibu ndani ya masaa 24"
+      },
+      "location": {
+        "title": "Tembelea Ofisi Yetu",
+        "address": "Kigali, Rwanda",
+        "visit": "Panga mkutano"
+      }
+    }
+  },
+  "contact": {
+    "hero": {
+      "title": "Wasiliana Nasi",
+      "subtitle": "Tuko hapa kusaidia. Wasiliana na timu yetu kwa maswali yoyote au msaada ambao unahitaji."
+    },
+    "form": {
+      "title": "Tutume Ujumbe",
+      "description": "Jaza fomu hapa chini na tutakujibu haraka iwezekanavyo.",
+      "firstName": "Jina la Kwanza",
+      "firstNamePlaceholder": "Weka jina lako la kwanza",
+      "lastName": "Jina la Mwisho",
+      "lastNamePlaceholder": "Weka jina lako la mwisho",
+      "email": "Barua Pepe",
+      "emailPlaceholder": "Weka anwani yako ya barua pepe",
+      "phone": "Simu",
+      "phonePlaceholder": "Weka nambari yako ya simu",
+      "subject": "Mada",
+      "subjectPlaceholder": "Inahusu nini?",
+      "message": "Ujumbe",
+      "messagePlaceholder": "Tuambie jinsi tunavyoweza kukusaidia...",
+      "sendMessage": "Tuma Ujumbe"
+    },
+    "info": {
+      "general": {
+        "title": "Maelezo ya Jumla",
+        "phone": "Simu",
+        "email": "Barua Pepe",
+        "address": "Anwani",
+        "addressValue": "Kigali, Rwanda",
+        "hours": "Masaa ya Kazi",
+        "hoursValue": "Jumatatu - Jumapili 24/7"
+      },
+      "support": {
+        "title": "Msaada wa Mteja",
+        "phone": "Simu ya Msaada",
+        "phoneHours": "Inapatikana 24/7",
+        "email": "Barua Pepe ya Msaada",
+        "response": "Jibu ndani ya masaa 2"
+      },
+      "business": {
+        "title": "Maswali ya Biashara",
+        "email": "Barua Pepe ya Biashara",
+        "description": "Kwa ushirikiano, utangazaji na fursa za biashara",
+        "learnMore": "Jifunze Zaidi Kuhusu Huduma za Biashara"
+      }
+    },
+    "faq": {
+      "title": "Maswali Yanayoulizwa Sana",
+      "subtitle": "Pata majibu ya haraka kwa maswali ya kawaida kuhusu huduma zetu",
+      "question1": "Ninawezaje kudai orodha yangu ya biashara?",
+      "answer1": "Unaweza kudai orodha yako ya biashara kwa kutembelea ukurasa wetu wa kudai na kufuata mchakato rahisi wa uthibitishaji. Tutakuelekeza kupitia kila hatua.",
+      "question2": "Chaguzi gani za utangazaji mnazotoa?",
+      "answer2": "Tunatoa orodha za premium, kampeni za utangazaji zilizolengwa na zana za uchambuzi kukusaidia kufikia wateja zaidi na kukuza biashara yako.",
+      "question3": "Ninawezaje kusasisha maelezo ya biashara yangu?",
+      "answer3": "Mara tu umepodai orodha yako, unaweza kusasisha kwa urahisi maelezo ya biashara yako, masaa, picha na zaidi kupitia dashibodi yako ya biashara.",
+      "question4": "Msaada gani mnatoa kwa biashara?",
+      "answer4": "Tunatoa msaada kamili ikiwa na msaada wa simu, usaidizi wa barua pepe na wasimamizi wa akaunti waliojitolea kwa wateja wa premium."
+    },
+    "cta": {
+      "title": "Unahitaji Msaada Zaidi?",
+      "description": "Timu yetu iko tayari kukusaidia na maswali yoyote au wasiwasi ambao unaweza kuwa nao",
+      "primaryButton": "Wasiliana na Msaada",
+      "secondaryButton": "Tembelea Kituo cha Msaada"
+    }
   },
   "cities": {
     "kigali": "Kigali, mji mkuu na mji mkubwa zaidi wa Rwanda, ni mfano mzuri wa mabadiliko ya mijini katika Afrika ya Mashariki. Inayojulikana kwa barabara zake safi sana, Kigali imepata sifa ya kuwa moja ya miji mkuu iliyo na mpangilio mzuri zaidi katika bara. Mji ni kituo cha biashara, teknolojia na utalii, na miundombinu ya kisasa ikiwa na majengo marefu, barabara zilizotengenezwa vizuri na mfumo wa teknolojia unaokua, mara nyingi huitwa \"Silicon Valley ya Afrika ya Mashariki\". Utamaduni wake wa kusisimua unaonekana katika masoko ya kusisimua, ngoma na muziki wa jadi wa Rwanda, na sherehe za kila mwaka kama KigaliUp. Ukuaji wa haraka wa Kigali, pamoja na ahadi yake ya uendelevu na nafasi za kijani, kama bustani za Kumbukumbu ya Mauaji ya Kigali, hufanya kuwa mfano wa maendeleo ya mijini katika mkoa.",

@@ -161,7 +161,7 @@
         },
         "emailUs": {
           "title": "Écrivez-nous",
-          "email": "support@yellowpages.rw",
+          "email": "advertise@bara.com",
           "response": "Nous répondrons dans les 24 heures"
         },
         "processingTime": {
@@ -637,5 +637,154 @@
     "invalidCoordinates": "Veuillez entrer des coordonnées valides",
     "invalidViewCount": "Veuillez entrer un nombre de vues valide",
     "invalidClickCount": "Veuillez entrer un nombre de clics valide"
+  },
+  "advertise": {
+    "hero": {
+      "title": "Développez Votre Entreprise avec Bara",
+      "subtitle": "Atteignez des millions de clients et boostez votre visibilité avec nos solutions publicitaires puissantes",
+      "getStarted": "Commencer",
+      "learnMore": "En Savoir Plus"
+    },
+    "stats": {
+      "monthlyVisitors": "Visiteurs Mensuels",
+      "businesses": "Entreprises Listées",
+      "satisfaction": "Satisfaction Client"
+    },
+    "services": {
+      "title": "Nos Services Publicitaires",
+      "subtitle": "Choisissez la solution parfaite pour développer votre entreprise et atteindre plus de clients",
+      "premium": {
+        "title": "Annonce Premium",
+        "description": "Distinguez-vous de la concurrence avec une visibilité améliorée et un placement premium",
+        "feature1": "Classement de recherche amélioré",
+        "feature2": "Placement premium dans les résultats",
+        "feature3": "Présentation détaillée de l'entreprise",
+        "cta": "Obtenir l'Annonce Premium"
+      },
+      "targeted": {
+        "title": "Publicité Ciblée",
+        "description": "Atteignez vos clients idéaux avec des campagnes publicitaires ciblées avec précision",
+        "feature1": "Ciblage géographique",
+        "feature2": "Filtrage démographique",
+        "feature3": "Insights comportementaux",
+        "cta": "Commencer la Publicité"
+      },
+      "analytics": {
+        "title": "Analyses et Insights",
+        "description": "Suivez vos performances et optimisez vos campagnes avec des analyses détaillées",
+        "feature1": "Données de performance en temps réel",
+        "feature2": "Insights sur le comportement client",
+        "feature3": "Suivi et rapports ROI",
+        "cta": "Voir les Analyses"
+      }
+    },
+    "whyChoose": {
+      "title": "Pourquoi Choisir Bara pour la Publicité ?",
+      "subtitle": "Nous fournissons les outils et la portée dont vous avez besoin pour développer votre entreprise efficacement",
+      "reach": {
+        "title": "Portée Massive",
+        "description": "Accès à des millions de clients potentiels recherchant activement des entreprises comme la vôtre"
+      },
+      "growth": {
+        "title": "Croissance Éprouvée",
+        "description": "Les entreprises voient une augmentation moyenne de 40% des demandes de clients dans le premier mois"
+      },
+      "local": {
+        "title": "Focus Local",
+        "description": "Spécialisé dans la connexion des entreprises locales avec des clients locaux dans votre région"
+      },
+      "visibility": {
+        "title": "Visibilité Améliorée",
+        "description": "Distinguez-vous dans les résultats de recherche et soyez remarqué par les clients cherchant vos services"
+      }
+    },
+    "cta": {
+      "title": "Prêt à Développer Votre Entreprise ?",
+      "description": "Rejoignez des milliers d'entreprises qui font confiance à Bara pour les aider à atteindre plus de clients et développer leurs revenus",
+      "primaryButton": "Commencer la Publicité Aujourd'hui",
+      "secondaryButton": "Planifier une Consultation"
+    },
+    "contact": {
+      "title": "Contactez-nous",
+      "subtitle": "Nos experts publicitaires sont là pour vous aider à réussir",
+      "phone": {
+        "title": "Support Téléphonique",
+        "hours": "Lun - Dimanche 24/7"
+      },
+      "email": {
+        "title": "Support Email",
+        "response": "Réponse sous 24 heures"
+      },
+      "location": {
+        "title": "Visitez Notre Bureau",
+        "address": "Kigali, Rwanda",
+        "visit": "Planifier une réunion"
+      }
+    }
+  },
+  "contact": {
+    "hero": {
+      "title": "Contactez-nous",
+      "subtitle": "Nous sommes là pour vous aider. Contactez notre équipe pour toute question ou support dont vous avez besoin."
+    },
+    "form": {
+      "title": "Envoyez-nous un Message",
+      "description": "Remplissez le formulaire ci-dessous et nous vous répondrons dès que possible.",
+      "firstName": "Prénom",
+      "firstNamePlaceholder": "Entrez votre prénom",
+      "lastName": "Nom de Famille",
+      "lastNamePlaceholder": "Entrez votre nom de famille",
+      "email": "Email",
+      "emailPlaceholder": "Entrez votre adresse email",
+      "phone": "Téléphone",
+      "phonePlaceholder": "Entrez votre numéro de téléphone",
+      "subject": "Sujet",
+      "subjectPlaceholder": "De quoi s'agit-il ?",
+      "message": "Message",
+      "messagePlaceholder": "Dites-nous comment nous pouvons vous aider...",
+      "sendMessage": "Envoyer le Message"
+    },
+    "info": {
+      "general": {
+        "title": "Informations Générales",
+        "phone": "Téléphone",
+        "email": "Email",
+        "address": "Adresse",
+        "addressValue": "Kigali, Rwanda",
+        "hours": "Heures d'Ouverture",
+        "hoursValue": "Lun - Dimanche 24/7"
+      },
+      "support": {
+        "title": "Support Client",
+        "phone": "Téléphone de Support",
+        "phoneHours": "Disponible 24/7",
+        "email": "Email de Support",
+        "response": "Réponse sous 2 heures"
+      },
+      "business": {
+        "title": "Demandes Commerciales",
+        "email": "Email Commercial",
+        "description": "Pour les partenariats, la publicité et les opportunités commerciales",
+        "learnMore": "En Savoir Plus sur les Services Commerciaux"
+      }
+    },
+    "faq": {
+      "title": "Questions Fréquemment Posées",
+      "subtitle": "Trouvez des réponses rapides aux questions communes sur nos services",
+      "question1": "Comment puis-je réclamer mon annonce d'entreprise ?",
+      "answer1": "Vous pouvez réclamer votre annonce d'entreprise en visitant notre page de réclamation et en suivant le processus de vérification simple. Nous vous guiderons à travers chaque étape.",
+      "question2": "Quelles options publicitaires proposez-vous ?",
+      "answer2": "Nous proposons des annonces premium, des campagnes publicitaires ciblées et des outils d'analyse pour vous aider à atteindre plus de clients et développer votre entreprise.",
+      "question3": "Comment puis-je mettre à jour les informations de mon entreprise ?",
+      "answer3": "Une fois que vous avez réclamé votre annonce, vous pouvez facilement mettre à jour les informations de votre entreprise, les horaires, les photos et plus encore via votre tableau de bord d'entreprise.",
+      "question4": "Quel support fournissez-vous aux entreprises ?",
+      "answer4": "Nous fournissons un support complet incluant le support téléphonique, l'assistance par email et des gestionnaires de compte dédiés pour les clients premium."
+    },
+    "cta": {
+      "title": "Besoin de Plus d'Aide ?",
+      "description": "Notre équipe est prête à vous assister avec toute question ou préoccupation que vous pourriez avoir",
+      "primaryButton": "Contacter le Support",
+      "secondaryButton": "Parcourir le Centre d'Aide"
+    }
   }
 } 

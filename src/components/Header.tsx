@@ -145,10 +145,12 @@ export const Header = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-6">
-            {/* <Button variant="ghost" className="font-roboto">
-              <Building className="w-4 h-4 mr-1" />
-              {t('navigation.advertise')}
-            </Button> */}
+            <Link to="/advertise">
+              <Button variant="ghost" className="font-roboto">
+                <Building className="w-4 h-4 mr-1" />
+                {t('navigation.advertise')}
+              </Button>
+            </Link>
             
             <Link to="/writeareview">
               <Button variant="ghost" className="font-roboto">

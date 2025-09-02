@@ -9,6 +9,8 @@ import NotFound from "./pages/NotFound";
 import { ListingsPage } from "./pages/ListingsPage";
 import { WriteReviewPage } from "./pages/WriteReviewPage";
 import { ClaimListingPage } from "./pages/ClaimListingPage";
+import  AdvertisePage from "./pages/AdvertisePage";
+import  ContactUsPage from "./pages/ContactUsPage";
 import { BusinessDetailPage } from "./pages/BusinessDetailPage";
 import { CategoriesPage } from "./pages/CategoriesPage";
 import { CityDetailPage } from "./pages/CityDetailPage";
@@ -43,6 +45,8 @@ const AppRoutes = () => {
       <Route path="/writeareview" element={<WriteReviewPage />} />
       <Route path="/write-review/:businessId" element={<WriteReviewPage />} />
       <Route path="/claim-listing" element={<ClaimListingPage />} />
+      <Route path="/advertise" element={<AdvertisePage />} />
+      <Route path="/contact-us" element={<ContactUsPage />} />
       <Route path="/ask-question" element={<AskQuestionPage />} />
       <Route path="/categories" element={<CategoriesPage />} />
       <Route path="/category/:categorySlug" element={<ListingsPage />} />

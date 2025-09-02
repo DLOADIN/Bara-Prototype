@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
 import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -45,7 +45,7 @@ import {
   X
 } from "lucide-react";
 import { db } from "@/lib/supabase";
-import { useToast } from "@/hooks/use-toast";
+import { useToast } from "@/components/ui/use-toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -144,6 +144,8 @@ export const AdminBusinesses = () => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
   
@@ -193,24 +195,49 @@ export const AdminBusinesses = () => {
     fetchCountries();
   }, []);
 
+  // Debounced search effect
+  useEffect(() => {
+    if (searchTerm.trim()) {
+      setIsSearching(true);
+    }
+    
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      setCurrentPage(1); // Reset to first page when searching
+      setIsSearching(false);
+    }, 300); // 300ms delay
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
   const fetchBusinesses = async () => {
     try {
-      const { data, error } = await db
+      // First, fetch businesses with basic info
+      const { data: businessesData, error: businessesError } = await db
         .businesses()
-        .select(`
-          *,
-          categories!inner(name, slug),
-          cities!inner(name, countries!inner(name))
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
 
-      if (error) throw error;
-      
-      const businessesWithDetails = data?.map(business => ({
+      if (businessesError) throw businessesError;
+
+      // Then fetch categories, cities, and countries separately
+      const { data: categoriesData } = await db.categories().select('id, name, slug');
+      const { data: citiesData } = await db.cities().select('id, name, country_id');
+      const { data: countriesData } = await db.countries().select('id, name');
+
+      // Create lookup maps for better performance
+      const categoriesMap = new Map(categoriesData?.map(cat => [cat.id, cat]) || []);
+      const citiesMap = new Map(citiesData?.map(city => [city.id, city]) || []);
+      const countriesMap = new Map(countriesData?.map(country => [country.id, country]) || []);
+
+      // Combine the data
+      const businessesWithDetails = businessesData?.map(business => ({
         ...business,
-        category_name: business.categories?.name,
-        city_name: business.cities?.name,
-        country_name: business.cities?.countries?.name
+        category_name: business.category_id ? categoriesMap.get(business.category_id)?.name : null,
+        city_name: business.city_id ? citiesMap.get(business.city_id)?.name : null,
+        country_name: business.city_id ? 
+          (citiesMap.get(business.city_id)?.country_id ? 
+            countriesMap.get(citiesMap.get(business.city_id)?.country_id)?.name : null) : null
       })) || [];
       
       setBusinesses(businessesWithDetails);
@@ -280,15 +307,46 @@ export const AdminBusinesses = () => {
     }
   };
 
+  // Enhanced search filtering with better keyword matching
   const filteredBusinesses = businesses.filter(business => {
-    const matchesSearch = business.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         business.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         business.city_name?.toLowerCase().includes(searchTerm.toLowerCase());
+    if (!debouncedSearchTerm.trim()) {
+      // If no search term, only apply status and category filters
+      const matchesStatus = statusFilter === "all" || business.status === statusFilter;
+      const matchesCategory = categoryFilter === "all" || business.category_id === categoryFilter;
+      return matchesStatus && matchesCategory;
+    }
+
+    // Enhanced search across multiple fields with better matching
+    const searchLower = debouncedSearchTerm.toLowerCase().trim();
+    const searchWords = searchLower.split(/\s+/).filter(word => word.length > 0);
     
+    // Search across multiple business fields
+    const searchableFields = [
+      business.name,
+      business.description,
+      business.address,
+      business.phone,
+      business.email,
+      business.website,
+      business.whatsapp,
+      business.city_name,
+      business.country_name,
+      business.category_name,
+      business.slug
+    ].filter(Boolean); // Remove null/undefined values
+    
+    // Check if ALL search words are found in ANY of the searchable fields
+    const allWordsFound = searchWords.every(searchWord => 
+      searchableFields.some(field => 
+        field.toLowerCase().includes(searchWord)
+      )
+    );
+    
+    // Apply status and category filters
     const matchesStatus = statusFilter === "all" || business.status === statusFilter;
     const matchesCategory = categoryFilter === "all" || business.category_id === categoryFilter;
     
-    return matchesSearch && matchesStatus && matchesCategory;
+    return allWordsFound && matchesStatus && matchesCategory;
   });
 
   // Pagination
@@ -300,8 +358,26 @@ export const AdminBusinesses = () => {
   // CRUD Functions
   const handleAddBusiness = async (data: BusinessFormData) => {
     try {
+      // Validate and format latitude/longitude to prevent numeric overflow
+      let latitude = data.latitude;
+      let longitude = data.longitude;
+      
+      if (latitude !== undefined) {
+        // Ensure latitude is within valid range and format to 6 decimal places
+        latitude = Math.max(-90, Math.min(90, latitude));
+        latitude = Math.round(latitude * 1000000) / 1000000; // 6 decimal places
+      }
+      
+      if (longitude !== undefined) {
+        // Ensure longitude is within valid range and format to 6 decimal places
+        longitude = Math.max(-180, Math.min(180, longitude));
+        longitude = Math.round(longitude * 1000000) / 1000000; // 6 decimal places
+      }
+
       const businessData = {
         ...data,
+        latitude,
+        longitude,
         images: uploadedImages,
         logo_url: logoFile ? URL.createObjectURL(logoFile) : null,
         created_at: new Date().toISOString(),
@@ -341,8 +417,26 @@ export const AdminBusinesses = () => {
     if (!selectedBusiness) return;
     
     try {
+      // Validate and format latitude/longitude to prevent numeric overflow
+      let latitude = data.latitude;
+      let longitude = data.longitude;
+      
+      if (latitude !== undefined) {
+        // Ensure latitude is within valid range and format to 6 decimal places
+        latitude = Math.max(-90, Math.min(90, latitude));
+        latitude = Math.round(latitude * 1000000) / 1000000; // 6 decimal places
+      }
+      
+      if (longitude !== undefined) {
+        // Ensure longitude is within valid range and format to 6 decimal places
+        longitude = Math.max(-180, Math.min(180, longitude));
+        longitude = Math.round(longitude * 1000000) / 1000000; // 6 decimal places
+      }
+
       const businessData = {
         ...data,
+        latitude,
+        longitude,
         images: uploadedImages,
         logo_url: logoFile ? URL.createObjectURL(logoFile) : selectedBusiness.logo_url,
         updated_at: new Date().toISOString()
@@ -509,6 +603,27 @@ export const AdminBusinesses = () => {
     setUploadedImages(prev => prev.filter((_, i) => i !== index));
   };
 
+  // Function to highlight search terms in text
+  const highlightSearchTerms = (text: string | null, searchTerm: string) => {
+    if (!text || !searchTerm.trim()) return text;
+    
+    const searchWords = searchTerm.toLowerCase().split(/\s+/).filter(word => word.length > 0);
+    let highlightedText = text;
+    
+    searchWords.forEach(word => {
+      const regex = new RegExp(`(${word})`, 'gi');
+      highlightedText = highlightedText.replace(regex, '<mark class="bg-yellow-200 px-1 rounded">$1</mark>');
+    });
+    
+    return highlightedText;
+  };
+
+  // Helper function to format coordinates for display
+  const formatCoordinate = (value: number | null | undefined) => {
+    if (value === null || value === undefined) return "Not set";
+    return value.toFixed(6);
+  };
+
   if (loading) {
     return (
       <AdminLayout title="Businesses Management" subtitle="Manage business listings and verifications">
@@ -554,11 +669,43 @@ export const AdminBusinesses = () => {
             <div className="relative">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
               <Input
-                placeholder="Search businesses..."
+                placeholder="Search businesses by name, description, address, phone, email, website, city, country, category..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10 font-roboto"
+                className={`pl-10 pr-10 font-roboto transition-all duration-200 ${
+                  searchTerm ? 'ring-2 ring-yp-blue/20 border-yp-blue' : ''
+                }`}
               />
+              {isSearching && (
+                <div className="absolute right-10 top-1/2 transform -translate-y-1/2">
+                  <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-yp-blue"></div>
+                </div>
+              )}
+              {searchTerm && !isSearching && (
+                <button
+                  onClick={() => setSearchTerm("")}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+                  title="Clear search"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
+              {/* Search suggestions */}
+              {searchTerm && searchTerm.length > 0 && (
+                <div className="absolute top-full left-0 right-0 mt-1 bg-white border border-gray-200 rounded-lg shadow-lg z-10 max-h-48 overflow-y-auto">
+                  <div className="p-2 text-xs text-gray-500 font-roboto border-b">
+                    Search suggestions:
+                  </div>
+                  <div className="p-2">
+                    <div className="text-sm font-roboto text-gray-700 mb-1">
+                      • Try searching for: <span className="text-yp-blue">{searchTerm}</span>
+                    </div>
+                    <div className="text-xs text-gray-500">
+                      Search across all business fields including contact information and location
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
               <SelectTrigger className="font-roboto">
@@ -591,6 +738,56 @@ export const AdminBusinesses = () => {
         </CardContent>
       </Card>
 
+      {/* Search Results Summary */}
+      {debouncedSearchTerm && (
+        <Card className="mb-4">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center space-x-2">
+                <Search className="w-5 h-5 text-yp-blue" />
+                <span className="font-roboto text-gray-700">
+                  Search results for "<span className="font-semibold text-yp-dark">{debouncedSearchTerm}</span>"
+                </span>
+              </div>
+              <div className="flex items-center space-x-4 text-sm text-gray-600">
+                <span className="font-roboto">
+                  Found <span className="font-semibold text-yp-blue">{filteredBusinesses.length}</span> businesses
+                </span>
+                <span className="font-roboto">
+                  from <span className="font-semibold text-yp-blue">{businesses.length}</span> total
+                </span>
+              </div>
+            </div>
+            
+            {/* Search Statistics */}
+            <div className="mt-3 pt-3 border-t border-gray-200">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-xs text-gray-600">
+                <div className="text-center">
+                  <div className="font-semibold text-yp-blue">{filteredBusinesses.length}</div>
+                  <div>Results</div>
+                </div>
+                <div className="text-center">
+                  <div className="font-semibold text-yp-blue">
+                    {Math.round((filteredBusinesses.length / businesses.length) * 100)}%
+                  </div>
+                  <div>Match Rate</div>
+                </div>
+                <div className="text-center">
+                  <div className="font-semibold text-yp-blue">
+                    {debouncedSearchTerm.split(/\s+/).filter(word => word.length > 0).length}
+                  </div>
+                  <div>Search Terms</div>
+                </div>
+                <div className="text-center">
+                  <div className="font-semibold text-yp-blue">300ms</div>
+                  <div>Search Delay</div>
+                </div>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Businesses Grid */}
       <div id="businesses-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {currentBusinesses.map((business) => (
@@ -600,7 +797,15 @@ export const AdminBusinesses = () => {
                 <div className="flex items-center space-x-2">
                   <Building2 className="w-5 h-5 text-yp-blue" />
                   <div className="flex-1">
-                    <CardTitle className="text-lg font-comfortaa line-clamp-2">{business.name}</CardTitle>
+                    <CardTitle className="text-lg font-comfortaa line-clamp-2">
+                      {debouncedSearchTerm ? (
+                        <span dangerouslySetInnerHTML={{ 
+                          __html: highlightSearchTerms(business.name, debouncedSearchTerm) || business.name 
+                        }} />
+                      ) : (
+                        business.name
+                      )}
+                    </CardTitle>
                     <div className="flex items-center space-x-1 mt-1">
                       <MapPin className="w-4 h-4 text-gray-500" />
                       <span className="text-sm font-roboto text-gray-600">
@@ -640,7 +845,13 @@ export const AdminBusinesses = () => {
             <CardContent className="pt-0">
               {business.description && (
                 <p className="text-sm font-roboto text-gray-600 mb-3 line-clamp-2">
-                  {business.description}
+                  {debouncedSearchTerm ? (
+                    <span dangerouslySetInnerHTML={{ 
+                      __html: highlightSearchTerms(business.description, debouncedSearchTerm) || business.description 
+                    }} />
+                  ) : (
+                    business.description
+                  )}
                 </p>
               )}
               
@@ -680,7 +891,7 @@ export const AdminBusinesses = () => {
                 </div>
                 <div className="flex items-center space-x-2 text-sm text-gray-600">
                   <Eye className="w-4 h-4" />
-                  <span className="font-roboto">{business.click_count || 0} clicks</span>
+                  <span className="font-roboto">{business.click_count || 0} </span>
                 </div>
               </div>
               
@@ -749,16 +960,35 @@ export const AdminBusinesses = () => {
       )}
 
       {/* No Results */}
-      {filteredBusinesses.length === 0 && searchTerm && (
+      {filteredBusinesses.length === 0 && debouncedSearchTerm && (
         <Card className="text-center py-12">
           <CardContent>
-            <Building2 className="w-12 h-12 text-gray-400 mx-auto mb-4" />
+            <Search className="w-12 h-12 text-gray-400 mx-auto mb-4" />
             <h3 className="text-lg font-comfortaa font-semibold text-gray-900 mb-2">
-              No businesses found
+              No businesses found for "{debouncedSearchTerm}"
             </h3>
-            <p className="text-gray-600 font-roboto">
-              Try adjusting your search terms or filters.
+            <p className="text-gray-600 font-roboto mb-4">
+              Try adjusting your search terms or filters. You can search by:
             </p>
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 text-sm text-gray-500 font-roboto">
+              <div>• Business name</div>
+              <div>• Description</div>
+              <div>• Address</div>
+              <div>• Phone number</div>
+              <div>• Email</div>
+              <div>• Website</div>
+              <div>• City</div>
+              <div>• Country</div>
+            </div>
+            <div className="mt-4">
+              <Button 
+                variant="outline" 
+                onClick={() => setSearchTerm("")}
+                className="font-roboto"
+              >
+                Clear Search
+              </Button>
+            </div>
           </CardContent>
         </Card>
       )}
@@ -918,21 +1148,50 @@ export const AdminBusinesses = () => {
                     <Input
                       id="latitude"
                       type="number"
-                      step="any"
-                      {...form.register("latitude", { valueAsNumber: true })}
+                      step="0.000001"
+                      min="-90"
+                      max="90"
+                      placeholder="-90 to 90"
+                      {...form.register("latitude", { 
+                        valueAsNumber: true,
+                        validate: (value) => {
+                          if (value === undefined || value === null) return true;
+                          return (value >= -90 && value <= 90) || "Latitude must be between -90 and 90";
+                        }
+                      })}
                       className="font-roboto"
                     />
+                    {form.formState.errors.latitude && (
+                      <p className="text-sm text-red-600 mt-1">{form.formState.errors.latitude.message}</p>
+                    )}
                   </div>
                   <div>
                     <Label htmlFor="longitude" className="font-roboto">Longitude</Label>
                     <Input
                       id="longitude"
                       type="number"
-                      step="any"
-                      {...form.register("longitude", { valueAsNumber: true })}
+                      step="0.000001"
+                      min="-180"
+                      max="180"
+                      placeholder="-180 to 180"
+                      {...form.register("longitude", { 
+                        valueAsNumber: true,
+                        validate: (value) => {
+                          if (value === undefined || value === null) return true;
+                          return (value >= -180 && value <= 180) || "Longitude must be between -180 and 180";
+                        }
+                      })}
                       className="font-roboto"
                     />
+                    {form.formState.errors.longitude && (
+                      <p className="text-sm text-red-600 mt-1">{form.formState.errors.longitude.message}</p>
+                    )}
                   </div>
+                </div>
+                <div className="text-xs text-gray-500 font-roboto mb-4">
+                  <p>💡 <strong>Coordinate Format:</strong> Use decimal degrees (e.g., 30.0444 for Cairo, 31.2357 for longitude)</p>
+                  <p>• Latitude: -90 to +90 (negative = South, positive = North)</p>
+                  <p>• Longitude: -180 to +180 (negative = West, positive = East)</p>
                 </div>
                 <div>
                   <Label htmlFor="status" className="font-roboto">Status</Label>
@@ -1235,21 +1494,50 @@ export const AdminBusinesses = () => {
                     <Input
                       id="edit-latitude"
                       type="number"
-                      step="any"
-                      {...form.register("latitude", { valueAsNumber: true })}
+                      step="0.000001"
+                      min="-90"
+                      max="90"
+                      placeholder="-90 to 90"
+                      {...form.register("latitude", { 
+                        valueAsNumber: true,
+                        validate: (value) => {
+                          if (value === undefined || value === null) return true;
+                          return (value >= -90 && value <= 90) || "Latitude must be between -90 and 90";
+                        }
+                      })}
                       className="font-roboto"
                     />
+                    {form.formState.errors.latitude && (
+                      <p className="text-sm text-red-600 mt-1">{form.formState.errors.latitude.message}</p>
+                    )}
                   </div>
                   <div>
                     <Label htmlFor="edit-longitude" className="font-roboto">Longitude</Label>
                     <Input
                       id="edit-longitude"
                       type="number"
-                      step="any"
-                      {...form.register("longitude", { valueAsNumber: true })}
+                      step="0.000001"
+                      min="-180"
+                      max="180"
+                      placeholder="-180 to 180"
                       className="font-roboto"
+                      {...form.register("longitude", { 
+                        valueAsNumber: true,
+                        validate: (value) => {
+                          if (value === undefined || value === null) return true;
+                          return (value >= -180 && value <= 180) || "Longitude must be between -180 and 180";
+                        }
+                      })}
                     />
+                    {form.formState.errors.longitude && (
+                      <p className="text-sm text-red-600 mt-1">{form.formState.errors.longitude.message}</p>
+                    )}
                   </div>
+                </div>
+                <div className="text-xs text-gray-500 font-roboto mb-4">
+                  <p>💡 <strong>Coordinate Format:</strong> Use decimal degrees (e.g., 30.0444 for Cairo, 31.2357 for longitude)</p>
+                  <p>• Latitude: -90 to +90 (negative = South, positive = North)</p>
+                  <p>• Longitude: -180 to +180 (negative = West, positive = East)</p>
                 </div>
                 <div>
                   <Label htmlFor="edit-status" className="font-roboto">Status</Label>
@@ -1504,14 +1792,14 @@ export const AdminBusinesses = () => {
                       <span className="font-roboto font-medium">Country:</span>
                       <span className="font-roboto">{selectedBusiness.country_name}</span>
                     </div>
-                    {selectedBusiness.latitude && selectedBusiness.longitude && (
-                      <div className="flex items-center space-x-2">
-                        <span className="font-roboto font-medium">Coordinates:</span>
-                        <span className="font-roboto">
-                          {selectedBusiness.latitude}, {selectedBusiness.longitude}
-                        </span>
-                      </div>
-                    )}
+                                         {selectedBusiness.latitude && selectedBusiness.longitude && (
+                       <div className="flex items-center space-x-2">
+                         <span className="font-roboto font-medium">Coordinates:</span>
+                         <span className="font-roboto">
+                           {formatCoordinate(selectedBusiness.latitude)}, {formatCoordinate(selectedBusiness.longitude)}
+                         </span>
+                       </div>
+                     )}
                   </div>
                 </div>
               </div>

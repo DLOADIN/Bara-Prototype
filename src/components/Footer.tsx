@@ -23,7 +23,7 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/contact" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                <Link to="/contact-us" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   {t('footer.contactUs')}
                 </Link>
               </li>
