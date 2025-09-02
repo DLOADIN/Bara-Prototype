@@ -116,9 +116,9 @@ export const AdminSponsoredAds = () => {
         business.id === businessId 
           ? { ...business, is_sponsored_ad: !currentStatus }
           : business
-      ));
-
-      toast({
+    ));
+    
+    toast({
         title: 'Success',
         description: `Sponsored ad ${!currentStatus ? 'enabled' : 'disabled'} for ${businesses.find(b => b.id === businessId)?.name}`,
         variant: 'default'
@@ -211,74 +211,74 @@ export const AdminSponsoredAds = () => {
           <Download className="w-4 h-4 mr-2" />
           Download Data
         </Button>
-      </div>
+          </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-2">
+          {/* Stats Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-2">
               <Building2 className="w-5 h-5 text-blue-600" />
-              <div>
+                  <div>
                 <p className="text-sm font-medium text-gray-600">Total Businesses</p>
-                <p className="text-2xl font-bold text-yp-dark">
+                    <p className="text-2xl font-bold text-yp-dark">
                   {businesses.length}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-2">
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-2">
               <Target className="w-5 h-5 text-green-600" />
-              <div>
+                  <div>
                 <p className="text-sm font-medium text-gray-600">Sponsored Ads Active</p>
-                <p className="text-2xl font-bold text-yp-dark">
+                    <p className="text-2xl font-bold text-yp-dark">
                   {businesses.filter(b => b.is_sponsored_ad).length}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-        
-        <Card>
-          <CardContent className="p-6">
-            <div className="flex items-center space-x-2">
-              <TrendingUp className="w-5 h-5 text-purple-600" />
-              <div>
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            <Card>
+              <CardContent className="p-6">
+                <div className="flex items-center space-x-2">
+                  <TrendingUp className="w-5 h-5 text-purple-600" />
+                  <div>
                 <p className="text-sm font-medium text-gray-600">Sponsored Ads Inactive</p>
-                <p className="text-2xl font-bold text-yp-dark">
+                    <p className="text-2xl font-bold text-yp-dark">
                   {businesses.filter(b => !b.is_sponsored_ad).length}
-                </p>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-      </div>
+                    </p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
 
       {/* Search Filter */}
-      <Card className="mb-6">
-        <CardContent className="p-6">
-          <div className="flex flex-col md:flex-row gap-4">
-            <div className="flex-1">
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                <Input
+          <Card className="mb-6">
+            <CardContent className="p-6">
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="flex-1">
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
                   placeholder="Search businesses by name, description, or website..."
-                  value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
-                />
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                      className="pl-10"
+                    />
+                  </div>
+                </div>
               </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+            </CardContent>
+          </Card>
 
       {/* Businesses List */}
-      <div className="space-y-4">
+          <div className="space-y-4">
         {currentBusinesses.length === 0 ? (
           <Card>
             <CardContent className="p-8 text-center">
@@ -411,8 +411,8 @@ export const AdminSponsoredAds = () => {
                         Next
                         <ChevronRight className="w-4 h-4" />
                       </Button>
-                    </div>
-                  </div>
+          </div>
+        </div>
                 </CardContent>
               </Card>
             )}

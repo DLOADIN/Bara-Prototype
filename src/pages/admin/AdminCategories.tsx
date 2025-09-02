@@ -85,7 +85,7 @@ export const AdminCategories = () => {
     slug: '',
     icon: '',
     description: '',
-    parent_id: '',
+    parent_id: 'none',
     sort_order: 0,
     is_active: true
   });
@@ -204,7 +204,7 @@ export const AdminCategories = () => {
           slug: formData.slug.trim(),
           icon: formData.icon.trim() || null,
           description: formData.description.trim() || null,
-          parent_id: formData.parent_id || null,
+          parent_id: formData.parent_id === 'none' ? null : formData.parent_id,
           sort_order: formData.sort_order,
           is_active: formData.is_active
         }]);
@@ -231,7 +231,7 @@ export const AdminCategories = () => {
         slug: '',
         icon: '',
         description: '',
-        parent_id: '',
+        parent_id: 'none',
         sort_order: 0,
         is_active: true
       });
@@ -261,17 +261,20 @@ export const AdminCategories = () => {
 
     setIsSubmitting(true);
     try {
+      const updatePayload = {
+        name: formData.name.trim(),
+        slug: formData.slug.trim(),
+        // Preserve existing DB icon when the hidden input is empty
+        icon: formData.icon.trim() === '' ? (selectedCategory.icon || null) : formData.icon.trim(),
+        description: formData.description.trim() || null,
+        parent_id: formData.parent_id === 'none' ? null : formData.parent_id,
+        sort_order: formData.sort_order,
+        is_active: formData.is_active
+      };
+
       const { error } = await supabase
         .from('categories')
-        .update({
-          name: formData.name.trim(),
-          slug: formData.slug.trim(),
-          icon: formData.icon.trim() || null,
-          description: formData.description.trim() || null,
-          parent_id: formData.parent_id || null,
-          sort_order: formData.sort_order,
-          is_active: formData.is_active
-        })
+        .update(updatePayload)
         .eq('id', selectedCategory.id);
 
       if (error) {
@@ -355,7 +358,7 @@ export const AdminCategories = () => {
       slug: category.slug,
       icon: category.icon || '',
       description: category.description || '',
-      parent_id: category.parent_id || '',
+      parent_id: category.parent_id ? category.parent_id : 'none',
       sort_order: category.sort_order,
       is_active: category.is_active
     });
@@ -473,7 +476,7 @@ export const AdminCategories = () => {
                     className="font-roboto"
                   />
                 </div>
-                <div className="grid gap-2">
+                <div className="grid gap-2 hidden">
                   <Label htmlFor="icon" className="font-roboto">Icon (CSS Class)</Label>
                   <Input
                     id="icon"
@@ -500,7 +503,7 @@ export const AdminCategories = () => {
                       <SelectValue placeholder="Select parent category (optional)" />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="" className="font-roboto">No Parent (Top Level)</SelectItem>
+                      <SelectItem value="none" className="font-roboto">No Parent (Top Level)</SelectItem>
                       {categories.filter(cat => cat.is_active).map((category) => (
                         <SelectItem key={category.id} value={category.id} className="font-roboto">
                           {category.name}
@@ -745,7 +748,7 @@ export const AdminCategories = () => {
                 className="font-roboto"
               />
             </div>
-            <div className="grid gap-2">
+            <div className="grid gap-2 hidden">
               <Label htmlFor="edit-icon" className="font-roboto">Icon (CSS Class)</Label>
               <Input
                 id="edit-icon"
@@ -772,8 +775,8 @@ export const AdminCategories = () => {
                   <SelectValue placeholder="Select parent category (optional)" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="" className="font-roboto">No Parent (Top Level)</SelectItem>
-                  {categories.filter(cat => cat.is_active && cat.id !== selectedCategory?.id).map((category) => (
+                  <SelectItem value="none" className="font-roboto">No Parent (Top Level)</SelectItem>
+                  {categories.filter(cat => cat.is_active).map((category) => (
                     <SelectItem key={category.id} value={category.id} className="font-roboto">
                       {category.name}
                     </SelectItem>
