@@ -42,7 +42,7 @@ const AdvertisePage = () => {
               <Button size="lg" className="bg-white text-yp-blue hover:bg-gray-100 font-roboto">
                 {t('advertise.hero.getStarted')}
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-yp-blue font-roboto">
+              <Button size="lg" className="bg-white text-yp-blue hover:bg-gray-100 font-roboto">
                 {t('advertise.hero.learnMore')}
               </Button>
             </div>
@@ -242,7 +242,7 @@ const AdvertisePage = () => {
               <Button size="lg" className="bg-white text-yp-blue hover:bg-gray-100 font-roboto">
                 {t('advertise.cta.primaryButton')}
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-yp-blue font-roboto">
+              <Button size="lg" className="bg-white text-yp-blue hover:bg-gray-100 font-roboto">
                 {t('advertise.cta.secondaryButton')}
               </Button>
             </div>

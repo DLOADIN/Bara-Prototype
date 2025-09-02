@@ -43,7 +43,7 @@ const AboutUsPage = () => {
               <Button size="lg" className="bg-white text-yp-blue hover:bg-gray-100 font-roboto">
                 {t('about.hero.learnMore')}
               </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white hover:text-yp-blue font-roboto">
+              <Button size="lg" className="bg-white text-yp-blue hover:bg-gray-100 font-roboto">
                 {t('about.hero.contactUs')}
               </Button>
             </div>
