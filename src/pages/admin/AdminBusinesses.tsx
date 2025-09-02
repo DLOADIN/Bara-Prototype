@@ -22,6 +22,8 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { Switch } from "@/components/ui/switch";
 import { 
   Plus, 
   Search, 
@@ -34,33 +36,55 @@ import {
   Eye,
   CheckCircle,
   XCircle,
-  AlertTriangle
+  AlertTriangle,
+  Download,
+  ChevronLeft,
+  ChevronRight,
+  Image as ImageIcon,
+  Upload,
+  X
 } from "lucide-react";
 import { db } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
 
 interface Business {
   id: string;
   name: string;
+  slug: string;
   description: string | null;
   address: string | null;
   phone: string | null;
   email: string | null;
   website: string | null;
+  whatsapp: string | null;
   category_id: string;
   category_name?: string;
   city_id: string;
   city_name?: string;
+  country_id: string;
   country_name?: string;
-  status: 'active' | 'pending' | 'suspended';
+  latitude: number | null;
+  longitude: number | null;
+  hours_of_operation: any | null;
+  services: any | null;
+  images: string[] | null;
+  logo_url: string | null;
+  status: 'pending' | 'active' | 'suspended';
   is_premium: boolean;
   is_verified: boolean;
   has_coupons: boolean;
   accepts_orders_online: boolean;
   is_kid_friendly: boolean;
-  rating: number | null;
-  review_count: number | null;
+  is_sponsored_ad: boolean;
+  view_count: number;
+  click_count: number;
   created_at: string;
+  updated_at: string;
   owner_id: string | null;
 }
 
@@ -73,8 +97,43 @@ interface Category {
 interface City {
   id: string;
   name: string;
+  country_id: string;
   country_name?: string;
 }
+
+interface Country {
+  id: string;
+  name: string;
+  code: string;
+}
+
+// Form validation schema
+const businessFormSchema = z.object({
+  name: z.string().min(1, "Business name is required"),
+  slug: z.string().min(1, "Slug is required"),
+  description: z.string().optional(),
+  address: z.string().optional(),
+  phone: z.string().optional(),
+  email: z.string().email("Invalid email").optional().or(z.literal("")),
+  website: z.string().url("Invalid website URL").optional().or(z.literal("")),
+  whatsapp: z.string().optional(),
+  category_id: z.string().min(1, "Category is required"),
+  city_id: z.string().min(1, "City is required"),
+  country_id: z.string().min(1, "Country is required"),
+  latitude: z.number().optional(),
+  longitude: z.number().optional(),
+  hours_of_operation: z.any().optional(),
+  services: z.any().optional(),
+  is_premium: z.boolean().default(false),
+  is_verified: z.boolean().default(false),
+  has_coupons: z.boolean().default(false),
+  accepts_orders_online: z.boolean().default(false),
+  is_kid_friendly: z.boolean().default(false),
+  is_sponsored_ad: z.boolean().default(false),
+  status: z.enum(['pending', 'active', 'suspended']).default('pending')
+});
+
+type BusinessFormData = z.infer<typeof businessFormSchema>;
 
 export const AdminBusinesses = () => {
   const { t } = useTranslation();
@@ -82,15 +141,56 @@ export const AdminBusinesses = () => {
   const [businesses, setBusinesses] = useState<Business[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [cities, setCities] = useState<City[]>([]);
+  const [countries, setCountries] = useState<Country[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  
+  // Dialog states
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
+  const [isViewDialogOpen, setIsViewDialogOpen] = useState(false);
+  const [selectedBusiness, setSelectedBusiness] = useState<Business | null>(null);
+  
+  // Pagination
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage] = useState(12);
+  
+  // Image upload
+  const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [logoFile, setLogoFile] = useState<File | null>(null);
+  
+  // Form
+  const form = useForm<BusinessFormData>({
+    resolver: zodResolver(businessFormSchema),
+    defaultValues: {
+      name: "",
+      slug: "",
+      description: "",
+      address: "",
+      phone: "",
+      email: "",
+      website: "",
+      whatsapp: "",
+      category_id: "",
+      city_id: "",
+      country_id: "",
+      is_premium: false,
+      is_verified: false,
+      has_coupons: false,
+      accepts_orders_online: false,
+      is_kid_friendly: false,
+      is_sponsored_ad: false,
+      status: "pending"
+    }
+  });
 
   useEffect(() => {
     fetchBusinesses();
     fetchCategories();
     fetchCities();
+    fetchCountries();
   }, []);
 
   const fetchBusinesses = async () => {
@@ -102,7 +202,6 @@ export const AdminBusinesses = () => {
           categories!inner(name, slug),
           cities!inner(name, countries!inner(name))
         `)
-        .eq('is_active', true)
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -166,6 +265,21 @@ export const AdminBusinesses = () => {
     }
   };
 
+  const fetchCountries = async () => {
+    try {
+      const { data, error } = await db
+        .countries()
+        .select('*')
+        .eq('is_active', true)
+        .order('name');
+
+      if (error) throw error;
+      setCountries(data || []);
+    } catch (error) {
+      console.error('Error fetching countries:', error);
+    }
+  };
+
   const filteredBusinesses = businesses.filter(business => {
     const matchesSearch = business.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
                          business.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -176,6 +290,224 @@ export const AdminBusinesses = () => {
     
     return matchesSearch && matchesStatus && matchesCategory;
   });
+
+  // Pagination
+  const totalPages = Math.ceil(filteredBusinesses.length / itemsPerPage);
+  const startIndex = (currentPage - 1) * itemsPerPage;
+  const endIndex = startIndex + itemsPerPage;
+  const currentBusinesses = filteredBusinesses.slice(startIndex, endIndex);
+
+  // CRUD Functions
+  const handleAddBusiness = async (data: BusinessFormData) => {
+    try {
+      const businessData = {
+        ...data,
+        images: uploadedImages,
+        logo_url: logoFile ? URL.createObjectURL(logoFile) : null,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+      };
+
+      const { data: newBusiness, error } = await db
+        .businesses()
+        .insert(businessData)
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Business added successfully",
+        variant: "default"
+      });
+
+      setIsAddDialogOpen(false);
+      form.reset();
+      setUploadedImages([]);
+      setLogoFile(null);
+      fetchBusinesses();
+    } catch (error) {
+      console.error('Error adding business:', error);
+      toast({
+        title: "Error",
+        description: "Failed to add business",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleEditBusiness = async (data: BusinessFormData) => {
+    if (!selectedBusiness) return;
+    
+    try {
+      const businessData = {
+        ...data,
+        images: uploadedImages,
+        logo_url: logoFile ? URL.createObjectURL(logoFile) : selectedBusiness.logo_url,
+        updated_at: new Date().toISOString()
+      };
+
+      const { error } = await db
+        .businesses()
+        .update(businessData)
+        .eq('id', selectedBusiness.id);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Business updated successfully",
+        variant: "default"
+      });
+
+      setIsEditDialogOpen(false);
+      setSelectedBusiness(null);
+      form.reset();
+      setUploadedImages([]);
+      setLogoFile(null);
+      fetchBusinesses();
+    } catch (error) {
+      console.error('Error updating business:', error);
+      toast({
+        title: "Error",
+        description: "Failed to update business",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleDeleteBusiness = async (businessId: string) => {
+    if (!confirm('Are you sure you want to delete this business?')) return;
+    
+    try {
+      const { error } = await db
+        .businesses()
+        .delete()
+        .eq('id', businessId);
+
+      if (error) throw error;
+
+      toast({
+        title: "Success",
+        description: "Business deleted successfully",
+        variant: "default"
+      });
+
+      fetchBusinesses();
+    } catch (error) {
+      console.error('Error deleting business:', error);
+      toast({
+        title: "Error",
+        description: "Failed to delete business",
+        variant: "destructive"
+      });
+    }
+  };
+
+  const handleViewBusiness = (business: Business) => {
+    setSelectedBusiness(business);
+    setIsViewDialogOpen(true);
+  };
+
+  const handleEditClick = (business: Business) => {
+    setSelectedBusiness(business);
+    setUploadedImages(business.images || []);
+    form.reset({
+      name: business.name,
+      slug: business.slug,
+      description: business.description || "",
+      address: business.address || "",
+      phone: business.phone || "",
+      email: business.email || "",
+      website: business.website || "",
+      whatsapp: business.whatsapp || "",
+      category_id: business.category_id,
+      city_id: business.city_id,
+      country_id: business.country_id,
+      latitude: business.latitude || undefined,
+      longitude: business.longitude || undefined,
+      hours_of_operation: business.hours_of_operation,
+      services: business.services,
+      is_premium: business.is_premium,
+      is_verified: business.is_verified,
+      has_coupons: business.has_coupons,
+      accepts_orders_online: business.accepts_orders_online,
+      is_kid_friendly: business.is_kid_friendly,
+      is_sponsored_ad: business.is_sponsored_ad,
+      status: business.status
+    });
+    setIsEditDialogOpen(true);
+  };
+
+  const handleAddClick = () => {
+    form.reset();
+    setUploadedImages([]);
+    setLogoFile(null);
+    setIsAddDialogOpen(true);
+  };
+
+  // PDF Export
+  const exportToPDF = async () => {
+    const element = document.getElementById('businesses-grid');
+    if (!element) return;
+
+    try {
+      const canvas = await html2canvas(element);
+      const imgData = canvas.toDataURL('image/png');
+      const pdf = new jsPDF('p', 'mm', 'a4');
+      const imgWidth = 210;
+      const pageHeight = 295;
+      const imgHeight = (canvas.height * imgWidth) / canvas.width;
+      let heightLeft = imgHeight;
+
+      let position = 0;
+
+      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+      heightLeft -= pageHeight;
+
+      while (heightLeft >= 0) {
+        position = heightLeft - imgHeight;
+        pdf.addPage();
+        pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight);
+        heightLeft -= pageHeight;
+      }
+
+      pdf.save('businesses-list.pdf');
+      toast({
+        title: "Success",
+        description: "PDF exported successfully",
+        variant: "default"
+      });
+    } catch (error) {
+      console.error('Error exporting PDF:', error);
+      toast({
+        title: "Error",
+        description: "Failed to export PDF",
+        variant: "destructive"
+      });
+    }
+  };
+
+  // Image handling
+  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files) {
+      const newImages = Array.from(files).map(file => URL.createObjectURL(file));
+      setUploadedImages(prev => [...prev, ...newImages]);
+    }
+  };
+
+  const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      setLogoFile(file);
+    }
+  };
+
+  const removeImage = (index: number) => {
+    setUploadedImages(prev => prev.filter((_, i) => i !== index));
+  };
 
   if (loading) {
     return (
@@ -196,10 +528,23 @@ export const AdminBusinesses = () => {
           <p className="text-gray-600 font-roboto">Manage and moderate business listings</p>
         </div>
         
-        <Button className="bg-yp-blue hover:bg-[#4e3c28]">
-          <Plus className="w-4 h-4 mr-2" />
-          Add Business
-        </Button>
+        <div className="flex gap-2">
+          <Button 
+            variant="outline" 
+            onClick={exportToPDF}
+            className="font-roboto"
+          >
+            <Download className="w-4 h-4 mr-2" />
+            Export PDF
+          </Button>
+          <Button 
+            className="bg-yp-blue hover:bg-[#4e3c28]"
+            onClick={handleAddClick}
+          >
+            <Plus className="w-4 h-4 mr-2" />
+            Add Business
+          </Button>
+        </div>
       </div>
 
       {/* Search and Filters */}
@@ -247,8 +592,8 @@ export const AdminBusinesses = () => {
       </Card>
 
       {/* Businesses Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {filteredBusinesses.map((business) => (
+      <div id="businesses-grid" className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        {currentBusinesses.map((business) => (
           <Card key={business.id} className="hover:shadow-lg transition-shadow duration-200">
             <CardHeader className="pb-3">
               <div className="flex items-start justify-between">
@@ -269,6 +614,15 @@ export const AdminBusinesses = () => {
                     variant="ghost"
                     size="sm"
                     className="p-1 h-8 w-8"
+                    onClick={() => handleViewBusiness(business)}
+                  >
+                    <Eye className="w-4 h-4" />
+                  </Button>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="p-1 h-8 w-8"
+                    onClick={() => handleEditClick(business)}
                   >
                     <Edit className="w-4 h-4" />
                   </Button>
@@ -276,6 +630,7 @@ export const AdminBusinesses = () => {
                     variant="ghost"
                     size="sm"
                     className="p-1 h-8 w-8 text-red-600 hover:text-red-700 hover:bg-[#4e3c28]/10"
+                    onClick={() => handleDeleteBusiness(business.id)}
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
@@ -321,11 +676,11 @@ export const AdminBusinesses = () => {
               <div className="grid grid-cols-2 gap-4 mb-3">
                 <div className="flex items-center space-x-2 text-sm text-gray-600">
                   <Crown className="w-4 h-4 text-yellow-500" />
-                  <span className="font-roboto">{business.rating?.toFixed(1) || "N/A"}</span>
+                  <span className="font-roboto">{business.view_count || 0} views</span>
                 </div>
                 <div className="flex items-center space-x-2 text-sm text-gray-600">
                   <Eye className="w-4 h-4" />
-                  <span className="font-roboto">{business.review_count || 0} reviews</span>
+                  <span className="font-roboto">{business.click_count || 0} clicks</span>
                 </div>
               </div>
               
@@ -345,6 +700,54 @@ export const AdminBusinesses = () => {
         ))}
       </div>
 
+      {/* Pagination */}
+      {totalPages > 1 && (
+        <Card className="mt-6">
+          <CardContent className="p-4">
+            <div className="flex items-center justify-between">
+              <div className="text-sm font-roboto text-gray-600">
+                Showing {startIndex + 1} to {Math.min(endIndex, filteredBusinesses.length)} of {filteredBusinesses.length} businesses
+              </div>
+              <div className="flex items-center space-x-2">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  className="font-roboto"
+                >
+                  <ChevronLeft className="w-4 h-4 mr-1" />
+                  Previous
+                </Button>
+                <div className="flex items-center space-x-1">
+                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <Button
+                      key={page}
+                      variant={currentPage === page ? "default" : "outline"}
+                      size="sm"
+                      onClick={() => setCurrentPage(page)}
+                      className="font-roboto w-8 h-8 p-0"
+                    >
+                      {page}
+                    </Button>
+                  ))}
+                </div>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  className="font-roboto"
+                >
+                  Next
+                  <ChevronRight className="w-4 h-4 ml-1" />
+                </Button>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* No Results */}
       {filteredBusinesses.length === 0 && searchTerm && (
         <Card className="text-center py-12">
@@ -359,6 +762,825 @@ export const AdminBusinesses = () => {
           </CardContent>
         </Card>
       )}
+
+      {/* Add Business Dialog */}
+      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="font-comfortaa">Add New Business</DialogTitle>
+            <DialogDescription className="font-roboto">
+              Fill in the details to create a new business listing
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={form.handleSubmit(handleAddBusiness)} className="space-y-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="name" className="font-roboto">Business Name *</Label>
+                  <Input
+                    id="name"
+                    {...form.register("name")}
+                    className="font-roboto"
+                  />
+                  {form.formState.errors.name && (
+                    <p className="text-sm text-red-600 mt-1">{form.formState.errors.name.message}</p>
+                  )}
+                </div>
+                <div>
+                  <Label htmlFor="slug" className="font-roboto">Slug *</Label>
+                  <Input
+                    id="slug"
+                    {...form.register("slug")}
+                    className="font-roboto"
+                  />
+                  {form.formState.errors.slug && (
+                    <p className="text-sm text-red-600 mt-1">{form.formState.errors.slug.message}</p>
+                  )}
+                </div>
+                <div>
+                  <Label htmlFor="description" className="font-roboto">Description</Label>
+                  <Textarea
+                    id="description"
+                    {...form.register("description")}
+                    className="font-roboto"
+                    rows={3}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="address" className="font-roboto">Address</Label>
+                  <Input
+                    id="address"
+                    {...form.register("address")}
+                    className="font-roboto"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="phone" className="font-roboto">Phone</Label>
+                  <Input
+                    id="phone"
+                    {...form.register("phone")}
+                    className="font-roboto"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="email" className="font-roboto">Email</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    {...form.register("email")}
+                    className="font-roboto"
+                  />
+                  {form.formState.errors.email && (
+                    <p className="text-sm text-red-600 mt-1">{form.formState.errors.email.message}</p>
+                  )}
+                </div>
+                <div>
+                  <Label htmlFor="website" className="font-roboto">Website</Label>
+                  <Input
+                    id="website"
+                    type="url"
+                    {...form.register("website")}
+                    className="font-roboto"
+                  />
+                  {form.formState.errors.website && (
+                    <p className="text-sm text-red-600 mt-1">{form.formState.errors.website.message}</p>
+                  )}
+                </div>
+                <div>
+                  <Label htmlFor="whatsapp" className="font-roboto">WhatsApp</Label>
+                  <Input
+                    id="whatsapp"
+                    {...form.register("whatsapp")}
+                    className="font-roboto"
+                  />
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="category_id" className="font-roboto">Category *</Label>
+                  <Select value={form.watch("category_id")} onValueChange={(value) => form.setValue("category_id", value)}>
+                    <SelectTrigger className="font-roboto">
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.id} className="font-roboto">
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {form.formState.errors.category_id && (
+                    <p className="text-sm text-red-600 mt-1">{form.formState.errors.category_id.message}</p>
+                  )}
+                </div>
+                <div>
+                  <Label htmlFor="country_id" className="font-roboto">Country *</Label>
+                  <Select value={form.watch("country_id")} onValueChange={(value) => form.setValue("country_id", value)}>
+                    <SelectTrigger className="font-roboto">
+                      <SelectValue placeholder="Select country" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {countries.map((country) => (
+                        <SelectItem key={country.id} value={country.id} className="font-roboto">
+                          {country.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {form.formState.errors.country_id && (
+                    <p className="text-sm text-red-600 mt-1">{form.formState.errors.country_id.message}</p>
+                  )}
+                </div>
+                <div>
+                  <Label htmlFor="city_id" className="font-roboto">City *</Label>
+                  <Select value={form.watch("city_id")} onValueChange={(value) => form.setValue("city_id", value)}>
+                    <SelectTrigger className="font-roboto">
+                      <SelectValue placeholder="Select city" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {cities
+                        .filter(city => !form.watch("country_id") || city.country_id === form.watch("country_id"))
+                        .map((city) => (
+                          <SelectItem key={city.id} value={city.id} className="font-roboto">
+                            {city.name}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                  {form.formState.errors.city_id && (
+                    <p className="text-sm text-red-600 mt-1">{form.formState.errors.city_id.message}</p>
+                  )}
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="latitude" className="font-roboto">Latitude</Label>
+                    <Input
+                      id="latitude"
+                      type="number"
+                      step="any"
+                      {...form.register("latitude", { valueAsNumber: true })}
+                      className="font-roboto"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="longitude" className="font-roboto">Longitude</Label>
+                    <Input
+                      id="longitude"
+                      type="number"
+                      step="any"
+                      {...form.register("longitude", { valueAsNumber: true })}
+                      className="font-roboto"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="status" className="font-roboto">Status</Label>
+                  <Select value={form.watch("status")} onValueChange={(value) => form.setValue("status", value as 'pending' | 'active' | 'suspended')}>
+                    <SelectTrigger className="font-roboto">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pending" className="font-roboto">Pending</SelectItem>
+                      <SelectItem value="active" className="font-roboto">Active</SelectItem>
+                      <SelectItem value="suspended" className="font-roboto">Suspended</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="is_premium"
+                      checked={form.watch("is_premium")}
+                      onCheckedChange={(checked) => form.setValue("is_premium", checked)}
+                    />
+                    <Label htmlFor="is_premium" className="font-roboto">Premium Business</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="is_verified"
+                      checked={form.watch("is_verified")}
+                      onCheckedChange={(checked) => form.setValue("is_verified", checked)}
+                    />
+                    <Label htmlFor="is_verified" className="font-roboto">Verified Business</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="has_coupons"
+                      checked={form.watch("has_coupons")}
+                      onCheckedChange={(checked) => form.setValue("has_coupons", checked)}
+                    />
+                    <Label htmlFor="has_coupons" className="font-roboto">Has Coupons</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="accepts_orders_online"
+                      checked={form.watch("accepts_orders_online")}
+                      onCheckedChange={(checked) => form.setValue("accepts_orders_online", checked)}
+                    />
+                    <Label htmlFor="accepts_orders_online" className="font-roboto">Accepts Online Orders</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="is_kid_friendly"
+                      checked={form.watch("is_kid_friendly")}
+                      onCheckedChange={(checked) => form.setValue("is_kid_friendly", checked)}
+                    />
+                    <Label htmlFor="is_kid_friendly" className="font-roboto">Kid Friendly</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="is_sponsored_ad"
+                      checked={form.watch("is_sponsored_ad")}
+                      onCheckedChange={(checked) => form.setValue("is_sponsored_ad", checked)}
+                    />
+                    <Label htmlFor="is_sponsored_ad" className="font-roboto">Sponsored Ad</Label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Image Upload Section */}
+            <div className="space-y-4">
+              <div>
+                <Label className="font-roboto">Business Logo</Label>
+                <div className="mt-2">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleLogoUpload}
+                    className="font-roboto"
+                  />
+                </div>
+                {logoFile && (
+                  <div className="mt-2 flex items-center space-x-2">
+                    <img
+                      src={URL.createObjectURL(logoFile)}
+                      alt="Logo preview"
+                      className="w-16 h-16 object-cover rounded border"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setLogoFile(null)}
+                      className="font-roboto"
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                )}
+              </div>
+              <div>
+                <Label className="font-roboto">Business Images</Label>
+                <div className="mt-2">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleImageUpload}
+                    className="font-roboto"
+                  />
+                </div>
+                {uploadedImages.length > 0 && (
+                  <div className="mt-2 grid grid-cols-4 gap-2">
+                    {uploadedImages.map((image, index) => (
+                      <div key={index} className="relative">
+                        <img
+                          src={image}
+                          alt={`Business image ${index + 1}`}
+                          className="w-20 h-20 object-cover rounded border"
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="absolute -top-2 -right-2 w-6 h-6 p-0"
+                          onClick={() => removeImage(index)}
+                        >
+                          <X className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)} className="font-roboto">
+                Cancel
+              </Button>
+              <Button type="submit" className="bg-yp-blue hover:bg-[#4e3c28] font-roboto">
+                Add Business
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* Edit Business Dialog */}
+      <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="font-comfortaa">Edit Business</DialogTitle>
+            <DialogDescription className="font-roboto">
+              Update the business details
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={form.handleSubmit(handleEditBusiness)} className="space-y-6">
+            {/* Same form fields as Add Business Dialog */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="edit-name" className="font-roboto">Business Name *</Label>
+                  <Input
+                    id="edit-name"
+                    {...form.register("name")}
+                    className="font-roboto"
+                  />
+                  {form.formState.errors.name && (
+                    <p className="text-sm text-red-600 mt-1">{form.formState.errors.name.message}</p>
+                  )}
+                </div>
+                <div>
+                  <Label htmlFor="edit-slug" className="font-roboto">Slug *</Label>
+                  <Input
+                    id="edit-slug"
+                    {...form.register("slug")}
+                    className="font-roboto"
+                  />
+                  {form.formState.errors.slug && (
+                    <p className="text-sm text-red-600 mt-1">{form.formState.errors.slug.message}</p>
+                  )}
+                </div>
+                <div>
+                  <Label htmlFor="edit-description" className="font-roboto">Description</Label>
+                  <Textarea
+                    id="edit-description"
+                    {...form.register("description")}
+                    className="font-roboto"
+                    rows={3}
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-address" className="font-roboto">Address</Label>
+                  <Input
+                    id="edit-address"
+                    {...form.register("address")}
+                    className="font-roboto"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-phone" className="font-roboto">Phone</Label>
+                  <Input
+                    id="edit-phone"
+                    {...form.register("phone")}
+                    className="font-roboto"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="edit-email" className="font-roboto">Email</Label>
+                  <Input
+                    id="edit-email"
+                    type="email"
+                    {...form.register("email")}
+                    className="font-roboto"
+                  />
+                  {form.formState.errors.email && (
+                    <p className="text-sm text-red-600 mt-1">{form.formState.errors.email.message}</p>
+                  )}
+                </div>
+                <div>
+                  <Label htmlFor="edit-website" className="font-roboto">Website</Label>
+                  <Input
+                    id="edit-website"
+                    type="url"
+                    {...form.register("website")}
+                    className="font-roboto"
+                  />
+                  {form.formState.errors.website && (
+                    <p className="text-sm text-red-600 mt-1">{form.formState.errors.website.message}</p>
+                  )}
+                </div>
+                <div>
+                  <Label htmlFor="edit-whatsapp" className="font-roboto">WhatsApp</Label>
+                  <Input
+                    id="edit-whatsapp"
+                    {...form.register("whatsapp")}
+                    className="font-roboto"
+                  />
+                </div>
+              </div>
+              <div className="space-y-4">
+                <div>
+                  <Label htmlFor="edit-category_id" className="font-roboto">Category *</Label>
+                  <Select value={form.watch("category_id")} onValueChange={(value) => form.setValue("category_id", value)}>
+                    <SelectTrigger className="font-roboto">
+                      <SelectValue placeholder="Select category" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {categories.map((category) => (
+                        <SelectItem key={category.id} value={category.id} className="font-roboto">
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {form.formState.errors.category_id && (
+                    <p className="text-sm text-red-600 mt-1">{form.formState.errors.category_id.message}</p>
+                  )}
+                </div>
+                <div>
+                  <Label htmlFor="edit-country_id" className="font-roboto">Country *</Label>
+                  <Select value={form.watch("country_id")} onValueChange={(value) => form.setValue("country_id", value)}>
+                    <SelectTrigger className="font-roboto">
+                      <SelectValue placeholder="Select country" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {countries.map((country) => (
+                        <SelectItem key={country.id} value={country.id} className="font-roboto">
+                          {country.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  {form.formState.errors.country_id && (
+                    <p className="text-sm text-red-600 mt-1">{form.formState.errors.country_id.message}</p>
+                  )}
+                </div>
+                <div>
+                  <Label htmlFor="edit-city_id" className="font-roboto">City *</Label>
+                  <Select value={form.watch("city_id")} onValueChange={(value) => form.setValue("city_id", value)}>
+                    <SelectTrigger className="font-roboto">
+                      <SelectValue placeholder="Select city" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {cities
+                        .filter(city => !form.watch("country_id") || city.country_id === form.watch("country_id"))
+                        .map((city) => (
+                          <SelectItem key={city.id} value={city.id} className="font-roboto">
+                            {city.name}
+                          </SelectItem>
+                        ))}
+                    </SelectContent>
+                  </Select>
+                  {form.formState.errors.city_id && (
+                    <p className="text-sm text-red-600 mt-1">{form.formState.errors.city_id.message}</p>
+                  )}
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <Label htmlFor="edit-latitude" className="font-roboto">Latitude</Label>
+                    <Input
+                      id="edit-latitude"
+                      type="number"
+                      step="any"
+                      {...form.register("latitude", { valueAsNumber: true })}
+                      className="font-roboto"
+                    />
+                  </div>
+                  <div>
+                    <Label htmlFor="edit-longitude" className="font-roboto">Longitude</Label>
+                    <Input
+                      id="edit-longitude"
+                      type="number"
+                      step="any"
+                      {...form.register("longitude", { valueAsNumber: true })}
+                      className="font-roboto"
+                    />
+                  </div>
+                </div>
+                <div>
+                  <Label htmlFor="edit-status" className="font-roboto">Status</Label>
+                  <Select value={form.watch("status")} onValueChange={(value) => form.setValue("status", value as 'pending' | 'active' | 'suspended')}>
+                    <SelectTrigger className="font-roboto">
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pending" className="font-roboto">Pending</SelectItem>
+                      <SelectItem value="active" className="font-roboto">Active</SelectItem>
+                      <SelectItem value="suspended" className="font-roboto">Suspended</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div className="space-y-3">
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="edit-is_premium"
+                      checked={form.watch("is_premium")}
+                      onCheckedChange={(checked) => form.setValue("is_premium", checked)}
+                    />
+                    <Label htmlFor="edit-is_premium" className="font-roboto">Premium Business</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="edit-is_verified"
+                      checked={form.watch("is_verified")}
+                      onCheckedChange={(checked) => form.setValue("is_verified", checked)}
+                    />
+                    <Label htmlFor="edit-is_verified" className="font-roboto">Verified Business</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="edit-has_coupons"
+                      checked={form.watch("has_coupons")}
+                      onCheckedChange={(checked) => form.setValue("has_coupons", checked)}
+                    />
+                    <Label htmlFor="edit-has_coupons" className="font-roboto">Has Coupons</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="edit-accepts_orders_online"
+                      checked={form.watch("accepts_orders_online")}
+                      onCheckedChange={(checked) => form.setValue("accepts_orders_online", checked)}
+                    />
+                    <Label htmlFor="edit-accepts_orders_online" className="font-roboto">Accepts Online Orders</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="edit-is_kid_friendly"
+                      checked={form.watch("is_kid_friendly")}
+                      onCheckedChange={(checked) => form.setValue("is_kid_friendly", checked)}
+                    />
+                    <Label htmlFor="edit-is_kid_friendly" className="font-roboto">Kid Friendly</Label>
+                  </div>
+                  <div className="flex items-center space-x-2">
+                    <Switch
+                      id="edit-is_sponsored_ad"
+                      checked={form.watch("is_sponsored_ad")}
+                      onCheckedChange={(checked) => form.setValue("is_sponsored_ad", checked)}
+                    />
+                    <Label htmlFor="edit-is_sponsored_ad" className="font-roboto">Sponsored Ad</Label>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            {/* Image Upload Section for Edit */}
+            <div className="space-y-4">
+              <div>
+                <Label className="font-roboto">Business Logo</Label>
+                <div className="mt-2">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    onChange={handleLogoUpload}
+                    className="font-roboto"
+                  />
+                </div>
+                {(logoFile || selectedBusiness?.logo_url) && (
+                  <div className="mt-2 flex items-center space-x-2">
+                    <img
+                      src={logoFile ? URL.createObjectURL(logoFile) : selectedBusiness?.logo_url}
+                      alt="Logo preview"
+                      className="w-16 h-16 object-cover rounded border"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => setLogoFile(null)}
+                      className="font-roboto"
+                    >
+                      <X className="w-4 h-4" />
+                    </Button>
+                  </div>
+                )}
+              </div>
+              <div>
+                <Label className="font-roboto">Business Images</Label>
+                <div className="mt-2">
+                  <Input
+                    type="file"
+                    accept="image/*"
+                    multiple
+                    onChange={handleImageUpload}
+                    className="font-roboto"
+                  />
+                </div>
+                {uploadedImages.length > 0 && (
+                  <div className="mt-2 grid grid-cols-4 gap-2">
+                    {uploadedImages.map((image, index) => (
+                      <div key={index} className="relative">
+                        <img
+                          src={image}
+                          alt={`Business image ${index + 1}`}
+                          className="w-20 h-20 object-cover rounded border"
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="absolute -top-2 -right-2 w-6 h-6 p-0"
+                          onClick={() => removeImage(index)}
+                        >
+                          <X className="w-3 h-3" />
+                        </Button>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            <DialogFooter>
+              <Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)} className="font-roboto">
+                Cancel
+              </Button>
+              <Button type="submit" className="bg-yp-blue hover:bg-[#4e3c28] font-roboto">
+                Update Business
+              </Button>
+            </DialogFooter>
+          </form>
+        </DialogContent>
+      </Dialog>
+
+      {/* View Business Dialog */}
+      <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
+        <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="font-comfortaa">Business Details</DialogTitle>
+            <DialogDescription className="font-roboto">
+              View complete business information
+            </DialogDescription>
+          </DialogHeader>
+          {selectedBusiness && (
+            <div className="space-y-6">
+              {/* Business Header */}
+              <div className="flex items-start space-x-4">
+                {selectedBusiness.logo_url && (
+                  <img
+                    src={selectedBusiness.logo_url}
+                    alt="Business logo"
+                    className="w-20 h-20 object-cover rounded-lg border"
+                  />
+                )}
+                <div className="flex-1">
+                  <h3 className="text-2xl font-comfortaa font-bold text-yp-dark">{selectedBusiness.name}</h3>
+                  <p className="text-gray-600 font-roboto">{selectedBusiness.description}</p>
+                  <div className="flex items-center space-x-2 mt-2">
+                    <MapPin className="w-4 h-4 text-gray-500" />
+                    <span className="text-sm font-roboto text-gray-600">
+                      {selectedBusiness.address}
+                    </span>
+                  </div>
+                </div>
+                <div className="flex flex-col items-end space-y-2">
+                  <Badge variant="outline" className="capitalize">
+                    {selectedBusiness.status}
+                  </Badge>
+                  {selectedBusiness.is_premium && (
+                    <Badge variant="default" className="bg-yp-blue">
+                      Premium
+                    </Badge>
+                  )}
+                  {selectedBusiness.is_verified && (
+                    <Badge variant="secondary">
+                      ✓ Verified
+                    </Badge>
+                  )}
+                </div>
+              </div>
+
+              {/* Business Images */}
+              {selectedBusiness.images && selectedBusiness.images.length > 0 && (
+                <div>
+                  <h4 className="text-lg font-comfortaa font-semibold mb-3">Business Images</h4>
+                  <div className="grid grid-cols-4 gap-4">
+                    {selectedBusiness.images.map((image, index) => (
+                      <img
+                        key={index}
+                        src={image}
+                        alt={`Business image ${index + 1}`}
+                        className="w-full h-32 object-cover rounded-lg border"
+                      />
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {/* Contact Information */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <h4 className="text-lg font-comfortaa font-semibold">Contact Information</h4>
+                  <div className="space-y-3">
+                    {selectedBusiness.phone && (
+                      <div className="flex items-center space-x-2">
+                        <span className="font-roboto font-medium">Phone:</span>
+                        <span className="font-roboto">{selectedBusiness.phone}</span>
+                      </div>
+                    )}
+                    {selectedBusiness.email && (
+                      <div className="flex items-center space-x-2">
+                        <span className="font-roboto font-medium">Email:</span>
+                        <span className="font-roboto">{selectedBusiness.email}</span>
+                      </div>
+                    )}
+                    {selectedBusiness.website && (
+                      <div className="flex items-center space-x-2">
+                        <span className="font-roboto font-medium">Website:</span>
+                        <a href={selectedBusiness.website} target="_blank" rel="noopener noreferrer" className="font-roboto text-yp-blue hover:underline">
+                          {selectedBusiness.website}
+                        </a>
+                      </div>
+                    )}
+                    {selectedBusiness.whatsapp && (
+                      <div className="flex items-center space-x-2">
+                        <span className="font-roboto font-medium">WhatsApp:</span>
+                        <span className="font-roboto">{selectedBusiness.whatsapp}</span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <h4 className="text-lg font-comfortaa font-semibold">Location</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center space-x-2">
+                      <span className="font-roboto font-medium">City:</span>
+                      <span className="font-roboto">{selectedBusiness.city_name}</span>
+                    </div>
+                    <div className="flex items-center space-x-2">
+                      <span className="font-roboto font-medium">Country:</span>
+                      <span className="font-roboto">{selectedBusiness.country_name}</span>
+                    </div>
+                    {selectedBusiness.latitude && selectedBusiness.longitude && (
+                      <div className="flex items-center space-x-2">
+                        <span className="font-roboto font-medium">Coordinates:</span>
+                        <span className="font-roboto">
+                          {selectedBusiness.latitude}, {selectedBusiness.longitude}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </div>
+
+              {/* Business Features */}
+              <div>
+                <h4 className="text-lg font-comfortaa font-semibold mb-3">Business Features</h4>
+                <div className="flex flex-wrap gap-2">
+                  {selectedBusiness.has_coupons && (
+                    <Badge variant="outline" className="border-orange-200 text-orange-700 bg-orange-50">
+                      Coupons
+                    </Badge>
+                  )}
+                  {selectedBusiness.accepts_orders_online && (
+                    <Badge variant="outline" className="border-green-200 text-green-700 bg-green-50">
+                      Order Online
+                    </Badge>
+                  )}
+                  {selectedBusiness.is_kid_friendly && (
+                    <Badge variant="outline" className="border-blue-200 text-blue-700 bg-blue-50">
+                      Kid Friendly
+                    </Badge>
+                  )}
+                  {selectedBusiness.is_sponsored_ad && (
+                    <Badge variant="outline" className="border-purple-200 text-purple-700 bg-purple-50">
+                      Sponsored Ad
+                    </Badge>
+                  )}
+                </div>
+              </div>
+
+              {/* Statistics */}
+              <div className="grid grid-cols-2 gap-4">
+                <div className="text-center p-4 bg-gray-50 rounded-lg">
+                  <div className="text-2xl font-comfortaa font-bold text-yp-blue">{selectedBusiness.view_count}</div>
+                  <div className="text-sm font-roboto text-gray-600">Total Views</div>
+                </div>
+                <div className="text-center p-4 bg-gray-50 rounded-lg">
+                  <div className="text-2xl font-comfortaa font-bold text-yp-blue">{selectedBusiness.click_count}</div>
+                  <div className="text-sm font-roboto text-gray-600">Total Clicks</div>
+                </div>
+              </div>
+
+              {/* Timestamps */}
+              <div className="text-sm font-roboto text-gray-500">
+                <div>Created: {new Date(selectedBusiness.created_at).toLocaleString()}</div>
+                <div>Updated: {new Date(selectedBusiness.updated_at).toLocaleString()}</div>
+              </div>
+            </div>
+          )}
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setIsViewDialogOpen(false)} className="font-roboto">
+              Close
+            </Button>
+            {selectedBusiness && (
+              <Button 
+                onClick={() => {
+                  setIsViewDialogOpen(false);
+                  handleEditClick(selectedBusiness);
+                }}
+                className="bg-yp-blue hover:bg-[#4e3c28] font-roboto"
+              >
+                <Edit className="w-4 h-4 mr-2" />
+                Edit Business
+              </Button>
+            )}
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </AdminLayout>
   );
 };

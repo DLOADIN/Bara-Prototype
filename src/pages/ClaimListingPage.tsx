@@ -149,7 +149,7 @@ export const ClaimListingPage = () => {
             <div className="flex flex-col sm:flex-row items-center justify-center gap-4 text-lg">
               <div className="flex items-center gap-2">
                 <Phone className="w-5 h-5" />
-                <span>{t('claimListing.page.hero.callUs')} (+250) 791 568 519</span>
+                <span>{t('claimListing.page.hero.callUs')} (+250) 791 568 519 </span>
               </div>
               <div className="flex items-center gap-2">
                 <Clock className="w-5 h-5" />
