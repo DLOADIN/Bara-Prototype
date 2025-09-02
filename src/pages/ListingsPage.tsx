@@ -693,30 +693,7 @@ export const ListingsPage = () => {
       {/* Results */}
       <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8 py-4 sm:py-6">
         <div className="flex flex-col lg:flex-row gap-4 lg:gap-8">
-          {/* Main Content - Business Listings */}
           <div className="flex-1">
-        {/* City-specific summary when a city is selected */}
-        {selectedCity && !isSearchPage && (
-          <div className="bg-green-50 border border-green-200 rounded-lg p-3 sm:p-4 mb-4 sm:mb-6">
-            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between space-y-2 sm:space-y-0">
-              <div>
-                <h3 className="text-base sm:text-lg font-semibold text-green-900 mb-1">
-                  {categoryName} in {selectedCity}
-                </h3>
-                <p className="text-green-700 text-xs sm:text-sm">
-                      {t('listings.showingBusinesses')} {sortedBusinesses.length} {t('listings.businessesInCity')} {selectedCity}
-                </p>
-              </div>
-              <div className="text-left sm:text-right">
-                    <div className="text-xl sm:text-2xl font-bold text-green-900">{sortedBusinesses.length}</div>
-                    <div className="text-xs sm:text-sm text-green-700">{t('listings.businessesFoundCount')}</div>
-              </div>
-            </div>
-          </div>
-        )}
-
-
-
             {sortedBusinesses.length === 0 ? (
           <div className="text-center py-16">
             <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
