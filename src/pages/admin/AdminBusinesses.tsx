@@ -656,9 +656,9 @@ export const AdminBusinesses = () => {
             className="bg-yp-blue hover:bg-[#4e3c28]"
             onClick={handleAddClick}
           >
-            <Plus className="w-4 h-4 mr-2" />
-            Add Business
-          </Button>
+          <Plus className="w-4 h-4 mr-2" />
+          Add Business
+        </Button>
         </div>
       </div>
 
@@ -1212,48 +1212,78 @@ export const AdminBusinesses = () => {
                       id="is_premium"
                       checked={form.watch("is_premium")}
                       onCheckedChange={(checked) => form.setValue("is_premium", checked)}
+                      className={`${form.watch("is_premium") ? 'bg-green-600' : 'bg-red-600'}`}
                     />
-                    <Label htmlFor="is_premium" className="font-roboto">Premium Business</Label>
+                    <Label htmlFor="is_premium" className="font-roboto">
+                      <span className={`${form.watch("is_premium") ? 'text-green-700' : 'text-red-700'}`}>
+                        Premium Business
+                      </span>
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Switch
                       id="is_verified"
                       checked={form.watch("is_verified")}
                       onCheckedChange={(checked) => form.setValue("is_verified", checked)}
+                      className={`${form.watch("is_verified") ? 'bg-green-600' : 'bg-red-600'}`}
                     />
-                    <Label htmlFor="is_verified" className="font-roboto">Verified Business</Label>
+                    <Label htmlFor="is_verified" className="font-roboto">
+                      <span className={`${form.watch("is_verified") ? 'text-green-700' : 'text-red-700'}`}>
+                        Verified Business
+                      </span>
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Switch
                       id="has_coupons"
                       checked={form.watch("has_coupons")}
                       onCheckedChange={(checked) => form.setValue("has_coupons", checked)}
+                      className={`${form.watch("has_coupons") ? 'bg-green-600' : 'bg-red-600'}`}
                     />
-                    <Label htmlFor="has_coupons" className="font-roboto">Has Coupons</Label>
+                    <Label htmlFor="has_coupons" className="font-roboto">
+                      <span className={`${form.watch("has_coupons") ? 'text-green-700' : 'text-red-700'}`}>
+                        Has Coupons
+                      </span>
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Switch
                       id="accepts_orders_online"
                       checked={form.watch("accepts_orders_online")}
                       onCheckedChange={(checked) => form.setValue("accepts_orders_online", checked)}
+                      className={`${form.watch("accepts_orders_online") ? 'bg-green-600' : 'bg-red-600'}`}
                     />
-                    <Label htmlFor="accepts_orders_online" className="font-roboto">Accepts Online Orders</Label>
+                    <Label htmlFor="accepts_orders_online" className="font-roboto">
+                      <span className={`${form.watch("accepts_orders_online") ? 'text-green-700' : 'text-red-700'}`}>
+                        Accepts Online Orders
+                      </span>
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Switch
                       id="is_kid_friendly"
                       checked={form.watch("is_kid_friendly")}
                       onCheckedChange={(checked) => form.setValue("is_kid_friendly", checked)}
+                      className={`${form.watch("is_kid_friendly") ? 'bg-green-600' : 'bg-red-600'}`}
                     />
-                    <Label htmlFor="is_kid_friendly" className="font-roboto">Kid Friendly</Label>
+                    <Label htmlFor="is_kid_friendly" className="font-roboto">
+                      <span className={`${form.watch("is_kid_friendly") ? 'text-green-700' : 'text-red-700'}`}>
+                        Kid Friendly
+                      </span>
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Switch
                       id="is_sponsored_ad"
                       checked={form.watch("is_sponsored_ad")}
                       onCheckedChange={(checked) => form.setValue("is_sponsored_ad", checked)}
+                      className={`${form.watch("is_sponsored_ad") ? 'bg-green-600' : 'bg-red-600'}`}
                     />
-                    <Label htmlFor="is_sponsored_ad" className="font-roboto">Sponsored Ad</Label>
+                    <Label htmlFor="is_sponsored_ad" className="font-roboto">
+                      <span className={`${form.watch("is_sponsored_ad") ? 'text-green-700' : 'text-red-700'}`}>
+                        Sponsored Ad
+                      </span>
+                    </Label>
                   </div>
                 </div>
               </div>
@@ -1558,48 +1588,78 @@ export const AdminBusinesses = () => {
                       id="edit-is_premium"
                       checked={form.watch("is_premium")}
                       onCheckedChange={(checked) => form.setValue("is_premium", checked)}
+                      className={`${form.watch("is_premium") ? 'bg-green-600' : 'bg-red-600'}`}
                     />
-                    <Label htmlFor="edit-is_premium" className="font-roboto">Premium Business</Label>
+                    <Label htmlFor="edit-is_premium" className="font-roboto">
+                      <span className={`${form.watch("is_premium") ? 'text-green-700' : 'text-red-700'}`}>
+                        Premium Business
+                      </span>
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Switch
                       id="edit-is_verified"
                       checked={form.watch("is_verified")}
                       onCheckedChange={(checked) => form.setValue("is_verified", checked)}
+                      className={`${form.watch("is_verified") ? 'bg-green-600' : 'bg-red-600'}`}
                     />
-                    <Label htmlFor="edit-is_verified" className="font-roboto">Verified Business</Label>
+                    <Label htmlFor="edit-is_verified" className="font-roboto">
+                      <span className={`${form.watch("is_verified") ? 'text-green-700' : 'text-red-700'}`}>
+                        Verified Business
+                      </span>
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Switch
                       id="edit-has_coupons"
                       checked={form.watch("has_coupons")}
                       onCheckedChange={(checked) => form.setValue("has_coupons", checked)}
+                      className={`${form.watch("has_coupons") ? 'bg-green-600' : 'bg-red-600'}`}
                     />
-                    <Label htmlFor="edit-has_coupons" className="font-roboto">Has Coupons</Label>
+                    <Label htmlFor="edit-has_coupons" className="font-roboto">
+                      <span className={`${form.watch("has_coupons") ? 'text-green-700' : 'text-red-700'}`}>
+                        Has Coupons
+                      </span>
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Switch
                       id="edit-accepts_orders_online"
                       checked={form.watch("accepts_orders_online")}
                       onCheckedChange={(checked) => form.setValue("accepts_orders_online", checked)}
+                      className={`${form.watch("accepts_orders_online") ? 'bg-green-600' : 'bg-red-600'}`}
                     />
-                    <Label htmlFor="edit-accepts_orders_online" className="font-roboto">Accepts Online Orders</Label>
+                    <Label htmlFor="edit-accepts_orders_online" className="font-roboto">
+                      <span className={`${form.watch("accepts_orders_online") ? 'text-green-700' : 'text-red-700'}`}>
+                        Accepts Online Orders
+                      </span>
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Switch
                       id="edit-is_kid_friendly"
                       checked={form.watch("is_kid_friendly")}
                       onCheckedChange={(checked) => form.setValue("is_kid_friendly", checked)}
+                      className={`${form.watch("is_kid_friendly") ? 'bg-green-600' : 'bg-red-600'}`}
                     />
-                    <Label htmlFor="edit-is_kid_friendly" className="font-roboto">Kid Friendly</Label>
+                    <Label htmlFor="edit-is_kid_friendly" className="font-roboto">
+                      <span className={`${form.watch("is_kid_friendly") ? 'text-green-700' : 'text-red-700'}`}>
+                        Kid Friendly
+                      </span>
+                    </Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <Switch
                       id="edit-is_sponsored_ad"
                       checked={form.watch("is_sponsored_ad")}
                       onCheckedChange={(checked) => form.setValue("is_sponsored_ad", checked)}
+                      className={`${form.watch("is_sponsored_ad") ? 'bg-green-600' : 'bg-red-600'}`}
                     />
-                    <Label htmlFor="edit-is_sponsored_ad" className="font-roboto">Sponsored Ad</Label>
+                    <Label htmlFor="edit-is_sponsored_ad" className="font-roboto">
+                      <span className={`${form.watch("is_sponsored_ad") ? 'text-green-700' : 'text-red-700'}`}>
+                        Sponsored Ad
+                      </span>
+                    </Label>
                   </div>
                 </div>
               </div>
