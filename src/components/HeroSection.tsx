@@ -10,7 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import heroImage from "@/assets/hero-kitchen.jpg";
+import heroImage from "@/assets/jeremy-pelletier-MoPM7OM3D18-unsplash.jpg";
 import { db } from "@/lib/supabase";
 import { BusinessService, Business } from "@/lib/businessService";
 import { toast } from "sonner";
