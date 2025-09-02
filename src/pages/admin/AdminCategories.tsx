@@ -69,6 +69,7 @@ export const AdminCategories = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
+  const [isSearching, setIsSearching] = useState(false);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [isEditDialogOpen, setIsEditDialogOpen] = useState(false);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
@@ -91,62 +92,161 @@ export const AdminCategories = () => {
   });
 
   // Fetch categories from database
-  const fetchCategories = async () => {
+  const fetchCategories = async (searchMode = false) => {
     try {
       setLoading(true);
       
-      // Get total count for pagination
-      const { count } = await supabase
-        .from('categories')
-        .select('id', { count: 'exact', head: true });
-
-      setTotalCategories(count || 0);
-
-      // Fetch categories with parent information
-      const startIndex = (currentPage - 1) * itemsPerPage;
-      const { data, error } = await supabase
+      let query = supabase
         .from('categories')
         .select('*')
         .order('sort_order', { ascending: true })
-        .order('name', { ascending: true })
-        .range(startIndex, startIndex + itemsPerPage - 1);
+        .order('name', { ascending: true });
 
-      if (error) {
-        console.error('Error fetching categories:', error);
-        toast({
-          title: 'Error',
-          description: 'Failed to fetch categories',
-          variant: 'destructive'
-        });
-        return;
-      }
-
-      // Get parent names for categories that have parents
-      const categoriesWithParents = data?.filter(cat => cat.parent_id) || [];
-      const parentIds = [...new Set(categoriesWithParents.map(cat => cat.parent_id))];
-      
-      let parentCategories: { [key: string]: string } = {};
-      if (parentIds.length > 0) {
-        const { data: parentData, error: parentError } = await supabase
-          .from('categories')
-          .select('id, name')
-          .in('id', parentIds);
+      // If searching, use server-side search; otherwise use pagination
+      if (searchMode && searchTerm.trim()) {
+        // Server-side search using Supabase text search
+        const searchQuery = searchTerm.trim();
         
-        if (!parentError && parentData) {
-          parentCategories = parentData.reduce((acc, parent) => {
-            acc[parent.id] = parent.name;
-            return acc;
-          }, {} as { [key: string]: string });
+        // Use ilike for case-insensitive search across multiple fields
+        const { data, error } = await supabase
+          .from('categories')
+          .select('*')
+          .or(`name.ilike.%${searchQuery}%,slug.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%,icon.ilike.%${searchQuery}%`)
+          .order('sort_order', { ascending: true })
+          .order('name', { ascending: true });
+
+        if (error) {
+          console.error('Error searching categories:', error);
+          toast({
+            title: 'Error',
+            description: 'Failed to search categories',
+            variant: 'destructive'
+          });
+          return;
         }
+
+        // Get total count for search results
+        setTotalCategories(data?.length || 0);
+
+        // Get parent names for categories that have parents
+        const categoriesWithParents = data?.filter(cat => cat.parent_id) || [];
+        const parentIds = [...new Set(categoriesWithParents.map(cat => cat.parent_id))];
+        
+        let parentCategories: { [key: string]: string } = {};
+        if (parentIds.length > 0) {
+          const { data: parentData, error: parentError } = await supabase
+            .from('categories')
+            .select('id, name')
+            .in('id', parentIds);
+          
+          if (!parentError && parentData) {
+            parentCategories = parentData.reduce((acc, parent) => {
+              acc[parent.id] = parent.name;
+              return acc;
+            }, {} as { [key: string]: string });
+          }
+        }
+
+        // Transform data to include parent name
+        const categoriesWithParent = data?.map(category => ({
+          ...category,
+          parent_name: category.parent_id ? parentCategories[category.parent_id] || null : null
+        })) || [];
+
+        setCategories(categoriesWithParent);
+      } else if (searchMode) {
+        // For search mode without search term, fetch all categories
+        const { data, error } = await query;
+
+        if (error) {
+          console.error('Error fetching categories:', error);
+          toast({
+            title: 'Error',
+            description: 'Failed to fetch categories',
+            variant: 'destructive'
+          });
+          return;
+        }
+
+        // Get total count for search results
+        setTotalCategories(data?.length || 0);
+
+        // Get parent names for categories that have parents
+        const categoriesWithParents = data?.filter(cat => cat.parent_id) || [];
+        const parentIds = [...new Set(categoriesWithParents.map(cat => cat.parent_id))];
+        
+        let parentCategories: { [key: string]: string } = {};
+        if (parentIds.length > 0) {
+          const { data: parentData, error: parentError } = await supabase
+            .from('categories')
+            .select('id, name')
+            .in('id', parentIds);
+          
+          if (!parentError && parentData) {
+            parentCategories = parentData.reduce((acc, parent) => {
+              acc[parent.id] = parent.name;
+              return acc;
+            }, {} as { [key: string]: string });
+          }
+        }
+
+        // Transform data to include parent name
+        const categoriesWithParent = data?.map(category => ({
+          ...category,
+          parent_name: category.parent_id ? parentCategories[category.parent_id] || null : null
+        })) || [];
+
+        setCategories(categoriesWithParent);
+      } else {
+        // For normal pagination mode
+        // Get total count for pagination
+        const { count } = await supabase
+          .from('categories')
+          .select('id', { count: 'exact', head: true });
+
+        setTotalCategories(count || 0);
+
+        // Fetch categories with pagination
+        const startIndex = (currentPage - 1) * itemsPerPage;
+        const { data, error } = await query.range(startIndex, startIndex + itemsPerPage - 1);
+
+        if (error) {
+          console.error('Error fetching categories:', error);
+          toast({
+            title: 'Error',
+            description: 'Failed to fetch categories',
+            variant: 'destructive'
+          });
+          return;
+        }
+
+        // Get parent names for categories that have parents
+        const categoriesWithParents = data?.filter(cat => cat.parent_id) || [];
+        const parentIds = [...new Set(categoriesWithParents.map(cat => cat.parent_id))];
+        
+        let parentCategories: { [key: string]: string } = {};
+        if (parentIds.length > 0) {
+          const { data: parentData, error: parentError } = await supabase
+            .from('categories')
+            .select('id, name')
+            .in('id', parentIds);
+          
+          if (!parentError && parentData) {
+            parentCategories = parentData.reduce((acc, parent) => {
+              acc[parent.id] = parent.name;
+              return acc;
+            }, {} as { [key: string]: string });
+          }
+        }
+
+        // Transform data to include parent name
+        const categoriesWithParent = data?.map(category => ({
+          ...category,
+          parent_name: category.parent_id ? parentCategories[category.parent_id] || null : null
+        })) || [];
+
+        setCategories(categoriesWithParent);
       }
-
-      // Transform data to include parent name
-      const categoriesWithParent = data?.map(category => ({
-        ...category,
-        parent_name: category.parent_id ? parentCategories[category.parent_id] || null : null
-      })) || [];
-
-      setCategories(categoriesWithParent);
     } catch (error) {
       console.error('Error fetching categories:', error);
       toast({
@@ -159,12 +259,21 @@ export const AdminCategories = () => {
     }
   };
 
-  // Filter categories based on search term
-  const filteredCategories = categories.filter(category =>
-    category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    (category.description && category.description.toLowerCase().includes(searchTerm.toLowerCase())) ||
-    (category.parent_name && category.parent_name.toLowerCase().includes(searchTerm.toLowerCase()))
-  );
+  // Filter categories based on search term (client-side fallback for parent names)
+  const filteredCategories = categories.filter(category => {
+    if (!searchTerm.trim()) return true;
+    
+    // Since we're using server-side search, we only need to filter by parent_name
+    // as the server-side search doesn't include parent names
+    const searchLower = searchTerm.toLowerCase();
+    return (
+      category.name.toLowerCase().includes(searchLower) ||
+      category.slug.toLowerCase().includes(searchLower) ||
+      (category.description && category.description.toLowerCase().includes(searchLower)) ||
+      (category.parent_name && category.parent_name.toLowerCase().includes(searchLower)) ||
+      (category.icon && category.icon.toLowerCase().includes(searchLower))
+    );
+  });
 
   // Generate slug from name
   const generateSlug = (name: string) => {
@@ -399,16 +508,47 @@ export const AdminCategories = () => {
     document.body.removeChild(link);
   };
 
+  // Handle search input changes
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    setIsSearching(value.trim().length > 0);
+    setCurrentPage(1); // Reset to first page when searching
+  };
+
+  // Clear search and return to pagination mode
+  const clearSearch = () => {
+    setSearchTerm('');
+    setIsSearching(false);
+    setCurrentPage(1);
+    fetchCategories(false); // Fetch with pagination
+  };
+
   // Calculate pagination
   const totalPages = Math.ceil(totalCategories / itemsPerPage);
 
   useEffect(() => {
-    fetchCategories();
-  }, [currentPage]);
+    if (isSearching) {
+      // When searching, fetch all categories
+      fetchCategories(true);
+    } else {
+      // When not searching, use pagination
+      fetchCategories(false);
+    }
+  }, [currentPage, isSearching]);
 
-  // Reset to first page when search term changes
+  // Handle search term changes with debouncing
   useEffect(() => {
-    setCurrentPage(1);
+    const timeoutId = setTimeout(() => {
+      if (searchTerm.trim()) {
+        setIsSearching(true);
+        fetchCategories(true);
+      } else if (isSearching) {
+        setIsSearching(false);
+        fetchCategories(false);
+      }
+    }, 300); // 300ms debounce
+
+    return () => clearTimeout(timeoutId);
   }, [searchTerm]);
 
   if (loading) {
@@ -432,7 +572,7 @@ export const AdminCategories = () => {
         
         <div className="flex items-center space-x-2">
           <Button 
-            onClick={fetchCategories}
+            onClick={() => fetchCategories(isSearching)}
             variant="outline"
             size="sm"
             disabled={loading}
@@ -554,13 +694,33 @@ export const AdminCategories = () => {
               <div className="relative">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
                 <Input
-                  placeholder="Search categories by name, description, or parent..."
+                  placeholder="Search categories by name, slug, description, parent, or icon..."
                   value={searchTerm}
-                  onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10"
+                  onChange={(e) => handleSearchChange(e.target.value)}
+                  className="pl-10 pr-10"
                 />
+                {searchTerm && (
+                  <button
+                    onClick={clearSearch}
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  >
+                    <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                )}
               </div>
             </div>
+            {isSearching && (
+              <div className="flex items-center space-x-2">
+                <Badge variant="secondary" className="font-roboto">
+                  Search Mode
+                </Badge>
+                <span className="text-sm text-gray-600 font-roboto">
+                  {filteredCategories.length} result{filteredCategories.length !== 1 ? 's' : ''} found
+                </span>
+              </div>
+            )}
           </div>
         </CardContent>
       </Card>
@@ -653,8 +813,8 @@ export const AdminCategories = () => {
               </Card>
             ))}
 
-            {/* Pagination */}
-            {totalPages > 1 && (
+            {/* Pagination - Only show when not in search mode */}
+            {!isSearching && totalPages > 1 && (
               <Card className="mt-6">
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between">
