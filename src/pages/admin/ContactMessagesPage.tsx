@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { useTranslation } from "react-i18next";
+import { AdminLayout } from "@/components/admin/AdminLayout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -21,7 +22,6 @@ import {
 import { useContactMessages, ContactMessage } from "@/hooks/useContactMessages";
 import { 
   Search, 
-  Filter, 
   MoreHorizontal, 
   Eye, 
   CheckCircle, 
@@ -138,39 +138,24 @@ const ContactMessagesPage = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      {/* Header */}
-      <div className="bg-white shadow-sm border-b">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16">
-            <div className="flex items-center">
-              <MessageSquare className="w-8 h-8 text-yp-blue mr-3" />
-              <div>
-                <h1 className="text-2xl font-bold text-gray-900 font-comfortaa">
-                  Contact Messages
-                </h1>
-                <p className="text-sm text-gray-600 font-roboto">
-                  Manage and respond to customer inquiries
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center space-x-3">
-              <Button
-                onClick={fetchMessages}
-                variant="outline"
-                size="sm"
-                className="font-roboto"
-              >
-                <RefreshCw className="w-4 h-4 mr-2" />
-                Refresh
-              </Button>
-            </div>
-          </div>
-        </div>
-      </div>
-
+    <AdminLayout 
+      title="Contact Messages" 
+      subtitle="Manage and respond to customer inquiries"
+    >
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Header Actions */}
+        <div className="mb-6 flex justify-end">
+          <Button
+            onClick={fetchMessages}
+            variant="outline"
+            size="sm"
+            className="font-roboto"
+          >
+            <RefreshCw className="w-4 h-4 mr-2" />
+            Refresh
+          </Button>
+        </div>
         {/* Filters and Search */}
         <div className="mb-6">
           <Card>
@@ -488,7 +473,7 @@ const ContactMessagesPage = () => {
           </div>
         </div>
       )}
-    </div>
+    </AdminLayout>
   );
 };
 
