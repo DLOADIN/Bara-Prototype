@@ -346,7 +346,7 @@ export const AdminSettings = () => {
                 <Button
                   onClick={handleSave}
                   disabled={loading}
-                  className="bg-[#e64600] hover:bg-[#4e3c28] text-white"
+                  className="bg-[#e64600] hover:bg-orange-600 text-white"
                 >
                   {loading ? 'Saving...' : 'Save Changes'}
                 </Button>

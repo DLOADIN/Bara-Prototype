@@ -9,14 +9,17 @@ All colors MUST be HSL.
 @layer base {
   :root {
     /* BARA LISTINGS Brand Colors */
-    --yp-yellow: 48 100% 50%; /* Updated to CMYK 5, 20, 100, 0 converted to HSL */
-    --yp-yellow-hover: 48 100% 45%; /* Adjusted hover state for new yellow */
-    --yp-dark: 0 0% 15%;
-    --yp-gray-light: 0 0% 96%;
-    --yp-gray-medium: 0 0% 75%;
-    --yp-gray-dark: 0 0% 35%;
-    --yp-blue: 48 100% 50%;
-    --yp-green: 152 100% 35%;
+    --yp-yellow: 45 97% 48%; /* Google Yellow #FBBC05 */
+    --yp-yellow-hover: 45 97% 43%; /* Slightly darker for hover */
+    --yp-blue: 217 89% 61%; /* Google Blue #4285F4 */
+    --yp-blue-hover: 217 89% 56%; /* Slightly darker for hover */
+    
+    /* Neutral Colors */
+    --yp-dark: 0 0% 13%; /* #202124 */
+    --yp-gray-dark: 220 9% 46%; /* #5F6368 */
+    --yp-gray-medium: 220 9% 90%; /* #E8EAED */
+    --yp-gray-light: 0 0% 97%; /* #F8F9FA */
+    --yp-white: 0 0% 100%;
     
     --background: 0 0% 100%;
     --foreground: 0 0% 15%;
@@ -30,13 +33,13 @@ All colors MUST be HSL.
     --primary: 0 70% 100%;
     --primary-foreground: 0 0% 15%;
 
-    --secondary: 48 100% 50%; /* Updated to match new yellow */
+    --secondary: 217 89% 61%; /* Google Blue */
     --secondary-foreground: 0 0% 15%;
 
     --muted: 0 0% 96%;
     --muted-foreground: 0 0% 45%;
 
-    --accent: 0 70% 100%;
+    --accent: 45 97% 48%; /* Google Yellow */
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84.2% 60.2%;
@@ -234,7 +237,7 @@ All colors MUST be HSL.
   }
 
   .button:hover {
-    background-color: #8B4513;
+    background-color: rgb(243 244 246); /* gray-100 */
   }
 }
 

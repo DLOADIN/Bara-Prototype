@@ -653,7 +653,7 @@ export const AdminBusinesses = () => {
             Export PDF
           </Button>
           <Button 
-            className="bg-yp-blue hover:bg-[#4e3c28]"
+            className="bg-yp-blue hover:bg-blue-600"
             onClick={handleAddClick}
           >
           <Plus className="w-4 h-4 mr-2" />
@@ -672,7 +672,7 @@ export const AdminBusinesses = () => {
                 placeholder="Search businesses by name, description, address, phone, email, website, city, country, category..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className={`pl-10 pr-10 font-roboto transition-all duration-200 ${
+                className={`bg-blue-500 hover:opacity-80 text-white px-3 py-1 rounded text-sm font-roboto font-medium transition-opacity duration-300 ${
                   searchTerm ? 'ring-2 ring-yp-blue/20 border-yp-blue' : ''
                 }`}
               />
@@ -834,7 +834,7 @@ export const AdminBusinesses = () => {
                   <Button
                     variant="ghost"
                     size="sm"
-                    className="p-1 h-8 w-8 text-red-600 hover:text-red-700 hover:bg-[#4e3c28]/10"
+                    className="p-1 h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
                     onClick={() => handleDeleteBusiness(business.id)}
                   >
                     <Trash2 className="w-4 h-4" />
@@ -879,7 +879,7 @@ export const AdminBusinesses = () => {
                 )}
                 {business.is_kid_friendly && (
                   <Badge variant="outline" className="text-xs border-blue-200 text-blue-700 bg-blue-50">
-                    Kid Friendly
+                    Family Friendly
                   </Badge>
                 )}
               </div>
@@ -1268,7 +1268,7 @@ export const AdminBusinesses = () => {
                     />
                     <Label htmlFor="is_kid_friendly" className="font-roboto">
                       <span className={`${form.watch("is_kid_friendly") ? 'text-green-700' : 'text-red-700'}`}>
-                        Kid Friendly
+                        Family Friendly
                       </span>
                     </Label>
                   </div>
@@ -1360,7 +1360,7 @@ export const AdminBusinesses = () => {
               <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)} className="font-roboto">
                 Cancel
               </Button>
-              <Button type="submit" className="bg-yp-blue hover:bg-[#4e3c28] font-roboto">
+              <Button type="submit" className="bg-yp-blue hover:bg-blue-600 font-roboto">
                 Add Business
               </Button>
             </DialogFooter>
@@ -1550,7 +1550,6 @@ export const AdminBusinesses = () => {
                       min="-180"
                       max="180"
                       placeholder="-180 to 180"
-                      className="font-roboto"
                       {...form.register("longitude", { 
                         valueAsNumber: true,
                         validate: (value) => {
@@ -1558,6 +1557,7 @@ export const AdminBusinesses = () => {
                           return (value >= -180 && value <= 180) || "Longitude must be between -180 and 180";
                         }
                       })}
+                      className="font-roboto"
                     />
                     {form.formState.errors.longitude && (
                       <p className="text-sm text-red-600 mt-1">{form.formState.errors.longitude.message}</p>
@@ -1644,7 +1644,7 @@ export const AdminBusinesses = () => {
                     />
                     <Label htmlFor="edit-is_kid_friendly" className="font-roboto">
                       <span className={`${form.watch("is_kid_friendly") ? 'text-green-700' : 'text-red-700'}`}>
-                        Kid Friendly
+                        Family Friendly
                       </span>
                     </Label>
                   </div>
@@ -1736,7 +1736,7 @@ export const AdminBusinesses = () => {
               <Button type="button" variant="outline" onClick={() => setIsEditDialogOpen(false)} className="font-roboto">
                 Cancel
               </Button>
-              <Button type="submit" className="bg-yp-blue hover:bg-[#4e3c28] font-roboto">
+              <Button type="submit" className="bg-yp-blue hover:bg-blue-600 font-roboto">
                 Update Business
               </Button>
             </DialogFooter>
@@ -1852,14 +1852,14 @@ export const AdminBusinesses = () => {
                       <span className="font-roboto font-medium">Country:</span>
                       <span className="font-roboto">{selectedBusiness.country_name}</span>
                     </div>
-                                         {selectedBusiness.latitude && selectedBusiness.longitude && (
-                       <div className="flex items-center space-x-2">
-                         <span className="font-roboto font-medium">Coordinates:</span>
-                         <span className="font-roboto">
-                           {formatCoordinate(selectedBusiness.latitude)}, {formatCoordinate(selectedBusiness.longitude)}
-                         </span>
-                       </div>
-                     )}
+                    {selectedBusiness.latitude && selectedBusiness.longitude && (
+                      <div className="flex items-center space-x-2">
+                        <span className="font-roboto font-medium">Coordinates:</span>
+                        <span className="font-roboto">
+                          {formatCoordinate(selectedBusiness.latitude)}, {formatCoordinate(selectedBusiness.longitude)}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
@@ -1880,7 +1880,7 @@ export const AdminBusinesses = () => {
                   )}
                   {selectedBusiness.is_kid_friendly && (
                     <Badge variant="outline" className="border-blue-200 text-blue-700 bg-blue-50">
-                      Kid Friendly
+                      Family Friendly
                     </Badge>
                   )}
                   {selectedBusiness.is_sponsored_ad && (
@@ -1920,7 +1920,7 @@ export const AdminBusinesses = () => {
                   setIsViewDialogOpen(false);
                   handleEditClick(selectedBusiness);
                 }}
-                className="bg-yp-blue hover:bg-[#4e3c28] font-roboto"
+                className="bg-yp-blue hover:opacity-80 text-white px-4 py-2 rounded-lg font-roboto font-medium transition-opacity duration-300 flex items-center gap-2"
               >
                 <Edit className="w-4 h-4 mr-2" />
                 Edit Business

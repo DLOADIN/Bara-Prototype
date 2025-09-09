@@ -66,7 +66,7 @@ const ContactUsPage = () => {
       <Header />
       <div className="min-h-screen bg-gray-50">
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-yp-blue to-blue-700 text-white py-20">
+        <section className="bg-brand-blue text-white py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 font-comfortaa">
               {t('contact.hero.title')}
@@ -86,7 +86,7 @@ const ContactUsPage = () => {
                 <Card className="shadow-lg">
                   <CardHeader>
                     <CardTitle className="text-2xl font-comfortaa flex items-center">
-                      <MessageCircle className="w-6 h-6 mr-2 text-yp-blue" />
+                      <MessageCircle className="w-6 h-6 mr-2 text-brand-blue" />
                       {t('contact.form.title')}
                     </CardTitle>
                     <CardDescription className="font-roboto">
@@ -178,12 +178,14 @@ const ContactUsPage = () => {
 
                       <Button 
                         type="submit"
-                        className="w-full bg-yp-blue hover:bg-yp-blue/90 font-roboto"
+                        className="w-full bg-brand-blue hover:bg-brand-blue-hover text-white font-roboto"
                         disabled={loading}
                       >
                         {loading ? (
                           <>
-                            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                            <div className="p-6 bg-brand-blue/5 rounded-lg h-full">
+                              <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white mr-2"></div>
+                            </div>
                             {t('common.loading')}
                           </>
                         ) : (
@@ -204,34 +206,34 @@ const ContactUsPage = () => {
                 <Card className="shadow-lg">
                   <CardHeader>
                     <CardTitle className="text-xl font-comfortaa flex items-center">
-                      <Building className="w-5 h-5 mr-2 text-yp-blue" />
+                      <Building className="w-6 h-6 mr-2 text-brand-blue" />
                       {t('contact.info.general.title')}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="flex items-start space-x-3">
-                      <Phone className="w-5 h-5 text-yp-blue mt-1" />
+                      <Phone className="w-6 h-6 text-brand-blue" />
                       <div>
                         <p className="font-semibold font-roboto">{t('contact.info.general.phone')}</p>
                         <p className="text-gray-600 font-roboto">(+250) 791 568 519</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
-                      <Mail className="w-5 h-5 text-yp-blue mt-1" />
+                      <Mail className="w-6 h-6 text-brand-blue" />
                       <div>
                         <p className="font-semibold font-roboto">{t('contact.info.general.email')}</p>
                         <p className="text-gray-600 font-roboto">info@bara.com</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
-                      <MapPin className="w-5 h-5 text-yp-blue mt-1" />
+                      <MapPin className="w-6 h-6 text-brand-blue" />
                       <div>
                         <p className="font-semibold font-roboto">{t('contact.info.general.address')}</p>
                         <p className="text-gray-600 font-roboto">{t('contact.info.general.addressValue')}</p>
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
-                      <Clock className="w-5 h-5 text-yp-blue mt-1" />
+                      <Clock className="w-6 h-6 text-brand-blue" />
                       <div>
                         <p className="font-semibold font-roboto">{t('contact.info.general.hours')}</p>
                         <p className="text-gray-600 font-roboto">{t('contact.info.general.hoursValue')}</p>
@@ -244,13 +246,13 @@ const ContactUsPage = () => {
                 <Card className="shadow-lg">
                   <CardHeader>
                     <CardTitle className="text-xl font-comfortaa flex items-center">
-                      <User className="w-5 h-5 mr-2 text-yp-blue" />
+                      <User className="w-6 h-6 mr-2 text-brand-blue" />
                       {t('contact.info.support.title')}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="flex items-start space-x-3">
-                      <Phone className="w-5 h-5 text-yp-blue mt-1" />
+                      <Phone className="w-6 h-6 text-brand-blue" />
                       <div>
                         <p className="font-semibold font-roboto">{t('contact.info.support.phone')}</p>
                         <p className="text-gray-600 font-roboto">(+250) 791 568 519</p>
@@ -258,7 +260,7 @@ const ContactUsPage = () => {
                       </div>
                     </div>
                     <div className="flex items-start space-x-3">
-                      <MailIcon className="w-5 h-5 text-yp-blue mt-1" />
+                      <MailIcon className="w-6 h-6 text-brand-blue" />
                       <div>
                         <p className="font-semibold font-roboto">{t('contact.info.support.email')}</p>
                         <p className="text-gray-600 font-roboto">support@bara.com</p>
@@ -272,13 +274,13 @@ const ContactUsPage = () => {
                 <Card className="shadow-lg">
                   <CardHeader>
                     <CardTitle className="text-xl font-comfortaa flex items-center">
-                      <Building className="w-5 h-5 mr-2 text-yp-blue" />
+                      <Building className="w-6 h-6 mr-2 text-brand-blue" />
                       {t('contact.info.business.title')}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-4">
                     <div className="flex items-start space-x-3">
-                      <MailIcon className="w-5 h-5 text-yp-blue mt-1" />
+                      <MailIcon className="w-6 h-6 text-brand-blue" />
                       <div>
                         <p className="font-semibold font-roboto">{t('contact.info.business.email')}</p>
                         <p className="text-gray-600 font-roboto">business@bara.com</p>
@@ -356,7 +358,7 @@ const ContactUsPage = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="py-16 bg-yp-blue text-white">
+        <section className="py-16 bg-brand-blue text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 font-comfortaa">
               {t('contact.cta.title')}
@@ -365,10 +367,10 @@ const ContactUsPage = () => {
               {t('contact.cta.description')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-white text-yp-blue hover:bg-gray-100 font-roboto">
+              <Button size="lg" className="bg-brand-yellow text-dark hover:bg-brand-yellow-hover font-roboto">
                 {t('contact.cta.primaryButton')}
               </Button>
-              <Button size="lg" className="bg-white text-yp-blue hover:bg-gray-100 font-roboto">
+              <Button size="lg" variant="outline" className="bg-transparent border-2 border-white text-white hover:bg-white/10 font-roboto">
                 {t('contact.cta.secondaryButton')}
               </Button>
             </div>

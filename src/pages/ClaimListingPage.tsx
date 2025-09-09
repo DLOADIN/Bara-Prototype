@@ -2,11 +2,13 @@ import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Header } from "@/components/Header";
 import Footer from "@/components/Footer";
+import { PremiumFeatures } from "@/components/PremiumFeatures";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { 
   Phone, 
   Mail, 
@@ -137,7 +139,7 @@ export const ClaimListingPage = () => {
       <Header />
       
       {/* Hero Section */}
-      <div className="bg-gradient-to-br from-yp-blue to-yp-green text-white py-16">
+      <div className="bg-gradient-to-br from-brand-blue to-brand-green text-white py-16">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold font-comfortaa mb-6">
@@ -176,7 +178,7 @@ export const ClaimListingPage = () => {
             {benefits.map((benefit, index) => (
               <Card key={index} className="text-center p-6 hover:shadow-lg transition-shadow">
                 <CardContent className="pt-6">
-                  <div className="w-12 h-12 bg-yp-blue text-white rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="w-12 h-12 bg-brand-blue text-white rounded-full flex items-center justify-center mx-auto mb-4">
                     {benefit.icon}
                   </div>
                   <h3 className="text-lg font-semibold text-yp-dark mb-2 font-comfortaa">
@@ -192,8 +194,13 @@ export const ClaimListingPage = () => {
         </div>
       </div>
 
+      {/* Premium Features Section - Moved above the form */}
+      <div className="border-t border-gray-100">
+        <PremiumFeatures />
+      </div>
+
       {/* Claim Form Section */}
-      <div className="py-16 bg-gray-50">
+      <div className="py-12 bg-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-yp-dark font-comfortaa mb-4">
@@ -206,9 +213,6 @@ export const ClaimListingPage = () => {
 
           <Card className="shadow-lg">
             <CardHeader>
-              <CardTitle className="text-2xl font-comfortaa text-center">
-                {t('claimListing.page.form.formTitle')}
-              </CardTitle>
               <p className="text-center text-gray-600">
                 {t('claimListing.page.form.requiredFields')}
               </p>
@@ -337,7 +341,7 @@ export const ClaimListingPage = () => {
                   <Button
                     type="submit"
                     disabled={isLoading}
-                    className="bg-yp-blue hover:bg-yp-blue/90 text-white px-8 py-3 text-lg font-semibold"
+                    className="bg-brand-blue hover:bg-brand-blue/90 text-white px-8 py-3 text-lg font-semibold"
                   >
                     {isLoading ? (
                       <>
@@ -359,7 +363,7 @@ export const ClaimListingPage = () => {
       </div>
 
       {/* Contact Section */}
-      <div className="py-16 bg-yp-blue text-white">
+      <div className="py-16 bg-brand-blue text-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center">
             <h2 className="text-3xl md:text-4xl font-bold font-comfortaa mb-6">
@@ -402,58 +406,109 @@ export const ClaimListingPage = () => {
       </div>
 
       {/* FAQ Section */}
-      <div className="py-16 bg-white">
+      <div className="py-16 bg-gradient-to-b from-white to-gray-50">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-yp-dark font-comfortaa mb-4">
-              {t('claimListing.page.faq.title')}
+              Frequently Asked Questions
             </h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Find answers to common questions about claiming your business listing
+            </p>
           </div>
           
-          <div className="space-y-6">
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold text-yp-dark mb-2">
-                  {t('claimListing.page.faq.processingTime.question')}
-                </h3>
-                <p className="text-gray-600">
-                  {t('claimListing.page.faq.processingTime.answer')}
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold text-yp-dark mb-2">
-                  {t('claimListing.page.faq.requiredInfo.question')}
-                </h3>
-                <p className="text-gray-600">
-                  {t('claimListing.page.faq.requiredInfo.answer')}
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold text-yp-dark mb-2">
-                  {t('claimListing.page.faq.cost.question')}
-                </h3>
-                <p className="text-gray-600">
-                  {t('claimListing.page.faq.cost.answer')}
-                </p>
-              </CardContent>
-            </Card>
-            
-            <Card>
-              <CardContent className="p-6">
-                <h3 className="text-lg font-semibold text-yp-dark mb-2">
-                  {t('claimListing.page.faq.notListed.question')}
-                </h3>
-                <p className="text-gray-600">
-                  {t('claimListing.page.faq.notListed.answer')}
-                </p>
-              </CardContent>
-            </Card>
+          <div className="space-y-4">
+            <Accordion type="single" collapsible className="w-full space-y-4">
+              <AccordionItem value="item-1" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50">
+                  <span className="text-lg font-medium text-left">How long does the verification process take?</span>
+                </AccordionTrigger>
+                <AccordionContent className="px-6 pb-4 text-gray-600">
+                  The verification process typically takes 2-3 business days. We'll notify you via email once your claim is approved or if we need additional information.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-2" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50">
+                  <span className="text-lg font-medium text-left">What information do I need to verify my business?</span>
+                </AccordionTrigger>
+                <AccordionContent className="px-6 pb-4 text-gray-600">
+                  You'll need to provide official business documentation such as a business license, tax ID, or utility bill. We may also require a government-issued ID to verify your identity as an authorized representative.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-3" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50">
+                  <span className="text-lg font-medium text-left">Is there a cost to claim my business?</span>
+                </AccordionTrigger>
+                <AccordionContent className="px-6 pb-4 text-gray-600">
+                  No, claiming and verifying your business listing is completely free. This allows you to manage your business information, respond to reviews, and access basic analytics at no cost.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-4" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50">
+                  <span className="text-lg font-medium text-left">What if my business isn't listed yet?</span>
+                </AccordionTrigger>
+                <AccordionContent className="px-6 pb-4 text-gray-600">
+                  If you can't find your business, you can add it by clicking the "Add a missing business" link at the bottom of the search results. You'll need to provide basic information about your business to create the listing.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-5" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50">
+                  <span className="text-lg font-medium text-left">Can I claim multiple locations of my business?</span>
+                </AccordionTrigger>
+                <AccordionContent className="px-6 pb-4 text-gray-600">
+                  Yes, you can claim multiple locations. After claiming your first location, you'll have the option to add and manage additional locations from your business dashboard.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-6" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50">
+                  <span className="text-lg font-medium text-left">What happens after my claim is approved?</span>
+                </AccordionTrigger>
+                <AccordionContent className="px-6 pb-4 text-gray-600">
+                  Once approved, you'll gain access to your business dashboard where you can update business information, respond to reviews, add photos, view analytics, and access other exclusive features for business owners.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-7" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50">
+                  <span className="text-lg font-medium text-left">Can I transfer ownership of my business listing?</span>
+                </AccordionTrigger>
+                <AccordionContent className="px-6 pb-4 text-gray-600">
+                  Yes, you can transfer ownership by contacting our support team with the new owner's information. We'll guide both parties through the verification process to ensure a smooth transition.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-8" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50">
+                  <span className="text-lg font-medium text-left">How do I update my business information?</span>
+                </AccordionTrigger>
+                <AccordionContent className="px-6 pb-4 text-gray-600">
+                  After claiming your business, you can update your information anytime through your business dashboard. Changes are typically reviewed and published within 24-48 hours.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-9" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50">
+                  <span className="text-lg font-medium text-left">What if my claim is rejected?</span>
+                </AccordionTrigger>
+                <AccordionContent className="px-6 pb-4 text-gray-600">
+                  If your claim is rejected, we'll provide a reason and instructions on how to resolve the issue. Common reasons include insufficient documentation or incomplete information. You can reapply with the correct information.
+                </AccordionContent>
+              </AccordionItem>
+
+              <AccordionItem value="item-10" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
+                <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50">
+                  <span className="text-lg font-medium text-left">How can I get help with the claiming process?</span>
+                </AccordionTrigger>
+                <AccordionContent className="px-6 pb-4 text-gray-600">
+                  Our support team is available to assist you. You can contact us through the help center or email support@baralistings.com. Include your business name and any relevant details for faster assistance.
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </div>
         </div>
       </div>

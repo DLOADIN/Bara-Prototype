@@ -21,6 +21,7 @@
   },
   "navigation": {
     "home": "Home",
+    "listings": "Listings",
     "advertise": "Advertise",
     "writeReview": "Write a Review",
     "searchByCity": "Search by City",
@@ -65,7 +66,7 @@
     "manageListing": {
       "title": "Manage your free listing.",
       "step1": "Update your business information in a few steps.",
-      "step2": "Make it easy for your customers to find you on Bara app.",
+      "step2": "Make it easy for your customers to find you on BARA.",
       "new": "New!",
       "jobPosting": "Post a job opening on your free listing."
     },
@@ -192,7 +193,7 @@
         "subtitle": "When you claim your business listing, you unlock powerful tools to grow your business",
         "fullControl": {
           "title": "Full Business Control",
-          "description": "Update your business information, hours, and services anytime"
+          "description": "Update your information, media, services, and more."
         },
         "enhancedVisibility": {
           "title": "Enhanced Visibility",
@@ -418,7 +419,7 @@
     "contactUs": "Contact Us",
     "advertiseWithUs": "Advertise with Us",
     "corporateBlog": "Corporate Blog",
-    "advertisingChoices": "Advertising Choices",
+    "advertisingChoices": "Advertise",
     "AskUsAnyQuestion": "Ask Us Any Question",
     "ClaimYourListing": "Claim Your Listing",
     "siteDirectory": "Site Directory",
@@ -622,7 +623,7 @@
     "verifiedBusiness": "Verified Business",
     "hasCoupons": "Has Coupons",
     "acceptsOrdersOnline": "Accepts Orders Online",
-    "kidFriendly": "Kid Friendly",
+    "kidFriendly": "Family Friendly",
     "cancel": "Cancel",
     "update": "Update",
     "create": "Create",
@@ -664,7 +665,7 @@
     "listView": "List View",
     "all": "All",
     "orderOnline": "Order Online",
-    "kidFriendly": "Kid Friendly",
+    "kidFriendly": "Family Friendly",
     "coupons": "Coupons",
     "premium": "Premium",
     "verified": "Verified",
@@ -746,7 +747,7 @@
   "businessFeatures": {
     "hasCoupons": "Has Coupons",
     "acceptsOrdersOnline": "Accepts Orders Online",
-    "isKidFriendly": "Kid Friendly",
+    "isKidFriendly": "Family Friendly",
     "isPremium": "Premium Business",
     "isVerified": "Verified Business"
   },

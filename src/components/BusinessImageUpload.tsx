@@ -159,7 +159,7 @@ export const BusinessImageUpload = ({
             className={`border-2 border-dashed border-gray-300 rounded-lg p-6 text-center transition-colors ${
               images.length >= maxImages 
                 ? 'border-gray-200 bg-gray-50' 
-                : 'border-[#e64600]/30 bg-[#e64600]/5 hover:border-[#4e3c28] hover:bg-[#4e3c28]/10'
+                : 'border-[#e64600]/30 bg-[#e64600]/5 hover:border-blue-400 hover:bg-blue-50'
             }`}
             onDragOver={handleDragOver}
             onDrop={handleDrop}

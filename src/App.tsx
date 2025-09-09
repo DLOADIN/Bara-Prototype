@@ -30,10 +30,17 @@ import { AdminCategories } from "./pages/admin/AdminCategories";
 import { AdminUsers } from "./pages/admin/AdminUsers";
 import { AdminSettings } from "./pages/admin/AdminSettings";
 import ContactMessagesPage from "./pages/admin/ContactMessagesPage";
+import { AdminBannerAds } from "./pages/admin/AdminBannerAds";
 import { AdminAuthGuard } from "./components/admin/AdminAuthGuard";
 import { MapTestPage } from "./pages/MapTestPage";
+import GlobalAfricaPage from "./pages/GlobalAfricaPage";
+import FaqPage from "./pages/FaqPage";
 // import { SimpleMapTest } from "./pages/SimpleMapTest";
 import { UltraSimpleMap } from "./components/UltraSimpleMap";
+import MarketplacePage from "./pages/MarketplacePage";
+import EventsPage from "./pages/EventsPage";
+import CommunitiesPage from "./pages/communities";
+import { CommunityPage } from "./pages/communities/CommunityPage";
 
 const queryClient = new QueryClient();
 
@@ -48,8 +55,9 @@ const AppRoutes = () => {
       <Route path="/write-review/:businessId" element={<WriteReviewPage />} />
       <Route path="/claim-listing" element={<ClaimListingPage />} />
       <Route path="/advertise" element={<AdvertisePage />} />
-      <Route path="/contact-us" element={<ContactUsPage />} />
       <Route path="/about" element={<AboutUsPage />} />
+      <Route path="/contact-us" element={<ContactUsPage />} />
+      <Route path="/faq" element={<FaqPage />} />
       <Route path="/ask-question" element={<AskQuestionPage />} />
       <Route path="/categories" element={<CategoriesPage />} />
       <Route path="/category/:categorySlug" element={<ListingsPage />} />
@@ -59,13 +67,22 @@ const AppRoutes = () => {
       <Route path="/cities/:citySlug" element={<CityDetailPage />} />
       <Route path="/countries/:countrySlug" element={<CountryDetailPage />} />
       
+      {/* New Navigation Pages */}
+      <Route path="/marketplace" element={<MarketplacePage />} />
+      <Route path="/events" element={<EventsPage />} />
+      
       {/* Authentication Routes */}
       <Route path="/sign-in" element={<SignInPage />} />
       <Route path="/sign-up" element={<SignUpPage />} />
       
+      {/* Community Pages */}
+      <Route path="/communities" element={<CommunitiesPage />} />
+      <Route path="/communities/:communityId" element={<CommunityPage />} />
+      
       {/* <Route path="/googlemaps" element={<GoogleMapsTest />} /> */}
       <Route path="/map-test" element={<MapTestPage />} />
-      {/* <Route path="/simple-map-test" element={<SimpleMapTest />} /> */}
+      <Route path="/global-africa/:id?" element={<GlobalAfricaPage />} />
+      {/* <Route path="/simple-map-test" element={<SimpleMapTest />} */}
     {/* <Route path="/callback-map-test" element={
       <div className="p-8">
         <h1 className="text-2xl font-bold mb-4">Callback Map Test</h1>
@@ -156,6 +173,11 @@ const AppRoutes = () => {
       <Route path="/admin/contact-messages" element={
         <AdminAuthGuard>
           <ContactMessagesPage />
+        </AdminAuthGuard>
+      } />
+      <Route path="/admin/banner-ads" element={
+        <AdminAuthGuard>
+          <AdminBannerAds />
         </AdminAuthGuard>
       } />
       

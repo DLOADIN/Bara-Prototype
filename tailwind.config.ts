@@ -29,26 +29,32 @@ export default {
 				'roboto-bold': ['Roboto', 'sans-serif'],
 			},
 			colors: {
-				'yp-yellow': 'hsl(var(--yp-yellow))',
-				'yp-yellow-hover': 'hsl(var(--yp-yellow-hover))',
-				'yp-dark': 'hsl(var(--yp-dark))',
-				'yp-gray-light': 'hsl(var(--yp-gray-light))',
-				'yp-gray-medium': 'hsl(var(--yp-gray-medium))',
-				'yp-gray-dark': 'hsl(var(--yp-gray-dark))',
-				'yp-blue': 'hsl(var(--yp-blue))',
-				'yp-green': 'hsl(var(--yp-green))',
+				// Brand Colors
+				'brand-yellow': 'hsl(var(--yp-yellow))',
+				'brand-yellow-hover': 'hsl(var(--yp-yellow-hover))',
+				'brand-blue': 'hsl(var(--yp-blue))',
+				'brand-blue-hover': 'hsl(var(--yp-blue-hover))',
+				
+				// Neutral Colors
+				'dark': 'hsl(var(--yp-dark))',
+				'gray-dark': 'hsl(var(--yp-gray-dark))',
+				'gray-medium': 'hsl(var(--yp-gray-medium))',
+				'gray-light': 'hsl(var(--yp-gray-light))',
+				'white': 'hsl(var(--yp-white))',
 				border: 'hsl(var(--border))',
 				input: 'hsl(var(--input))',
 				ring: 'hsl(var(--ring))',
 				background: 'hsl(var(--background))',
 				foreground: 'hsl(var(--foreground))',
 				primary: {
-					DEFAULT: 'hsl(var(--primary))',
-					foreground: 'hsl(var(--primary-foreground))'
+					DEFAULT: 'hsl(var(--yp-blue))',
+					foreground: 'hsl(var(--yp-white))',
+					hover: 'hsl(var(--yp-blue-hover))'
 				},
 				secondary: {
-					DEFAULT: 'hsl(var(--secondary))',
-					foreground: 'hsl(var(--secondary-foreground))'
+					DEFAULT: 'hsl(var(--yp-yellow))',
+					foreground: 'hsl(var(--yp-dark))',
+					hover: 'hsl(var(--yp-yellow-hover))'
 				},
 				destructive: {
 					DEFAULT: 'hsl(var(--destructive))',

@@ -493,7 +493,7 @@ export const CountryDetailPage: React.FC = () => {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-yp-dark mb-4">Country Not Found</h1>
-            <Button onClick={() => navigate('/')} className="bg-yp-blue">
+            <Button onClick={() => navigate('/')} className="bg-brand-blue">
               <ArrowLeft className="w-4 h-4 mr-2" />
               Back to Home
             </Button>
@@ -739,7 +739,7 @@ export const CountryDetailPage: React.FC = () => {
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-yp-blue focus:border-transparent"
+                className="border border-gray-300 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-brand-blue focus:border-transparent"
               >
                 <option value="">All Categories</option>
                 {Array.from(new Set(businesses.map(b => b.category?.name).filter((name): name is string => !!name))).map((categoryName) => (
@@ -866,7 +866,7 @@ export const CountryDetailPage: React.FC = () => {
                       </Button>
                     </Link>
                     <Link to={`/write-review/${business.id}`}>
-                      <Button size="sm" className="bg-yp-blue text-white text-sm">
+                      <Button size="sm" className="bg-brand-blue text-white text-sm">
                         Review
                       </Button>
                     </Link>

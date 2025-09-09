@@ -9,7 +9,7 @@ const Footer = () => {
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 md:py-12">
         {/* Four Column Layout */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-6 sm:mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 mb-6 sm:mb-8">
           
           {/* About Column */}
           <div>
@@ -43,13 +43,18 @@ const Footer = () => {
                 </Link>
               </li>
               <li>
-                <Link to="/ask-question" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
-                  {t('footer.AskUsAnyQuestion')}
+                <Link to="/claim-listing" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                  {t('footer.ClaimYourListing')}
                 </Link>
               </li>
               <li>
-                <Link to="/claim-listing" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
-                  {t('footer.ClaimYourListing')}
+                <Link to="/faq" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                  FAQ
+                </Link>
+              </li>
+              <li>
+                <Link to="/ask-question" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                  {t('footer.AskUsAnyQuestion')}
                 </Link>
               </li>
             </ul>
@@ -99,82 +104,82 @@ const Footer = () => {
             </ul>
           </div> */}
 
-          {/* Cities Column */}
+          {/* Countries Column */}
           <div>
             <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 pb-2 border-b-2 border-[#70905a] font-comfortaa">
-              {t('footer.cities')}
+              Countries
             </h3>
             <div className="grid grid-cols-1 gap-1.5 sm:gap-2">
               <div>
                 <Link 
-                  to="#" 
+                  to="/countries/rwanda" 
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇷🇼</span>
-                  {t('footer.kigaliRwanda')}
+                  Rwanda
                 </Link>
               </div>
               <div>
                 <Link 
-                  to="#" 
+                  to="/countries/kenya" 
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇰🇪</span>
-                  {t('footer.nairobiKenya')}
+                  Kenya
                 </Link>
               </div>
               <div>
                 <Link 
-                  to="#" 
+                  to="/countries/uganda" 
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇺🇬</span>
-                  {t('footer.kampalaUganda')}
+                  Uganda
                 </Link>
               </div>
               <div>
                 <Link 
-                  to="#" 
+                  to="/countries/tanzania" 
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇹🇿</span>
-                  {t('footer.darEsSalaamTanzania')}
+                  Tanzania
                 </Link>
               </div>
               <div>
                 <Link 
-                  to="#" 
+                  to="/countries/ethiopia" 
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇪🇹</span>
-                  {t('footer.addisAbabaEthiopia')}
+                  Ethiopia
                 </Link>
               </div>
               <div>
                 <Link 
-                  to="#" 
+                  to="/countries/ghana" 
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇬🇭</span>
-                  {t('footer.accraGhana')}
+                  Ghana
                 </Link>
               </div>
               <div>
                 <Link 
-                  to="#" 
+                  to="/countries/nigeria" 
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇳🇬</span>
-                  {t('footer.lagosNigeria')}
+                  Nigeria
                 </Link>
               </div>
               <div>
                 <Link 
-                  to="#" 
+                  to="/countries/south-africa" 
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇿🇦</span>
-                  {t('footer.capeTownSouthAfrica')}
+                  South Africa
                 </Link>
               </div>
             </div>
@@ -187,79 +192,127 @@ const Footer = () => {
             </h3>
             <div className="grid grid-cols-1 gap-1.5 sm:gap-2">
               <div>
-                <Link 
-                  to="https://afri-nexus-listings-xw16.vercel.app/" 
-                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
-                >
-                  <span className="mr-2">🇷🇼</span>
-                  {t('footer.rwandafulRwanda')}
+                <Link to="/communities/benincredible-benin" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                  BeninCredible Benin
                 </Link>
               </div>
               <div>
-                <Link 
-                  to="/communities/beautiful-botswana" 
-                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
-                >
-                  <span className="mr-2">🇧🇼</span>
-                  {t('footer.beautifulBotswana')}
+                <Link to="/communities/egyptional-egypt" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                  EgypTional Egypt
                 </Link>
               </div>
               <div>
-                <Link 
-                  to="/communities/kenyaful-kenya" 
-                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
-                >
-                  <span className="mr-2">🇰🇪</span>
-                  {t('footer.kenyafulKenya')}
+                <Link to="/communities/ethutopia-ethiopia" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                  Ethutopia Ethiopia
                 </Link>
               </div>
               <div>
-                <Link 
-                  to="/communities/ugandaful-uganda" 
-                  className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base"
-                >
-                  <span className="mr-2">🇺🇬</span>
-                  {t('footer.ugandafulUganda')}
+                <Link to="/communities/gambion-gambia" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                  GambiOn Gambia
                 </Link>
               </div>
               <div>
-                <Link 
-                  to="/communities/tanzaniaful-tanzania" 
-                  className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base"
-                >
-                  <span className="mr-2">🇹🇿</span>
-                  {t('footer.tanzaniafulTanzania')}
+                <Link to="/communities/ghananion-ghana" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                  GhaNation Ghana
                 </Link>
               </div>
               <div>
-                <Link 
-                  to="/communities/ethiopiaful-ethiopia" 
-                  className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base"
-                >
-                  <span className="mr-2">🇪🇹</span>
-                  {t('footer.ethiopiafulEthiopia')}
+                <Link to="/communities/kensential-kenya" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                  KenSential Kenya
                 </Link>
               </div>
               <div>
-                <Link 
-                  to="/communities/ghanaful-ghana" 
-                  className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base"
-                >
-                  <span className="mr-2">🇬🇭</span>
-                  {t('footer.ghanafulGhana')}
+                <Link to="/communities/nigeriayeah-nigeria" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                  NigeriaYeah Nigeria
                 </Link>
               </div>
               <div>
-                <Link 
-                  to="/communities/nigeriaful-nigeria" 
-                  className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base"
-                >
-                  <span className="mr-2">🇳🇬</span>
-                  {t('footer.nigeriafulNigeria')}
+                <Link to="/communities/rwandaful-rwanda" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                  Rwandaful Rwanda
+                </Link>
+              </div>
+              <div>
+                <Link to="/communities/senegalastic-senegal" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                  SenegalAstic Senegal
+                </Link>
+              </div>
+              <div>
+                <Link to="/communities/south-african-south-africa" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                  South AfriCan South Africa
+                </Link>
+              </div>
+              <div>
+                <Link to="/communities/spotswana-botswana" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                  Spotswana Botswana
+                </Link>
+              </div>
+              <div>
+                <Link to="/communities/tanzaniya-tanzania" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                  TanzaniYa Tanzania
+                </Link>
+              </div>
+              <div>
+                <Link to="/communities/ugandalous-uganda" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                  UgandaLous Uganda
                 </Link>
               </div>
             </div>
           </div>
+
+          {/* Global Africa Column */}
+          <div>
+            <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 pb-2 border-b-2 border-[#70905a] font-comfortaa">
+              Global Africa
+            </h3>
+            <div className="grid grid-cols-1 gap-1.5 sm:gap-2">
+              <div>
+                <Link 
+                  to="/global-africa/black-americans" 
+                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
+                >
+                  <span className="mr-2">🇺🇸</span>
+                  African Americans
+                </Link>
+              </div>
+              <div>
+                <Link 
+                  to="/global-africa/brazil" 
+                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
+                >
+                  <span className="mr-2">🇧🇷</span>
+                  Brazil
+                </Link>
+              </div>
+              <div>
+                <Link 
+                  to="/global-africa/haiti" 
+                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
+                >
+                  <span className="mr-2">🇭🇹</span>
+                  Haïti
+                </Link>
+              </div>
+              <div>
+                <Link 
+                  to="/global-africa/jamaica" 
+                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
+                >
+                  <span className="mr-2">🇯🇲</span>
+                  Jamaica
+                </Link>
+              </div>
+              <div>
+                <Link 
+                  to="/global-africa/trinidad" 
+                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
+                >
+                  <span className="mr-2">🇹🇹</span>
+                  Trinidad
+                </Link>
+              </div>
+            </div>
+          </div>
+
         </div>
 
         {/* Communities Section */}

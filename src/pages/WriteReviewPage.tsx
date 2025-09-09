@@ -424,13 +424,13 @@ export const WriteReviewPage = () => {
           {/* Illustration placeholder */}
           <div className="mb-8 flex justify-center">
             <div className="relative">
-              <div className="w-80 h-48 bg-gradient-to-br from-yp-yellow/20 to-yp-blue/20 rounded-lg flex items-center justify-center">
+              <div className="w-80 h-48 bg-gradient-to-br from-yp-yellow/20 to-brand-blue/20 rounded-lg flex items-center justify-center">
                 <div className="flex space-x-4">
                   <div className="bg-yp-yellow p-4 rounded-lg">
                     <Store className="w-8 h-8 text-yp-dark" />
                   </div>
                   <div className="bg-white p-4 rounded-lg shadow">
-                    <MessageSquare className="w-8 h-8 text-yp-blue" />
+                    <MessageSquare className="w-8 h-8 text-brand-blue" />
                   </div>
                   <div className="bg-yp-yellow p-4 rounded-lg">
                     <FileText className="w-8 h-8 text-yp-dark" />
@@ -441,7 +441,7 @@ export const WriteReviewPage = () => {
           </div>
           
           <h1 className="text-4xl font-bold text-yp-dark mb-4 font-comfortaa">
-            <span className="text-yp-blue">{t('ReviewMessageOne')} </span>{t('reviewMessage')}</h1>
+            <span className="text-brand-blue">{t('ReviewMessageOne')} </span>{t('reviewMessage')}</h1>
           <p className="text-xl text-gray-600 mb-2 font-roboto">
             {t('reviews.helpFinding')}
           </p>
@@ -643,7 +643,7 @@ export const WriteReviewPage = () => {
                     <div className="flex space-x-2 pt-2">
                       <Button
                         onClick={handleSaveBusinessEdits}
-                        className="bg-yp-blue text-white font-roboto"
+                        className="bg-brand-blue text-white font-roboto"
                       >
                         <Save className="w-4 h-4 mr-2" />
                         Save Changes
@@ -749,7 +749,7 @@ export const WriteReviewPage = () => {
               {/* Image Upload */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2 font-roboto">
-                  {t('reviews.addPhotos')} (Optional)
+                  {t('reviews.addPhotos')}
                 </label>
                 {/* <BusinessImageUpload
                   businessId={selectedBusiness.id}
@@ -796,7 +796,7 @@ export const WriteReviewPage = () => {
             {/* Step 1 */}
             <div className="text-center">
               <div className="bg-gray-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-                <Store className="w-10 h-10 text-yp-blue" />
+                <Store className="w-10 h-10 text-brand-blue" />
               </div>
               <h3 className="text-xl font-semibold text-yp-dark mb-3 font-comfortaa">
                 {t('findBusiness')}
@@ -809,7 +809,7 @@ export const WriteReviewPage = () => {
             {/* Step 2 */}
             <div className="text-center">
               <div className="bg-gray-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-                <MessageSquare className="w-10 h-10 text-yp-blue" />
+                <MessageSquare className="w-10 h-10 text-brand-blue" />
               </div>
               <h3 className="text-xl font-semibold text-yp-dark mb-3 font-comfortaa">
                 {t('sentenceOne')}
@@ -822,7 +822,7 @@ export const WriteReviewPage = () => {
             {/* Step 3 */}
             <div className="text-center">
               <div className="bg-gray-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
-                <FileText className="w-10 h-10 text-yp-blue" />
+                <FileText className="w-10 h-10 text-brand-blue" />
               </div>
               <h3 className="text-xl font-semibold text-yp-dark mb-3 font-comfortaa">
                 {t('sentenceTwo')}

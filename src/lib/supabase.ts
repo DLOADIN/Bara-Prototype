@@ -113,7 +113,13 @@ export const getAdminDb = () => {
     contact_messages: () => adminSupabase.from('contact_messages'),
     
     // Listing claims operations
-    listing_claims: () => adminSupabase.from('listing_claims')
+    listing_claims: () => adminSupabase.from('listing_claims'),
+    
+    // Banner ads operations
+    banner_ads: () => adminSupabase.from('banner_ads'),
+    
+    // Banner ad analytics operations
+    banner_ad_analytics: () => adminSupabase.from('banner_ad_analytics')
   };
 };
 
@@ -335,7 +341,13 @@ export const db = {
   contact_messages: () => supabase.from('contact_messages'),
   
   // Listing claims operations
-  listing_claims: () => supabase.from('listing_claims')
+  listing_claims: () => supabase.from('listing_claims'),
+  
+  // Banner ads operations
+  banner_ads: () => supabase.from('banner_ads'),
+  
+  // Banner ad analytics operations
+  banner_ad_analytics: () => supabase.from('banner_ad_analytics')
 }
 
 // Auth helper functions

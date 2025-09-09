@@ -125,21 +125,21 @@ export const CategoriesPage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-yp-gray-light">
-        <Header />
+    <div className="min-h-screen bg-[#F8F9FA]">
+      <Header />
 
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Header */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center space-x-4">
             <Button 
               variant="ghost" 
               onClick={handleBackClick}
-              className="p-2 hover:bg-white rounded-full"
+              className="p-2 hover:bg-[#E8F0FE] rounded-full text-[#4285F4]"
             >
               <ArrowLeft className="w-5 h-5" />
             </Button>
-            <h1 className="text-2xl md:text-3xl font-comfortaa font-bold text-yp-dark">
+            <h1 className="text-2xl md:text-3xl font-comfortaa font-bold text-[#202124]">
               {t('categories.title')}
             </h1>
           </div>
@@ -148,13 +148,13 @@ export const CategoriesPage = () => {
         {/* Search Bar */}
         <div className="mb-8">
           <div className="relative max-w-md">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-yp-gray-dark w-5 h-5" />
+            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-[#202124] w-5 h-5" />
             <Input
               type="text"
               placeholder={t('categories.searchPlaceholder')}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10 h-12 font-roboto border-yp-gray-medium focus:border-yp-blue focus:ring-yp-blue"
+              className="pl-10 h-12 font-roboto border-[#E8EAED] focus:border-[#4285F4] focus:ring-2 focus:ring-[#E8F0FE] rounded-lg"
             />
           </div>
         </div>
@@ -169,35 +169,29 @@ export const CategoriesPage = () => {
             return (
               <div 
                 key={category.id} 
-                className="bg-white rounded-lg shadow-sm border border-yp-gray-medium hover:shadow-md transition-all duration-200 cursor-pointer group"
+                className="bg-white rounded-lg shadow-sm border border-[#E8EAED] hover:shadow-md transition-all duration-200 cursor-pointer group"
                 onClick={() => handleCategoryClick(category.slug)}
               >
                 {/* Category Icon */}
                 <div className="p-6 pb-4">
-                  <div className="w-16 h-16 bg-gradient-to-br from-yp-blue to-yp-green rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-transform duration-200">
-                    <IconComponent className="w-8 h-8 text-white" />
+                  <div className="w-16 h-16 bg-[#E8F0FE] rounded-full flex items-center justify-center mx-auto mb-4 group-hover:scale-110 transition-all duration-300">
+                    <IconComponent className="w-8 h-8 text-[#4285F4]" />
                   </div>
                 </div>
 
                 {/* Category Content */}
                 <div className="px-6 pb-6">
-                  <h3 className="font-roboto font-semibold text-lg text-yp-dark mb-2 text-center group-hover:text-[#4e3c28] transition-colors duration-200">
+                  <h3 className="font-roboto font-semibold text-lg text-[#202124] mb-2 text-center group-hover:text-[#3367D6] transition-colors duration-200">
                     {translatedName}
                   </h3>
                   
                   {category.description && (
-                    <p className="font-roboto text-sm text-yp-gray-dark text-center leading-relaxed">
+                    <p className="font-roboto text-sm text-[#5F6368] text-center leading-relaxed">
                       {category.description}
                     </p>
                   )}
                   
-                  {/* Category Stats (placeholder) */}
-                  <div className="mt-4 pt-4 border-t border-yp-gray-light">
-                    <div className="flex justify-center items-center space-x-4 text-xs text-yp-gray-dark">
-                      <span>📍 150+ locations</span>
-                      <span>⭐ 4.5 rating</span>
-                    </div>
-                  </div>
+                  {/* Removed category stats (location count and rating) as per design update */}
                 </div>
               </div>
             );

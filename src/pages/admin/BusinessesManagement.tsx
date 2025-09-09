@@ -631,7 +631,7 @@ export const BusinessesManagement = () => {
                       <Button
                       variant="ghost"
                         size="sm"
-                      className="p-1 h-8 w-8 text-red-600 hover:text-red-700 hover:bg-[#4e3c28]/10"
+                      className="p-1 h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
                       onClick={() => handleDelete(business.id)}
                       >
                       <Trash2 className="w-4 h-4" />

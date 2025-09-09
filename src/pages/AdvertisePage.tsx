@@ -30,7 +30,7 @@ const AdvertisePage = () => {
       <Header />
       <div className="min-h-screen bg-gray-50">
         {/* Hero Section */}
-        <section className="bg-gradient-to-r from-yp-blue to-blue-700 text-white py-20">
+        <section className="bg-brand-blue text-white py-20">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 font-comfortaa">
               {t('advertise.hero.title')}
@@ -39,10 +39,10 @@ const AdvertisePage = () => {
               {t('advertise.hero.subtitle')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-white text-yp-blue hover:bg-gray-100 font-roboto">
+              <Button size="lg" className="bg-brand-yellow text-dark hover:bg-brand-yellow-hover font-roboto">
                 {t('advertise.hero.getStarted')}
               </Button>
-              <Button size="lg" className="bg-white text-yp-blue hover:bg-gray-100 font-roboto">
+              <Button size="lg" variant="outline" className="bg-transparent border-2 border-white text-white hover:bg-white/10 font-roboto">
                 {t('advertise.hero.learnMore')}
               </Button>
             </div>
@@ -54,15 +54,15 @@ const AdvertisePage = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-center">
               <div className="space-y-4">
-                <div className="text-4xl font-bold text-yp-blue">100K+</div>
+                <div className="text-4xl font-bold text-brand-blue">100K+</div>
                 <p className="text-gray-600 font-roboto">{t('advertise.stats.monthlyVisitors')}</p>
               </div>
               <div className="space-y-4">
-                <div className="text-4xl font-bold text-yp-blue">1K+</div>
+                <div className="text-4xl font-bold text-brand-blue">1K+</div>
                 <p className="text-gray-600 font-roboto">{t('advertise.stats.businesses')}</p>
               </div>
               <div className="space-y-4">
-                <div className="text-4xl font-bold text-yp-blue">95%</div>
+                <div className="text-4xl font-bold text-brand-blue">95%</div>
                 <p className="text-gray-600 font-roboto">{t('advertise.stats.satisfaction')}</p>
               </div>
             </div>
@@ -85,7 +85,7 @@ const AdvertisePage = () => {
               {/* Premium Listing */}
               <Card className="hover:shadow-lg transition-shadow duration-300">
                 <CardHeader className="text-center">
-                  <div className="w-16 h-16 bg-yp-blue rounded-full flex items-center justify-center mx-auto mb-4">
+                  <div className="w-16 h-16 bg-brand-blue rounded-full flex items-center justify-center mx-auto mb-4">
                     <Star className="w-8 h-8 text-white" />
                   </div>
                   <CardTitle className="text-xl font-comfortaa">{t('advertise.services.premium.title')}</CardTitle>
@@ -108,7 +108,7 @@ const AdvertisePage = () => {
                       {t('advertise.services.premium.feature3')}
                     </li>
                   </ul>
-                  <Button className="w-full bg-yp-blue hover:bg-yp-blue/90 font-roboto">
+                  <Button className="w-full bg-brand-blue hover:bg-brand-blue/90 font-roboto">
                     {t('advertise.services.premium.cta')}
                   </Button>
                 </CardContent>
@@ -195,7 +195,7 @@ const AdvertisePage = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
               <div className="text-center space-y-4">
-                <div className="w-16 h-16 bg-yp-blue rounded-full flex items-center justify-center mx-auto">
+                <div className="w-16 h-16 bg-brand-blue rounded-full flex items-center justify-center mx-auto">
                   <Users className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-lg font-semibold font-comfortaa">{t('advertise.whyChoose.reach.title')}</h3>
@@ -203,7 +203,7 @@ const AdvertisePage = () => {
               </div>
 
               <div className="text-center space-y-4">
-                <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center mx-auto">
+                <div className="w-16 h-16 bg-brand-blue rounded-full flex items-center justify-center mx-auto">
                   <TrendingUp className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-lg font-semibold font-comfortaa">{t('advertise.whyChoose.growth.title')}</h3>
@@ -211,7 +211,7 @@ const AdvertisePage = () => {
               </div>
 
               <div className="text-center space-y-4">
-                <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto">
+                <div className="w-16 h-16 bg-brand-blue rounded-full flex items-center justify-center mx-auto">
                   <Globe className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-lg font-semibold font-comfortaa">{t('advertise.whyChoose.local.title')}</h3>
@@ -219,7 +219,7 @@ const AdvertisePage = () => {
               </div>
 
               <div className="text-center space-y-4">
-                <div className="w-16 h-16 bg-orange-600 rounded-full flex items-center justify-center mx-auto">
+                <div className="w-16 h-16 bg-brand-blue rounded-full flex items-center justify-center mx-auto">
                   <Eye className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-lg font-semibold font-comfortaa">{t('advertise.whyChoose.visibility.title')}</h3>
@@ -230,7 +230,7 @@ const AdvertisePage = () => {
         </section>
 
         {/* CTA Section */}
-        <section className="py-16 bg-yp-blue text-white">
+        <section className="py-16 bg-brand-blue text-white">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h2 className="text-3xl md:text-4xl font-bold mb-6 font-comfortaa">
               {t('advertise.cta.title')}
@@ -239,10 +239,10 @@ const AdvertisePage = () => {
               {t('advertise.cta.description')}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-white text-yp-blue hover:bg-gray-100 font-roboto">
+              <Button size="lg" className="bg-brand-yellow text-dark hover:bg-brand-yellow-hover font-roboto">
                 {t('advertise.cta.primaryButton')}
               </Button>
-              <Button size="lg" className="bg-white text-yp-blue hover:bg-gray-100 font-roboto">
+              <Button size="lg" variant="outline" className="bg-transparent border-2 border-brand-blue text-brand-blue hover:bg-brand-blue/10 font-roboto">
                 {t('advertise.cta.secondaryButton')}
               </Button>
             </div>
@@ -263,7 +263,7 @@ const AdvertisePage = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               <div className="text-center space-y-4">
-                <div className="w-16 h-16 bg-yp-blue rounded-full flex items-center justify-center mx-auto">
+                <div className="w-16 h-16 bg-brand-blue rounded-full flex items-center justify-center mx-auto">
                   <Phone className="w-8 h-8 text-white" />
                 </div>
                 <h3 className="text-lg font-semibold font-comfortaa">{t('advertise.contact.phone.title')}</h3>

@@ -65,7 +65,7 @@
     "manageListing": {
       "title": "Dhibiti orodha yako ya bure.",
       "step1": "Sasisha maelezo ya biashara yako kwa hatua chache.",
-      "step2": "Fanya iwe rahisi kwa wateja wako kukupata kwenye programu ya Bara.",
+      "step2": "Fanya iwe rahisi kwa wateja wako kukupata kwenye BARA.",
       "new": "Mpya!",
       "jobPosting": "Chapisha nafasi ya kazi kwenye orodha yako ya bure."
     },
@@ -99,14 +99,14 @@
   },
   "about": {
     "hero": {
-      "title": "Kuhusu Bara",
+      "title": "Kuhusu BARA",
       "subtitle": "Kuunganisha jamii na biashara za kujiamini za mitaani",
       "learnMore": "Jifunze zaidi",
       "contactUs": "Wasiliana nasi"
     },
     "overview": {
       "title": "Hadithi yetu",
-      "description": "Bara ni jukwaa kuu la orodha ya biashara nchini Rwanda, lililojitolea kuunganisha jamii za mitaani na biashara za kujiamini. Tunamini nguvu ya biashara ya mitaani na tunajitahidi kufanya iwe rahisi kwa watu kugundua na kuungana na huduma bora zaidi katika eneo lao.",
+      "description": "BARA ni jukwaa kuu la orodha ya biashara nchini Rwanda, lililojitolea kuunganisha jamii za mitaani na biashara za kujiamini. Tunamini nguvu ya biashara ya mitaani na tunajitahidi kufanya iwe rahisi kwa watu kugundua na kuungana na huduma bora zaidi katika eneo lao.",
       "mission": "Dhamira yetu ni kuwezesha biashara za mitaani kwa kuwapa uwepo wa kidijitali huku tukisaidia watumiaji kufanya maamuzi ya kujua wapi kununua, kula na kupokea huduma.",
       "established": "Imeanzishwa 2024",
       "location": "Rwanda"
@@ -147,7 +147,7 @@
     },
     "team": {
       "title": "Timu yetu",
-      "subtitle": "Kutana na wataalamu waliojitolea nyuma ya Bara",
+      "subtitle": "Kutana na wataalamu waliojitolea nyuma ya BARA",
       "leadership": {
         "title": "Timu ya uongozi",
         "description": "Viongozi wenye uzoefu wanaongoza mtazamo wetu wa kimkakati na ukuaji."
@@ -163,7 +163,7 @@
     },
     "contact": {
       "title": "Wasiliana nasi",
-      "subtitle": "Tungependa kusikia kutoka kwako. Wasiliana nasi ili kujifunza zaidi kuhusu Bara.",
+      "subtitle": "Tungependa kusikia kutoka kwako. Wasiliana nasi ili kujifunza zaidi kuhusu BARA.",
       "phone": {
         "title": "Simu",
         "hours": "Jumatatu - Jumapili 24/7"
@@ -287,7 +287,7 @@
     }
   },
   "qa": {
-    "askQuestions": "Uliza maswali kwa jumuiya ya Bara",
+    "askQuestions": "Uliza maswali kwa jumuiya ya BARA",
     "shareKnowledge": "Shiriki maarifa yako kusaidia wengine",
     "findAnswers": "Pata majibu au toa suluhisho",
     "askQuestion": "Uliza Swali",
@@ -302,7 +302,7 @@
       "info1": "Wasilisha swali lako na kichwa cha habari cha wazi na maelezo ya kina",
       "info2": "Wanachama wa jumuiya yetu watatoa majibu muhimu",
       "info3": "Utapokea arifa za barua pepe wakati mtu anapojibu",
-      "footer": "© 2024 Jumuiya ya Bara. Haki zote zimehifadhiwa."
+      "footer": "© 2024 Jumuiya ya BARA. Haki zote zimehifadhiwa."
     },
     "form": {
       "titleLabel": "Kichwa cha Swali",
@@ -420,13 +420,13 @@
     "contactUs": "Wasiliana Nasi",
     "advertiseWithUs": "Tangaza Nasi",
     "corporateBlog": "Blog ya Kampuni",
-    "advertisingChoices": "Chaguo za Utangazaji",
+    "advertisingChoices": "Tangaza",
     "AskUsAnyQuestion": "Uliza Swali",
     "ClaimYourListing": "Reklai Biashara Yako",
     "siteDirectory": "Orodha ya Tovuti",
     "articles": "Makala",
     "findBusiness": "Pata Biashara",
-    "ypMobileApp": "Programu ya Simu ya Bara",
+    "ypMobileApp": "Programu ya Simu ya BARA",
     "gasGuruMobileApp": "Programu ya Simu ya Gas Guru",
     "siteMap": "Ramani ya Tovuti",
     "categories": "Kategoria",
@@ -435,8 +435,8 @@
     "privacy": "Faragha",
     "terms": "Masharti ya Matumizi",
     "legal": "Kisheria",
-    "copyright": "© 2025 Bara, Inc. Haki zote zimehifadhiwa.",
-    "trademark": "Bara, alama ya Bara, The Real Bara Listings, na alama zingine zote za Bara ni alama zilizosajiliwa za Bara, Inc.",
+    "copyright": "© 2025 BARA, Inc. Haki zote zimehifadhiwa.",
+    "trademark": "BARA, alama ya BARA, The Real BARA Listings, na alama zingine zote za BARA ni alama zilizosajiliwa za BARA, Inc.",
     "otherMarks": "Alama zote zingine zilizomo hapa ni mali ya wamiliki wao."
   },
   "categories": {
@@ -725,7 +725,7 @@
   },
   "advertise": {
     "hero": {
-      "title": "Kua Biashara Yako na Bara",
+      "title": "Kua Biashara Yako na BARA",
       "subtitle": "Fikia mamilioni ya wateja na kuongeza mwonekano wako na suluhisho zetu za utangazaji zenye nguvu",
       "getStarted": "Anza",
       "learnMore": "Jifunze Zaidi"
@@ -764,7 +764,7 @@
       }
     },
     "whyChoose": {
-      "title": "Kwa Nini Kuchagua Bara kwa Utangazaji?",
+      "title": "Kwa Nini Kuchagua BARA kwa Utangazaji?",
       "subtitle": "Tunatoa zana na ufikiaji ambao unahitaji kukuza biashara yako kwa ufanisi",
       "reach": {
         "title": "Ufikiaji wa Wingi",
@@ -785,7 +785,7 @@
     },
     "cta": {
       "title": "Tayari Kukuza Biashara Yako?",
-      "description": "Jiunge na maelfu ya biashara zinazomtumaini Bara kuwasaidia kufikia wateja zaidi na kukuza mapato yao",
+      "description": "Jiunge na maelfu ya biashara zinazomtumaini BARA kuwasaidia kufikia wateja zaidi na kukuza mapato yao",
       "primaryButton": "Anza Utangazaji Leo",
       "secondaryButton": "Panga Mashauriano"
     },

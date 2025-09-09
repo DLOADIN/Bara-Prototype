@@ -767,7 +767,7 @@ export const ListingsPage = () => {
                               >
                                 <Button
                                   size="sm"
-                                  className="bg-yellow-500 hover:bg-yellow-600 text-white font-roboto h-8 px-3 flex items-center gap-2 text-xs sm:text-sm"
+                                  className="bg-yellow-500 hover:bg-yellow-400 text-white font-roboto h-8 px-3 flex items-center gap-2 text-xs sm:text-sm"
                                 >
                                   <Globe className="w-4 h-4" />
                                   Order Online

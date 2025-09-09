@@ -99,7 +99,7 @@ export const BusinessDetailPage = () => {
             <p className="text-gray-600 mb-6">
               {error?.message || 'The business you are looking for could not be found.'}
             </p>
-            <Button onClick={handleBackClick} className="bg-yp-blue">
+            <Button onClick={handleBackClick} className="bg-brand-blue">
               Go Back
                 </Button>
               </div>
@@ -167,7 +167,7 @@ export const BusinessDetailPage = () => {
               {/* Badges */}
               <div className="flex flex-wrap gap-2">
                 {business.is_premium && (
-                  <Badge variant="default" className="bg-yp-blue text-white">
+                  <Badge variant="default" className="bg-brand-blue text-white">
                     <Award className="w-3 h-3 mr-1" />
                     Premium
                   </Badge>
@@ -288,7 +288,7 @@ export const BusinessDetailPage = () => {
                 {business.phone && (
                   <div className="flex items-center">
                     <Phone className="w-4 h-4 text-gray-500 mr-3" />
-                    <a href={`tel:${business.phone}`} className="text-yp-blue hover:underline">
+                    <a href={`tel:${business.phone}`} className="text-brand-blue hover:underline">
                       {business.phone}
                     </a>
                   </div>
@@ -297,7 +297,7 @@ export const BusinessDetailPage = () => {
                 {business.email && (
                   <div className="flex items-center">
                     <Users className="w-4 h-4 text-gray-500 mr-3" />
-                    <a href={`mailto:${business.email}`} className="text-yp-blue hover:underline">
+                    <a href={`mailto:${business.email}`} className="text-brand-blue hover:underline">
                       {business.email}
                     </a>
                 </div>
@@ -308,7 +308,7 @@ export const BusinessDetailPage = () => {
                     <Globe className="w-4 h-4 text-gray-500 mr-3" />
                     <a 
                       href={`https://${business.website}`} 
-                      className="text-yp-blue hover:underline"
+                      className="text-brand-blue hover:underline"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
@@ -348,7 +348,7 @@ export const BusinessDetailPage = () => {
             {/* Actions */}
             <div className="space-y-3">
               <Link to={`/write-review/${business.id}`}>
-                <Button className="w-full bg-yp-blue">
+                <Button className="w-full bg-brand-blue">
                   Write Review
                 </Button>
               </Link>

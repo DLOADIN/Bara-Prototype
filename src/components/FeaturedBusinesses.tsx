@@ -219,18 +219,18 @@ export const FeaturedBusinesses: React.FC<FeaturedBusinessesProps> = ({
 
   if (loading) {
     return (
-      <Card className="w-[60vh] border border-gray-200">
+      <Card className="w-[60vh] border border-[#E8EAED] shadow-sm">
         <CardHeader>
-          <CardTitle className="text-lg font-semibold text-yp-dark">
+          <CardTitle className="text-lg font-semibold text-[#202124]">
             {getCategoryDisplayName()}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           {[1, 2, 3].map((i) => (
             <div key={i} className="animate-pulse">
-              <div className="h-4 bg-gray-200 rounded w-3/4 mb-2"></div>
-              <div className="h-3 bg-gray-200 rounded w-1/2 mb-1"></div>
-              <div className="h-3 bg-gray-200 rounded w-2/3"></div>
+              <div className="h-4 bg-[#F8F9FA] rounded w-3/4 mb-2"></div>
+              <div className="h-3 bg-[#F8F9FA] rounded w-1/2 mb-1"></div>
+              <div className="h-3 bg-[#F8F9FA] rounded w-2/3"></div>
             </div>
           ))}
         </CardContent>
@@ -240,11 +240,11 @@ export const FeaturedBusinesses: React.FC<FeaturedBusinessesProps> = ({
 
   // Always show the main business listings - no empty state
   return (
-    <Card className="w-[58vh] border border-gray-200">
+    <Card className="w-[58vh] border border-[#E8EAED] shadow-sm">
       <CardHeader>
-        <CardTitle className="text-lg font-semibold text-yp-dark flex items-center justify-between">
+        <CardTitle className="text-lg font-semibold text-[#202124] flex items-center justify-between">
           {getCategoryDisplayName()}
-          <Badge variant="secondary" className="text-xs">
+          <Badge variant="secondary" className="text-xs bg-[#FBBC05] text-[#202124] hover:bg-[#F2B600]">
             {t('featuredBusinesses.sponsored')}
           </Badge>
         </CardTitle>
@@ -252,45 +252,45 @@ export const FeaturedBusinesses: React.FC<FeaturedBusinessesProps> = ({
       <CardContent className="space-y-4">
         {featuredBusinesses.length === 0 ? (
           <div className="text-center py-8">
-            <div className="w-12 h-12 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3">
-              <Building className="w-6 h-6 text-gray-400" />
+            <div className="w-12 h-12 bg-[#F8F9FA] rounded-full flex items-center justify-center mx-auto mb-3">
+              <Building className="w-6 h-6 text-[#5F6368]" />
             </div>
-            <p className="text-sm text-gray-500 mb-2">
+            <p className="text-sm text-[#5F6368] mb-2">
               No sponsored businesses available
             </p>
-            <p className="text-xs text-gray-400">
+            <p className="text-xs text-[#9AA0A6]">
               Check back later for featured businesses
             </p>
           </div>
         ) : (
           featuredBusinesses.map((business) => (
-            <div key={business.id} className="border-b border-gray-100 pb-4 last:border-b-0">
+            <div key={business.id} className="border-b border-[#E8EAED] pb-4 last:border-b-0">
               {/* Business Header */}
               <div className="flex items-start justify-between mb-2">
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-semibold text-yp-dark text-sm truncate">
+                  <h3 className="font-semibold text-[#202124] text-sm truncate">
                     {business.name}
                   </h3>
-                  <p className="text-xs text-gray-500 mt-1">
+                  <p className="text-xs text-[#5F6368] mt-1">
                     {business.phone}
                   </p>
                 </div>
-                <Badge variant="outline" className="text-xs ml-2">
+                <Badge variant="outline" className="text-xs ml-2 border-[#DADCE0] text-[#5F6368]">
                   {t('featuredBusinesses.ad')}
                 </Badge>
               </div>
 
               {/* Category */}
               {business.category && (
-                <p className="text-xs text-gray-600 mb-2">
+                <p className="text-xs text-[#5F6368] mb-2">
                   {business.category.name}
                 </p>
               )}
 
               {/* Address */}
               {business.address && (
-                <p className="text-xs text-gray-600 mb-3 flex items-start">
-                  <MapPin className="w-3 h-3 text-gray-400 mr-1 mt-0.5 flex-shrink-0" />
+                <p className="text-xs text-[#5F6368] mb-3 flex items-start">
+                  <MapPin className="w-3 h-3 text-[#9AA0A6] mr-1 mt-0.5 flex-shrink-0" />
                   <span className="line-clamp-2">{business.address}</span>
                 </p>
               )}
@@ -298,11 +298,11 @@ export const FeaturedBusinesses: React.FC<FeaturedBusinessesProps> = ({
               {/* Rating */}
               {business.reviews && business.reviews.length > 0 && (
                 <div className="flex items-center space-x-2 mb-3">
-                  <Crown className="w-3 h-3 text-yellow-500 fill-current" />
-                  <span className="text-xs font-medium text-gray-900">
+                  <Crown className="w-3 h-3 text-[#FBBC05] fill-current" />
+                  <span className="text-xs font-medium text-[#202124]">
                     {getAverageRating(business).toFixed(1)}
                   </span>
-                  <span className="text-xs text-gray-500">
+                  <span className="text-xs text-[#9AA0A6]">
                     ({business.reviews.length} {t('featuredBusinesses.reviews')})
                   </span>
                 </div>
@@ -310,22 +310,30 @@ export const FeaturedBusinesses: React.FC<FeaturedBusinessesProps> = ({
 
               {/* Action Links */}
               <div className="flex items-center space-x-2 text-xs">
-                {/* {business.website && (
+                {business.website && (
                   <Link to={business.website} target="_blank" rel="noopener noreferrer">
-                    <Button variant="ghost" size="sm" className="h-6 px-2 text-yp-blue hover:text-yp-blue-dark">
+                    <Button variant="ghost" size="sm" className="h-6 px-2 text-[#4285F4] hover:bg-[#F1F3F4] hover:text-[#3367D6]">
                       <Globe className="w-3 h-3 mr-1" />
                       {t('featuredBusinesses.website')}
                     </Button>
                   </Link>
-                )} */}
+                )}
                 
-                {/* <Button variant="ghost" size="sm" className="h-6 px-2 text-yp-blue hover:text-yp-blue-dark">
-                  <Navigation className="w-3 h-3 mr-1" />
-                  {t('featuredBusinesses.directions')}
-                </Button> */}
+                {business.latitude && business.longitude && (
+                  <a 
+                    href={`https://www.google.com/maps/dir/?api=1&destination=${business.latitude},${business.longitude}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <Button variant="ghost" size="sm" className="h-6 px-2 text-[#4285F4] hover:bg-[#F1F3F4] hover:text-[#3367D6]">
+                      <Navigation className="w-3 h-3 mr-1" />
+                      {t('featuredBusinesses.directions')}
+                    </Button>
+                  </a>
+                )}
                 
                 <Link to={`/${citySlug || 'city'}/${business.category?.slug || 'business'}/${business.id}`}>
-                  <Button variant="ghost" size="sm" className="h-6 px-2 text-yp-blue hover:text-yp-blue-dark">
+                  <Button variant="ghost" size="sm" className="h-6 px-2 text-[#4285F4] hover:bg-[#F1F3F4] hover:text-[#3367D6]">
                     <Info className="w-3 h-3 mr-1" />
                     {t('featuredBusinesses.moreInfo')}
                   </Button>

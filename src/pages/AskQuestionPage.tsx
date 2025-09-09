@@ -91,7 +91,7 @@ export const AskQuestionPage = () => {
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sm:p-8">
           {/* Page Header */}
           <div className="text-center mb-8">
-            <div className="w-16 h-16 bg-yp-blue rounded-full flex items-center justify-center mx-auto mb-4">
+            <div className="w-16 h-16 bg-brand-blue rounded-full flex items-center justify-center mx-auto mb-4">
               <MessageSquare className="w-8 h-8 text-white" />
             </div>
             <h2 className="text-2xl sm:text-3xl font-comfortaa font-bold text-yp-dark mb-2">

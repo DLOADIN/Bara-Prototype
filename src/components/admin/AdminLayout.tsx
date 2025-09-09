@@ -80,7 +80,7 @@ export const AdminLayout = ({ children, title, subtitle }: AdminLayoutProps) => 
 
   const getPageSubtitle = () => {
     if (subtitle) return subtitle;
-    return "Manage your Bara application";
+    return "Manage your BARA application";
   };
 
   return (

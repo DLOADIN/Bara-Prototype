@@ -65,7 +65,7 @@
     "manageListing": {
       "title": "Gestiona tu anuncio gratuito.",
       "step1": "Actualiza la información de tu negocio en pocos pasos.",
-      "step2": "Facilita que tus clientes te encuentren en la aplicación Bara.",
+      "step2": "Facilita que tus clientes te encuentren en BARA.",
       "new": "¡Nuevo!",
       "jobPosting": "Publica una oferta de trabajo en tu anuncio gratuito."
     },
@@ -99,14 +99,14 @@
   },
   "about": {
     "hero": {
-      "title": "Acerca de Bara",
+      "title": "Acerca de BARA",
       "subtitle": "Conectando comunidades con negocios locales de confianza",
       "learnMore": "Saber más",
       "contactUs": "Contáctanos"
     },
     "overview": {
       "title": "Nuestra historia",
-      "description": "Bara es la principal plataforma de directorio de negocios de Ruanda, dedicada a conectar comunidades locales con negocios de confianza. Creemos en el poder del comercio local y nos esforzamos por facilitar que las personas descubran y se conecten con los mejores servicios en su área.",
+      "description": "BARA es la principal plataforma de directorio de negocios de Ruanda, dedicada a conectar comunidades locales con negocios de confianza. Creemos en el poder del comercio local y nos esforzamos por facilitar que las personas descubran y se conecten con los mejores servicios en su área.",
       "mission": "Nuestra misión es empoderar a los negocios locales proporcionándoles una presencia digital mientras ayudamos a los consumidores a tomar decisiones informadas sobre dónde comprar, cenar y recibir servicios.",
       "established": "Est. 2024",
       "location": "Ruanda"
@@ -147,7 +147,7 @@
     },
     "team": {
       "title": "Nuestro equipo",
-      "subtitle": "Conoce a los profesionales dedicados detrás de Bara",
+      "subtitle": "Conoce a los profesionales dedicados detrás de BARA",
       "leadership": {
         "title": "Equipo de liderazgo",
         "description": "Ejecutivos experimentados guiando nuestra visión estratégica y crecimiento."
@@ -163,7 +163,7 @@
     },
     "contact": {
       "title": "Ponte en contacto",
-      "subtitle": "Nos encantaría saber de ti. Contáctanos para saber más sobre Bara.",
+      "subtitle": "Nos encantaría saber de ti. Contáctanos para saber más sobre BARA.",
       "phone": {
         "title": "Teléfono",
         "hours": "Lun - Dom 24/7"
@@ -286,7 +286,7 @@
     }
   },
   "qa": {
-    "askQuestions": "Haz preguntas a la comunidad Bara",
+    "askQuestions": "Haz preguntas a la comunidad BARA",
     "shareKnowledge": "Comparte tu conocimiento para ayudar a otros",
     "findAnswers": "Encuentra respuestas u ofrece soluciones",
     "askQuestion": "Hacer una Pregunta",
@@ -301,7 +301,7 @@
       "info1": "Envía tu pregunta con un título claro y descripción detallada",
       "info2": "Los miembros de nuestra comunidad proporcionarán respuestas útiles",
       "info3": "Recibirás notificaciones por email cuando alguien responda",
-      "footer": "© 2024 Comunidad Bara. Todos los derechos reservados."
+      "footer": "© 2024 Comunidad BARA. Todos los derechos reservados."
     },
     "form": {
       "titleLabel": "Título de la Pregunta",
@@ -417,13 +417,13 @@
     "contactUs": "Contáctanos",
     "advertiseWithUs": "Anuncia con Nosotros",
     "corporateBlog": "Blog Corporativo",
-    "advertisingChoices": "Opciones de Publicidad",
+    "advertisingChoices": "Publicidad",
     "AskUsAnyQuestion": "Pregúntanos cualquier pregunta",
     "ClaimYourListing": "Reclama tu listado",
     "siteDirectory": "Directorio del Sitio",
     "articles": "Artículos",
     "findBusiness": "Encontrar un Negocio",
-    "ypMobileApp": "Aplicación Móvil Bara",
+    "ypMobileApp": "Aplicación Móvil BARA",
     "gasGuruMobileApp": "Aplicación Móvil Gas Guru",
     "siteMap": "Mapa del Sitio",
     "categories": "Categorías",
@@ -432,8 +432,8 @@
     "privacy": "Privacidad",
     "terms": "Términos de Uso",
     "legal": "Legal",
-    "copyright": "© 2025 Bara, Inc. Todos los derechos reservados.",
-    "trademark": "Bara, el logo de Bara, The Real Bara Listings, y todas las demás marcas Bara son marcas registradas de Bara, Inc.",
+    "copyright": "© 2025 BARA, Inc. Todos los derechos reservados.",
+    "trademark": "BARA, el logo de BARA, The Real BARA Listings, y todas las demás marcas BARA son marcas registradas de BARA, Inc.",
     "otherMarks": "Todas las demás marcas contenidas aquí son propiedad de sus respectivos dueños."
   },
   "categories": {
@@ -722,7 +722,7 @@
   },
   "advertise": {
     "hero": {
-      "title": "Haz Crecer tu Negocio con Bara",
+      "title": "Haz Crecer tu Negocio con BARA",
       "subtitle": "Alcanza a millones de clientes y aumenta tu visibilidad con nuestras poderosas soluciones publicitarias",
       "getStarted": "Comenzar",
       "learnMore": "Saber Más"
@@ -761,7 +761,7 @@
       }
     },
     "whyChoose": {
-      "title": "¿Por Qué Elegir Bara para Publicidad?",
+      "title": "¿Por Qué Elegir BARA para Publicidad?",
       "subtitle": "Proporcionamos las herramientas y alcance que necesitas para hacer crecer tu negocio efectivamente",
       "reach": {
         "title": "Alcance Masivo",
@@ -782,7 +782,7 @@
     },
     "cta": {
       "title": "¿Listo para Hacer Crecer tu Negocio?",
-      "description": "Únete a miles de negocios que confían en Bara para ayudarlos a alcanzar más clientes y hacer crecer sus ingresos",
+      "description": "Únete a miles de negocios que confían en BARA para ayudarlos a alcanzar más clientes y hacer crecer sus ingresos",
       "primaryButton": "Comenzar Publicidad Hoy",
       "secondaryButton": "Programar una Consulta"
     },

@@ -192,18 +192,18 @@ export const AdminSidebar = ({ isOpen, onToggle }: AdminSidebarProps) => {
                   "w-full flex items-center space-x-3 px-3 py-3 rounded-lg text-left transition-all duration-200 group",
                   isActive 
                     ? "bg-[#e64600] text-white shadow-md" 
-                    : "text-gray-700 hover:bg-gray-100 hover:text-[#4e3c28]"
+                    : "text-gray-700 hover:bg-gray-100 hover:text-blue-600"
                 )}
               >
                 <Icon className={cn(
                   "w-5 h-5 transition-colors duration-200",
-                  isActive ? "text-white" : "text-gray-500 group-hover:text-[#4e3c28]"
+                  isActive ? "text-white" : "text-gray-500 group-hover:text-blue-600"
                 )} />
                 <div className="flex-1">
                   <div className="font-roboto font-medium">{item.title}</div>
                   <div className={cn(
                     "text-xs font-roboto transition-colors duration-200",
-                    isActive ? "text-orange-100" : "text-gray-500 group-hover:text-[#4e3c28]"
+                    isActive ? "text-orange-100" : "text-gray-500 group-hover:text-blue-600"
                   )}>
                     {item.description}
                   </div>

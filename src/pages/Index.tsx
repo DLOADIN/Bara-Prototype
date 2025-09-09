@@ -1,4 +1,5 @@
 import { Header } from "@/components/Header";
+import { BannerAd } from "@/components/BannerAd";
 import { HeroSection } from "@/components/HeroSection";
 import { CategoryGrid } from "@/components/CategoryGrid";
 import { BusinessSection } from "@/components/BusinessSection";
@@ -10,6 +11,7 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background font-roboto">
       <Header />
+      <BannerAd />
       <HeroSection />
       <CategoryGrid />
       <BusinessSection />

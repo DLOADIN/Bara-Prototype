@@ -21,6 +21,7 @@
   },
   "navigation": {
     "home": "Accueil",
+    "listings": "Annonces",
     "advertise": "Annoncer",
     "writeReview": "Écrire un Avis",
     "searchByCity": "Rechercher par Ville",
@@ -65,7 +66,7 @@
     "manageListing": {
       "title": "Gérez votre annonce gratuite.",
       "step1": "Mettez à jour les informations de votre entreprise en quelques étapes.",
-      "step2": "Facilitez à vos clients de vous trouver sur l'application Bara.",
+      "step2": "Facilitez à vos clients de vous trouver sur BARA.",
       "new": "Nouveau !",
       "jobPosting": "Publiez une offre d'emploi sur votre annonce gratuite."
     },
@@ -99,14 +100,14 @@
   },
   "about": {
     "hero": {
-      "title": "À propos de Bara",
+      "title": "À propos de BARA",
       "subtitle": "Connecter les communautés avec des entreprises locales de confiance",
       "learnMore": "En savoir plus",
       "contactUs": "Contactez-nous"
     },
     "overview": {
       "title": "Notre histoire",
-      "description": "Bara est la principale plateforme d'annuaire d'entreprises du Rwanda, dédiée à connecter les communautés locales avec des entreprises de confiance. Nous croyons au pouvoir du commerce local et nous nous efforçons de faciliter la découverte et la connexion avec les meilleurs services de leur région.",
+      "description": "BARA est la principale plateforme d'annuaire d'entreprises du Rwanda, dédiée à connecter les communautés locales avec des entreprises de confiance. Nous croyons au pouvoir du commerce local et nous nous efforçons de faciliter la découverte et la connexion avec les meilleurs services de leur région.",
       "mission": "Notre mission est d'autonomiser les entreprises locales en leur fournissant une présence numérique tout en aidant les consommateurs à prendre des décisions éclairées sur où faire leurs achats, dîner et recevoir des services.",
       "established": "Créé en 2024",
       "location": "Rwanda"
@@ -147,7 +148,7 @@
     },
     "team": {
       "title": "Notre équipe",
-      "subtitle": "Rencontrez les professionnels dévoués derrière Bara",
+      "subtitle": "Rencontrez les professionnels dévoués derrière BARA",
       "leadership": {
         "title": "Équipe de direction",
         "description": "Dirigeants expérimentés guidant notre vision stratégique et notre croissance."
@@ -163,7 +164,7 @@
     },
     "contact": {
       "title": "Contactez-nous",
-      "subtitle": "Nous aimerions avoir de vos nouvelles. Contactez-nous pour en savoir plus sur Bara.",
+      "subtitle": "Nous aimerions avoir de vos nouvelles. Contactez-nous pour en savoir plus sur BARA.",
       "phone": {
         "title": "Téléphone",
         "hours": "Lun - Dim 24h/24"
@@ -286,7 +287,7 @@
     }
   },
   "qa": {
-    "askQuestions": "Posez des questions à la communauté Bara",
+    "askQuestions": "Posez des questions à la communauté BARA",
     "shareKnowledge": "Partagez vos connaissances pour aider les autres",
     "findAnswers": "Trouvez des réponses ou proposez des solutions",
     "askQuestion": "Poser une Question",
@@ -301,7 +302,7 @@
       "info1": "Soumettez votre question avec un titre clair et une description détaillée",
       "info2": "Les membres de notre communauté fourniront des réponses utiles",
       "info3": "Vous recevrez des notifications par email quand quelqu'un répond",
-      "footer": "© 2024 Communauté Bara. Tous droits réservés."
+      "footer": "© 2024 Communauté BARA. Tous droits réservés."
     },
     "form": {
       "titleLabel": "Titre de la Question",
@@ -417,13 +418,13 @@
     "contactUs": "Contactez-nous",
     "advertiseWithUs": "Faites de la publicité avec nous",
     "corporateBlog": "Blog d'entreprise",
-    "advertisingChoices": "Choix publicitaires",
-    "AskUsAnyQuestion": "Poser des questions à Bara",
+    "advertisingChoices": "Publicité",
+    "AskUsAnyQuestion": "Poser des questions à BARA",
     "ClaimYourListing": "Réclamer votre listing",
     "siteDirectory": "Répertoire du site",
     "articles": "Articles",
     "findBusiness": "Trouver une entreprise",
-    "ypMobileApp": "Application mobile Bara",
+    "ypMobileApp": "Application mobile BARA",
     "gasGuruMobileApp": "Application mobile Gas Guru",
     "siteMap": "Plan du site",
     "categories": "Catégories",
@@ -432,8 +433,8 @@
     "privacy": "Confidentialité",
     "terms": "Conditions d'utilisation",
     "legal": "Mentions légales",
-    "copyright": "© 2025 Bara, Inc. Tous droits réservés.",
-    "trademark": "Bara, le logo Bara, The Real Bara Listings, et toutes les autres marques Bara sont des marques déposées de Bara, Inc.",
+    "copyright": "© 2025 BARA, Inc. Tous droits réservés.",
+    "trademark": "BARA, le logo BARA, The Real BARA Listings, et toutes les autres marques BARA sont des marques déposées de BARA, Inc.",
     "otherMarks": "Toutes les autres marques contenues ici sont la propriété de leurs propriétaires respectifs."
   },
   "categories": {

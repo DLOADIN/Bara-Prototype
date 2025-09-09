@@ -667,7 +667,7 @@ export const AdminReviews = () => {
                       variant="outline"
                       size="sm"
                       onClick={() => handleFlagReview(review.id, 'Inappropriate content')}
-                            className="text-orange-600 border-orange-200 hover:bg-orange-50 font-roboto text-xs"
+                            className="text-orange-600 border-orange-200 hover:bg-orange-100 font-roboto text-xs"
                     >
                             <Flag className="w-3 h-3 mr-1" />
                       Flag

@@ -159,7 +159,7 @@ export const AdminAuthGuard = ({ children }: AdminAuthGuardProps) => {
           <p className="text-gray-600 font-roboto mb-4">You don't have permission to access the admin panel.</p>
           <button
             onClick={() => navigate('/')}
-            className="bg-yp-blue text-white px-4 py-2 rounded-lg hover:bg-[#4e3c28] transition-colors font-roboto"
+            className="bg-yp-blue text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition-colors font-roboto"
           >
             Go Back Home
           </button>

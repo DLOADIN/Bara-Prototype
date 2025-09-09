@@ -399,7 +399,7 @@ export const AdminCities = () => {
         
         <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="bg-yp-blue hover:bg-[#4e3c28]">
+            <Button className="bg-yp-blue hover:bg-blue-600">
             <Plus className="w-4 h-4 mr-2" />
             Add City
           </Button>
@@ -499,7 +499,7 @@ export const AdminCities = () => {
                     variant="ghost"
                     size="sm"
                     onClick={() => handleDeleteCity(city.id)}
-                    className="p-1 h-8 w-8 text-red-600 hover:text-red-700 hover:bg-[#4e3c28]/10"
+                    className="p-1 h-8 w-8 text-red-600 hover:text-red-700 hover:bg-red-50"
                   >
                     <Trash2 className="w-4 h-4" />
                   </Button>
