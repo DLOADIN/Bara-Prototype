@@ -14,7 +14,7 @@ const languages = [
   { code: 'fr', name: 'Français', flag: '🇫🇷' },
   { code: 'es', name: 'Español', flag: '🇪🇸' },
   { code: 'sw', name: 'Kiswahili', flag: '🇹🇿' },
-  { code: 'ar', name: 'العربية', flag: '🇸🇦' }
+  { code: 'ar', name: 'العربية', flag: '🇦🇷' }
 ];
 
 export const LanguageSelector = () => {
