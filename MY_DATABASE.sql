@@ -35,6 +35,34 @@ CREATE TABLE public.admin_users (
   updated_at timestamp with time zone DEFAULT now(),
   CONSTRAINT admin_users_pkey PRIMARY KEY (id)
 );
+CREATE TABLE public.banner_ad_analytics (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  banner_ad_id uuid,
+  event_type character varying NOT NULL CHECK (event_type::text = ANY (ARRAY['view'::character varying, 'click'::character varying]::text[])),
+  user_agent text,
+  ip_address inet,
+  referrer text,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT banner_ad_analytics_pkey PRIMARY KEY (id),
+  CONSTRAINT banner_ad_analytics_banner_ad_id_fkey FOREIGN KEY (banner_ad_id) REFERENCES public.banner_ads(id)
+);
+CREATE TABLE public.banner_ads (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  title character varying NOT NULL,
+  image_url text NOT NULL,
+  redirect_url text NOT NULL,
+  alt_text character varying,
+  is_active boolean DEFAULT false,
+  start_date timestamp with time zone,
+  end_date timestamp with time zone,
+  total_views integer DEFAULT 0,
+  total_clicks integer DEFAULT 0,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  created_by uuid,
+  CONSTRAINT banner_ads_pkey PRIMARY KEY (id),
+  CONSTRAINT banner_ads_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id)
+);
 CREATE TABLE public.businesses (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   name text NOT NULL,
@@ -68,11 +96,13 @@ CREATE TABLE public.businesses (
   accepts_orders_online boolean DEFAULT false,
   is_kid_friendly boolean DEFAULT false,
   is_sponsored_ad boolean DEFAULT false,
+  order_online_url text,
+  website_visible boolean DEFAULT true,
   CONSTRAINT businesses_pkey PRIMARY KEY (id),
-  CONSTRAINT businesses_country_id_fkey FOREIGN KEY (country_id) REFERENCES public.countries(id),
   CONSTRAINT businesses_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.categories(id),
+  CONSTRAINT businesses_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public.users(id),
   CONSTRAINT businesses_city_id_fkey FOREIGN KEY (city_id) REFERENCES public.cities(id),
-  CONSTRAINT businesses_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public.users(id)
+  CONSTRAINT businesses_country_id_fkey FOREIGN KEY (country_id) REFERENCES public.countries(id)
 );
 CREATE TABLE public.categories (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -94,16 +124,28 @@ CREATE TABLE public.cities (
   latitude numeric,
   longitude numeric,
   population bigint,
-  is_active boolean DEFAULT true,
   created_at timestamp with time zone DEFAULT now(),
+  is_active boolean DEFAULT true,
   CONSTRAINT cities_pkey PRIMARY KEY (id),
   CONSTRAINT cities_country_id_fkey FOREIGN KEY (country_id) REFERENCES public.countries(id)
+);
+CREATE TABLE public.contact_messages (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  first_name text NOT NULL,
+  last_name text NOT NULL,
+  email text NOT NULL,
+  phone text,
+  subject text NOT NULL,
+  message text NOT NULL,
+  status text DEFAULT 'new'::text CHECK (status = ANY (ARRAY['new'::text, 'read'::text, 'replied'::text, 'closed'::text])),
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT contact_messages_pkey PRIMARY KEY (id)
 );
 CREATE TABLE public.countries (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   name text NOT NULL UNIQUE,
   code text NOT NULL UNIQUE,
-  flag_emoji text,
   flag_url text,
   wikipedia_url text,
   description text,
@@ -111,8 +153,9 @@ CREATE TABLE public.countries (
   capital text,
   currency text,
   language text,
-  is_active boolean DEFAULT true,
   created_at timestamp with time zone DEFAULT now(),
+  is_active boolean DEFAULT true,
+  flag_emoji text,
   CONSTRAINT countries_pkey PRIMARY KEY (id)
 );
 CREATE TABLE public.events (
@@ -137,6 +180,27 @@ CREATE TABLE public.events (
   CONSTRAINT events_organizer_id_fkey FOREIGN KEY (organizer_id) REFERENCES public.users(id),
   CONSTRAINT events_city_id_fkey FOREIGN KEY (city_id) REFERENCES public.cities(id),
   CONSTRAINT events_country_id_fkey FOREIGN KEY (country_id) REFERENCES public.countries(id)
+);
+CREATE TABLE public.listing_claims (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  business_id uuid,
+  business_name text NOT NULL,
+  business_address text NOT NULL,
+  contact_name text NOT NULL,
+  contact_email text NOT NULL,
+  contact_phone text,
+  website text,
+  reason_for_claim text NOT NULL,
+  additional_info text,
+  status text DEFAULT 'pending'::text CHECK (status = ANY (ARRAY['pending'::text, 'approved'::text, 'rejected'::text, 'in_review'::text])),
+  admin_notes text,
+  verified_at timestamp with time zone,
+  processed_by uuid,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT listing_claims_pkey PRIMARY KEY (id),
+  CONSTRAINT listing_claims_business_id_fkey FOREIGN KEY (business_id) REFERENCES public.businesses(id),
+  CONSTRAINT listing_claims_processed_by_fkey FOREIGN KEY (processed_by) REFERENCES public.admin_users(id)
 );
 CREATE TABLE public.payments (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
@@ -208,8 +272,8 @@ CREATE TABLE public.reviews (
   created_at timestamp with time zone DEFAULT now(),
   updated_at timestamp with time zone DEFAULT now(),
   CONSTRAINT reviews_pkey PRIMARY KEY (id),
-  CONSTRAINT reviews_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id),
-  CONSTRAINT reviews_business_id_fkey FOREIGN KEY (business_id) REFERENCES public.businesses(id)
+  CONSTRAINT reviews_business_id_fkey FOREIGN KEY (business_id) REFERENCES public.businesses(id),
+  CONSTRAINT reviews_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
 );
 CREATE TABLE public.user_logs (
   id uuid NOT NULL DEFAULT gen_random_uuid(),

@@ -192,8 +192,8 @@ export const Header = () => {
 
             <Link to="/advertise">
               <Button variant="ghost" className="font-roboto">
-                <Building className="w-4 h-4 mr-1" />
-                {t('navigation.advertise')}
+              <Building className="w-4 h-4 mr-1" />
+              {t('navigation.advertise')}
               </Button>
             </Link>
             
@@ -247,8 +247,8 @@ export const Header = () => {
             {/* Authentication Section */}
             <div className="flex items-center ml-4">
               {isSignedIn ? (
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
                     <Button 
                       variant="outline" 
                       className="h-10 w-10 p-0 rounded-full border-2 border-blue-500 bg-white hover:bg-blue-50 transition-colors"
@@ -262,8 +262,8 @@ export const Header = () => {
                       ) : (
                         <User className="h-5 w-5 text-blue-600" />
                       )}
-                    </Button>
-                  </DropdownMenuTrigger>
+                </Button>
+              </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56 shadow-lg rounded-lg border border-gray-200" align="end" forceMount>
                     <div className="flex items-center gap-3 p-3 border-b border-gray-100">
                       <div className="flex-shrink-0">
@@ -278,7 +278,7 @@ export const Header = () => {
                             <User className="h-5 w-5 text-blue-600" />
                           </div>
                         )}
-                      </div>
+                    </div>
                       <div className="flex-1 min-w-0">
                         {user?.fullName && (
                           <p className="text-sm font-medium text-gray-900 truncate">{user.fullName}</p>
@@ -288,8 +288,8 @@ export const Header = () => {
                             {user.primaryEmailAddress.emailAddress}
                           </p>
                         )}
-                      </div>
                     </div>
+                </div>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem 
                       onClick={() => navigate('/profile')}
@@ -336,8 +336,8 @@ export const Header = () => {
                       <Settings className="mr-2 h-4 w-4" />
                       <span>{t('navigation.signup')}</span>
                     </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
+              </DropdownMenuContent>
+            </DropdownMenu>
               )}
             </div>
           </div>
@@ -413,10 +413,10 @@ export const Header = () => {
                     Business Services
                   </h3>
                   <Link to="/advertise" onClick={closeMobileMenu}>
-                    <Button variant="ghost" className="w-full justify-start font-roboto h-12">
-                      <Building className="w-5 h-5 mr-3" />
-                      {t('navigation.advertise')}
-                    </Button>
+                  <Button variant="ghost" className="w-full justify-start font-roboto h-12">
+                    <Building className="w-5 h-5 mr-3" />
+                    {t('navigation.advertise')}
+                  </Button>
                   </Link>
                   <Link to="/writeareview" onClick={closeMobileMenu}>
                     <Button variant="ghost" className="w-full justify-start font-roboto h-12">
@@ -541,7 +541,7 @@ export const Header = () => {
                             key={country.id}
                             variant="ghost"
                             className={`w-full justify-start font-roboto h-10 text-sm transition-all duration-200 ${
-                              countries.length > 0 && (selectedCountry === formatCountryDisplay(country) 
+                              countries.length > 0 && (selectedCountry?.id === country.id 
                                 ? "bg-yp-blue text-white shadow-md" 
                                 : "hover:bg-gray-100 text-gray-700"
                             )}`}

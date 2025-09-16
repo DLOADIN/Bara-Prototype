@@ -18,7 +18,11 @@ import {
   List,
   Globe,
   Users,
-  Landmark
+  Landmark,
+  User,
+  Calendar,
+  Star,
+  Hash
 } from "lucide-react";
 import { db } from "@/lib/supabase";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -35,10 +39,27 @@ interface Country {
   capital: string | null;
   currency: string | null;
   language: string | null;
-  coat_of_arms_url?: string | null;
-  area?: string | null;
-  gdp?: string | null;
+  flag_emoji?: string | null;
+  // Enhanced fields from Wikipedia
+  president_name?: string | null;
+  gdp_usd?: number | null;
+  average_age?: number | null;
+  largest_city?: string | null;
+  largest_city_population?: number | null;
+  capital_population?: number | null;
+  ethnic_groups?: Array<{
+    name: string;
+    percentage: number;
+    note?: string;
+  }> | null;
+  formation_date?: string | null;
+  hdi_score?: number | null;
+  calling_code?: string | null;
+  latitude?: number | null;
+  longitude?: number | null;
+  area_sq_km?: number | null;
   timezone?: string | null;
+  coat_of_arms_url?: string | null;
   wikipedia_description?: string | null;
 }
 
@@ -89,7 +110,7 @@ export const CountryDetailPage: React.FC = () => {
 
     const timeout = setTimeout(() => {
       setLoading(false);
-    }, 15000); // Increased timeout
+    }, 15000);
 
     fetchCountryData().catch(console.error);
 
@@ -125,7 +146,8 @@ export const CountryDetailPage: React.FC = () => {
               population,
               capital,
               currency,
-              language
+              language,
+              flag_emoji
             `)
             .or(`name.ilike.%${pattern}%,name.ilike.${pattern}%,name.ilike.%${pattern}`)
             .single();
@@ -152,30 +174,44 @@ export const CountryDetailPage: React.FC = () => {
           console.log(`Fetching Wikipedia data for ${countryData.name}...`);
           const wikipediaData = await fetchWikipediaCountryInfo(countryData.name);
           
-                     if (wikipediaData) {
-             // Helper function to safely parse population
-             const parsePopulation = (popStr: string): number | null => {
-               if (!popStr) return null;
-               const cleanStr = popStr.replace(/[^\d]/g, '');
-               const num = parseInt(cleanStr);
-               return isNaN(num) ? null : num;
-             };
+          if (wikipediaData) {
+            // Helper function to safely parse population
+            const parsePopulation = (popStr: string): number | null => {
+              if (!popStr) return null;
+              const cleanStr = popStr.replace(/[^\d]/g, '');
+              const num = parseInt(cleanStr);
+              return isNaN(num) ? null : num;
+            };
 
-             // Merge Wikipedia data with database data
-             const enrichedCountryData = {
-               ...countryData,
-               description: wikipediaData.description || countryData.description,
-               flag_url: wikipediaData.flag_url || countryData.flag_url,
-               coat_of_arms_url: wikipediaData.coat_of_arms_url,
-               capital: wikipediaData.capital || countryData.capital,
-               currency: wikipediaData.currency || countryData.currency,
-               population: parsePopulation(wikipediaData.population) || countryData.population,
-               language: wikipediaData.language || countryData.language,
-               area: wikipediaData.area,
-               gdp: wikipediaData.gdp,
-               timezone: wikipediaData.timezone,
-               wikipedia_description: wikipediaData.description
-             };
+            // Merge Wikipedia data with database data
+            const enrichedCountryData = {
+              ...countryData,
+              description: wikipediaData.description || countryData.description,
+              flag_url: wikipediaData.flag_url || countryData.flag_url,
+              coat_of_arms_url: wikipediaData.coat_of_arms_url,
+              capital: wikipediaData.capital || countryData.capital,
+              currency: wikipediaData.currency || countryData.currency,
+              population: parsePopulation(wikipediaData.population) || countryData.population,
+              language: wikipediaData.language || countryData.language,
+              area: wikipediaData.area,
+              gdp: wikipediaData.gdp,
+              timezone: wikipediaData.timezone,
+              wikipedia_description: wikipediaData.description,
+              // Enhanced fields from Wikipedia
+              president_name: wikipediaData.president_name,
+              gdp_usd: wikipediaData.gdp_usd,
+              average_age: wikipediaData.average_age,
+              largest_city: wikipediaData.largest_city,
+              largest_city_population: wikipediaData.largest_city_population,
+              capital_population: wikipediaData.capital_population,
+              ethnic_groups: wikipediaData.ethnic_groups,
+              formation_date: wikipediaData.formation_date,
+              hdi_score: wikipediaData.hdi_score,
+              calling_code: wikipediaData.calling_code,
+              latitude: wikipediaData.latitude,
+              longitude: wikipediaData.longitude,
+              area_sq_km: wikipediaData.area_sq_km
+            };
             
             console.log(`✅ Wikipedia data fetched for ${countryData.name}`);
             setCountry(enrichedCountryData);
@@ -203,7 +239,7 @@ export const CountryDetailPage: React.FC = () => {
         console.log(`Retrying... (${retryCount + 1}/${maxRetries})`);
         setTimeout(() => {
           fetchCountryData(retryCount + 1);
-        }, 1000 * (retryCount + 1)); // Exponential backoff
+        }, 1000 * (retryCount + 1));
         return;
       }
       
@@ -235,7 +271,7 @@ export const CountryDetailPage: React.FC = () => {
         `)
         .eq('status', 'active')
         .eq('country_id', countryData.id)
-        .limit(50); // Add limit to prevent timeout
+        .limit(50);
 
       if (error) {
         console.error('Error fetching businesses with relations:', error);
@@ -293,7 +329,7 @@ export const CountryDetailPage: React.FC = () => {
         city: business.city ? {
           name: business.city.name
         } : undefined,
-        reviews: business.reviews || [] // This will be empty array if reviews weren't fetched
+        reviews: business.reviews || []
       })) || [];
 
       console.log(`Successfully fetched ${transformedBusinesses.length} businesses for ${countryData.name}`);
@@ -306,7 +342,7 @@ export const CountryDetailPage: React.FC = () => {
         console.log(`Retrying business fetch... (${retryCount + 1}/${maxRetries})`);
         setTimeout(() => {
           fetchBusinesses(countryData, retryCount + 1);
-        }, 1000 * (retryCount + 1)); // Exponential backoff
+        }, 1000 * (retryCount + 1));
         return;
       }
       
@@ -317,7 +353,6 @@ export const CountryDetailPage: React.FC = () => {
   };
 
   const generateSampleBusinesses = (countryData: Country): Business[] => {
-    // Generate more realistic sample data based on country
     const sampleBusinesses = [
       {
         id: 'sample-1',
@@ -530,200 +565,334 @@ export const CountryDetailPage: React.FC = () => {
                 <h1 className="text-3xl font-bold text-yp-dark font-comfortaa">
                   {formatCountryName(countrySlug)}
                 </h1>
-                                 <p className="text-yp-gray-dark">
-                   {/* {country.population && country.population > 0 ? country.population.toLocaleString() : 'Unknown'} residents */}
-                   {country.capital && country.capital !== 'Territory' && ` • Capital: ${country.capital}`}
-                 </p>
+                <p className="text-yp-gray-dark">
+                  {country.capital && country.capital !== 'Territory' && ` • Capital: ${country.capital}`}
+                </p>
               </div>
             </div>
           </div>
           
-                     {/* Country Info Cards */}
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-             <Card className="bg-blue-50 border-blue-200">
-               <CardContent className="p-4">
-                 <div className="flex items-center space-x-2">
-                   <Globe className="w-5 h-5 text-blue-600" />
-                   <div>
-                     <p className="text-sm text-blue-600 font-medium">Code</p>
-                     <p className="text-lg font-semibold text-blue-800">{country.code}</p>
-                   </div>
-                 </div>
-               </CardContent>
-             </Card>
-             
-               {/* {country.population && country.population > 0 && (
-                <Card className="bg-green-50 border-green-200">
+          {/* Basic Country Info Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+            <Card className="bg-blue-50 border-blue-200">
+              <CardContent className="p-4">
+                <div className="flex items-center space-x-2">
+                  <Globe className="w-5 h-5 text-blue-600" />
+                  <div>
+                    <p className="text-sm text-blue-600 font-medium">Code</p>
+                    <p className="text-lg font-semibold text-blue-800">{country.code}</p>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+            
+            {country.capital && country.capital !== 'Territory' && country.capital.length > 0 && (
+              <Card className="bg-purple-50 border-purple-200">
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Landmark className="w-5 h-5 text-purple-600" />
+                    <div>
+                      <p className="text-sm text-purple-600 font-medium">Capital</p>
+                      <p className="text-lg font-semibold text-purple-800">{country.capital}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+            
+            {country.currency && country.currency.length > 0 && (
+              <Card className="bg-yellow-50 border-yellow-200">
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Building className="w-5 h-5 text-yellow-600" />
+                    <div>
+                      <p className="text-sm text-yellow-600 font-medium">Currency</p>
+                      <p className="text-lg font-semibold text-yellow-800">{country.currency}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+
+            {country.population && country.population > 0 && (
+              <Card className="bg-green-50 border-green-200">
+                <CardContent className="p-4">
+                  <div className="flex items-center space-x-2">
+                    <Users className="w-5 h-5 text-green-600" />
+                    <div>
+                      <p className="text-sm text-green-600 font-medium">Population</p>
+                      <p className="text-lg font-semibold text-green-800">
+                        {country.population.toLocaleString()} Million
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+            )}
+          </div>
+
+          {/* Enhanced Country Info Cards from Wikipedia */}
+          {(country.president_name || country.gdp_usd || country.average_age || country.largest_city || country.formation_date || country.hdi_score || country.calling_code) && (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+              {/* President */}
+              {country.president_name && (
+                <Card className="bg-red-50 border-red-200">
                   <CardContent className="p-4">
                     <div className="flex items-center space-x-2">
-                      <Users className="w-5 h-5 text-green-600" />
+                      <User className="w-5 h-5 text-red-600" />
                       <div>
-                        <p className="text-sm text-green-600 font-medium">Population</p>
-                        <p className="text-lg font-semibold text-green-800">
-                          {country.population.toLocaleString()}
+                        <p className="text-sm text-red-600 font-medium">President</p>
+                        <p className="text-lg font-semibold text-red-800">{country.president_name}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* GDP */}
+              {country.gdp_usd && (
+                <Card className="bg-emerald-50 border-emerald-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-2">
+                      <Building className="w-5 h-5 text-emerald-600" />
+                      <div>
+                        <p className="text-sm text-emerald-600 font-medium">GDP</p>
+                        <p className="text-lg font-semibold text-emerald-800">
+                          ${(country.gdp_usd / 1000000000).toFixed(1)}B
                         </p>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
-              )} */}
-             
-                           {country.capital && country.capital !== 'Territory' && country.capital.length > 0 && (
+              )}
+
+              {/* Average Age */}
+              {country.average_age && (
                 <Card className="bg-purple-50 border-purple-200">
                   <CardContent className="p-4">
                     <div className="flex items-center space-x-2">
-                      <Landmark className="w-5 h-5 text-purple-600" />
+                      <Users className="w-5 h-5 text-purple-600" />
                       <div>
-                        <p className="text-sm text-purple-600 font-medium">Capital</p>
-                        <p className="text-lg font-semibold text-purple-800">{country.capital}</p>
+                        <p className="text-sm text-purple-600 font-medium">Avg Age</p>
+                        <p className="text-lg font-semibold text-purple-800">{country.average_age} years</p>
                       </div>
                     </div>
                   </CardContent>
                 </Card>
               )}
-             
-                           {country.currency && country.currency.length > 0 && (
-                <Card className="bg-yellow-50 border-yellow-200">
+
+              {/* Largest City */}
+              {country.largest_city && (
+                <Card className="bg-indigo-50 border-indigo-200">
                   <CardContent className="p-4">
                     <div className="flex items-center space-x-2">
-                      <Building className="w-5 h-5 text-yellow-600" />
+                      <Landmark className="w-5 h-5 text-indigo-600" />
                       <div>
-                        <p className="text-sm text-yellow-600 font-medium">Currency</p>
-                        <p className="text-lg font-semibold text-yellow-800">{country.currency}</p>
+                        <p className="text-sm text-indigo-600 font-medium">Largest City</p>
+                        <p className="text-lg font-semibold text-indigo-800">{country.largest_city}</p>
+                        {country.largest_city_population && (
+                          <p className="text-xs text-indigo-600">
+                            {country.largest_city_population.toLocaleString()} people
+                          </p>
+                        )}
                       </div>
                     </div>
                   </CardContent>
                 </Card>
               )}
-           </div>
 
-                       {/* Additional Country Info Cards */}
-            {(country.area || country.gdp || country.timezone || country.language) && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
-                {/* {country.area && country.area.length > 0 && !country.area.includes('of 923') && (
-                  <Card className="bg-indigo-50 border-indigo-200">
-                    <CardContent className="p-4">
-                      <div className="flex items-center space-x-2">
-                        <Globe className="w-5 h-5 text-indigo-600" />
-                        <div>
-                          <p className="text-sm text-indigo-600 font-medium">Area</p>
-                          <p className="text-lg font-semibold text-indigo-800">{country.area}</p>
-                        </div>
+              {/* Formation Date */}
+              {country.formation_date && (
+                <Card className="bg-cyan-50 border-cyan-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-2">
+                      <Calendar className="w-5 h-5 text-cyan-600" />
+                      <div>
+                        <p className="text-sm text-cyan-600 font-medium">Gained Independence In</p>
+                        <p className="text-lg font-semibold text-cyan-800">
+                          {new Date(country.formation_date).getFullYear()}
+                        </p>
                       </div>
-                    </CardContent>
-                  </Card>
-                )} */}
-                
-                {country.gdp && country.gdp.length > 0 && (
-                  <Card className="bg-emerald-50 border-emerald-200">
-                    <CardContent className="p-4">
-                      <div className="flex items-center space-x-2">
-                        <Building className="w-5 h-5 text-emerald-600" />
-                        <div>
-                          <p className="text-sm text-emerald-600 font-medium">GDP</p>
-                          <p className="text-lg font-semibold text-emerald-800">{country.gdp}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-                
-                {country.timezone && country.timezone.length > 0 && (
-                  <Card className="bg-orange-50 border-orange-200">
-                    <CardContent className="p-4">
-                      <div className="flex items-center space-x-2">
-                        <Globe className="w-5 h-5 text-orange-600" />
-                        <div>
-                          <p className="text-sm text-orange-600 font-medium">Timezone</p>
-                          <p className="text-lg font-semibold text-orange-800">{country.timezone}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-                
-                {country.language && country.language.length > 0 && !country.language.includes('is English') && (
-                  <Card className="bg-pink-50 border-pink-200">
-                    <CardContent className="p-4">
-                      <div className="flex items-center space-x-2">
-                        <Globe className="w-5 h-5 text-pink-600" />
-                        <div>
-                          <p className="text-sm text-pink-600 font-medium">Language</p>
-                          <p className="text-lg font-semibold text-pink-800">{country.language}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-              </div>
-            )}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
 
-           {/* Wikipedia Data Loading Indicator */}
-           {wikipediaLoading && (
-             <div className="mt-6">
-               <Card className="bg-blue-50 border-blue-200">
-                 <CardContent className="p-6">
-                   <div className="flex items-center justify-center space-x-3">
-                     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-                     <p className="text-blue-800 font-medium">Loading Wikipedia information...</p>
-                   </div>
-                 </CardContent>
-               </Card>
-             </div>
-           )}
+              {/* HDI Score */}
+              {country.hdi_score && (
+                <Card className="bg-teal-50 border-teal-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-2">
+                      <Star className="w-5 h-5 text-teal-600" />
+                      <div>
+                        <p className="text-sm text-teal-600 font-medium">HDI</p>
+                        <p className="text-lg font-semibold text-teal-800">
+                          {country.hdi_score.toFixed(3)}
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
 
-           {/* Country Description and Coat of Arms */}
-           {(country.wikipedia_description || country.coat_of_arms_url) && !wikipediaLoading && (
-             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-               {country.wikipedia_description && (
-                 <div className="lg:col-span-2">
-                   <Card className="bg-gray-50 border-gray-200">
-                     <CardHeader>
-                       <CardTitle className="text-lg text-gray-800">About {country.name}</CardTitle>
-                     </CardHeader>
-                     <CardContent>
-                       <p className="text-gray-700 leading-relaxed">
-                         {country.wikipedia_description}
-                       </p>
-                     </CardContent>
-                   </Card>
-                 </div>
-               )}
-               
-               {country.coat_of_arms_url && (
-                 <div className="lg:col-span-1">
-                   <Card className="bg-amber-50 border-amber-200">
-                     <CardHeader>
-                       <CardTitle className="text-lg text-amber-800">Coat of Arms</CardTitle>
-                     </CardHeader>
-                     <CardContent className="flex justify-center">
-                       <img 
-                         src={country.coat_of_arms_url} 
-                         alt={`${country.name} coat of arms`}
-                         className="w-32 h-32 object-contain rounded-lg shadow-md"
-                       />
-                     </CardContent>
-                   </Card>
-                 </div>
-               )}
-             </div>
-           )}
+              {/* Calling Code */}
+              {country.calling_code && (
+                <Card className="bg-orange-50 border-orange-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-2">
+                      <Phone className="w-5 h-5 text-orange-600" />
+                      <div>
+                        <p className="text-sm text-orange-600 font-medium">Calling Code</p>
+                        <p className="text-lg font-semibold text-orange-800">{country.calling_code}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Area */}
+              {country.area_sq_km && (
+                <Card className="bg-pink-50 border-pink-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-2">
+                      <Globe className="w-5 h-5 text-pink-600" />
+                      <div>
+                        <p className="text-sm text-pink-600 font-medium">Area</p>
+                        <p className="text-lg font-semibold text-pink-800">
+                          {country.area_sq_km.toLocaleString()} km²
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Timezone */}
+              {country.timezone && (
+                <Card className="bg-violet-50 border-violet-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-2">
+                      <Globe className="w-5 h-5 text-violet-600" />
+                      <div>
+                        <p className="text-sm text-violet-600 font-medium">Timezone</p>
+                        <p className="text-lg font-semibold text-violet-800">{country.timezone}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+
+              {/* Language */}
+              {country.language && country.language.length > 0 && !country.language.includes('is English') && (
+                <Card className="bg-rose-50 border-rose-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-2">
+                      <Globe className="w-5 h-5 text-rose-600" />
+                      <div>
+                        <p className="text-sm text-rose-600 font-medium">Language</p>
+                        <p className="text-lg font-semibold text-rose-800">{country.language}</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
+            </div>
+          )}
+
+          {/* Ethnic Groups Section */}
+          {country.ethnic_groups && country.ethnic_groups.length > 0 && (
+            <div className="mt-6">
+              <Card className="bg-gray-50 border-gray-200">
+                <CardHeader>
+                  <CardTitle className="text-lg text-gray-800">Ethnic Groups</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                    {country.ethnic_groups.map((group, index) => (
+                      <div key={index} className="bg-white p-4 rounded-lg border">
+                        <div className="flex justify-between items-center mb-2">
+                          <h4 className="font-semibold text-gray-900">{group.name}</h4>
+                          <span className="text-sm font-medium text-blue-600">{group.percentage}%</span>
+                        </div>
+                        {group.note && (
+                          <p className="text-sm text-gray-600">{group.note}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {/* Wikipedia Data Loading Indicator */}
+          {wikipediaLoading && (
+            <div className="mt-6">
+              <Card className="bg-blue-50 border-blue-200">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-center space-x-3">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                    <p className="text-blue-800 font-medium">Loading Wikipedia information...</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </div>
+          )}
+
+          {/* Country Description and Coat of Arms */}
+          {(country.wikipedia_description || country.coat_of_arms_url) && !wikipediaLoading && (
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+              {country.wikipedia_description && (
+                <div className="lg:col-span-2">
+                  <Card className="bg-gray-50 border-gray-200">
+                    <CardHeader>
+                      <CardTitle className="text-lg text-gray-800">About {country.name}</CardTitle>
+                    </CardHeader>
+                    <CardContent>
+                      <p className="text-gray-700 leading-relaxed">
+                        {country.wikipedia_description}
+                      </p>
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
+              
+              {country.coat_of_arms_url && (
+                <div className="lg:col-span-1">
+                  <Card className="bg-amber-50 border-amber-200">
+                    <CardHeader>
+                      <CardTitle className="text-lg text-amber-800">Coat of Arms</CardTitle>
+                    </CardHeader>
+                    <CardContent className="flex justify-center">
+                      <img 
+                        src={country.coat_of_arms_url} 
+                        alt={`${country.name} coat of arms`}
+                        className="w-32 h-32 object-contain rounded-lg shadow-md"
+                      />
+                    </CardContent>
+                  </Card>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       </div>
 
-             {/* Map Section */}
-       <div className="bg-white border-b border-gray-200">
-         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-           <h2 className="text-2xl font-bold text-yp-dark mb-6">Map View</h2>
-           <UltraSimpleMap 
-             countryData={{
-               ...country,
-               ...getCountryCoordinates(country.name)
-             }}
-             countryName={country.name}
-           />
-         </div>
-       </div>
+      {/* Map Section */}
+      <div className="bg-white border-b border-gray-200">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <h2 className="text-2xl font-bold text-yp-dark mb-6">Map View</h2>
+          <UltraSimpleMap 
+            countryData={{
+              name: country.name,
+              capital: country.capital,
+              latitude: getCountryCoordinates(country.name).latitude,
+              longitude: getCountryCoordinates(country.name).longitude
+            }}
+            countryName={country.name}
+          />
+        </div>
+      </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">
