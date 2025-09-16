@@ -234,14 +234,34 @@ export const BusinessDetailPage = () => {
                 </div>
             )}
 
-            {/* Reviews Preview */}
+            {/* Reviews Section */}
             {business.reviews && business.reviews.length > 0 && (
               <div className="mb-8">
-                <h3 className="text-xl font-semibold text-yp-dark mb-3">Recent Reviews</h3>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl font-semibold text-yp-dark">Customer Reviews</h3>
+                  <div className="flex items-center space-x-2">
+                    <div className="flex items-center">
+                      {[...Array(5)].map((_, i) => (
+                        <Crown
+                          key={i}
+                          className={`w-4 h-4 ${
+                            i < Math.floor(getAverageRating(business))
+                              ? 'text-yellow-400 fill-current'
+                              : 'text-gray-300'
+                          }`}
+                        />
+                      ))}
+                    </div>
+                    <span className="text-sm text-gray-600">
+                      {getAverageRating(business).toFixed(1)} ({getReviewCount(business)} reviews)
+                    </span>
+                  </div>
+                </div>
+                
                 <div className="space-y-4">
-                  {business.reviews.slice(0, 3).map((review) => (
-                    <div key={review.id} className="border border-gray-200 rounded-lg p-4">
-                      <div className="flex items-center mb-2">
+                  {business.reviews.slice(0, 5).map((review) => (
+                    <div key={review.id} className="border border-gray-200 rounded-lg p-4 hover:shadow-sm transition-shadow">
+                      <div className="flex items-center justify-between mb-2">
                         <div className="flex items-center">
                           {[...Array(5)].map((_, i) => (
                             <Crown
@@ -252,28 +272,64 @@ export const BusinessDetailPage = () => {
                                   : 'text-gray-300'
                               }`}
                             />
-                    ))}
-                  </div>
-                        <span className="ml-2 text-sm text-gray-500">
-                          {new Date(review.created_at).toLocaleDateString()}
-                        </span>
-                </div>
+                          ))}
+                          <span className="ml-2 text-sm text-gray-500">
+                            {new Date(review.created_at).toLocaleDateString()}
+                          </span>
+                        </div>
+                        <div className="text-xs text-gray-400">
+                          {(review as any).status === 'pending' ? 'Pending Review' : 'Verified'}
+                        </div>
+                      </div>
                       {review.title && (
-                        <h4 className="font-medium text-yp-dark mb-1">{review.title}</h4>
+                        <h4 className="font-medium text-yp-dark mb-2">{review.title}</h4>
                       )}
                       {review.content && (
-                        <p className="text-gray-700 text-sm">{review.content}</p>
-                    )}
-                  </div>
+                        <p className="text-gray-700 text-sm leading-relaxed">{review.content}</p>
+                      )}
+                      {(review as any).images && (review as any).images.length > 0 && (
+                        <div className="mt-3 flex space-x-2">
+                          {(review as any).images.slice(0, 3).map((image: string, index: number) => (
+                            <img
+                              key={index}
+                              src={image}
+                              alt={`Review image ${index + 1}`}
+                              className="w-16 h-16 object-cover rounded border"
+                            />
+                          ))}
+                          {(review as any).images.length > 3 && (
+                            <div className="w-16 h-16 bg-gray-100 rounded border flex items-center justify-center text-xs text-gray-500">
+                              +{(review as any).images.length - 3}
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
                   ))}
                 </div>
-                <div className="mt-4">
-                  <Link to={`/write-review/${business.id}`}>
-                    <Button variant="outline" className="w-full">
-                      Write a Review
+                
+                {business.reviews.length > 5 && (
+                  <div className="mt-4 text-center">
+                    <Button variant="outline" className="mr-4">
+                      View All Reviews ({business.reviews.length})
                     </Button>
-                  </Link>
-                </div>
+                    <Link to={`/write-review/${business.id}`}>
+                      <Button className="bg-brand-blue text-white">
+                        Write a Review
+                      </Button>
+                    </Link>
+                  </div>
+                )}
+                
+                {business.reviews.length <= 5 && (
+                  <div className="mt-4">
+                    <Link to={`/write-review/${business.id}`}>
+                      <Button variant="outline" className="w-full">
+                        Write a Review
+                      </Button>
+                    </Link>
+                  </div>
+                )}
               </div>
             )}
             </div>

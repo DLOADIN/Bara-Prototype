@@ -39,6 +39,7 @@ GPS coordinates
 
 6. Reviews & FAQs
 The Add a review page for each business should also have a historic of previous reviews for that business
+
 In the “Add Photos” section, remove the second “optional” word as it says (Optional)(Optional)
 Add another banner ad between “Browse Categories” and “Manage Free Listings” on the homepage.
 The homepage picture that is currently static should change every few seconds, I can provide the images to change to, just let me know how to provide or where to put them

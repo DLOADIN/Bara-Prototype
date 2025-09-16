@@ -174,28 +174,28 @@ export const CountryDetailPage: React.FC = () => {
           console.log(`Fetching Wikipedia data for ${countryData.name}...`);
           const wikipediaData = await fetchWikipediaCountryInfo(countryData.name);
           
-          if (wikipediaData) {
-            // Helper function to safely parse population
-            const parsePopulation = (popStr: string): number | null => {
-              if (!popStr) return null;
-              const cleanStr = popStr.replace(/[^\d]/g, '');
-              const num = parseInt(cleanStr);
-              return isNaN(num) ? null : num;
-            };
+                     if (wikipediaData) {
+             // Helper function to safely parse population
+             const parsePopulation = (popStr: string): number | null => {
+               if (!popStr) return null;
+               const cleanStr = popStr.replace(/[^\d]/g, '');
+               const num = parseInt(cleanStr);
+               return isNaN(num) ? null : num;
+             };
 
-            // Merge Wikipedia data with database data
-            const enrichedCountryData = {
-              ...countryData,
-              description: wikipediaData.description || countryData.description,
-              flag_url: wikipediaData.flag_url || countryData.flag_url,
-              coat_of_arms_url: wikipediaData.coat_of_arms_url,
-              capital: wikipediaData.capital || countryData.capital,
-              currency: wikipediaData.currency || countryData.currency,
-              population: parsePopulation(wikipediaData.population) || countryData.population,
-              language: wikipediaData.language || countryData.language,
-              area: wikipediaData.area,
-              gdp: wikipediaData.gdp,
-              timezone: wikipediaData.timezone,
+             // Merge Wikipedia data with database data
+             const enrichedCountryData = {
+               ...countryData,
+               description: wikipediaData.description || countryData.description,
+               flag_url: wikipediaData.flag_url || countryData.flag_url,
+               coat_of_arms_url: wikipediaData.coat_of_arms_url,
+               capital: wikipediaData.capital || countryData.capital,
+               currency: wikipediaData.currency || countryData.currency,
+               population: parsePopulation(wikipediaData.population) || countryData.population,
+               language: wikipediaData.language || countryData.language,
+               area: wikipediaData.area,
+               gdp: wikipediaData.gdp,
+               timezone: wikipediaData.timezone,
               wikipedia_description: wikipediaData.description,
               // Enhanced fields from Wikipedia
               president_name: wikipediaData.president_name,
@@ -211,7 +211,7 @@ export const CountryDetailPage: React.FC = () => {
               latitude: wikipediaData.latitude,
               longitude: wikipediaData.longitude,
               area_sq_km: wikipediaData.area_sq_km
-            };
+             };
             
             console.log(`✅ Wikipedia data fetched for ${countryData.name}`);
             setCountry(enrichedCountryData);
@@ -565,54 +565,54 @@ export const CountryDetailPage: React.FC = () => {
                 <h1 className="text-3xl font-bold text-yp-dark font-comfortaa">
                   {formatCountryName(countrySlug)}
                 </h1>
-                <p className="text-yp-gray-dark">
-                  {country.capital && country.capital !== 'Territory' && ` • Capital: ${country.capital}`}
-                </p>
+                                 <p className="text-yp-gray-dark">
+                   {country.capital && country.capital !== 'Territory' && ` • Capital: ${country.capital}`}
+                 </p>
               </div>
             </div>
           </div>
           
           {/* Basic Country Info Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
-            <Card className="bg-blue-50 border-blue-200">
-              <CardContent className="p-4">
-                <div className="flex items-center space-x-2">
-                  <Globe className="w-5 h-5 text-blue-600" />
-                  <div>
-                    <p className="text-sm text-blue-600 font-medium">Code</p>
-                    <p className="text-lg font-semibold text-blue-800">{country.code}</p>
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-            
-            {country.capital && country.capital !== 'Territory' && country.capital.length > 0 && (
-              <Card className="bg-purple-50 border-purple-200">
-                <CardContent className="p-4">
-                  <div className="flex items-center space-x-2">
-                    <Landmark className="w-5 h-5 text-purple-600" />
-                    <div>
-                      <p className="text-sm text-purple-600 font-medium">Capital</p>
-                      <p className="text-lg font-semibold text-purple-800">{country.capital}</p>
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+             <Card className="bg-blue-50 border-blue-200">
+               <CardContent className="p-4">
+                 <div className="flex items-center space-x-2">
+                   <Globe className="w-5 h-5 text-blue-600" />
+                   <div>
+                     <p className="text-sm text-blue-600 font-medium">Code</p>
+                     <p className="text-lg font-semibold text-blue-800">{country.code}</p>
+                   </div>
+                 </div>
+               </CardContent>
+             </Card>
+             
+                           {country.capital && country.capital !== 'Territory' && country.capital.length > 0 && (
+                <Card className="bg-purple-50 border-purple-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-2">
+                      <Landmark className="w-5 h-5 text-purple-600" />
+                      <div>
+                        <p className="text-sm text-purple-600 font-medium">Capital</p>
+                        <p className="text-lg font-semibold text-purple-800">{country.capital}</p>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
-            
-            {country.currency && country.currency.length > 0 && (
-              <Card className="bg-yellow-50 border-yellow-200">
-                <CardContent className="p-4">
-                  <div className="flex items-center space-x-2">
-                    <Building className="w-5 h-5 text-yellow-600" />
-                    <div>
-                      <p className="text-sm text-yellow-600 font-medium">Currency</p>
-                      <p className="text-lg font-semibold text-yellow-800">{country.currency}</p>
+                  </CardContent>
+                </Card>
+              )}
+             
+                           {country.currency && country.currency.length > 0 && (
+                <Card className="bg-yellow-50 border-yellow-200">
+                  <CardContent className="p-4">
+                    <div className="flex items-center space-x-2">
+                      <Building className="w-5 h-5 text-yellow-600" />
+                      <div>
+                        <p className="text-sm text-yellow-600 font-medium">Currency</p>
+                        <p className="text-lg font-semibold text-yellow-800">{country.currency}</p>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+                  </CardContent>
+                </Card>
+              )}
 
             {country.population && country.population > 0 && (
               <Card className="bg-green-50 border-green-200">
@@ -629,43 +629,43 @@ export const CountryDetailPage: React.FC = () => {
                 </CardContent>
               </Card>
             )}
-          </div>
+           </div>
 
           {/* Enhanced Country Info Cards from Wikipedia */}
           {(country.president_name || country.gdp_usd || country.average_age || country.largest_city || country.formation_date || country.hdi_score || country.calling_code) && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
               {/* President */}
               {country.president_name && (
                 <Card className="bg-red-50 border-red-200">
-                  <CardContent className="p-4">
-                    <div className="flex items-center space-x-2">
+                    <CardContent className="p-4">
+                      <div className="flex items-center space-x-2">
                       <User className="w-5 h-5 text-red-600" />
-                      <div>
+                        <div>
                         <p className="text-sm text-red-600 font-medium">President</p>
                         <p className="text-lg font-semibold text-red-800">{country.president_name}</p>
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
               )}
-
+                
               {/* GDP */}
               {country.gdp_usd && (
-                <Card className="bg-emerald-50 border-emerald-200">
-                  <CardContent className="p-4">
-                    <div className="flex items-center space-x-2">
-                      <Building className="w-5 h-5 text-emerald-600" />
-                      <div>
-                        <p className="text-sm text-emerald-600 font-medium">GDP</p>
+                  <Card className="bg-emerald-50 border-emerald-200">
+                    <CardContent className="p-4">
+                      <div className="flex items-center space-x-2">
+                        <Building className="w-5 h-5 text-emerald-600" />
+                        <div>
+                          <p className="text-sm text-emerald-600 font-medium">GDP</p>
                         <p className="text-lg font-semibold text-emerald-800">
                           ${(country.gdp_usd / 1000000000).toFixed(1)}B
                         </p>
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
+                    </CardContent>
+                  </Card>
+                )}
+                
               {/* Average Age */}
               {country.average_age && (
                 <Card className="bg-purple-50 border-purple-200">
@@ -737,35 +737,35 @@ export const CountryDetailPage: React.FC = () => {
 
               {/* Calling Code */}
               {country.calling_code && (
-                <Card className="bg-orange-50 border-orange-200">
-                  <CardContent className="p-4">
-                    <div className="flex items-center space-x-2">
+                  <Card className="bg-orange-50 border-orange-200">
+                    <CardContent className="p-4">
+                      <div className="flex items-center space-x-2">
                       <Phone className="w-5 h-5 text-orange-600" />
-                      <div>
+                        <div>
                         <p className="text-sm text-orange-600 font-medium">Calling Code</p>
                         <p className="text-lg font-semibold text-orange-800">{country.calling_code}</p>
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
+                    </CardContent>
+                  </Card>
+                )}
+                
               {/* Area */}
               {country.area_sq_km && (
-                <Card className="bg-pink-50 border-pink-200">
-                  <CardContent className="p-4">
-                    <div className="flex items-center space-x-2">
-                      <Globe className="w-5 h-5 text-pink-600" />
-                      <div>
+                  <Card className="bg-pink-50 border-pink-200">
+                    <CardContent className="p-4">
+                      <div className="flex items-center space-x-2">
+                        <Globe className="w-5 h-5 text-pink-600" />
+                        <div>
                         <p className="text-sm text-pink-600 font-medium">Area</p>
                         <p className="text-lg font-semibold text-pink-800">
                           {country.area_sq_km.toLocaleString()} km²
                         </p>
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
+                    </CardContent>
+                  </Card>
+                )}
 
               {/* Timezone */}
               {country.timezone && (
@@ -822,28 +822,28 @@ export const CountryDetailPage: React.FC = () => {
                   </div>
                 </CardContent>
               </Card>
-            </div>
-          )}
+              </div>
+            )}
 
-          {/* Wikipedia Data Loading Indicator */}
-          {wikipediaLoading && (
-            <div className="mt-6">
-              <Card className="bg-blue-50 border-blue-200">
-                <CardContent className="p-6">
-                  <div className="flex items-center justify-center space-x-3">
-                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-                    <p className="text-blue-800 font-medium">Loading Wikipedia information...</p>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          )}
+           {/* Wikipedia Data Loading Indicator */}
+           {wikipediaLoading && (
+             <div className="mt-6">
+               <Card className="bg-blue-50 border-blue-200">
+                 <CardContent className="p-6">
+                   <div className="flex items-center justify-center space-x-3">
+                     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
+                     <p className="text-blue-800 font-medium">Loading Wikipedia information...</p>
+                   </div>
+                 </CardContent>
+               </Card>
+             </div>
+           )}
 
-          {/* Country Description and Coat of Arms */}
-          {(country.wikipedia_description || country.coat_of_arms_url) && !wikipediaLoading && (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-              {country.wikipedia_description && (
-                <div className="lg:col-span-2">
+           {/* Country Description and Coat of Arms */}
+           {(country.wikipedia_description || country.coat_of_arms_url) && !wikipediaLoading && (
+             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
+               {country.wikipedia_description && (
+                 <div className="lg:col-span-2">
                   <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 shadow-lg">
                     <CardHeader className="pb-4">
                       <CardTitle className="text-xl text-gray-800 flex items-center">
@@ -851,39 +851,39 @@ export const CountryDetailPage: React.FC = () => {
                         About {country.name}
                       </CardTitle>
                       <p className="text-sm text-gray-600">Comprehensive overview from Wikipedia</p>
-                    </CardHeader>
-                    <CardContent>
+                     </CardHeader>
+                     <CardContent>
                       <div className="prose prose-sm max-w-none">
                         <p className="text-gray-700 leading-relaxed text-base">
-                          {country.wikipedia_description}
-                        </p>
+                         {country.wikipedia_description}
+                       </p>
                       </div>
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
-              
-              {country.coat_of_arms_url && (
-                <div className="lg:col-span-1">
+                     </CardContent>
+                   </Card>
+                 </div>
+               )}
+               
+               {country.coat_of_arms_url && (
+                 <div className="lg:col-span-1">
                   <Card className="bg-amber-50 border-amber-200 shadow-lg">
-                    <CardHeader>
+                     <CardHeader>
                       <CardTitle className="text-lg text-amber-800 flex items-center">
                         <Landmark className="w-5 h-5 mr-2" />
                         Coat of Arms
                       </CardTitle>
-                    </CardHeader>
-                    <CardContent className="flex justify-center">
-                      <img 
-                        src={country.coat_of_arms_url} 
-                        alt={`${country.name} coat of arms`}
-                        className="w-32 h-32 object-contain rounded-lg shadow-md"
-                      />
-                    </CardContent>
-                  </Card>
-                </div>
-              )}
-            </div>
-          )}
+                     </CardHeader>
+                     <CardContent className="flex justify-center">
+                       <img 
+                         src={country.coat_of_arms_url} 
+                         alt={`${country.name} coat of arms`}
+                         className="w-32 h-32 object-contain rounded-lg shadow-md"
+                       />
+                     </CardContent>
+                   </Card>
+                 </div>
+               )}
+             </div>
+           )}
 
           {/* Additional Wikipedia Information */}
           {country.wikipedia_description && !wikipediaLoading && (
@@ -960,21 +960,21 @@ export const CountryDetailPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Map Section */}
-      <div className="bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <h2 className="text-2xl font-bold text-yp-dark mb-6">Map View</h2>
-          <UltraSimpleMap 
-            countryData={{
+             {/* Map Section */}
+       <div className="bg-white border-b border-gray-200">
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+           <h2 className="text-2xl font-bold text-yp-dark mb-6">Map View</h2>
+           <UltraSimpleMap 
+             countryData={{
               name: country.name,
               capital: country.capital,
               latitude: getCountryCoordinates(country.name).latitude,
               longitude: getCountryCoordinates(country.name).longitude
-            }}
-            countryName={country.name}
-          />
-        </div>
-      </div>
+             }}
+             countryName={country.name}
+           />
+         </div>
+       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 mb-8">

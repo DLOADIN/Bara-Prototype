@@ -56,6 +56,8 @@ export interface Business {
     title: string | null;
     content: string | null;
     created_at: string;
+    status?: 'pending' | 'approved' | 'rejected';
+    images?: string[] | null;
   }[];
 }
 
@@ -184,7 +186,7 @@ export class BusinessService {
           category:categories!businesses_category_id_fkey(id, name, slug, icon),
           city:cities!businesses_city_id_fkey(id, name, country_id),
           country:countries!businesses_country_id_fkey(id, name, code, flag_url),
-          reviews:reviews(id, rating, title, content, created_at)
+          reviews:reviews(id, rating, title, content, created_at, status, images)
         `, { head: false })
         .eq('status', 'active');
 
@@ -277,7 +279,7 @@ export class BusinessService {
           category:categories!businesses_category_id_fkey(id, name, slug, icon),
           city:cities!businesses_city_id_fkey(id, name, country_id),
           country:countries!businesses_country_id_fkey(id, name, code, flag_url),
-          reviews:reviews(id, rating, title, content, created_at)
+          reviews:reviews(id, rating, title, content, created_at, status, images)
         `)
         .eq('id', id)
         .eq('status', 'active')
@@ -323,7 +325,7 @@ export class BusinessService {
           category:categories!businesses_category_id_fkey(id, name, slug, icon),
           city:cities!businesses_city_id_fkey(id, name, country_id),
           country:countries!businesses_country_id_fkey(id, name, code, flag_url),
-          reviews:reviews(id, rating, title, content, created_at)
+          reviews:reviews(id, rating, title, content, created_at, status, images)
         `)
         .eq('status', 'active')
         .eq('category_id', categoryData.id);
@@ -389,7 +391,7 @@ export class BusinessService {
           category:categories!businesses_category_id_fkey(id, name, slug, icon),
           city:cities!businesses_city_id_fkey(id, name, country_id),
           country:countries!businesses_country_id_fkey(id, name, code, flag_url),
-          reviews:reviews(id, rating, title, content, created_at)
+          reviews:reviews(id, rating, title, content, created_at, status, images)
         `)
         .eq('status', 'active')
         .or(`name.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`);
@@ -790,7 +792,7 @@ export class BusinessService {
           category:categories!businesses_category_id_fkey(id, name, slug, icon),
           city:cities!businesses_city_id_fkey(id, name, country_id),
           country:countries!businesses_country_id_fkey(id, name, code, flag_url),
-          reviews:reviews(id, rating, title, content, created_at)
+          reviews:reviews(id, rating, title, content, created_at, status, images)
         `)
         .eq('status', 'active')
         .eq('is_sponsored_ad', true)

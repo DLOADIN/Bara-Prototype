@@ -88,8 +88,8 @@ export const fetchWikipediaCountryInfo = async (countryName: string): Promise<Wi
 
     for (const searchTerm of searchTerms) {
       const searchUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchTerm)}&format=json&origin=*`;
-      const searchResponse = await fetch(searchUrl);
-      const searchData = await searchResponse.json();
+    const searchResponse = await fetch(searchUrl);
+    const searchData = await searchResponse.json();
 
       if (searchData.query?.search?.[0]) {
         pageId = searchData.query.search[0].pageid;
@@ -340,7 +340,7 @@ export const fetchWikipediaCountryInfo = async (countryName: string): Promise<Wi
      };
 
     const extractedInfo = extractInfo(description);
-    
+
     // Debug logging
     console.log(`📊 Extracted info for ${countryName}:`, {
       president: extractedInfo.president_name,
