@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 newtxt.txt
+theflow.md
 /.env
 .env
 /src/components/CityMapGoogle.tsx

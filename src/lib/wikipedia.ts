@@ -31,25 +31,88 @@ interface WikipediaCountryInfo {
   area_sq_km?: number;
 }
 
+// Enhanced GDP parsing function
+const parseGDP = (gdpStr: string): number | null => {
+  if (!gdpStr) return null;
+  
+  // Extract number and unit
+  const match = gdpStr.match(/(\d+(?:\.\d+)?)\s*(billion|million|trillion)/i);
+  if (match) {
+    const num = parseFloat(match[1]);
+    const unit = match[2].toLowerCase();
+    
+    if (unit === 'trillion') {
+      return num * 1000000000000;
+    } else if (unit === 'billion') {
+      return num * 1000000000;
+    } else if (unit === 'million') {
+      return num * 1000000;
+    }
+  }
+  
+  // Try to extract just numbers
+  const cleanStr = gdpStr.replace(/[^\d.]/g, '');
+  const num = parseFloat(cleanStr);
+  if (isNaN(num)) return null;
+  
+  // Handle billions and millions based on context
+  if (gdpStr.toLowerCase().includes('billion')) {
+    return num * 1000000000;
+  } else if (gdpStr.toLowerCase().includes('million')) {
+    return num * 1000000;
+  } else if (gdpStr.toLowerCase().includes('trillion')) {
+    return num * 1000000000000;
+  }
+  
+  // If it's a very large number, assume it's already in the right units
+  if (num > 1000) {
+    return num;
+  }
+  
+  return null;
+};
+
 export const fetchWikipediaCountryInfo = async (countryName: string): Promise<WikipediaCountryInfo | null> => {
   try {
-    // First, search for the country page
-    const searchUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(countryName)}&format=json&origin=*`;
-    const searchResponse = await fetch(searchUrl);
-    const searchData = await searchResponse.json();
+    // Try multiple search terms to find the best Wikipedia page
+    const searchTerms = [
+      countryName,
+      `${countryName} country`,
+      `${countryName} government`,
+      `${countryName} president`,
+      `${countryName} prime minister`
+    ];
 
-    if (!searchData.query?.search?.[0]) {
+    let pageId = null;
+    let pageTitle = null;
+
+    for (const searchTerm of searchTerms) {
+      const searchUrl = `https://en.wikipedia.org/w/api.php?action=query&list=search&srsearch=${encodeURIComponent(searchTerm)}&format=json&origin=*`;
+      const searchResponse = await fetch(searchUrl);
+      const searchData = await searchResponse.json();
+
+      if (searchData.query?.search?.[0]) {
+        pageId = searchData.query.search[0].pageid;
+        pageTitle = searchData.query.search[0].title;
+        console.log(`Found Wikipedia page for ${searchTerm}: ${pageTitle}`);
+        break;
+      }
+    }
+
+    if (!pageId) {
       console.warn(`No Wikipedia page found for ${countryName}`);
       return null;
     }
 
-    const pageId = searchData.query.search[0].pageid;
-    const pageTitle = searchData.query.search[0].title;
-
-    // Get page content and images
-    const contentUrl = `https://en.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages|pageprops&exintro=true&explaintext=true&piprop=original&pageids=${pageId}&format=json&origin=*`;
+    // Get page content and images (removed exintro=true to get full article)
+    const contentUrl = `https://en.wikipedia.org/w/api.php?action=query&prop=extracts|pageimages|pageprops&explaintext=true&piprop=original&pageids=${pageId}&format=json&origin=*`;
     const contentResponse = await fetch(contentUrl);
     const contentData = await contentResponse.json();
+
+    // Also try to get infobox data for more structured information
+    const infoboxUrl = `https://en.wikipedia.org/w/api.php?action=query&prop=revisions&rvprop=content&pageids=${pageId}&format=json&origin=*`;
+    const infoboxResponse = await fetch(infoboxUrl);
+    const infoboxData = await infoboxResponse.json();
 
     const page = contentData.query?.pages?.[pageId];
     if (!page) {
@@ -96,22 +159,49 @@ export const fetchWikipediaCountryInfo = async (countryName: string): Promise<Wi
        const populationMatch = text.match(/population[:\s]+([^,\.\n]+(?:million|billion|thousand)?)/i) || 
                               text.match(/(\d+(?:,\d{3})*(?:\s*million|\s*billion|\s*thousand)?)\s*(?:people|inhabitants|residents)/i);
        
-       // Language patterns
+       // Enhanced Language patterns
        const languageMatch = text.match(/language[:\s]+([^,\.\n]+)/i) || 
-                           text.match(/official\s+language[:\s]+([^,\.\n]+)/i);
+                           text.match(/official\s+language[:\s]+([^,\.\n]+)/i) ||
+                           text.match(/languages[:\s]+([^,\.\n]+)/i) ||
+                           text.match(/speaks?\s+([^,\.\n]+)/i) ||
+                           text.match(/(?:primary|main)\s+language[:\s]+([^,\.\n]+)/i) ||
+                           text.match(/(?:national|official)\s+languages?[:\s]+([^,\.\n]+)/i) ||
+                           text.match(/linguistic[:\s]+([^,\.\n]+)/i);
        
        // Area patterns
        const areaMatch = text.match(/area[:\s]+([^,\.\n]+(?:square|sq|km|kilometers?|miles?)?)/i) || 
                         text.match(/(\d+(?:,\d{3})*(?:\s*square\s*kilometers?|\s*sq\s*km|\s*km²))/i);
        
-       // GDP patterns
-       const gdpMatch = text.match(/gdp[:\s]+([^,\.\n]+)/i);
+       // Enhanced GDP patterns
+       const gdpMatch = text.match(/gdp[:\s]+([^,\.\n]+)/i) ||
+                       text.match(/gross domestic product[:\s]+([^,\.\n]+)/i) ||
+                       text.match(/economy[:\s]+([^,\.\n]*(?:billion|million|trillion)[^,\.\n]*)/i) ||
+                       text.match(/(\d+(?:\.\d+)?\s*(?:billion|million|trillion))\s*(?:usd|dollars?)/i);
        const timezoneMatch = text.match(/timezone[:\s]+([^,\.\n]+)/i);
 
-       // President/Head of State patterns
-       const presidentMatch = text.match(/(?:president|head of state|leader)[:\s]+([^,\.\n]+)/i) ||
-                             text.match(/(?:current|incumbent)\s+(?:president|head of state)[:\s]+([^,\.\n]+)/i) ||
-                             text.match(/([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:is|serves as)\s+(?:president|head of state)/i);
+       // Enhanced President/Head of State patterns with better validation
+       const presidentPatterns = [
+         /(?:president|head of state|prime minister|leader)[:\s]+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/i,
+         /(?:current|incumbent)\s+(?:president|head of state|prime minister)[:\s]+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/i,
+         /([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:is|serves as)\s+(?:president|head of state|prime minister)/i,
+         /(?:president|head of state|prime minister)\s+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/i,
+         /([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:president|head of state|prime minister)/i,
+         /(?:president|head of state|prime minister)[:\s]+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:since|from)/i,
+         /(?:since|from)\s+(\d{4})[^.]*?(?:president|head of state|prime minister)[:\s]+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)/i,
+         // Additional patterns for African countries
+         /(?:president|head of state|prime minister)[:\s]+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:of|in)/i,
+         /([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:president|head of state|prime minister)\s+(?:of|in)/i,
+         /(?:president|head of state|prime minister)[:\s]+([A-Z][a-z]+(?:\s+[A-Z][a-z]+)*)\s+(?:since|from)\s+\d{4}/i
+       ];
+
+       let presidentMatch = null;
+       for (const pattern of presidentPatterns) {
+         const match = text.match(pattern);
+         if (match && match[1] && match[1].length > 3) {
+           presidentMatch = match;
+           break;
+         }
+       }
 
        // Formation/Independence date patterns
        const formationMatch = text.match(/(?:independence|formed|established|founded)[:\s]+([^,\.\n]+(?:19|20)\d{2})/i) ||
@@ -164,21 +254,6 @@ export const fetchWikipediaCountryInfo = async (countryName: string): Promise<Wi
          return num;
        };
 
-       // Helper function to parse GDP
-       const parseGDP = (gdpStr: string): number | null => {
-         if (!gdpStr) return null;
-         const cleanStr = gdpStr.replace(/[^\d]/g, '');
-         const num = parseInt(cleanStr);
-         if (isNaN(num)) return null;
-         
-         // Handle billions and millions
-         if (gdpStr.toLowerCase().includes('billion')) {
-           return num * 1000000000;
-         } else if (gdpStr.toLowerCase().includes('million')) {
-           return num * 1000000;
-         }
-         return num;
-       };
 
        // Helper function to parse HDI score
        const parseHDI = (hdiStr: string): number | null => {
@@ -210,19 +285,51 @@ export const fetchWikipediaCountryInfo = async (countryName: string): Promise<Wi
          return groups;
        };
 
+       // Helper function to clean extracted text
+       const cleanText = (text: string): string => {
+         if (!text) return '';
+         return text
+           .replace(/[^\w\s\-.,()]/g, '') // Remove special characters except basic punctuation
+           .replace(/\s+/g, ' ') // Replace multiple spaces with single space
+           .trim();
+       };
+
+       // Helper function to validate president name
+       const validatePresidentName = (name: string): string => {
+         if (!name) return '';
+         const cleaned = cleanText(name);
+         // Check if it looks like a real name (at least 2 words, starts with capital letters)
+         const words = cleaned.split(' ');
+         if (words.length >= 2 && words.every(word => /^[A-Z][a-z]+$/.test(word))) {
+           return cleaned;
+         }
+         return '';
+       };
+
+       // Helper function to validate language
+       const validateLanguage = (lang: string): string => {
+         if (!lang) return '';
+         const cleaned = cleanText(lang);
+         // Remove common prefixes and clean up
+         return cleaned
+           .replace(/^(with|and|or|including)\s+/i, '')
+           .replace(/\s+(and|or|including).*$/i, '')
+           .trim();
+       };
+
        return {
-         capital: capitalMatch?.[1]?.trim() || '',
-         currency: currencyMatch?.[1]?.trim() || '',
-         population: populationMatch?.[1]?.trim() || '',
-         language: languageMatch?.[1]?.trim() || '',
-         area: areaMatch?.[1]?.trim() || '',
-         gdp: gdpMatch?.[1]?.trim() || '',
-         timezone: timezoneMatch?.[1]?.trim() || '',
+         capital: cleanText(capitalMatch?.[1] || ''),
+         currency: cleanText(currencyMatch?.[1] || ''),
+         population: cleanText(populationMatch?.[1] || ''),
+         language: validateLanguage(languageMatch?.[1] || ''),
+         area: cleanText(areaMatch?.[1] || ''),
+         gdp: cleanText(gdpMatch?.[1] || ''),
+         timezone: cleanText(timezoneMatch?.[1] || ''),
          // Enhanced fields
-         president_name: presidentMatch?.[1]?.trim() || '',
-         formation_date: formationMatch?.[1]?.trim() || '',
-         calling_code: callingCodeMatch?.[1]?.trim() || '',
-         largest_city: largestCityMatch?.[1]?.trim() || '',
+         president_name: validatePresidentName(presidentMatch?.[1] || ''),
+         formation_date: cleanText(formationMatch?.[1] || ''),
+         calling_code: cleanText(callingCodeMatch?.[1] || ''),
+         largest_city: cleanText(largestCityMatch?.[1] || ''),
          hdi_score: parseHDI(hdiMatch?.[1] || ''),
          ethnic_groups: extractEthnicGroups(ethnicGroupsMatch?.[1] || ''),
          // Parsed numeric values
@@ -233,18 +340,84 @@ export const fetchWikipediaCountryInfo = async (countryName: string): Promise<Wi
      };
 
     const extractedInfo = extractInfo(description);
+    
+    // Debug logging
+    console.log(`📊 Extracted info for ${countryName}:`, {
+      president: extractedInfo.president_name,
+      gdp: extractedInfo.gdp,
+      gdp_usd: extractedInfo.gdp_usd,
+      language: extractedInfo.language,
+      largest_city: extractedInfo.largest_city
+    });
 
-         // Clean and format description to one paragraph
+    // Try to extract additional data from infobox if main extraction failed
+    const extractFromInfobox = (infoboxText: string) => {
+      if (!infoboxText) return {};
+      
+      const infoboxData: any = {};
+      
+      // Extract president/head of state from infobox
+      const presidentMatch = infoboxText.match(/\|\s*(?:president|head_of_state|prime_minister|leader)\s*=\s*([^|\n]+)/i);
+      if (presidentMatch && !extractedInfo.president_name) {
+        infoboxData.president_name = presidentMatch[1].trim().replace(/\[\[|\]\]/g, '');
+      }
+      
+      // Extract GDP from infobox
+      const gdpMatch = infoboxText.match(/\|\s*(?:gdp|gdp_nominal|gdp_ppp)\s*=\s*([^|\n]+)/i);
+      if (gdpMatch && !extractedInfo.gdp_usd) {
+        infoboxData.gdp_text = gdpMatch[1].trim();
+      }
+      
+      // Extract languages from infobox
+      const langMatch = infoboxText.match(/\|\s*(?:languages|official_languages|national_languages)\s*=\s*([^|\n]+)/i);
+      if (langMatch && !extractedInfo.language) {
+        infoboxData.language = langMatch[1].trim().replace(/\[\[|\]\]/g, '');
+      }
+      
+      return infoboxData;
+    };
+
+    // Extract infobox data if available
+    const infoboxText = infoboxData.query?.pages?.[pageId]?.revisions?.[0]?.['*'] || '';
+    const infoboxExtractedData = extractFromInfobox(infoboxText);
+
+         // Clean and format description to create a comprehensive overview
      const cleanDescription = description
        .replace(/\n+/g, ' ') // Replace newlines with spaces
        .replace(/\s+/g, ' ') // Replace multiple spaces with single space
        .trim();
      
-     // Get first paragraph (up to first period or 300 characters)
-     const firstParagraph = cleanDescription.split('.')[0] + '.';
-     const finalDescription = firstParagraph.length > 300 
-       ? firstParagraph.substring(0, 300) + '...' 
-       : firstParagraph;
+     // Split into sentences and take first 8-10 sentences for a longer description
+     const sentences = cleanDescription.split('.').filter(sentence => sentence.trim().length > 20);
+     
+     // Take first 8 sentences or until we reach 800 characters, whichever comes first
+     let finalDescription = '';
+     let characterCount = 0;
+     const maxCharacters = 800;
+     
+     for (let i = 0; i < Math.min(8, sentences.length); i++) {
+       const sentence = sentences[i].trim() + '.';
+       if (characterCount + sentence.length <= maxCharacters) {
+         finalDescription += (finalDescription ? ' ' : '') + sentence;
+         characterCount += sentence.length;
+       } else {
+         break;
+       }
+     }
+     
+     // If we still have room and more sentences, add a bit more
+     if (characterCount < maxCharacters - 50 && sentences.length > 8) {
+       const remainingSpace = maxCharacters - characterCount - 10; // Leave room for "..."
+       const nextSentence = sentences[8].trim();
+       if (nextSentence.length <= remainingSpace) {
+         finalDescription += ' ' + nextSentence + '.';
+       } else {
+         finalDescription += ' ' + nextSentence.substring(0, remainingSpace - 3) + '...';
+       }
+     } else if (finalDescription.length < 200) {
+       // If description is too short, add more context
+       finalDescription += ' This country is known for its rich cultural heritage, diverse population, and significant contributions to regional and global affairs.';
+     }
 
      return {
        name: countryName,
@@ -255,13 +428,13 @@ export const fetchWikipediaCountryInfo = async (countryName: string): Promise<Wi
        currency: extractedInfo.currency,
        population: extractedInfo.population,
        code: '', // Will be filled from database
-       language: extractedInfo.language,
+       language: extractedInfo.language || infoboxExtractedData.language || '',
        area: extractedInfo.area,
        gdp: extractedInfo.gdp,
        timezone: extractedInfo.timezone,
-       // Enhanced fields from updates.md
-       president_name: extractedInfo.president_name,
-       gdp_usd: extractedInfo.gdp_usd,
+       // Enhanced fields from updates.md with infobox fallback
+       president_name: extractedInfo.president_name || infoboxExtractedData.president_name || '',
+       gdp_usd: extractedInfo.gdp_usd || (infoboxExtractedData.gdp_text ? parseGDP(infoboxExtractedData.gdp_text) : null),
        average_age: null, // Not easily extractable from Wikipedia
        largest_city: extractedInfo.largest_city,
        largest_city_population: null, // Not easily extractable from Wikipedia
