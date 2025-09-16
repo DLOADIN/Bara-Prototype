@@ -904,6 +904,12 @@ export const CountryDetailPage: React.FC = () => {
                         <p className="text-gray-600 text-sm">{country.president_name}</p>
                       </div>
                     )}
+                    {country.language && country.language.length > 0 && (
+                      <div className="bg-white p-3 rounded-lg border border-green-100">
+                        <h4 className="font-semibold text-gray-800 text-sm">Official Language</h4>
+                        <p className="text-gray-600 text-sm">{country.language}</p>
+                      </div>
+                    )}
                     {country.formation_date && (
                       <div className="bg-white p-3 rounded-lg border border-green-100">
                         <h4 className="font-semibold text-gray-800 text-sm">Independence</h4>
@@ -928,10 +934,22 @@ export const CountryDetailPage: React.FC = () => {
                         <p className="text-gray-600 text-sm">{country.hdi_score.toFixed(3)}</p>
                       </div>
                     )}
-                    {country.area_sq_km && (
+                    {/* {country.area_sq_km && (
                       <div className="bg-white p-3 rounded-lg border border-green-100">
                         <h4 className="font-semibold text-gray-800 text-sm">Total Area</h4>
                         <p className="text-gray-600 text-sm">{country.area_sq_km.toLocaleString()} km²</p>
+                      </div>
+                    )} */}
+                    {country.gdp_usd && (
+                      <div className="bg-white p-3 rounded-lg border border-green-100">
+                        <h4 className="font-semibold text-gray-800 text-sm">GDP (USD)</h4>
+                        <p className="text-gray-600 text-sm">${(country.gdp_usd / 1000000000).toFixed(1)}B</p>
+                      </div>
+                    )}
+                    {country.largest_city && (
+                      <div className="bg-white p-3 rounded-lg border border-green-100">
+                        <h4 className="font-semibold text-gray-800 text-sm">Largest City</h4>
+                        <p className="text-gray-600 text-sm">{country.largest_city}</p>
                       </div>
                     )}
                   </div>
