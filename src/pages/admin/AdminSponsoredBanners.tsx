@@ -53,8 +53,8 @@ export const AdminSponsoredBanners: React.FC = () => {
 
   const filteredBanners = banners.filter(banner => {
     const matchesSearch = 
-      banner.company_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      banner.contact_email.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      banner.company_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      banner.contact_email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       banner.country_name?.toLowerCase().includes(searchTerm.toLowerCase());
     
     const matchesStatus = statusFilter === 'all' || banner.status === statusFilter;
@@ -140,6 +140,11 @@ export const AdminSponsoredBanners: React.FC = () => {
   };
 
   const getStatusBadge = (status: string) => {
+    // Handle undefined/null status
+    if (!status) {
+      status = 'pending';
+    }
+    
     const statusConfig = {
       pending: { color: 'bg-yellow-100 text-yellow-800', icon: Clock },
       approved: { color: 'bg-blue-100 text-blue-800', icon: CheckCircle },
@@ -160,6 +165,11 @@ export const AdminSponsoredBanners: React.FC = () => {
   };
 
   const getPaymentStatusBadge = (status: string) => {
+    // Handle undefined/null status
+    if (!status) {
+      status = 'pending';
+    }
+    
     const statusConfig = {
       pending: { color: 'bg-yellow-100 text-yellow-800' },
       paid: { color: 'bg-green-100 text-green-800' },
@@ -294,7 +304,7 @@ export const AdminSponsoredBanners: React.FC = () => {
                       <TableRow key={banner.id}>
                         <TableCell>
                           <div>
-                            <div className="font-medium">{banner.company_name}</div>
+                            <div className="font-medium">{banner.company_name || 'N/A'}</div>
                             <div className="text-sm text-gray-500 flex items-center">
                               <Globe className="w-3 h-3 mr-1" />
                               {banner.company_website}
@@ -317,10 +327,10 @@ export const AdminSponsoredBanners: React.FC = () => {
                         
                         <TableCell>
                           <div>
-                            <div className="font-medium">{banner.contact_name}</div>
+                            <div className="font-medium">{banner.contact_name || 'N/A'}</div>
                             <div className="text-sm text-gray-500 flex items-center">
                               <Mail className="w-3 h-3 mr-1" />
-                              {banner.contact_email}
+                              {banner.contact_email || 'N/A'}
                             </div>
                             {banner.contact_phone && (
                               <div className="text-sm text-gray-500 flex items-center">
@@ -336,7 +346,7 @@ export const AdminSponsoredBanners: React.FC = () => {
                             {getPaymentStatusBadge(banner.payment_status)}
                             <div className="text-sm text-gray-500 mt-1 flex items-center">
                               <DollarSign className="w-3 h-3 mr-1" />
-                              ${banner.payment_amount}
+                              ${banner.payment_amount || 0}
                             </div>
                           </div>
                         </TableCell>
@@ -349,11 +359,11 @@ export const AdminSponsoredBanners: React.FC = () => {
                           <div className="text-sm">
                             <div className="flex items-center text-gray-600">
                               <Eye className="w-3 h-3 mr-1" />
-                              {banner.view_count} views
+                              {banner.view_count || 0} views
                             </div>
                             <div className="flex items-center text-gray-600">
                               <MousePointer className="w-3 h-3 mr-1" />
-                              {banner.click_count} clicks
+                              {banner.click_count || 0} clicks
                             </div>
                           </div>
                         </TableCell>
@@ -373,7 +383,7 @@ export const AdminSponsoredBanners: React.FC = () => {
                             </Button>
                             
                             <Select
-                              value={banner.status}
+                              value={banner.status || 'pending'}
                               onValueChange={(value) => handleStatusChange(banner.id, value)}
                             >
                               <SelectTrigger className="w-24 h-8">
