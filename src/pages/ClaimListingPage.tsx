@@ -29,8 +29,10 @@ import { useListingClaims } from "@/hooks/useListingClaims";
 
 interface ClaimForm {
   businessName: string;
+  businessRegistrationNumber: string;
   businessAddress: string;
   contactName: string;
+  registrantTitle: string;
   contactEmail: string;
   contactPhone: string;
   website: string;
@@ -45,8 +47,10 @@ export const ClaimListingPage = () => {
   
   const [formData, setFormData] = useState<ClaimForm>({
     businessName: '',
+    businessRegistrationNumber: '',
     businessAddress: '',
     contactName: '',
+    registrantTitle: '',
     contactEmail: '',
     contactPhone: '',
     website: '',
@@ -62,7 +66,7 @@ export const ClaimListingPage = () => {
     e.preventDefault();
     
     // Basic validation
-    if (!formData.businessName.trim() || !formData.contactName.trim() || !formData.contactEmail.trim()) {
+    if (!formData.businessName.trim() || !formData.businessRegistrationNumber.trim() || !formData.contactName.trim() || !formData.contactEmail.trim()) {
       toast({
         title: t('claimListing.page.validation.title'),
         description: t('claimListing.page.validation.requiredFields'),
@@ -73,8 +77,10 @@ export const ClaimListingPage = () => {
 
     const claimData = {
       business_name: formData.businessName,
+      business_registration_number: formData.businessRegistrationNumber,
       business_address: formData.businessAddress,
       contact_name: formData.contactName,
+      registrant_title: formData.registrantTitle || undefined,
       contact_email: formData.contactEmail,
       contact_phone: formData.contactPhone || undefined,
       website: formData.website || undefined,
@@ -94,8 +100,10 @@ export const ClaimListingPage = () => {
       // Reset form
       setFormData({
         businessName: '',
+        businessRegistrationNumber: '',
         businessAddress: '',
         contactName: '',
+        registrantTitle: '',
         contactEmail: '',
         contactPhone: '',
         website: '',
@@ -221,7 +229,7 @@ export const ClaimListingPage = () => {
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                   {/* Business Name */}
-                  <div className="md:col-span-2">
+                  <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
                       {t('claimListing.page.form.businessName')}
                     </label>
@@ -230,6 +238,21 @@ export const ClaimListingPage = () => {
                       value={formData.businessName}
                       onChange={(e) => handleInputChange('businessName', e.target.value)}
                       placeholder={t('claimListing.page.form.placeholders.businessName')}
+                      className="w-full"
+                      required
+                    />
+                  </div>
+
+                  {/* Business Registration Number */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Business Registration Number
+                    </label>
+                    <Input
+                      type="text"
+                      value={formData.businessRegistrationNumber}
+                      onChange={(e) => handleInputChange('businessRegistrationNumber', e.target.value)}
+                      placeholder="e.g., TIN / Reg. No."
                       className="w-full"
                       required
                     />
@@ -262,6 +285,20 @@ export const ClaimListingPage = () => {
                       placeholder={t('claimListing.page.form.placeholders.contactName')}
                       className="w-full"
                       required
+                    />
+                  </div>
+
+                  {/* Registrant Title */}
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Add Your Title (Role)
+                    </label>
+                    <Input
+                      type="text"
+                      value={formData.registrantTitle}
+                      onChange={(e) => handleInputChange('registrantTitle', e.target.value)}
+                      placeholder="e.g., Owner, Manager, Authorized Rep."
+                      className="w-full"
                     />
                   </div>
 

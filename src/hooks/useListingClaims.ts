@@ -5,8 +5,10 @@ export interface ListingClaim {
   id: string;
   business_id?: string;
   business_name: string;
+  business_registration_number?: string;
   business_address: string;
   contact_name: string;
+  registrant_title?: string;
   contact_email: string;
   contact_phone?: string;
   website?: string;
@@ -23,8 +25,10 @@ export interface ListingClaim {
 export interface CreateListingClaimData {
   business_id?: string;
   business_name: string;
+  business_registration_number: string;
   business_address: string;
   contact_name: string;
+  registrant_title?: string;
   contact_email: string;
   contact_phone?: string;
   website?: string;
@@ -42,7 +46,7 @@ export const useListingClaims = () => {
 
     try {
       const { data: claim, error: insertError } = await db
-        .from('listing_claims')
+        .listing_claims()
         .insert([data])
         .select()
         .single();
@@ -67,7 +71,7 @@ export const useListingClaims = () => {
     setError(null);
 
     try {
-      let query = db.from('listing_claims').select('*');
+      let query = db.listing_claims().select('*');
       
       if (status) {
         query = query.eq('status', status);
@@ -113,7 +117,7 @@ export const useListingClaims = () => {
       }
 
       const { error: updateError } = await db
-        .from('listing_claims')
+        .listing_claims()
         .update(updateData)
         .eq('id', claimId);
 
@@ -138,7 +142,7 @@ export const useListingClaims = () => {
 
     try {
       const { data: claim, error: fetchError } = await db
-        .from('listing_claims')
+        .listing_claims()
         .select('*')
         .eq('id', claimId)
         .single();
