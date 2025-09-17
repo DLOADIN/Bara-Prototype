@@ -41,6 +41,9 @@ import MarketplacePage from "./pages/MarketplacePage";
 import EventsPage from "./pages/EventsPage";
 import CommunitiesPage from "./pages/communities";
 import { CommunityPage } from "./pages/communities/CommunityPage";
+import UserSignInPage from "./pages/user/UserSignInPage";
+import UserSignUpPage from "./pages/user/UserSignUpPage";
+import UserSettingsPage from "./pages/user/UserSettingsPage";
 
 const queryClient = new QueryClient();
 
@@ -74,6 +77,9 @@ const AppRoutes = () => {
       {/* Authentication Routes */}
       <Route path="/sign-in" element={<SignInPage />} />
       <Route path="/sign-up" element={<SignUpPage />} />
+      <Route path="/user/sign-in" element={<UserSignInPage />} />
+      <Route path="/user/sign-up" element={<UserSignUpPage />} />
+      <Route path="/user/settings" element={<UserSettingsPage />} />
       
       {/* Community Pages */}
       <Route path="/communities" element={<CommunitiesPage />} />

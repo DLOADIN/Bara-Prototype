@@ -292,7 +292,7 @@ export const Header = () => {
                 </div>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem 
-                      onClick={() => navigate('/profile')}
+                      onClick={() => navigate('/user/settings')}
                       className="px-3 py-2.5 text-sm text-gray-700 hover:bg-gray-50 cursor-pointer"
                     >
                       <Settings className="mr-3 h-4 w-4 text-gray-500" />
@@ -328,11 +328,11 @@ export const Header = () => {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-48" align="end">
-                    <DropdownMenuItem onClick={() => navigate('/sign-in')}>
+                    <DropdownMenuItem onClick={() => navigate('/user/sign-in')}>
                       <User className="mr-2 h-4 w-4" />
                       <span>{t('navigation.login')}</span>
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate('/sign-up')}>
+                    <DropdownMenuItem onClick={() => navigate('/user/sign-up')}>
                       <Settings className="mr-2 h-4 w-4" />
                       <span>{t('navigation.signup')}</span>
                     </DropdownMenuItem>
@@ -465,7 +465,7 @@ export const Header = () => {
                         variant="ghost" 
                         className="w-full justify-start font-roboto h-12"
                         onClick={() => {
-                          navigate('/profile');
+                          navigate('/user/settings');
                           closeMobileMenu();
                         }}
                       >
@@ -490,7 +490,7 @@ export const Header = () => {
                         variant="ghost" 
                         className="w-full justify-start font-roboto h-12"
                         onClick={() => {
-                          navigate('/sign-in');
+                          navigate('/user/sign-in');
                           closeMobileMenu();
                         }}
                       >
@@ -501,7 +501,7 @@ export const Header = () => {
                         variant="ghost" 
                         className="w-full justify-start font-roboto h-12"
                         onClick={() => {
-                          navigate('/sign-up');
+                          navigate('/user/sign-up');
                           closeMobileMenu();
                         }}
                       >
