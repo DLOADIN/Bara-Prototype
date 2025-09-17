@@ -16,7 +16,12 @@ const heroSlides: string[] = [
   "/Homepage/pexels-followalice-667200.jpg",
   "/Homepage/pexels-julie-holmes-9538-51809.jpg",
   "/Homepage/pexels-pixabay-70080.jpg",
-  "/Homepage/1.jpg"
+  "/Homepage/1.jpg",
+  "/Homepage/pexels-laukevtravel-26924196.jpg",
+  "/Homepage/pexels-blue-ox-studio-218748-2014342.jpg",
+  "/Homepage/pexels-mwauraken-29093739.jpg",
+
+
 ];
 import { db } from "@/lib/supabase";
 import { BusinessService, Business } from "@/lib/businessService";
@@ -240,7 +245,7 @@ export const HeroSection = () => {
     <section className="relative">
       {/* Hero Image Background */}
       <div
-        className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] lg:h-[75vh] bg-cover bg-center bg-no-repeat transition-background duration-700"
+        className="relative h-[100vh] sm:h-[65vh] md:h-[80vh] lg:h-[80vh] bg-cover bg-center bg-no-repeat transition-background duration-700"
         style={{
           backgroundImage: `url(${heroSlides[currentSlide]})`,
           filter: 'brightness(1.2)'
