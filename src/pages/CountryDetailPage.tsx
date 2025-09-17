@@ -624,11 +624,11 @@ export const CountryDetailPage: React.FC = () => {
                       <p className="text-lg font-semibold text-green-800">
                         {country.population.toLocaleString()} Million
                       </p>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
-            )}
+                  </CardContent>
+                </Card>
+              )}
            </div>
 
           {/* Enhanced Country Info Cards from Wikipedia */}

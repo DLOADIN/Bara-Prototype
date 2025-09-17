@@ -653,10 +653,10 @@ export const AdminBusinesses = () => {
             Export PDF
           </Button>
           <Button 
-            className="bg-yp-blue hover:bg-blue-600"
+            className="bg-yellow-900 hover:bg-blue-600"
             onClick={handleAddClick}
           >
-          <Plus className="w-4 h-4 mr-2" />
+          <Plus className="w-4 h-4 mr-2 " />
           Add Business
         </Button>
         </div>
@@ -672,7 +672,7 @@ export const AdminBusinesses = () => {
                 placeholder="Search businesses by name, description, address, phone, email, website, city, country, category..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className={`bg-blue-500 hover:opacity-80 text-white px-3 py-1 rounded text-sm font-roboto font-medium transition-opacity duration-300 ${
+                className={`hover:opacity-80 text-white px-3 py-1 rounded text-sm font-roboto font-medium transition-opacity duration-300 ${
                   searchTerm ? 'ring-2 ring-yp-blue/20 border-yp-blue' : ''
                 }`}
               />
