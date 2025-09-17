@@ -1,11 +1,10 @@
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
+import {Link} from 'react-router-dom';
 import { Header } from "@/components/Header";
 import Footer from "@/components/Footer";
 import { 
-  Building, 
   Target, 
   Users, 
   TrendingUp, 
@@ -15,11 +14,8 @@ import {
   MapPin,
   CheckCircle,
   Star,
-  ArrowRight,
   BarChart3,
-  Megaphone,
   Eye,
-  MousePointer
 } from "lucide-react";
 
 const AdvertisePage = () => {
@@ -108,9 +104,12 @@ const AdvertisePage = () => {
                       {t('advertise.services.premium.feature3')}
                     </li>
                   </ul>
-                  <Button className="w-full bg-brand-blue hover:bg-brand-blue/90 font-roboto">
-                    {t('advertise.services.premium.cta')}
-                  </Button>
+                  
+                    <Button className="w-full bg-brand-blue hover:bg-brand-blue/90 font-roboto">
+                      <Link to="/claim-listing"> 
+                        {t('advertise.services.premium.cta')}
+                      </Link>
+                    </Button>
                 </CardContent>
               </Card>
 
@@ -141,7 +140,9 @@ const AdvertisePage = () => {
                     </li>
                   </ul>
                   <Button className="w-full bg-green-600 hover:bg-green-700 font-roboto">
-                    {t('advertise.services.targeted.cta')}
+                    <Link to="/claim-listing"> 
+                      {t('advertise.services.targeted.cta')}
+                    </Link>
                   </Button>
                 </CardContent>
               </Card>
@@ -173,7 +174,9 @@ const AdvertisePage = () => {
                     </li>
                   </ul>
                   <Button className="w-full bg-purple-600 hover:bg-purple-700 font-roboto">
-                    {t('advertise.services.analytics.cta')}
+                    <Link to="/user/settings"> 
+                      {t('advertise.services.analytics.cta')}
+                    </Link>
                   </Button>
                 </CardContent>
               </Card>

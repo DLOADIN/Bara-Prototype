@@ -246,13 +246,13 @@ export const ClaimListingPage = () => {
                   {/* Business Registration Number */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Business Registration Number
+                      {t('claimListing.page.form.businessRegistrationNumber')}
                     </label>
                     <Input
                       type="text"
                       value={formData.businessRegistrationNumber}
                       onChange={(e) => handleInputChange('businessRegistrationNumber', e.target.value)}
-                      placeholder="e.g., TIN / Reg. No."
+                      placeholder={t('claimListing.page.form.placeholders.businessRegistrationNumber')}
                       className="w-full"
                       required
                     />
@@ -291,13 +291,13 @@ export const ClaimListingPage = () => {
                   {/* Registrant Title */}
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Add Your Title (Role)
+                      {t('claimListing.page.form.registrantTitle')}
                     </label>
                     <Input
                       type="text"
                       value={formData.registrantTitle}
                       onChange={(e) => handleInputChange('registrantTitle', e.target.value)}
-                      placeholder="e.g., Owner, Manager, Authorized Rep."
+                      placeholder={t('claimListing.page.form.placeholders.registrantTitle')}
                       className="w-full"
                     />
                   </div>

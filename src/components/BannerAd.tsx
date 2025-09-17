@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase, getAdminDb } from '../lib/supabase';
+import {Link} from 'react-router-dom';
 
 interface BannerAdProps {
   children?: React.ReactNode;
@@ -167,9 +168,11 @@ export const BannerAd: React.FC<BannerAdProps> = ({
                 </div>
               </div>
               <div className="hidden md:block">
-                <div className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer">
-                  Learn More
-                </div>
+                <Link to="/advertise"> 
+                  <div className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer">
+                    Learn More
+                  </div>
+                </Link>
               </div>
             </div>
           ))}
