@@ -33,6 +33,7 @@ import { AdminNavLink } from "./AdminNavLink";
 import { db } from "@/lib/supabase";
 import { useToast } from "@/components/ui/use-toast";
 import { fetchWikipediaCountryInfo } from "@/lib/wikipedia";
+import { scrollToTop } from "@/lib/scrollToTop";
 
 interface Country {
   id: string;
@@ -135,6 +136,7 @@ export const Header = () => {
     // Navigate to country detail page
     const countrySlug = country.name.toLowerCase().replace(/\s+/g, '-');
     navigate(`/countries/${countrySlug}`);
+    scrollToTop();
   };
 
   const toggleMobileMenu = () => {
@@ -159,7 +161,7 @@ export const Header = () => {
         <div className="flex items-center justify-between h-20">
           {/* Logo */}
           <div className="flex items-center flex-shrink-0 mr-8">
-            <Link to="/">
+            <Link to="/" onClick={scrollToTop}>
               <div className="flex items-center py-4">
                 <img src="/bara-3.png" className="h-12 w-auto" alt="Logo picture" />
                 <img src="/bara-1-removebg-preview.png" className="h-12 w-auto ml-2" alt="Logo picture" />
@@ -169,35 +171,35 @@ export const Header = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-3 flex-1 justify-center">
-            <Link to="/">
+            <Link to="/" onClick={scrollToTop}>
               <Button variant="ghost" className="font-roboto">
                 <List className="w-4 h-4 mr-1" />
                 {t('navigation.listings')}
               </Button>
             </Link> 
             
-            <Link to="/marketplace">
+            <Link to="/marketplace" onClick={scrollToTop}>
               <Button variant="ghost" className="font-roboto">
                 <ShoppingBag className="w-4 h-4 mr-1" />
                 {t('navigation.marketplace')}
               </Button>
             </Link>
             
-            <Link to="/events">
+            <Link to="/events" onClick={scrollToTop}>
               <Button variant="ghost" className="font-roboto">
                 <Calendar className="w-4 h-4 mr-1" />
                 {t('navigation.events')}
               </Button>
             </Link>
 
-            <Link to="/advertise">
+            <Link to="/advertise" onClick={scrollToTop}>
               <Button variant="ghost" className="font-roboto">
               <Building className="w-4 h-4 mr-1" />
               {t('navigation.advertise')}
               </Button>
             </Link>
             
-            <Link to="/writeareview">
+            <Link to="/writeareview" onClick={scrollToTop}>
               <Button variant="ghost" className="font-roboto">
                 <Crown className="w-4 h-4 mr-1" />
                 {t('navigation.writeReview')}
@@ -387,19 +389,19 @@ export const Header = () => {
                   <h3 className="text-sm font-comfortaa font-semibold text-gray-900 uppercase tracking-wide">
                     Navigation
                   </h3>
-                  <Link to="/" onClick={closeMobileMenu}>
+                  <Link to="/" onClick={() => { closeMobileMenu(); scrollToTop(); }}>
                     <Button variant="ghost" className="w-full justify-start font-roboto h-12">
                       <List className="w-5 h-5 mr-3" />
                       {t('navigation.listings')}
                     </Button>
                   </Link>
-                  <Link to="/marketplace" onClick={closeMobileMenu}>
+                  <Link to="/marketplace" onClick={() => { closeMobileMenu(); scrollToTop(); }}>
                     <Button variant="ghost" className="w-full justify-start font-roboto h-12">
                       <ShoppingBag className="w-5 h-5 mr-3" />
                       {t('navigation.marketplace')}
                     </Button>
                   </Link>
-                  <Link to="/events" onClick={closeMobileMenu}>
+                  <Link to="/events" onClick={() => { closeMobileMenu(); scrollToTop(); }}>
                     <Button variant="ghost" className="w-full justify-start font-roboto h-12">
                       <Calendar className="w-5 h-5 mr-3" />
                       {t('navigation.events')}
@@ -412,13 +414,13 @@ export const Header = () => {
                   <h3 className="text-sm font-comfortaa font-semibold text-gray-900 uppercase tracking-wide">
                     Business Services
                   </h3>
-                  <Link to="/advertise" onClick={closeMobileMenu}>
+                  <Link to="/advertise" onClick={() => { closeMobileMenu(); scrollToTop(); }}>
                   <Button variant="ghost" className="w-full justify-start font-roboto h-12">
                     <Building className="w-5 h-5 mr-3" />
                     {t('navigation.advertise')}
                   </Button>
                   </Link>
-                  <Link to="/writeareview" onClick={closeMobileMenu}>
+                  <Link to="/writeareview" onClick={() => { closeMobileMenu(); scrollToTop(); }}>
                     <Button variant="ghost" className="w-full justify-start font-roboto h-12">
                       <Crown className="w-5 h-5 mr-3" />
                       {t('navigation.writeReview')}
@@ -431,7 +433,7 @@ export const Header = () => {
                   <h3 className="text-sm font-comfortaa font-semibold text-gray-900 uppercase tracking-wide">
                     Administration
                   </h3>
-                  <Link to="/admin" onClick={closeMobileMenu}>
+                  <Link to="/admin" onClick={() => { closeMobileMenu(); scrollToTop(); }}>
                     <Button variant="ghost" className="w-full justify-start font-roboto h-12">
                       <Shield className="w-5 h-5 mr-3" />
                       Admin Dashboard
@@ -467,6 +469,7 @@ export const Header = () => {
                         onClick={() => {
                           navigate('/user/settings');
                           closeMobileMenu();
+                          scrollToTop();
                         }}
                       >
                         <Settings className="w-5 h-5 mr-3" />
@@ -478,6 +481,7 @@ export const Header = () => {
                         onClick={() => {
                           signOut();
                           closeMobileMenu();
+                          scrollToTop();
                         }}
                       >
                         <LogOut className="w-5 h-5 mr-3" />
@@ -492,6 +496,7 @@ export const Header = () => {
                         onClick={() => {
                           navigate('/user/sign-in');
                           closeMobileMenu();
+                          scrollToTop();
                         }}
                       >
                         <User className="w-5 h-5 mr-3" />
@@ -503,6 +508,7 @@ export const Header = () => {
                         onClick={() => {
                           navigate('/user/sign-up');
                           closeMobileMenu();
+                          scrollToTop();
                         }}
                       >
                         <Settings className="w-5 h-5 mr-3" />

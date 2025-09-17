@@ -27,6 +27,7 @@ import {
 import { db } from "@/lib/supabase";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fetchWikipediaCountryInfo } from "@/lib/wikipedia";
+import { useSponsoredBanners } from "@/hooks/useSponsoredBanners";
 
 interface Country {
   id: string;
@@ -101,6 +102,9 @@ export const CountryDetailPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedCategory, setSelectedCategory] = useState("");
+  
+  // Sponsored banner functionality
+  const { banners: sponsoredBanners, fetchBannerByCountry, incrementBannerClick, incrementBannerView } = useSponsoredBanners();
 
   useEffect(() => {
     if (!countrySlug) {
@@ -227,6 +231,11 @@ export const CountryDetailPage: React.FC = () => {
         }
         
         await fetchBusinesses(countryData);
+        
+        // Fetch sponsored banner for this country
+        if (countryData.id) {
+          await fetchBannerByCountry(countryData.id);
+        }
       } else {
         console.error('Country not found with any search pattern:', lastError);
         setLoading(false);
@@ -767,7 +776,7 @@ export const CountryDetailPage: React.FC = () => {
                         <div>
                         <p className="text-sm text-pink-600 font-medium">Area</p>
                         <p className="text-lg font-semibold text-pink-800">
-                          {country.area_sq_km.toLocaleString()} km²
+                          {country.area_sq_km.toLocaleString()}K km²
                         </p>
                         </div>
                       </div>
@@ -804,6 +813,54 @@ export const CountryDetailPage: React.FC = () => {
                   </CardContent>
                 </Card>
               )}
+            </div>
+          )}
+
+          {/* Sponsored Banner Section */}
+          {sponsoredBanners.length > 0 && (
+            <div className="mt-6">
+              <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 shadow-lg">
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-center space-x-2">
+                      <Building className="w-5 h-5 text-blue-600" />
+                      <span className="text-sm font-medium text-blue-800">Sponsored by</span>
+                    </div>
+                    <Badge variant="outline" className="text-blue-600 border-blue-300">
+                      Advertisement
+                    </Badge>
+                  </div>
+                  
+                  {sponsoredBanners.map((banner) => (
+                    <div key={banner.id} className="space-y-4">
+                      <a
+                        href={banner.company_website}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        onClick={() => incrementBannerClick(banner.id)}
+                        className="block group"
+                      >
+                        <div className="relative overflow-hidden rounded-lg">
+                          <img
+                            src={banner.banner_image_url}
+                            alt={banner.banner_alt_text || `${banner.company_name} banner`}
+                            className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
+                            onLoad={() => incrementBannerView(banner.id)}
+                          />
+                          <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
+                        </div>
+                      </a>
+                      
+                      <div className="text-center">
+                        <h3 className="font-semibold text-gray-900">{banner.company_name}</h3>
+                        <p className="text-sm text-gray-600">
+                          Visit {banner.company_website}
+                        </p>
+                      </div>
+                    </div>
+                  ))}
+                </CardContent>
+              </Card>
             </div>
           )}
 
@@ -942,12 +999,12 @@ export const CountryDetailPage: React.FC = () => {
                         <p className="text-gray-600 text-sm">{country.hdi_score.toFixed(3)}</p>
                       </div>
                     )}
-                    {/* {country.area_sq_km && (
+                     {country.area_sq_km && (
                       <div className="bg-white p-3 rounded-lg border border-green-100">
                         <h4 className="font-semibold text-gray-800 text-sm">Total Area</h4>
                         <p className="text-gray-600 text-sm">{country.area_sq_km.toLocaleString()} km²</p>
                       </div>
-                    )} */}
+                    )} 
                     {country.gdp_usd && (
                       <div className="bg-white p-3 rounded-lg border border-green-100">
                         <h4 className="font-semibold text-gray-800 text-sm">GDP (USD)</h4>

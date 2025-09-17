@@ -78,6 +78,12 @@ const adminMenuItems = [
     description: "Manage customer inquiries"
   },
   {
+    title: "Sponsored Banners",
+    icon: Megaphone,
+    path: "/admin/sponsored-banners",
+    description: "Manage country page banners"
+  },
+  {
     title: "Users",
     icon: Users,
     path: "/admin/users",

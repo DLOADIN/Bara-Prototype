@@ -1,5 +1,6 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
+import { scrollToTop } from '@/lib/scrollToTop';
 
 const Footer = () => {
   const { t } = useTranslation();
@@ -18,12 +19,12 @@ const Footer = () => {
             </h3>
             <ul className="space-y-1.5 sm:space-y-2">
               <li>
-                <Link to="/about" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                <Link to="/about" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   {t('footer.aboutUs')}
                 </Link>
               </li>
               <li>
-                <Link to="/contact-us" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                <Link to="/contact-us" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   {t('footer.contactUs')}
                 </Link>
               </li>
@@ -38,22 +39,27 @@ const Footer = () => {
                 </Link>
               </li>*/}
               <li>
-                <Link to="/advertise" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                <Link to="/advertise" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   {t('footer.advertisingChoices')}
                 </Link>
               </li>
               <li>
-                <Link to="/claim-listing" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                <Link to="/sponsor-country" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                  Sponsor Country Page
+                </Link>
+              </li>
+              <li>
+                <Link to="/claim-listing" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   {t('footer.ClaimYourListing')}
                 </Link>
               </li>
               <li>
-                <Link to="/faq" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                <Link to="/faq" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   FAQ
                 </Link>
               </li>
               <li>
-                <Link to="/ask-question" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                <Link to="/ask-question" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   {t('footer.AskUsAnyQuestion')}
                 </Link>
               </li>
@@ -113,6 +119,7 @@ const Footer = () => {
               <div>
                 <Link 
                   to="/countries/rwanda" 
+                  onClick={scrollToTop}
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇷🇼</span>
@@ -122,6 +129,7 @@ const Footer = () => {
               <div>
                 <Link 
                   to="/countries/kenya" 
+                  onClick={scrollToTop}
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇰🇪</span>
@@ -131,6 +139,7 @@ const Footer = () => {
               <div>
                 <Link 
                   to="/countries/uganda" 
+                  onClick={scrollToTop}
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇺🇬</span>
@@ -140,6 +149,7 @@ const Footer = () => {
               <div>
                 <Link 
                   to="/countries/tanzania" 
+                  onClick={scrollToTop}
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇹🇿</span>
@@ -149,6 +159,7 @@ const Footer = () => {
               <div>
                 <Link 
                   to="/countries/ethiopia" 
+                  onClick={scrollToTop}
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇪🇹</span>
@@ -158,6 +169,7 @@ const Footer = () => {
               <div>
                 <Link 
                   to="/countries/ghana" 
+                  onClick={scrollToTop}
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇬🇭</span>
@@ -167,6 +179,7 @@ const Footer = () => {
               <div>
                 <Link 
                   to="/countries/nigeria" 
+                  onClick={scrollToTop}
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇳🇬</span>
@@ -176,6 +189,7 @@ const Footer = () => {
               <div>
                 <Link 
                   to="/countries/south-africa" 
+                  onClick={scrollToTop}
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇿🇦</span>
@@ -192,67 +206,67 @@ const Footer = () => {
             </h3>
             <div className="grid grid-cols-1 gap-1.5 sm:gap-2">
               <div>
-                <Link to="/communities/benincredible-benin" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                <Link to="/communities/benincredible-benin" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   BeninCredible Benin
                 </Link>
               </div>
               <div>
-                <Link to="/communities/egyptional-egypt" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                <Link to="/communities/egyptional-egypt" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   EgypTional Egypt
                 </Link>
               </div>
               <div>
-                <Link to="/communities/ethutopia-ethiopia" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                <Link to="/communities/ethutopia-ethiopia" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   Ethutopia Ethiopia
                 </Link>
               </div>
               <div>
-                <Link to="/communities/gambion-gambia" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                <Link to="/communities/gambion-gambia" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   GambiOn Gambia
                 </Link>
               </div>
               <div>
-                <Link to="/communities/ghananion-ghana" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                <Link to="/communities/ghananion-ghana" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   GhaNation Ghana
                 </Link>
               </div>
               <div>
-                <Link to="/communities/kensential-kenya" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                <Link to="/communities/kensential-kenya" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   KenSential Kenya
                 </Link>
               </div>
               <div>
-                <Link to="/communities/nigeriayeah-nigeria" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                <Link to="/communities/nigeriayeah-nigeria" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   NigeriaYeah Nigeria
                 </Link>
               </div>
               <div>
-                <Link to="/communities/rwandaful-rwanda" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                <Link to="/communities/rwandaful-rwanda" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   Rwandaful Rwanda
                 </Link>
               </div>
               <div>
-                <Link to="/communities/senegalastic-senegal" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                <Link to="/communities/senegalastic-senegal" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   SenegalAstic Senegal
                 </Link>
               </div>
               <div>
-                <Link to="/communities/south-african-south-africa" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                <Link to="/communities/south-african-south-africa" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   South AfriCan South Africa
                 </Link>
               </div>
               <div>
-                <Link to="/communities/spotswana-botswana" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                <Link to="/communities/spotswana-botswana" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   Spotswana Botswana
                 </Link>
               </div>
               <div>
-                <Link to="/communities/tanzaniya-tanzania" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                <Link to="/communities/tanzaniya-tanzania" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   TanzaniYa Tanzania
                 </Link>
               </div>
               <div>
-                <Link to="/communities/ugandalous-uganda" className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
+                <Link to="/communities/ugandalous-uganda" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   UgandaLous Uganda
                 </Link>
               </div>
@@ -268,6 +282,7 @@ const Footer = () => {
               <div>
                 <Link 
                   to="/global-africa/black-americans" 
+                  onClick={scrollToTop}
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇺🇸</span>
@@ -277,6 +292,7 @@ const Footer = () => {
               <div>
                 <Link 
                   to="/global-africa/brazil" 
+                  onClick={scrollToTop}
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇧🇷</span>
@@ -286,6 +302,7 @@ const Footer = () => {
               <div>
                 <Link 
                   to="/global-africa/haiti" 
+                  onClick={scrollToTop}
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇭🇹</span>
@@ -295,6 +312,7 @@ const Footer = () => {
               <div>
                 <Link 
                   to="/global-africa/jamaica" 
+                  onClick={scrollToTop}
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇯🇲</span>
@@ -304,6 +322,7 @@ const Footer = () => {
               <div>
                 <Link 
                   to="/global-africa/trinidad" 
+                  onClick={scrollToTop}
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇹🇹</span>

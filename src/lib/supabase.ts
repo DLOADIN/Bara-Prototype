@@ -122,7 +122,10 @@ export const getAdminDb = () => {
     banner_ad_analytics: () => adminSupabase.from('banner_ad_analytics'),
 
     // Business review stats view
-    business_review_stats: () => adminSupabase.from('business_review_stats')
+    business_review_stats: () => adminSupabase.from('business_review_stats'),
+    
+    // Sponsored banners operations
+    sponsored_banners: () => adminSupabase.from('sponsored_banners')
   };
 };
 
@@ -353,7 +356,10 @@ export const db = {
   banner_ad_analytics: () => supabase.from('banner_ad_analytics'),
 
   // Business review stats view
-  business_review_stats: () => supabase.from('business_review_stats')
+  business_review_stats: () => supabase.from('business_review_stats'),
+  
+  // Sponsored banners operations
+  sponsored_banners: () => supabase.from('sponsored_banners')
 }
 
 // Auth helper functions

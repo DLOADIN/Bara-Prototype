@@ -4,6 +4,7 @@ import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useAuthLogging } from "@/hooks/useAuthLogging";
+import { ScrollToTop } from "@/components/ScrollToTop";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { ListingsPage } from "./pages/ListingsPage";
@@ -45,6 +46,8 @@ import UserSignInPage from "./pages/user/UserSignInPage";
 import UserSignUpPage from "./pages/user/UserSignUpPage";
 import UserSettingsPage from "./pages/user/UserSettingsPage";
 import AdvertiseCheckoutPage from "./pages/AdvertiseCheckoutPage";
+import { SponsorCountryPage } from "./pages/SponsorCountryPage";
+import { AdminSponsoredBanners } from "./pages/admin/AdminSponsoredBanners";
 
 const queryClient = new QueryClient();
 
@@ -53,8 +56,10 @@ const AppRoutes = () => {
   useAuthLogging();
 
   return (
-    <Routes>
-      <Route path="/" element={<Index />} />
+    <>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<Index />} />
       <Route path="/writeareview" element={<WriteReviewPage />} />
       <Route path="/write-review/:businessId" element={<WriteReviewPage />} />
       <Route path="/claim-listing" element={<ClaimListingPage />} />
@@ -75,6 +80,7 @@ const AppRoutes = () => {
       <Route path="/marketplace" element={<MarketplacePage />} />
       <Route path="/events" element={<EventsPage />} />
       <Route path="/advertise/checkout" element={<AdvertiseCheckoutPage />} />
+      <Route path="/sponsor-country" element={<SponsorCountryPage />} />
       
       {/* Authentication Routes */}
       <Route path="/sign-in" element={<SignInPage />} />
@@ -188,10 +194,16 @@ const AppRoutes = () => {
           <AdminBannerAds />
         </AdminAuthGuard>
       } />
+      <Route path="/admin/sponsored-banners" element={
+        <AdminAuthGuard>
+          <AdminSponsoredBanners />
+        </AdminAuthGuard>
+      } />
       
       {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
       <Route path="*" element={<NotFound />} />
     </Routes>
+    </>
   );
 };
 
