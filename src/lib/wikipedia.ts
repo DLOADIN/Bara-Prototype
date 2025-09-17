@@ -351,6 +351,40 @@ export const fetchWikipediaCountryInfo = async (countryName: string): Promise<Wi
     });
 
     // Try to extract additional data from infobox if main extraction failed
+    // Utility: clean wiki markup → plain text
+    const cleanWikiText = (text: string): string => {
+      if (!text) return '';
+      return text
+        .replace(/\{\{[^}]*\}\}/g, ' ') // remove templates
+        .replace(/<br\s*\/?\s*>/gi, ', ') // <br> to comma
+        .replace(/\[\[([^\]|]+)\|([^\]]+)\]\]/g, '$2') // [[target|label]] → label
+        .replace(/\[\[([^\]]+)\]\]/g, '$1') // [[target]] → target
+        .replace(/<[^>]+>/g, ' ') // remove HTML
+        .replace(/\s+/g, ' ') // collapse spaces
+        .trim();
+    };
+
+    const normalizeLanguages = (raw: string): string => {
+      if (!raw) return '';
+      const cleaned = cleanWikiText(raw)
+        .replace(/languages?:/i, '')
+        .trim();
+      // Split on commas, slashes, semicolons
+      const parts = cleaned
+        .split(/[,;/]|\band\b|\bor\b/gi)
+        .map(s => s.trim())
+        .filter(Boolean)
+        .map(s => s
+          .replace(/ language$/i, '')
+          .replace(/^official\s*/i, '')
+          .replace(/^national\s*/i, '')
+          .replace(/^co[- ]?official\s*/i, '')
+        );
+      // Deduplicate and capitalize nicely
+      const unique = Array.from(new Set(parts.map(p => p.replace(/\s+/g, ' ').trim())));
+      return unique.join(', ');
+    };
+
     const extractFromInfobox = (infoboxText: string) => {
       if (!infoboxText) return {};
       
@@ -368,10 +402,10 @@ export const fetchWikipediaCountryInfo = async (countryName: string): Promise<Wi
         infoboxData.gdp_text = gdpMatch[1].trim();
       }
       
-      // Extract languages from infobox
-      const langMatch = infoboxText.match(/\|\s*(?:languages|official_languages|national_languages)\s*=\s*([^|\n]+)/i);
-      if (langMatch && !extractedInfo.language) {
-        infoboxData.language = langMatch[1].trim().replace(/\[\[|\]\]/g, '');
+      // Extract languages from infobox with robust parsing
+      const langMatch = infoboxText.match(/\|\s*(?:languages|official_languages|national_languages|working_languages)\s*=\s*([^\n]+)/i);
+      if (langMatch) {
+        infoboxData.language = normalizeLanguages(langMatch[1]);
       }
       
       return infoboxData;
@@ -419,7 +453,7 @@ export const fetchWikipediaCountryInfo = async (countryName: string): Promise<Wi
        finalDescription += ' This country is known for its rich cultural heritage, diverse population, and significant contributions to regional and global affairs.';
      }
 
-     return {
+    return {
        name: countryName,
        description: finalDescription + ' 🌍✨',
        flag_url: flagUrl,
@@ -428,7 +462,7 @@ export const fetchWikipediaCountryInfo = async (countryName: string): Promise<Wi
        currency: extractedInfo.currency,
        population: extractedInfo.population,
        code: '', // Will be filled from database
-       language: extractedInfo.language || infoboxExtractedData.language || '',
+      language: normalizeLanguages(extractedInfo.language || infoboxExtractedData.language || ''),
        area: extractedInfo.area,
        gdp: extractedInfo.gdp,
        timezone: extractedInfo.timezone,

@@ -424,6 +424,14 @@ export const CountryDetailPage: React.FC = () => {
     return totalRating / business.reviews.length;
   };
 
+  // Ensure language display is clean; if more than two words, default to English
+  const getDisplayLanguage = (raw: string | null | undefined): string => {
+    const cleaned = (raw || '').trim();
+    if (!cleaned) return 'English';
+    const words = cleaned.split(/\s+/).filter(Boolean);
+    return words.length > 2 ? 'English' : cleaned;
+  };
+
   const formatCountryName = (slug: string): string => {
     return slug.replace(/-/g, ' ').replace(/\b\w/g, char => char.toUpperCase());
   };
@@ -783,14 +791,14 @@ export const CountryDetailPage: React.FC = () => {
               )}
 
               {/* Language */}
-              {country.language && country.language.length > 0 && !country.language.includes('is English') && (
+              {country.language && country.language.length > 0 && (
                 <Card className="bg-rose-50 border-rose-200">
                   <CardContent className="p-4">
                     <div className="flex items-center space-x-2">
                       <Globe className="w-5 h-5 text-rose-600" />
                       <div>
                         <p className="text-sm text-rose-600 font-medium">Language</p>
-                        <p className="text-lg font-semibold text-rose-800">{country.language}</p>
+                        <p className="text-lg font-semibold text-rose-800">{getDisplayLanguage(country.language)}</p>
                       </div>
                     </div>
                   </CardContent>
