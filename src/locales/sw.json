@@ -34,6 +34,14 @@
     "profile": "Wasifu",
     "logout": "Ondoka"
   },
+  "bannerAd": {
+    "placeholder": {
+      "badge": "TANGAZO",
+      "title": "🚀 Tangaza Biashara Yako Hapa",
+      "subtitle": "Fikia maelfu ya wateja wa karibu • Nafasi ya juu",
+      "learnMore": "Jifunze Zaidi"
+    }
+  },
   "languages": {
     "english": "Kiingereza",
     "french": "Kifaransa",
@@ -493,6 +501,7 @@
     "pet-services": "Huduma za Wanyama"
   },
   "admin": {
+    "advertiseSeizure": "Tangaza",
     "dashboard": "Dashibodi",
     "cities": "Miji",
     "countries": "Nchi",

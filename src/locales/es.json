@@ -34,6 +34,14 @@
     "profile": "Perfil",
     "logout": "Cerrar Sesión"
   },
+  "bannerAd": {
+    "placeholder": {
+      "badge": "AD",
+      "title": "🚀 Anuncia tu negocio aquí",
+      "subtitle": "Alcanza a miles de clientes locales • Ubicación premium",
+      "learnMore": "Saber más"
+    }
+  },
   "languages": {
     "english": "Inglés",
     "french": "Francés",
@@ -490,6 +498,7 @@
     "pet-services": "Servicios para Mascotas"
   },
   "admin": {
+    "advertiseSeizure": "Anunciar",
     "dashboard": "Panel de Control",
     "cities": "Ciudades",
     "countries": "Países",

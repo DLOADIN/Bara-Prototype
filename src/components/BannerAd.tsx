@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { supabase, getAdminDb } from '../lib/supabase';
 import {Link} from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 interface BannerAdProps {
   children?: React.ReactNode;
@@ -22,6 +23,7 @@ export const BannerAd: React.FC<BannerAdProps> = ({
   children, 
   className = "" 
 }) => {
+  const { t } = useTranslation();
   const [activeBannerAd, setActiveBannerAd] = useState<BannerAdData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -156,21 +158,21 @@ export const BannerAd: React.FC<BannerAdProps> = ({
               {/* Default placeholder when no active ads */}
               <div className="hidden sm:block">
                 <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-xl">AD</span>
+                  <span className="text-white font-bold text-xl">{t('bannerAd.placeholder.badge')}</span>
                 </div>
               </div>
               <div className="flex-1">
                 <div className="text-gray-700 text-lg font-semibold mb-1">
-                  🚀 Advertise Your Business Here
+                  {t('bannerAd.placeholder.title')}
                 </div>
                 <div className="text-gray-500 text-sm">
-                  Reach thousands of local customers • Premium ad placement
+                  {t('bannerAd.placeholder.subtitle')}
                 </div>
               </div>
               <div className="hidden md:block">
                 <Link to="/advertise"> 
                   <div className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors cursor-pointer">
-                    Learn More
+                    {t('bannerAd.placeholder.learnMore')}
                   </div>
                 </Link>
               </div>

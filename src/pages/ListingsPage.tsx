@@ -957,7 +957,7 @@ export const ListingsPage = () => {
             <div className="mt-4 flex justify-center">
               <Link to="/advertise/checkout" className="w-full">
                 <Button size="sm" className="w-[58vh] sm:w-full lg:w-[58vh] md:w-[50vh] text-white" variant="secondary">
-                  Advertise
+                 {t('admin.advertiseSeizure')}
                 </Button>
               </Link>
             </div>

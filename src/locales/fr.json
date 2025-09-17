@@ -35,6 +35,14 @@
     "profile": "Profil",
     "logout": "Déconnexion"
   },
+  "bannerAd": {
+    "placeholder": {
+      "badge": "PUB",
+      "title": "🚀 Faites la promotion de votre entreprise ici",
+      "subtitle": "Touchez des milliers de clients locaux • Emplacement premium",
+      "learnMore": "En savoir plus"
+    }
+  },
   "languages": {
     "english": "Anglais",
     "french": "Français",
@@ -491,6 +499,7 @@
     "pet-services": "Services pour Animaux"
   },
   "admin": {
+    "advertiseSeizure": "Annoncer",
     "dashboard": "Tableau de Bord",
     "cities": "Villes",
     "countries": "Pays",

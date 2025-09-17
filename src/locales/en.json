@@ -503,6 +503,7 @@
       "users": "Users Management",
       "usersSubtitle": "Manage user accounts and permissions"
     },
+    "advertiseSeizure": "Advertise",
     "statistics": "Statistics",
     "recentActivity": "Recent Activity",
     "quickActions": "Quick Actions",
@@ -656,6 +657,14 @@
     "reviewFlagged": "Review flagged successfully",
     "stars": "Crowns",
     "outOf5Stars": "out of 5 crowns"
+  },
+  "bannerAd": {
+    "placeholder": {
+      "badge": "AD",
+      "title": "🚀 Advertise Your Business Here",
+      "subtitle": "Reach thousands of local customers • Premium ad placement",
+      "learnMore": "Learn More"
+    }
   },
   "lookForBusinesses": "Look for businesses by name and location.",
   "findBusiness": "Find the Business",
