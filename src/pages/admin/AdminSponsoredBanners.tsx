@@ -89,7 +89,7 @@ export const AdminSponsoredBanners: React.FC = () => {
 
   const handleAddNotes = async (bannerId: string) => {
     try {
-      await updateBanner(bannerId, { admin_notes: adminNotes });
+      await updateBanner(bannerId, { admin_notes: adminNotes } as any);
       setAdminNotes('');
       setShowDetails(false);
       
@@ -190,7 +190,7 @@ export const AdminSponsoredBanners: React.FC = () => {
     return (
       <AdminLayout>
         <div className="space-y-6">
-          <div className="h-8 bg-gray-300 rounded w-1/3 animate-pulse"></div>
+          <div className="h-8 bg-gray-300 rounded w-full animate-pulse"></div>
           <div className="h-64 bg-gray-300 rounded animate-pulse"></div>
         </div>
       </AdminLayout>
@@ -486,7 +486,7 @@ export const AdminSponsoredBanners: React.FC = () => {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                     <div><strong>Status:</strong> {getPaymentStatusBadge(selectedBanner.payment_status)}</div>
                     <div><strong>Amount:</strong> ${selectedBanner.payment_amount}</div>
-                    <div><strong>Reference:</strong> {selectedBanner.payment_reference || 'None'}</div>
+                    <div><strong>Reference:</strong> {(selectedBanner as any).payment_reference || 'None'}</div>
                     <div><strong>Current Status:</strong> {getStatusBadge(selectedBanner.status)}</div>
                   </div>
                 </div>
