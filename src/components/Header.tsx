@@ -169,12 +169,12 @@ export const Header = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-3 flex-1 justify-center">
-            {/* <Link to="/">
+            <Link to="/">
               <Button variant="ghost" className="font-roboto">
                 <List className="w-4 h-4 mr-1" />
                 {t('navigation.listings')}
               </Button>
-            </Link> */}
+            </Link> 
             
             <Link to="/marketplace">
               <Button variant="ghost" className="font-roboto">
@@ -387,12 +387,12 @@ export const Header = () => {
                   <h3 className="text-sm font-comfortaa font-semibold text-gray-900 uppercase tracking-wide">
                     Navigation
                   </h3>
-                  {/* <Link to="/" onClick={closeMobileMenu}>
+                  <Link to="/" onClick={closeMobileMenu}>
                     <Button variant="ghost" className="w-full justify-start font-roboto h-12">
                       <List className="w-5 h-5 mr-3" />
                       {t('navigation.listings')}
                     </Button>
-                  </Link> */}
+                  </Link>
                   <Link to="/marketplace" onClick={closeMobileMenu}>
                     <Button variant="ghost" className="w-full justify-start font-roboto h-12">
                       <ShoppingBag className="w-5 h-5 mr-3" />
