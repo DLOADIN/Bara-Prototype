@@ -954,6 +954,13 @@ export const ListingsPage = () => {
               citySlug={city}
               maxDisplay={6}
             />
+            <div className="mt-4 flex justify-center">
+              <Link to="/advertise/checkout" className="w-full">
+                <Button size="sm" className="w-[58vh] sm:w-full lg:w-[58vh] md:w-[50vh] text-white" variant="secondary">
+                  Advertise
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
       </div>

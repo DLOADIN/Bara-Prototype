@@ -120,10 +120,11 @@ export const HeroSection = () => {
     fetchCountries();
   }, []);
 
-  // Search businesses as user types
+  // Search businesses as user types (tokenized, live matching)
   useEffect(() => {
     const searchBusinesses = async () => {
-      if (searchTerm.length < 2) {
+      const trimmed = searchTerm.trim();
+      if (trimmed.length < 2) {
         setSearchResults([]);
         setIsSearchOpen(false);
         return;
@@ -136,8 +137,53 @@ export const HeroSection = () => {
         if (countryName) {
           options.country = countryName;
         }
-        const results = await BusinessService.searchBusinesses(searchTerm, options);
-        setSearchResults(results);
+        // Fetch a broader set from backend, then rank client-side by keyword coverage
+        const results = await BusinessService.searchBusinesses(trimmed, options, 100);
+
+        // Tokenize input into keywords (min length 2), match across multiple fields
+        const keywords = trimmed
+          .toLowerCase()
+          .split(/\s+/)
+          .filter(k => k.length >= 2);
+
+        const scored = results.map(b => {
+          const haystack = [
+            b.name,
+            b.description || '',
+            b.address || '',
+            b.website || '',
+            b.category?.name || '',
+            b.city?.name || '',
+            b.country?.name || ''
+          ].join(' ').toLowerCase();
+
+          let score = 0;
+          let allMatch = true;
+          for (const kw of keywords) {
+            const idx = haystack.indexOf(kw);
+            if (idx === -1) {
+              allMatch = false;
+            } else {
+              // Boost closer-to-start matches a little
+              score += 10 + Math.max(0, 5 - Math.floor(idx / 20));
+            }
+          }
+
+          // Exact name starts-with boost
+          if (b.name.toLowerCase().startsWith(trimmed.toLowerCase())) {
+            score += 20;
+          }
+          // Premium visibility boost
+          if (b.is_premium) score += 5;
+
+          return { b, score, allMatch };
+        })
+        .filter(x => x.allMatch || keywords.length === 0)
+        .sort((a, b) => b.score - a.score)
+        .map(x => x.b)
+        .slice(0, 20);
+
+        setSearchResults(scored);
         setIsSearchOpen(true);
       } catch (error) {
         console.error('Error searching businesses:', error);
@@ -189,7 +235,7 @@ export const HeroSection = () => {
         options.country = countryName;
       }
       
-      const results = await BusinessService.searchBusinesses(trimmed, options);
+      const results = await BusinessService.searchBusinesses(trimmed, options, 100);
       
       if (results.length === 0) {
         toast.error(

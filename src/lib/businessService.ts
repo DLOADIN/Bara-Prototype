@@ -381,10 +381,14 @@ export class BusinessService {
   /**
    * Search businesses by name or description
    */
-  static async searchBusinesses(searchTerm: string, filters: BusinessFilters = {}): Promise<Business[]> {
+  static async searchBusinesses(searchTerm: string, filters: BusinessFilters = {}, limit: number = 50): Promise<Business[]> {
     try {
       console.log('Searching businesses with term:', searchTerm, 'filters:', filters);
       
+      // Sanitize term for PostgREST logical tree (avoid commas/parentheses breaking or=)
+      const sanitized = (searchTerm || '').replace(/[(),]/g, ' ').trim();
+      const pattern = `*${sanitized}*`;
+
       let query = db.businesses()
         .select(`
           *,
@@ -394,7 +398,14 @@ export class BusinessService {
           reviews:reviews(id, rating, title, content, created_at, status, images)
         `)
         .eq('status', 'active')
-        .or(`name.ilike.%${searchTerm}%,description.ilike.%${searchTerm}%`);
+        // Broaden search across multiple relevant fields, including related tables
+        // Note: Keep OR limited to base table columns to avoid PostgREST parse errors
+        .or([
+          `name.ilike.${pattern}`,
+          `description.ilike.${pattern}`,
+          `address.ilike.${pattern}`,
+          `website.ilike.${pattern}`
+        ].join(','));
 
       // Apply additional filters
       if (filters.category) {
@@ -463,9 +474,11 @@ export class BusinessService {
         query = query.eq('is_sponsored_ad', true);
       }
 
+      // Apply a sane limit for live search
       const { data, error } = await query
         .order('is_premium', { ascending: false })
-        .order('created_at', { ascending: false });
+        .order('created_at', { ascending: false })
+        .limit(limit);
 
       if (error) {
         console.error('Error searching businesses:', error);

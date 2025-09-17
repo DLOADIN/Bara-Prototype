@@ -44,6 +44,7 @@ import { CommunityPage } from "./pages/communities/CommunityPage";
 import UserSignInPage from "./pages/user/UserSignInPage";
 import UserSignUpPage from "./pages/user/UserSignUpPage";
 import UserSettingsPage from "./pages/user/UserSettingsPage";
+import AdvertiseCheckoutPage from "./pages/AdvertiseCheckoutPage";
 
 const queryClient = new QueryClient();
 
@@ -73,6 +74,7 @@ const AppRoutes = () => {
       {/* New Navigation Pages */}
       <Route path="/marketplace" element={<MarketplacePage />} />
       <Route path="/events" element={<EventsPage />} />
+      <Route path="/advertise/checkout" element={<AdvertiseCheckoutPage />} />
       
       {/* Authentication Routes */}
       <Route path="/sign-in" element={<SignInPage />} />
