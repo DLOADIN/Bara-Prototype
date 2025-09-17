@@ -29,7 +29,6 @@ import {
 } from "lucide-react";
 import { db, auth } from "@/lib/supabase";
 import { useToast } from "@/hooks/use-toast";
-import { BusinessImageUpload } from "@/components/BusinessImageUpload";
 
 interface Business {
   id: string;
@@ -59,6 +58,18 @@ interface ReviewForm {
   title: string;
   content: string;
   images: string[];
+}
+
+interface BusinessReview {
+  id: string;
+  business_id: string;
+  user_id?: string | null;
+  rating: number;
+  title: string | null;
+  content: string;
+  images?: string[] | null;
+  status: 'pending' | 'approved' | 'rejected' | 'in_review';
+  created_at: string;
 }
 
 export const WriteReviewPage = () => {
@@ -91,6 +102,9 @@ export const WriteReviewPage = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hoveredRating, setHoveredRating] = useState(0);
+  const [reviews, setReviews] = useState<BusinessReview[]>([]);
+  const [loadingReviews, setLoadingReviews] = useState(false);
+  const [avgRating, setAvgRating] = useState<number | null>(null);
 
   // Load business if businessId is provided in URL
   useEffect(() => {
@@ -133,6 +147,11 @@ export const WriteReviewPage = () => {
           website: data.website,
           address: data.address
         });
+        // Load reviews and stats for this business
+        await Promise.all([
+          loadReviews(data.id),
+          loadReviewStats(data.id)
+        ]);
       } else {
         toast({
           title: 'Business Not Found',
@@ -151,6 +170,134 @@ export const WriteReviewPage = () => {
       navigate('/writeareview');
     } finally {
       setIsLoadingBusiness(false);
+    }
+  };
+
+  // Load previous reviews for business (admin-first to include ALL statuses)
+  const loadReviews = async (id: string) => {
+    setLoadingReviews(true);
+    console.log('Loading reviews for business:', id);
+    
+    try {
+      // Strategy 1: Use admin client first to bypass RLS and include ALL statuses
+      let data: any[] | null = null; let error: any = null;
+      try {
+        const { getAdminDb } = await import('@/lib/supabase');
+        const adminDb = getAdminDb();
+        const adminRes = await adminDb.reviews()
+          .select('*')
+          .eq('business_id', id)
+          .order('created_at', { ascending: false });
+        data = adminRes.data || null; error = adminRes.error || null;
+        console.log('Strategy 1 (admin all statuses):', adminRes);
+      } catch (adminErr) {
+        console.error('Admin client error:', adminErr);
+      }
+
+      // Strategy 2: Fallback to public client any status
+      if ((!data || data.length === 0) && !error) {
+        const anyRes = await db.reviews()
+          .select('*')
+          .eq('business_id', id)
+          .order('created_at', { ascending: false });
+        data = anyRes.data || null; error = anyRes.error || null;
+        console.log('Strategy 2 (public any status):', anyRes);
+      }
+
+      // Strategy 3: Try explicitly approved then pending
+      if ((!data || data.length === 0) && !error) {
+        const approvedRes = await db.reviews()
+          .select('*')
+          .eq('business_id', id)
+          .eq('status', 'approved')
+          .order('created_at', { ascending: false });
+        data = approvedRes.data || null; error = approvedRes.error || null;
+        console.log('Strategy 3 (public approved):', approvedRes);
+        if ((!data || data.length === 0) && !error) {
+          const pendingRes = await db.reviews()
+            .select('*')
+            .eq('business_id', id)
+            .eq('status', 'pending')
+            .order('created_at', { ascending: false });
+          data = pendingRes.data || null; error = pendingRes.error || null;
+          console.log('Strategy 3b (public pending):', pendingRes);
+        }
+      }
+
+      if (error) {
+        console.error('Final error loading reviews:', error);
+        setReviews([]);
+      } else {
+        console.log('Final reviews data:', data);
+        setReviews(data || []);
+      }
+    } catch (err) {
+      console.error('Error loading reviews:', err);
+      setReviews([]);
+    } finally {
+      setLoadingReviews(false);
+    }
+  };
+
+  // Load aggregated rating from business_review_stats with fallbacks
+  const loadReviewStats = async (id: string) => {
+    console.log('Loading review stats for business:', id);
+    
+    try {
+      // Strategy 1: Try business_review_stats view
+      let { data, error } = await db.business_review_stats()
+        .select('total_avg_rating, total_count, approved_avg_rating, approved_count')
+        .eq('business_id', id)
+        .order('total_count', { ascending: false })
+        .limit(1);
+
+      console.log('Strategy 1 (business_review_stats):', { data, error });
+
+      // Strategy 2: If no stats, try admin client
+      if ((!data || data.length === 0) && !error) {
+        try {
+          const { getAdminDb } = await import('@/lib/supabase');
+          const adminDb = getAdminDb();
+          const { data: adminData, error: adminError } = await adminDb.business_review_stats()
+            .select('total_avg_rating, total_count, approved_avg_rating, approved_count')
+            .eq('business_id', id)
+            .order('total_count', { ascending: false })
+            .limit(1);
+          
+          console.log('Strategy 2 (admin business_review_stats):', { data: adminData, error: adminError });
+          
+          if (adminData && adminData.length > 0) {
+            data = adminData;
+            error = adminError;
+          }
+        } catch (adminErr) {
+          console.error('Admin client error for stats:', adminErr);
+        }
+      }
+
+      // Strategy 3: Calculate from reviews directly if stats not available
+      if ((!data || data.length === 0) && !error) {
+        console.log('Strategy 3: Calculating from reviews directly');
+        // This will be calculated from the reviews we already loaded
+        return;
+      }
+
+      if (error) {
+        console.error('Error loading review stats:', error);
+        setAvgRating(null);
+      } else if (data && data.length > 0) {
+        const stats = data[0];
+        // Use approved rating if available, otherwise total rating
+        const rating = stats.approved_avg_rating || stats.total_avg_rating;
+        console.log('Review stats found:', { stats, rating });
+        setAvgRating(rating);
+      } else {
+        console.log('No review stats found');
+        setAvgRating(null);
+      }
+    } catch (err) {
+      console.error('Error loading review stats:', err);
+      setAvgRating(null);
     }
   };
 
@@ -377,17 +524,20 @@ export const WriteReviewPage = () => {
         });
         
         // Reset form and go back to search
-        setReviewForm({
-          business_id: '',
+        setReviewForm(prev => ({
+          business_id: prev.business_id,
           rating: 0,
           title: '',
           content: '',
           images: []
-        });
-        setSelectedBusiness(null);
-        setCurrentStep('search');
-        setSearchTerm('');
-        setSearchResults([]);
+        }));
+        // Refresh reviews and stats
+        if (selectedBusiness?.id) {
+          await Promise.all([
+            loadReviews(selectedBusiness.id),
+            loadReviewStats(selectedBusiness.id)
+          ]);
+        }
       }
     } catch (error) {
       console.error('Review submission error:', error);
@@ -697,6 +847,85 @@ export const WriteReviewPage = () => {
               </p>
             </CardHeader>
             <CardContent className="space-y-6">
+              {/* Most Recent Review */}
+              {reviews.length > 0 && (
+                <div className="border rounded-md p-4 bg-blue-50 border-blue-200">
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="text-base font-semibold text-yp-dark font-comfortaa">Latest Review</h3>
+                    <span className="text-sm text-gray-700 font-roboto">
+                      Avg: {avgRating ? avgRating.toFixed(1) : (reviews.reduce((s, r) => s + r.rating, 0) / reviews.length).toFixed(1)} {t('reviews.outOf5')} ({reviews.length} reviews)
+                    </span>
+                  </div>
+                  
+                  {/* Most recent review */}
+                  <div className="bg-white border rounded p-4 shadow-sm">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center">
+                        {[...Array(5)].map((_, i) => (
+                          <Crown key={i} className={`w-5 h-5 ${i < reviews[0].rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
+                        ))}
+                        <span className="ml-2 text-sm font-medium text-gray-700">
+                          {reviews[0].rating} {t('reviews.outOf5')}
+                        </span>
+                      </div>
+                      <span className="text-xs text-gray-500 font-roboto">
+                        {new Date(reviews[0].created_at).toLocaleDateString()}
+                      </span>
+                    </div>
+                    {reviews[0].title && (
+                      <div className="text-sm font-medium text-gray-900 mb-2">{reviews[0].title}</div>
+                    )}
+                    <div className="text-sm text-gray-700 leading-relaxed">{reviews[0].content}</div>
+                  </div>
+                </div>
+              )}
+
+              {/* All Reviews Summary */}
+              {reviews.length > 1 && (
+                <div className="border rounded-md p-4 bg-gray-50">
+                  <div className="flex items-center justify-between mb-2">
+                    <h3 className="text-base font-semibold text-yp-dark font-comfortaa">All Reviews</h3>
+                    <span className="text-sm text-gray-700 font-roboto">
+                      {reviews.length} total reviews
+                    </span>
+                  </div>
+                  {loadingReviews ? (
+                    <div className="text-sm text-gray-500">Loading reviews...</div>
+                  ) : (
+                    <div className="space-y-3 max-h-48 overflow-auto pr-1">
+                      {reviews.slice(1).map((rev) => (
+                        <div key={rev.id} className="bg-white border rounded p-3">
+                          <div className="flex items-center justify-between">
+                            <div className="flex items-center">
+                              {[...Array(5)].map((_, i) => (
+                                <Crown key={i} className={`w-4 h-4 ${i < rev.rating ? 'text-yellow-400 fill-current' : 'text-gray-300'}`} />
+                              ))}
+                            </div>
+                            <span className="text-xs text-gray-500 font-roboto">{new Date(rev.created_at).toLocaleDateString()}</span>
+                          </div>
+                          {rev.title && (
+                            <div className="mt-1 text-sm font-medium text-gray-900">{rev.title}</div>
+                          )}
+                          <div className="mt-1 text-sm text-gray-700">{rev.content}</div>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+              )}
+
+              {/* No reviews message */}
+              {reviews.length === 0 && !loadingReviews && (
+                <div className="border rounded-md p-4 bg-yellow-50 border-yellow-200 text-center">
+                  <div className="text-sm text-yellow-700 font-roboto">
+                    No reviews found for this business. Be the first to review!
+                  </div>
+                  <div className="text-xs text-yellow-600 mt-1">
+                    Check browser console for debugging info.
+                  </div>
+                </div>
+              )}
+
               {/* Rating */}
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-3 font-roboto">
@@ -771,7 +1000,7 @@ export const WriteReviewPage = () => {
                 <Button 
                   onClick={handleSubmitReview}
                   disabled={isSubmitting || reviewForm.rating === 0 || !reviewForm.content.trim()}
-                  className="bg-yp-blue text-white font-roboto"
+                  className="bg-yellow-900 hg:bg-yp-blue text-white font-roboto"
                 >
                   {isSubmitting ? (
                     <>
