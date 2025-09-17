@@ -194,33 +194,58 @@ export const WriteReviewPage = () => {
         console.error('Admin client error:', adminErr);
       }
 
-      // Strategy 2: Fallback to public client any status
-      if ((!data || data.length === 0) && !error) {
+      // Strategy 2: If admin fails, try public client with all statuses
+      if ((!data || data.length === 0) && error) {
+        console.log('Admin failed, trying public client...');
         const anyRes = await db.reviews()
           .select('*')
           .eq('business_id', id)
           .order('created_at', { ascending: false });
         data = anyRes.data || null; error = anyRes.error || null;
-        console.log('Strategy 2 (public any status):', anyRes);
+        console.log('Strategy 2 (public all statuses):', anyRes);
       }
 
-      // Strategy 3: Try explicitly approved then pending
+      // Strategy 3: If still no data, try individual status queries
       if ((!data || data.length === 0) && !error) {
+        console.log('Trying individual status queries...');
+        
+        // Try approved first
         const approvedRes = await db.reviews()
           .select('*')
           .eq('business_id', id)
           .eq('status', 'approved')
           .order('created_at', { ascending: false });
-        data = approvedRes.data || null; error = approvedRes.error || null;
-        console.log('Strategy 3 (public approved):', approvedRes);
-        if ((!data || data.length === 0) && !error) {
+        console.log('Strategy 3a (approved):', approvedRes);
+        
+        if (approvedRes.data && approvedRes.data.length > 0) {
+          data = approvedRes.data;
+          error = approvedRes.error;
+        } else {
+          // Try pending
           const pendingRes = await db.reviews()
             .select('*')
             .eq('business_id', id)
             .eq('status', 'pending')
             .order('created_at', { ascending: false });
-          data = pendingRes.data || null; error = pendingRes.error || null;
-          console.log('Strategy 3b (public pending):', pendingRes);
+          console.log('Strategy 3b (pending):', pendingRes);
+          
+          if (pendingRes.data && pendingRes.data.length > 0) {
+            data = pendingRes.data;
+            error = pendingRes.error;
+          } else {
+            // Try any other status
+            const otherRes = await db.reviews()
+              .select('*')
+              .eq('business_id', id)
+              .not('status', 'in', '(approved,pending)')
+              .order('created_at', { ascending: false });
+            console.log('Strategy 3c (other statuses):', otherRes);
+            
+            if (otherRes.data && otherRes.data.length > 0) {
+              data = otherRes.data;
+              error = otherRes.error;
+            }
+          }
         }
       }
 
@@ -354,10 +379,16 @@ export const WriteReviewPage = () => {
   };
 
   // Select business for review
-  const handleSelectBusiness = (business: Business) => {
+  const handleSelectBusiness = async (business: Business) => {
     setSelectedBusiness(business);
     setReviewForm(prev => ({ ...prev, business_id: business.id }));
     setCurrentStep('review');
+    
+    // Load reviews and stats for the selected business
+    await Promise.all([
+      loadReviews(business.id),
+      loadReviewStats(business.id)
+    ]);
   };
 
   // Handle rating selection
@@ -916,12 +947,12 @@ export const WriteReviewPage = () => {
 
               {/* No reviews message */}
               {reviews.length === 0 && !loadingReviews && (
-                <div className="border rounded-md p-4 bg-yellow-50 border-yellow-200 text-center">
-                  <div className="text-sm text-yellow-700 font-roboto">
+                <div className="border rounded-md p-4 bg-green-50 border-green-200 text-center">
+                  <div className="text-sm text-green-700 font-roboto">
                     No reviews found for this business. Be the first to review!
                   </div>
-                  <div className="text-xs text-yellow-600 mt-1">
-                    Check browser console for debugging info.
+                  <div className="text-xs text-green-600 mt-1">
+                    Your review will appear here after submission.
                   </div>
                 </div>
               )}
