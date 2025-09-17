@@ -45,6 +45,7 @@ import {
   X
 } from "lucide-react";
 import { db } from "@/lib/supabase";
+import { uploadImage, deleteImage } from "@/lib/storage";
 import { useToast } from "@/components/ui/use-toast";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -161,6 +162,7 @@ export const AdminBusinesses = () => {
   
   // Image upload
   const [uploadedImages, setUploadedImages] = useState<string[]>([]);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
   const [logoFile, setLogoFile] = useState<File | null>(null);
   
   // Form
@@ -374,12 +376,40 @@ export const AdminBusinesses = () => {
         longitude = Math.round(longitude * 1000000) / 1000000; // 6 decimal places
       }
 
+      // Upload images to storage
+      let uploadedImageUrls: string[] = [];
+      let uploadedLogoUrl: string | null = null;
+
+      // Upload business images
+      if (imageFiles.length > 0) {
+        const uploadPromises = imageFiles.map(file => 
+          uploadImage(file, 'business-images', 'businesses')
+        );
+        const uploadResults = await Promise.all(uploadPromises);
+        
+        for (const result of uploadResults) {
+          if (result.error) {
+            throw new Error(`Image upload failed: ${result.error}`);
+          }
+          uploadedImageUrls.push(result.url);
+        }
+      }
+
+      // Upload logo
+      if (logoFile) {
+        const logoResult = await uploadImage(logoFile, 'business-logos', 'logos');
+        if (logoResult.error) {
+          throw new Error(`Logo upload failed: ${logoResult.error}`);
+        }
+        uploadedLogoUrl = logoResult.url;
+      }
+
       const businessData = {
         ...data,
         latitude,
         longitude,
-        images: uploadedImages,
-        logo_url: logoFile ? URL.createObjectURL(logoFile) : null,
+        images: uploadedImageUrls,
+        logo_url: uploadedLogoUrl,
         created_at: new Date().toISOString(),
         updated_at: new Date().toISOString()
       };
@@ -401,6 +431,7 @@ export const AdminBusinesses = () => {
       setIsAddDialogOpen(false);
       form.reset();
       setUploadedImages([]);
+      setImageFiles([]);
       setLogoFile(null);
       fetchBusinesses();
     } catch (error) {
@@ -433,12 +464,44 @@ export const AdminBusinesses = () => {
         longitude = Math.round(longitude * 1000000) / 1000000; // 6 decimal places
       }
 
+      // Handle image uploads for editing
+      let finalImages = selectedBusiness.images || [];
+      let finalLogoUrl = selectedBusiness.logo_url;
+
+      // Upload new images if any
+      if (imageFiles.length > 0) {
+        const uploadPromises = imageFiles.map(file => 
+          uploadImage(file, 'business-images', 'businesses')
+        );
+        const uploadResults = await Promise.all(uploadPromises);
+        
+        const newImageUrls: string[] = [];
+        for (const result of uploadResults) {
+          if (result.error) {
+            throw new Error(`Image upload failed: ${result.error}`);
+          }
+          newImageUrls.push(result.url);
+        }
+        
+        // Combine existing images with new ones
+        finalImages = [...finalImages, ...newImageUrls];
+      }
+
+      // Upload new logo if provided
+      if (logoFile) {
+        const logoResult = await uploadImage(logoFile, 'business-logos', 'logos');
+        if (logoResult.error) {
+          throw new Error(`Logo upload failed: ${logoResult.error}`);
+        }
+        finalLogoUrl = logoResult.url;
+      }
+
       const businessData = {
         ...data,
         latitude,
         longitude,
-        images: uploadedImages,
-        logo_url: logoFile ? URL.createObjectURL(logoFile) : selectedBusiness.logo_url,
+        images: finalImages,
+        logo_url: finalLogoUrl,
         updated_at: new Date().toISOString()
       };
 
@@ -459,6 +522,7 @@ export const AdminBusinesses = () => {
       setSelectedBusiness(null);
       form.reset();
       setUploadedImages([]);
+      setImageFiles([]);
       setLogoFile(null);
       fetchBusinesses();
     } catch (error) {
@@ -507,6 +571,8 @@ export const AdminBusinesses = () => {
   const handleEditClick = (business: Business) => {
     setSelectedBusiness(business);
     setUploadedImages(business.images || []);
+    setImageFiles([]); // Reset file array for new uploads
+    setLogoFile(null); // Reset logo file for new uploads
     form.reset({
       name: business.name,
       slug: business.slug,
@@ -537,6 +603,7 @@ export const AdminBusinesses = () => {
   const handleAddClick = () => {
     form.reset();
     setUploadedImages([]);
+    setImageFiles([]);
     setLogoFile(null);
     setIsAddDialogOpen(true);
   };
@@ -584,23 +651,74 @@ export const AdminBusinesses = () => {
   };
 
   // Image handling
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const files = event.target.files;
     if (files) {
-      const newImages = Array.from(files).map(file => URL.createObjectURL(file));
+      const fileArray = Array.from(files);
+      
+      // Validate files
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      
+      for (const file of fileArray) {
+        if (!allowedTypes.includes(file.type)) {
+          toast({
+            title: "Invalid File Type",
+            description: "Please upload only JPEG, PNG, GIF, or WebP images.",
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        if (file.size > maxSize) {
+          toast({
+            title: "File Too Large",
+            description: "Please upload images smaller than 5MB.",
+            variant: "destructive",
+          });
+          return;
+        }
+      }
+      
+      // Create preview URLs for immediate display
+      const newImages = fileArray.map(file => URL.createObjectURL(file));
       setUploadedImages(prev => [...prev, ...newImages]);
+      setImageFiles(prev => [...prev, ...fileArray]);
     }
   };
 
-  const handleLogoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleLogoUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
+      // Validate file
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      
+      if (!allowedTypes.includes(file.type)) {
+        toast({
+          title: "Invalid File Type",
+          description: "Please upload only JPEG, PNG, GIF, or WebP images.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
+      if (file.size > maxSize) {
+        toast({
+          title: "File Too Large",
+          description: "Please upload an image smaller than 5MB.",
+          variant: "destructive",
+        });
+        return;
+      }
+      
       setLogoFile(file);
     }
   };
 
   const removeImage = (index: number) => {
     setUploadedImages(prev => prev.filter((_, i) => i !== index));
+    setImageFiles(prev => prev.filter((_, i) => i !== index));
   };
 
   // Function to highlight search terms in text
@@ -1360,7 +1478,7 @@ export const AdminBusinesses = () => {
               <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)} className="font-roboto">
                 Cancel
               </Button>
-              <Button type="submit" className="bg-yp-blue hover:bg-blue-600 font-roboto">
+              <Button type="submit" className="bg-yellow-900 hover:bg-blue-600 font-roboto">
                 Add Business
               </Button>
             </DialogFooter>

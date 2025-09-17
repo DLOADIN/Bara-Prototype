@@ -668,7 +668,7 @@ export const AdminCategories = () => {
                 <Button variant="outline" onClick={() => setIsAddDialogOpen(false)} className="font-roboto" disabled={isSubmitting}>
                   Cancel
                 </Button>
-                <Button onClick={handleAddCategory} className="font-roboto" disabled={isSubmitting}>
+                <Button onClick={handleAddCategory} className="font-roboto bg-yellow-900 hover:bg-blue-600" disabled={isSubmitting}>
                   {isSubmitting ? "Adding..." : "Add Category"}
                 </Button>
               </DialogFooter>
