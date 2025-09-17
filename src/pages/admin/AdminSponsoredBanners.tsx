@@ -27,6 +27,7 @@ import {
 } from 'lucide-react';
 import { useSponsoredBanners } from '@/hooks/useSponsoredBanners';
 import { useToast } from '@/hooks/use-toast';
+import { deleteImage } from '@/lib/storage';
 import { SponsoredBanner } from '@/types/sponsoredBanner.types';
 
 export const AdminSponsoredBanners: React.FC = () => {
@@ -109,10 +110,23 @@ export const AdminSponsoredBanners: React.FC = () => {
   const handleDeleteBanner = async (bannerId: string) => {
     if (window.confirm('Are you sure you want to delete this banner?')) {
       try {
+        // Find the banner to get the image path
+        const banner = banners.find(b => b.id === bannerId);
+        
+        // Delete the banner from database
         await deleteBanner(bannerId);
+        
+        // Delete the image from storage if it exists
+        if (banner?.banner_image_url) {
+          // Extract path from URL (remove domain part)
+          const url = new URL(banner.banner_image_url);
+          const path = url.pathname.split('/').slice(3).join('/'); // Remove /storage/v1/object/public/
+          await deleteImage(path, 'sponsored-banners');
+        }
+        
         toast({
           title: "Banner Deleted",
-          description: "The sponsored banner has been deleted",
+          description: "The sponsored banner and its image have been deleted",
         });
       } catch (error) {
         console.error('Error deleting banner:', error);
@@ -120,7 +134,7 @@ export const AdminSponsoredBanners: React.FC = () => {
           title: "Error",
           description: "Failed to delete banner",
           variant: "destructive",
-      });
+        });
       }
     }
   };

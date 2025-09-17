@@ -22,6 +22,7 @@ import {
 } from 'lucide-react';
 import { useSponsoredBanners } from '@/hooks/useSponsoredBanners';
 import { db } from '@/lib/supabase';
+import { uploadImage } from '@/lib/storage';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
 
@@ -174,9 +175,6 @@ export const SponsorCountryPage: React.FC = () => {
     company_website: '',
     banner_alt_text: '',
     country_id: '',
-    contact_name: '',
-    contact_email: '',
-    contact_phone: '',
   });
 
   useEffect(() => {
@@ -204,13 +202,36 @@ export const SponsorCountryPage: React.FC = () => {
     }
   };
 
-  const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
-      // In a real implementation, you would upload to a storage service
-      const url = URL.createObjectURL(file);
+      // Validate file type
+      const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+      if (!allowedTypes.includes(file.type)) {
+        toast({
+          title: "Invalid File Type",
+          description: "Please upload a JPEG, PNG, GIF, or WebP image.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Validate file size (5MB limit)
+      const maxSize = 5 * 1024 * 1024; // 5MB
+      if (file.size > maxSize) {
+        toast({
+          title: "File Too Large",
+          description: "Please upload an image smaller than 5MB.",
+          variant: "destructive",
+        });
+        return;
+      }
+
       setBannerImage(file);
-      setBannerImageUrl(url);
+      
+      // Create preview URL for immediate display
+      const previewUrl = URL.createObjectURL(file);
+      setBannerImageUrl(previewUrl);
     }
   };
 
@@ -233,13 +254,26 @@ export const SponsorCountryPage: React.FC = () => {
     setSubmitting(true);
     
     try {
-      // In a real implementation, you would upload the image to storage first
+      // Upload image to storage first
+      if (!bannerImage) {
+        throw new Error('No image to upload');
+      }
+
+      const uploadResult = await uploadImage(bannerImage, 'sponsored-banners', 'banners');
+      
+      if (uploadResult.error) {
+        throw new Error(`Image upload failed: ${uploadResult.error}`);
+      }
+
+      // Create banner data with uploaded image URL
       const bannerData = {
-        ...formData,
-        banner_image_url: bannerImageUrl, // This would be the uploaded image URL
+        country_id: formData.country_id,
+        company_name: formData.company_name,
+        company_website: formData.company_website,
+        banner_image_url: uploadResult.url,
+        banner_alt_text: formData.banner_alt_text,
         payment_status: 'paid' as const,
-        payment_amount: 25.00,
-        payment_reference: `PAY_${Date.now()}`,
+        payment_id: `PAY_${Date.now()}`,
       };
 
       const result = await createBanner(bannerData);
@@ -256,9 +290,6 @@ export const SponsorCountryPage: React.FC = () => {
           company_website: '',
           banner_alt_text: '',
           country_id: '',
-          contact_name: '',
-          contact_email: '',
-          contact_phone: '',
         });
         setBannerImage(null);
         setBannerImageUrl('');
@@ -269,7 +300,7 @@ export const SponsorCountryPage: React.FC = () => {
       console.error('Error submitting banner:', error);
       toast({
         title: "Error",
-        description: "Failed to submit banner. Please try again.",
+        description: error instanceof Error ? error.message : "Failed to submit banner. Please try again.",
         variant: "destructive",
       });
     } finally {
@@ -491,48 +522,6 @@ export const SponsorCountryPage: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Contact Information */}
-                  <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Contact Information</h3>
-                    
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                      <div>
-                        <label className="block text-sm font-medium mb-2">
-                          Contact Name *
-                        </label>
-                        <Input
-                          required
-                          value={formData.contact_name}
-                          onChange={(e) => setFormData(prev => ({ ...prev, contact_name: e.target.value }))}
-                          placeholder="Your Full Name"
-                        />
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium mb-2">
-                          Email *
-                        </label>
-                        <Input
-                          required
-                          type="email"
-                          value={formData.contact_email}
-                          onChange={(e) => setFormData(prev => ({ ...prev, contact_email: e.target.value }))}
-                          placeholder="your@email.com"
-                        />
-                      </div>
-                    </div>
-                    
-                    <div>
-                      <label className="block text-sm font-medium mb-2">
-                        Phone (Optional)
-                      </label>
-                      <Input
-                        value={formData.contact_phone}
-                        onChange={(e) => setFormData(prev => ({ ...prev, contact_phone: e.target.value }))}
-                        placeholder="+1 (555) 123-4567"
-                      />
-                    </div>
-                  </div>
 
                   {/* Terms and Submit */}
                   <div className="space-y-4">
