@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -23,16 +24,35 @@ import {
   TrendingUp
 } from "lucide-react";
 
+const aboutSlides: string[] = [
+  "/About Us page/pexels-blue-ox-studio-218748-2014342.jpg",
+  "/About Us page/pexels-laukevtravel-26924196.jpg",
+  "/About Us page/pexels-mwauraken-29093739.jpg"
+];
+
 const AboutUsPage = () => {
   const { t } = useTranslation();
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % aboutSlides.length);
+    }, 2000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
       <Header />
       <div className="min-h-screen bg-gray-50">
         {/* Hero Section */}
-        <section className="bg-brand-blue text-white py-20">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+        <section className="relative py-20">
+          <div
+            className="absolute inset-0 bg-cover bg-center bg-no-repeat transition-background duration-700"
+            style={{ backgroundImage: `url(${aboutSlides[currentSlide]})` }}
+          />
+          <div className="absolute inset-0 bg-brand-blue/70" />
+          <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <h1 className="text-4xl md:text-6xl font-bold mb-6 font-comfortaa">
               {t('about.hero.title')}
             </h1>

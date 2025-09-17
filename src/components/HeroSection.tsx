@@ -10,7 +10,14 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-const heroImage = "/jeremy-pelletier-MoPM7OM3D18-unsplash.jpg";
+const heroSlides: string[] = [
+  "/Homepage/jeremy-pelletier-MoPM7OM3D18-unsplash.jpg",
+  "/Homepage/rabah-al-shammary-VV08UXxnhnc-unsplash.jpg",
+  "/Homepage/pexels-followalice-667200.jpg",
+  "/Homepage/pexels-julie-holmes-9538-51809.jpg",
+  "/Homepage/pexels-pixabay-70080.jpg",
+  "/Homepage/1.jpg"
+];
 import { db } from "@/lib/supabase";
 import { BusinessService, Business } from "@/lib/businessService";
 import { toast } from "sonner";
@@ -36,6 +43,15 @@ export const HeroSection = () => {
   const [loading, setLoading] = useState(true);
   const [searchResults, setSearchResults] = useState<Business[]>([]);
   const [searchLoading, setSearchLoading] = useState(false);
+  const [currentSlide, setCurrentSlide] = useState(0);
+
+  // Background slideshow (2 seconds interval)
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const fetchCountries = async () => {
@@ -223,11 +239,13 @@ export const HeroSection = () => {
   return (
     <section className="relative">
       {/* Hero Image Background */}
-      <div className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] lg:h-[75vh] bg-cover bg-center bg-no-repeat" 
-           style={{ 
-             backgroundImage: `url(${heroImage})`,
-             filter: 'brightness(1.2)'
-           }}>
+      <div
+        className="relative h-[60vh] sm:h-[65vh] md:h-[70vh] lg:h-[75vh] bg-cover bg-center bg-no-repeat transition-background duration-700"
+        style={{
+          backgroundImage: `url(${heroSlides[currentSlide]})`,
+          filter: 'brightness(1.2)'
+        }}
+      >
         <div className="absolute inset-0 bg-[#202124] bg-opacity-30"></div>
         
         {/* Content Overlay */}
