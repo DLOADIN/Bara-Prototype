@@ -81,7 +81,6 @@ export const AdminCities = () => {
           *,
           countries(name)
         `)
-        .eq('is_active', true)
         .order('name');
 
       if (error) {
@@ -113,7 +112,6 @@ export const AdminCities = () => {
       const { data, error } = await db
         .countries()
         .select('*')
-        .eq('is_active', true)
         .order('name');
 
       if (error) {
@@ -326,7 +324,7 @@ export const AdminCities = () => {
       const db = getAdminDb();
       const { data, error } = await db
         .cities()
-        .update({ is_active: false })
+        .delete()
         .eq('id', cityId)
         .select();
 

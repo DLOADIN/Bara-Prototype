@@ -292,9 +292,9 @@ export const HeroSection = () => {
       {/* Hero Image Background */}
       <div
         className="relative h-[100vh] sm:h-[65vh] md:h-[80vh] lg:h-[80vh] bg-cover bg-center bg-no-repeat transition-background duration-700"
-        style={{
+           style={{ 
           backgroundImage: `url(${heroSlides[currentSlide]})`,
-          filter: 'brightness(1.2)'
+             filter: 'brightness(1.2)'
         }}
       >
         <div className="absolute inset-0 bg-[#202124] bg-opacity-30"></div>

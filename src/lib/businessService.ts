@@ -1,4 +1,4 @@
-import { db } from './supabase';
+import { db, getAdminDb } from './supabase';
 
 export interface Business {
   id: string;
@@ -762,13 +762,20 @@ export class BusinessService {
    */
   static async incrementViewCount(businessId: string): Promise<void> {
     try {
-      const { error } = await db.businesses()
-        .update({ view_count: db.businesses().select('view_count').eq('id', businessId).single().then(r => (r.data?.view_count || 0) + 1) })
+      // Read existing then update via admin client to avoid RLS issues
+      const { data: current } = await db.businesses()
+        .select('view_count')
+        .eq('id', businessId)
+        .single();
+
+      const next = (current?.view_count || 0) + 1;
+
+      const { error } = await getAdminDb()
+        .businesses()
+        .update({ view_count: next })
         .eq('id', businessId);
 
-      if (error) {
-        console.error('Error incrementing view count:', error);
-      }
+      if (error) console.error('Error incrementing view count:', error);
     } catch (error) {
       console.error('Error in incrementViewCount:', error);
     }
@@ -779,8 +786,17 @@ export class BusinessService {
    */
   static async incrementClickCount(businessId: string): Promise<void> {
     try {
-      const { error } = await db.businesses()
-        .update({ click_count: db.businesses().select('click_count').eq('id', businessId).single().then(r => (r.data?.click_count || 0) + 1) })
+      // Read current count then update with +1 (fallback if no event table available)
+      const { data: current } = await db.businesses()
+        .select('click_count')
+        .eq('id', businessId)
+        .single();
+
+      const next = (current?.click_count || 0) + 1;
+
+      const { error } = await getAdminDb()
+        .businesses()
+        .update({ click_count: next })
         .eq('id', businessId);
 
       if (error) {
@@ -788,6 +804,30 @@ export class BusinessService {
       }
     } catch (error) {
       console.error('Error in incrementClickCount:', error);
+    }
+  }
+
+  /**
+   * Log a click event for analytics (requires business_click_events table)
+   */
+  static async logBusinessClick(businessId: string, context: { source?: string; city?: string; category?: string } = {}): Promise<void> {
+    try {
+      const payload = {
+        business_id: businessId,
+        source: context.source || 'listings',
+        city: context.city || null,
+        category: context.category || null
+      } as any;
+
+      // First try with public client (RLS open per SQL). If it fails, fallback to admin client.
+      const { error } = await db.business_click_events().insert(payload);
+      if (error) {
+        console.warn('Public insert failed, retrying with admin client:', error.message);
+        const { error: adminErr } = await getAdminDb().business_click_events().insert(payload);
+        if (adminErr) console.error('Admin insert failed for business_click_events:', adminErr.message || adminErr);
+      }
+    } catch (error) {
+      console.error('Error logging business click:', error);
     }
   }
 

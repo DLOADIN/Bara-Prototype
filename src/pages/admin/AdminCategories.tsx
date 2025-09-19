@@ -36,7 +36,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useTranslation } from 'react-i18next';
-import { supabase } from '@/lib/supabase';
+import { getAdminDb } from '@/lib/supabase';
 import { cn } from '@/lib/utils';
 
 interface Category {
@@ -96,9 +96,11 @@ export const AdminCategories = () => {
     try {
       setLoading(true);
       
-      let query = supabase
-        .from('categories')
-        .select(`*, parent:parent_id (name)`)
+      const db = getAdminDb();
+      let query = db
+        .categories()
+        .select('*')
+        .order('sort_order', { ascending: true })
         .order('name', { ascending: true });
 
       // If searching, use server-side search; otherwise use pagination
@@ -107,8 +109,8 @@ export const AdminCategories = () => {
         const searchQuery = searchTerm.trim();
         
         // Use ilike for case-insensitive search across multiple fields
-        const { data, error } = await supabase
-          .from('categories')
+        const { data, error } = await db
+          .categories()
           .select('*')
           .or(`name.ilike.%${searchQuery}%,slug.ilike.%${searchQuery}%,description.ilike.%${searchQuery}%,icon.ilike.%${searchQuery}%`)
           .order('sort_order', { ascending: true })
@@ -133,8 +135,8 @@ export const AdminCategories = () => {
         
         let parentCategories: { [key: string]: string } = {};
         if (parentIds.length > 0) {
-          const { data: parentData, error: parentError } = await supabase
-            .from('categories')
+          const { data: parentData, error: parentError } = await db
+            .categories()
             .select('id, name')
             .in('id', parentIds);
           
@@ -176,8 +178,8 @@ export const AdminCategories = () => {
         
         let parentCategories: { [key: string]: string } = {};
         if (parentIds.length > 0) {
-          const { data: parentData, error: parentError } = await supabase
-            .from('categories')
+          const { data: parentData, error: parentError } = await db
+            .categories()
             .select('id, name')
             .in('id', parentIds);
           
@@ -199,8 +201,8 @@ export const AdminCategories = () => {
       } else {
         // For normal pagination mode
         // Get total count for pagination
-        const { count } = await supabase
-          .from('categories')
+        const { count } = await db
+          .categories()
           .select('id', { count: 'exact', head: true });
 
         setTotalCategories(count || 0);
@@ -225,8 +227,8 @@ export const AdminCategories = () => {
         
         let parentCategories: { [key: string]: string } = {};
         if (parentIds.length > 0) {
-          const { data: parentData, error: parentError } = await supabase
-            .from('categories')
+          const { data: parentData, error: parentError } = await getAdminDb()
+            .categories()
             .select('id, name')
             .in('id', parentIds);
           
@@ -305,8 +307,9 @@ export const AdminCategories = () => {
 
     setIsSubmitting(true);
     try {
-      const { error } = await supabase
-        .from('categories')
+      const db = getAdminDb();
+      const { error } = await db
+        .categories()
         .insert([{
           name: formData.name.trim(),
           slug: formData.slug.trim(),
@@ -380,8 +383,9 @@ export const AdminCategories = () => {
         is_active: formData.is_active
       };
 
-      const { error } = await supabase
-        .from('categories')
+      const db = getAdminDb();
+      const { error } = await db
+        .categories()
         .update(updatePayload)
         .eq('id', selectedCategory.id);
 
@@ -422,8 +426,9 @@ export const AdminCategories = () => {
 
     setIsSubmitting(true);
     try {
-      const { error } = await supabase
-        .from('categories')
+      const db = getAdminDb();
+      const { error } = await db
+        .categories()
         .delete()
         .eq('id', selectedCategory.id);
 

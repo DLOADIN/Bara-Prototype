@@ -176,7 +176,7 @@ export const Header = () => {
                 <List className="w-4 h-4 mr-1" />
                 {t('navigation.listings')}
               </Button>
-            </Link> 
+            </Link>
             
             <Link to="/marketplace" onClick={scrollToTop}>
               <Button variant="ghost" className="font-roboto">

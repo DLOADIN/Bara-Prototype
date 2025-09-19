@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { db, getAdminDb } from '@/lib/supabase';
+import { db, getAdminDb, SUPABASE_URL } from '@/lib/supabase';
 import { SponsoredBanner, CreateSponsoredBannerData, UpdateSponsoredBannerData } from '@/types/sponsoredBanner.types';
 
 export const useSponsoredBanners = () => {
@@ -30,6 +30,7 @@ export const useSponsoredBanners = () => {
 
       const transformedBanners: SponsoredBanner[] = data?.map((banner: any) => ({
         ...banner,
+        banner_image_url: normalizeBannerUrl(banner.banner_image_url),
         country_name: banner.countries?.name,
         country_code: banner.countries?.code,
         country_flag_url: banner.countries?.flag_url,
@@ -68,6 +69,7 @@ export const useSponsoredBanners = () => {
 
       const transformedBanners: SponsoredBanner[] = data?.map((banner: any) => ({
         ...banner,
+        banner_image_url: normalizeBannerUrl(banner.banner_image_url),
         country_name: banner.countries?.name,
         country_code: banner.countries?.code,
         country_flag_url: banner.countries?.flag_url,
@@ -87,7 +89,8 @@ export const useSponsoredBanners = () => {
     setError(null);
     
     try {
-      const { data, error: fetchError } = await db.sponsored_banners()
+      // 1) Prefer active + paid
+      let { data, error: fetchError } = await db.sponsored_banners()
         .select(`
           *,
           countries!sponsored_banners_country_id_fkey(
@@ -101,13 +104,53 @@ export const useSponsoredBanners = () => {
         .eq('payment_status', 'paid')
         .single();
 
-      if (fetchError && fetchError.code !== 'PGRST116') { // PGRST116 = no rows returned
+      // 2) If none, try any active
+      if (fetchError && fetchError.code === 'PGRST116') {
+        const res = await db.sponsored_banners()
+          .select(`
+            *,
+            countries!sponsored_banners_country_id_fkey(
+              name,
+              code,
+              flag_url
+            )
+          `)
+          .eq('country_id', countryId)
+          .eq('is_active', true)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        data = res.data as any;
+        fetchError = res.error as any;
+      }
+
+      // 3) If still none, take latest regardless of flags
+      if ((!data || fetchError?.code === 'PGRST116')) {
+        const res = await db.sponsored_banners()
+          .select(`
+            *,
+            countries!sponsored_banners_country_id_fkey(
+              name,
+              code,
+              flag_url
+            )
+          `)
+          .eq('country_id', countryId)
+          .order('created_at', { ascending: false })
+          .limit(1)
+          .maybeSingle();
+        data = res.data as any;
+        fetchError = res.error as any;
+      }
+
+      if (fetchError && fetchError.code !== 'PGRST116') {
         throw fetchError;
       }
 
       if (data) {
         const transformedBanner: SponsoredBanner = {
           ...data,
+          banner_image_url: normalizeBannerUrl(data.banner_image_url),
           country_name: data.countries?.name,
           country_code: data.countries?.code,
           country_flag_url: data.countries?.flag_url,
@@ -211,6 +254,33 @@ export const useSponsoredBanners = () => {
     } catch (err) {
       console.error('Error incrementing banner view:', err);
     }
+  };
+
+  // Ensure we always return a valid public URL for storage objects
+  const normalizeBannerUrl = (value: string | null | undefined): string | null => {
+    if (!value) return null;
+    const cleaned = String(value).trim();
+    // If already an absolute https URL, keep as is
+    if (cleaned.startsWith('http')) {
+      // If it contains our storage public path, ensure it's using the current SUPABASE_URL host
+      const marker = '/storage/v1/object/public/sponsored-banners/';
+      if (cleaned.includes(marker)) {
+        const idx = cleaned.indexOf(marker);
+        const path = cleaned.substring(idx + marker.length).replace(/^\/*/, '');
+        return `${SUPABASE_URL}${marker}${path}`;
+      }
+      return cleaned;
+    }
+    // If it was saved as a blob URL or multi-line string, try to extract the storage object path
+    const marker = 'sponsored-banners/';
+    if (cleaned.includes(marker)) {
+      const idx = cleaned.indexOf(marker) + marker.length;
+      const rest = cleaned.substring(idx).split(/\s|\n|\r/)[0].replace(/^\/*/, '');
+      return `${SUPABASE_URL}/storage/v1/object/public/sponsored-banners/${rest}`;
+    }
+    // Otherwise treat as a simple path like "banners/filename.jpg"
+    const trimmed = cleaned.replace(/^\/*/, '');
+    return `${SUPABASE_URL}/storage/v1/object/public/sponsored-banners/${trimmed}`;
   };
 
   return {

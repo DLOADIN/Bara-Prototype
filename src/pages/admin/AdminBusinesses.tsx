@@ -44,7 +44,7 @@ import {
   Upload,
   X
 } from "lucide-react";
-import { db } from "@/lib/supabase";
+import { getAdminDb } from "@/lib/supabase";
 import { uploadImage, deleteImage } from "@/lib/storage";
 import { useToast } from "@/components/ui/use-toast";
 import { useForm } from "react-hook-form";
@@ -137,6 +137,7 @@ const businessFormSchema = z.object({
 type BusinessFormData = z.infer<typeof businessFormSchema>;
 
 export const AdminBusinesses = () => {
+  const adminDb = getAdminDb();
   const { t } = useTranslation();
   const { toast } = useToast();
   const [businesses, setBusinesses] = useState<Business[]>([]);
@@ -149,6 +150,8 @@ export const AdminBusinesses = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [clickTotals, setClickTotals] = useState<Record<string, number>>({});
+  const [monthlyClicks, setMonthlyClicks] = useState<Record<string, Array<{ month: string; clicks: number }>>>({});
   
   // Dialog states
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -195,6 +198,7 @@ export const AdminBusinesses = () => {
     fetchCategories();
     fetchCities();
     fetchCountries();
+    fetchClicksSummary();
   }, []);
 
   // Debounced search effect
@@ -215,7 +219,7 @@ export const AdminBusinesses = () => {
   const fetchBusinesses = async () => {
     try {
       // First, fetch businesses with basic info
-      const { data: businessesData, error: businessesError } = await db
+      const { data: businessesData, error: businessesError } = await adminDb
         .businesses()
         .select('*')
         .order('created_at', { ascending: false });
@@ -223,9 +227,9 @@ export const AdminBusinesses = () => {
       if (businessesError) throw businessesError;
 
       // Then fetch categories, cities, and countries separately
-      const { data: categoriesData } = await db.categories().select('id, name, slug');
-      const { data: citiesData } = await db.cities().select('id, name, country_id');
-      const { data: countriesData } = await db.countries().select('id, name');
+      const { data: categoriesData } = await adminDb.categories().select('id, name, slug');
+      const { data: citiesData } = await adminDb.cities().select('id, name, country_id');
+      const { data: countriesData } = await adminDb.countries().select('id, name');
 
       // Create lookup maps for better performance
       const categoriesMap = new Map(categoriesData?.map(cat => [cat.id, cat]) || []);
@@ -257,10 +261,9 @@ export const AdminBusinesses = () => {
 
   const fetchCategories = async () => {
     try {
-      const { data, error } = await db
+      const { data, error } = await adminDb
         .categories()
         .select('*')
-        .eq('is_active', true)
         .order('name');
 
       if (error) throw error;
@@ -272,13 +275,12 @@ export const AdminBusinesses = () => {
 
   const fetchCities = async () => {
     try {
-      const { data, error } = await db
+      const { data, error } = await adminDb
         .cities()
         .select(`
           *,
           countries!inner(name)
         `)
-        .eq('is_active', true)
         .order('name');
 
       if (error) throw error;
@@ -296,16 +298,46 @@ export const AdminBusinesses = () => {
 
   const fetchCountries = async () => {
     try {
-      const { data, error } = await db
+      const { data, error } = await adminDb
         .countries()
         .select('*')
-        .eq('is_active', true)
         .order('name');
 
       if (error) throw error;
       setCountries(data || []);
     } catch (error) {
       console.error('Error fetching countries:', error);
+    }
+  };
+
+  const fetchClicksSummary = async () => {
+    try {
+      // Totals per business
+      const { data: totals } = await adminDb
+        .business_clicks_totals()
+        .select('*');
+
+      const totalsMap: Record<string, number> = {};
+      (totals || []).forEach((row: any) => {
+        totalsMap[row.business_id] = row.total_clicks || 0;
+      });
+
+      // Monthly per business
+      const { data: byMonth } = await adminDb
+        .business_clicks_by_month()
+        .select('*');
+
+      const monthsMap: Record<string, Array<{ month: string; clicks: number }>> = {};
+      (byMonth || []).forEach((row: any) => {
+        const key = row.business_id;
+        if (!monthsMap[key]) monthsMap[key] = [];
+        monthsMap[key].push({ month: row.month, clicks: row.clicks });
+      });
+
+      setClickTotals(totalsMap);
+      setMonthlyClicks(monthsMap);
+    } catch (error) {
+      console.error('Error fetching click summaries:', error);
     }
   };
 
@@ -414,7 +446,7 @@ export const AdminBusinesses = () => {
         updated_at: new Date().toISOString()
       };
 
-      const { data: newBusiness, error } = await db
+      const { data: newBusiness, error } = await adminDb
         .businesses()
         .insert(businessData)
         .select()
@@ -505,7 +537,7 @@ export const AdminBusinesses = () => {
         updated_at: new Date().toISOString()
       };
 
-      const { error } = await db
+      const { error } = await adminDb
         .businesses()
         .update(businessData)
         .eq('id', selectedBusiness.id);
@@ -539,7 +571,7 @@ export const AdminBusinesses = () => {
     if (!confirm('Are you sure you want to delete this business?')) return;
     
     try {
-      const { error } = await db
+      const { error } = await adminDb
         .businesses()
         .delete()
         .eq('id', businessId);
@@ -976,7 +1008,7 @@ export const AdminBusinesses = () => {
               {/* Business Features Badges */}
               <div className="flex flex-wrap gap-1 mb-3">
                 {business.is_premium && (
-                  <Badge variant="default" className="text-xs bg-yp-blue">
+                  <Badge variant="secondary" className="text-xs bg-yellow-900 text-white">
                     Premium
                   </Badge>
                 )}
@@ -1009,9 +1041,24 @@ export const AdminBusinesses = () => {
                 </div>
                 <div className="flex items-center space-x-2 text-sm text-gray-600">
                   <Eye className="w-4 h-4" />
-                  <span className="font-roboto">{business.click_count || 0} </span>
+                  <span className="font-roboto">{clickTotals[business.id] ?? business.click_count ?? 0} clicks</span>
                 </div>
               </div>
+
+              {/* Recent monthly clicks (last 3 months) */}
+              {monthlyClicks[business.id] && monthlyClicks[business.id].length > 0 && (
+                <div className="mb-3">
+                  <div className="flex flex-wrap gap-2">
+                    {monthlyClicks[business.id]
+                      .slice(-3)
+                      .map((m) => (
+                        <Badge key={String(m.month)} variant="outline" className="text-xs">
+                          {new Date(m.month).toLocaleString(undefined, { month: 'short', year: '2-digit' })}: {m.clicks}
+                        </Badge>
+                      ))}
+                  </div>
+                </div>
+              )}
               
               <div className="flex items-center justify-between">
                 <Badge 
