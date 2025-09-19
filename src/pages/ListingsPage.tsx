@@ -12,6 +12,7 @@ import { Business, BusinessService } from "@/lib/businessService";
 import { Skeleton } from "@/components/ui/skeleton";
 import { db } from "@/lib/supabase";
 import { FeaturedBusinesses } from "@/components/FeaturedBusinesses";
+import PopupAd from "@/components/PopupAd";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -451,6 +452,13 @@ export const ListingsPage = () => {
   return (
     <div className="min-h-screen bg-background font-roboto">
       <Header />
+      <PopupAd
+        imageUrl="/aboutBara.jpg"
+        linkUrl="https://another-sponsor.com"
+        intervalSeconds={600}
+        firstDelaySeconds={8}
+        frequencyKey="popup_listings"
+      />
       
       {/* Search Header */}
       <div className="bg-yp-yellow py-4">
