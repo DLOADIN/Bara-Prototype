@@ -1,8 +1,12 @@
 import React from 'react';
 import { useTranslation } from 'react-i18next';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
 import { FaSearch, FaBuilding, FaUserTie, FaInfoCircle, FaGlobeAfrica, FaStar, FaMobileAlt, FaLock, FaEdit, FaCheckCircle } from 'react-icons/fa';
+import { Button } from "@/components/ui/button";
+import { ArrowLeft } from "lucide-react";
+import { Header } from "@/components/Header";
+import Footer from "@/components/Footer";
 
 const FaqPage = () => {
   const { t } = useTranslation();
@@ -93,9 +97,21 @@ const FaqPage = () => {
     }
   ];
 
+  const navigate = useNavigate();
+
   return (
-    <div className="min-h-screen bg-gradient-to-b from-gray-50 to-gray-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-5xl mx-auto">
+    <div className="min-h-screen bg-yp-gray-light flex flex-col">
+      <Header />
+      <main className="flex-grow container mx-auto px-4 py-8 md:py-12">
+        <div className="max-w-5xl mx-auto">
+          <Button
+            variant="ghost"
+            onClick={() => navigate(-1)}
+            className="mb-6 flex items-center gap-2 text-yp-blue hover:bg-yp-blue/10"
+          >
+            <ArrowLeft className="w-4 h-4" />
+            {t('common.back') || 'Back'}
+          </Button>
         {/* Header */}
         <div className="text-center mb-12">
           <h1 className="text-4xl font-bold text-gray-900 mb-4">Frequently Asked Questions</h1>
@@ -190,7 +206,9 @@ const FaqPage = () => {
             </div>
           </div>
         </div>
-      </div>
+        </div>
+      </main>
+      <Footer />
     </div>
   );
 };

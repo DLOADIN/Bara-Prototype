@@ -142,10 +142,11 @@ export const CategoryGrid = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const { data, error } = await db.categories()
+        const { data, error } = await db
+          .categories()
           .select('*')
           .eq('is_active', true)
-          .order('sort_order', { ascending: true });
+          .order('name', { ascending: true });
 
         if (error) {
           console.error('Error fetching categories:', error);

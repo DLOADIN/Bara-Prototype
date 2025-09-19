@@ -1,19 +1,81 @@
 import { useTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
 import { scrollToTop } from '@/lib/scrollToTop';
+import { useEffect, useState } from 'react';
+import { db } from '@/lib/supabase';
+import { useToast } from "@/components/ui/use-toast";
+
+interface Country {
+  id: string;
+  name: string;
+  code: string;
+  flag_url: string | null;
+  wikipedia_url: string | null;
+  description: string | null;
+  population: number | null;
+  capital: string | null;
+  currency: string | null;
+  language: string | null;
+}
 
 const Footer = () => {
   const { t } = useTranslation();
+  const [countries, setCountries] = useState<Country[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const { toast } = useToast();
+
+  useEffect(() => {
+    const fetchCountries = async () => {
+      try {
+        const { data, error } = await db.countries()
+          .select(`
+            id,
+            name,
+            code,
+            flag_url,
+            wikipedia_url,
+            description,
+            population,
+            capital,
+            currency,
+            language
+          `)
+          .order('name', { ascending: true });
+
+        if (error) {
+          console.error('Error fetching countries:', error);
+          toast({
+            title: 'Error',
+            description: 'Failed to load countries. Please try again.',
+            variant: "destructive"
+          });
+        } else if (data) {
+          setCountries(data);
+        }
+      } catch (error) {
+        console.error('Error fetching countries:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to load countries. Please try again.',
+          variant: "destructive"
+        });
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchCountries();
+  }, [toast]);
 
   return (
     <footer className="bg-gray-100 text-gray-700">
       {/* Main Footer Content */}
       <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6 lg:px-8 py-6 sm:py-8 md:py-12">
-        {/* Four Column Layout */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8 mb-6 sm:mb-8">
+        {/* Responsive Grid Layout */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 md:gap-8 mb-6 sm:mb-8">
           
-          {/* About Column */}
-          <div>
+          {/* About Column - Full width on mobile, 2 columns on larger screens */}
+          <div className="lg:col-span-2">
             <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 pb-2 border-b-2 border-[#70905a] font-comfortaa">
               {t('footer.about')}
             </h3>
@@ -60,7 +122,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link to="/ask-question" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
-                  {t('footer.AskUsAnyQuestion')}
+                  Ask BARA
                 </Link>
               </li>
             </ul>
@@ -110,101 +172,117 @@ const Footer = () => {
             </ul>
           </div> */}
 
-          {/* Countries Column */}
-          <div>
+          {/* Countries Column - Split into two columns */}
+          <div className="lg:col-span-1">
             <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 pb-2 border-b-2 border-[#70905a] font-comfortaa">
               Countries
+            </h3>
+            {isLoading ? (
+              <div className="text-gray-500 text-sm">Loading countries...</div>
+            ) : countries.length > 0 ? (
+              <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
+                {countries.map((country) => (
+                  <div key={country.id} className="truncate">
+                    <Link 
+                      to={`/countries/${country.name.toLowerCase().replace(/\s+/g, '-')}`}
+                      onClick={scrollToTop}
+                      className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
+                      title={country.name}
+                    >
+                      {country.flag_url ? (
+                        <img 
+                          src={country.flag_url} 
+                          alt={`${country.name} flag`} 
+                          className="w-5 h-3.5 mr-2 flex-shrink-0"
+                        />
+                      ) : (
+                        <span className="mr-2">🌍</span>
+                      )}
+                      <span className="truncate">{country.name}</span>
+                    </Link>
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="text-gray-500 text-sm">No countries found</div>
+            )}
+          </div>
+
+          {/* Global Africa Column - Split into two columns on larger screens */}
+          <div className="lg:col-span-1">
+            <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 pb-2 border-b-2 border-[#70905a] font-comfortaa">
+              Global Africa
             </h3>
             <div className="grid grid-cols-1 gap-1.5 sm:gap-2">
               <div>
                 <Link 
-                  to="/countries/rwanda" 
+                  to="/global-africa/black-americans" 
                   onClick={scrollToTop}
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
-                  <span className="mr-2">🇷🇼</span>
-                  Rwanda
+                  <span className="mr-2">🇺🇸</span>
+                  African Americans
                 </Link>
               </div>
               <div>
                 <Link 
-                  to="/countries/kenya" 
+                  to="/global-africa/hbcus" 
                   onClick={scrollToTop}
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
-                  <span className="mr-2">🇰🇪</span>
-                  Kenya
+                  <span className="mr-2">🎓</span>
+                  HBCUs (USA)
                 </Link>
               </div>
               <div>
                 <Link 
-                  to="/countries/uganda" 
+                  to="/global-africa/brazil" 
                   onClick={scrollToTop}
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
-                  <span className="mr-2">🇺🇬</span>
-                  Uganda
+                  <span className="mr-2">🇧🇷</span>
+                  Brazil
                 </Link>
               </div>
               <div>
                 <Link 
-                  to="/countries/tanzania" 
+                  to="/global-africa/haiti" 
                   onClick={scrollToTop}
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
-                  <span className="mr-2">🇹🇿</span>
-                  Tanzania
+                  <span className="mr-2">🇭🇹</span>
+                  Haïti
                 </Link>
               </div>
               <div>
                 <Link 
-                  to="/countries/ethiopia" 
+                  to="/global-africa/jamaica" 
                   onClick={scrollToTop}
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
-                  <span className="mr-2">🇪🇹</span>
-                  Ethiopia
+                  <span className="mr-2">🇯🇲</span>
+                  Jamaica
                 </Link>
               </div>
               <div>
                 <Link 
-                  to="/countries/ghana" 
+                  to="/global-africa/trinidad" 
                   onClick={scrollToTop}
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
-                  <span className="mr-2">🇬🇭</span>
-                  Ghana
-                </Link>
-              </div>
-              <div>
-                <Link 
-                  to="/countries/nigeria" 
-                  onClick={scrollToTop}
-                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
-                >
-                  <span className="mr-2">🇳🇬</span>
-                  Nigeria
-                </Link>
-              </div>
-              <div>
-                <Link 
-                  to="/countries/south-africa" 
-                  onClick={scrollToTop}
-                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
-                >
-                  <span className="mr-2">🇿🇦</span>
-                  South Africa
+                  <span className="mr-2">🇹🇹</span>
+                  Trinidad
                 </Link>
               </div>
             </div>
           </div>
 
-          {/* Local Communities Column */}
-          <div>
+          {/* Local Communities Column - Full width on mobile, 2 columns on larger screens */}
+          <div className="lg:col-span-1">
             <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 pb-2 border-b-2 border-[#70905a] font-comfortaa">
               {t('footer.localCommunities')}
             </h3>
-            <div className="grid grid-cols-1 gap-1.5 sm:gap-2">
+            <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
               <div>
                 <Link to="/communities/benincredible-benin" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
                   BeninCredible Benin
@@ -273,64 +351,6 @@ const Footer = () => {
             </div>
           </div>
 
-          {/* Global Africa Column */}
-          <div>
-            <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 pb-2 border-b-2 border-[#70905a] font-comfortaa">
-              Global Africa
-            </h3>
-            <div className="grid grid-cols-1 gap-1.5 sm:gap-2">
-              <div>
-                <Link 
-                  to="/global-africa/black-americans" 
-                  onClick={scrollToTop}
-                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
-                >
-                  <span className="mr-2">🇺🇸</span>
-                  African Americans
-                </Link>
-              </div>
-              <div>
-                <Link 
-                  to="/global-africa/brazil" 
-                  onClick={scrollToTop}
-                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
-                >
-                  <span className="mr-2">🇧🇷</span>
-                  Brazil
-                </Link>
-              </div>
-              <div>
-                <Link 
-                  to="/global-africa/haiti" 
-                  onClick={scrollToTop}
-                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
-                >
-                  <span className="mr-2">🇭🇹</span>
-                  Haïti
-                </Link>
-              </div>
-              <div>
-                <Link 
-                  to="/global-africa/jamaica" 
-                  onClick={scrollToTop}
-                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
-                >
-                  <span className="mr-2">🇯🇲</span>
-                  Jamaica
-                </Link>
-              </div>
-              <div>
-                <Link 
-                  to="/global-africa/trinidad" 
-                  onClick={scrollToTop}
-                  className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
-                >
-                  <span className="mr-2">🇹🇹</span>
-                  Trinidad
-                </Link>
-              </div>
-            </div>
-          </div>
 
         </div>
 
