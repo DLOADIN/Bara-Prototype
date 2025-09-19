@@ -98,8 +98,7 @@ export const AdminCategories = () => {
       
       let query = supabase
         .from('categories')
-        .select('*')
-        .order('sort_order', { ascending: true })
+        .select(`*, parent:parent_id (name)`)
         .order('name', { ascending: true });
 
       // If searching, use server-side search; otherwise use pagination

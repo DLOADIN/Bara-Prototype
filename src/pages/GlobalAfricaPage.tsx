@@ -1,5 +1,8 @@
 import { useParams } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import DemographicProfile from '../components/demographics/DemographicProfile';
+import BrazilDemographicProfile from '../components/demographics/BrazilDemographicProfile';
+import HBCUProfile from '../components/demographics/HBCUProfile';
 
 type CountryData = {
   id: string;
@@ -9,14 +12,14 @@ type CountryData = {
   content: string;
 };
 
-const countryData: Record<string, CountryData> = {
+export const countryData: Record<string, CountryData> = {
   'black-americans': {
     id: 'black-americans',
-    title: 'Black Americans',
-    description: 'Exploring the African roots and cultural heritage of Black Americans',
+    title: 'African/Black Americans',
+    description: 'Exploring the African roots and cultural heritage of African/Black Americans',
     flag: '🇺🇸',
     content: `
-      <h2 className="text-2xl font-bold mb-4">The African Roots of Black Americans</h2>
+      <h2 className="text-2xl font-bold mb-4">The African Roots of African/Black Americans</h2>
       <p className="mb-4">
         The story of Black Americans is deeply intertwined with the African continent, where their ancestors were forcibly taken during the transatlantic slave trade. 
         Despite the brutality of slavery, African cultural traditions, music, food, and spiritual practices were preserved and adapted in the Americas.
@@ -25,6 +28,7 @@ const countryData: Record<string, CountryData> = {
         The Great Migration in the early 20th century saw millions of African Americans move from the rural South to urban centers in the North, bringing with them 
         rich cultural traditions that would shape American music, literature, and civil rights movements.
       </p>
+      <div id="demographics"></div>
     `
   },
   'brazil': {
@@ -93,20 +97,47 @@ const countryData: Record<string, CountryData> = {
         and has become a powerful symbol of cultural resilience and creativity.
       </p>
     `
+  },
+  'hbcus': {
+    id: 'hbcus',
+    title: 'HBCUs',
+    description: 'Historically Black Colleges and Universities in the United States',
+    flag: '🎓',
+    content: `
+      <h2 className="text-2xl font-bold mb-4">Historically Black Colleges & Universities (HBCUs)</h2>
+      <p className="mb-4">
+        HBCUs have been the backbone of African American higher education since the 19th century, providing opportunities for Black students 
+        who were systematically excluded from predominantly white institutions. These institutions have produced generations of Black leaders, 
+        professionals, and change-makers.
+      </p>
+      <p className="mb-4">
+        From their founding through the Civil Rights Movement to today, HBCUs continue to play a vital role in advancing educational 
+        opportunities and fostering leadership within the African American community.
+      </p>
+    `
   }
 };
 
 const GlobalAfricaPage = () => {
   const { id } = useParams<{ id: string }>();
   const [pageData, setPageData] = useState<CountryData | null>(null);
+  const [showDemographics, setShowDemographics] = useState(false);
+  const [showBrazilDemographics, setShowBrazilDemographics] = useState(false);
+  const [showHBCUDemographics, setShowHBCUDemographics] = useState(false);
 
   useEffect(() => {
     if (id && countryData[id]) {
       setPageData(countryData[id]);
     } else {
-      // Default to Black Americans if no valid ID
+      // Default to African/Black Americans if no valid ID
       setPageData(countryData['black-americans']);
     }
+  }, [id]);
+
+  useEffect(() => {
+    setShowDemographics(id === 'black-americans');
+    setShowBrazilDemographics(id === 'brazil');
+    setShowHBCUDemographics(id === 'hbcus');
   }, [id]);
 
   if (!pageData) {
@@ -129,9 +160,12 @@ const GlobalAfricaPage = () => {
           </p>
           
           <div 
-            className="prose max-w-none"
+            className="prose dark:prose-invert max-w-none"
             dangerouslySetInnerHTML={{ __html: pageData.content }}
           />
+          {showDemographics && <DemographicProfile />}
+          {showBrazilDemographics && <BrazilDemographicProfile />}
+          {showHBCUDemographics && <HBCUProfile />}
           
           <div className="mt-12 pt-6 border-t border-gray-200">
             <h3 className="text-lg font-semibold mb-4">Explore More</h3>

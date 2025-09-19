@@ -1,5 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
+import { Header } from "@/components/Header";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -148,39 +150,49 @@ export const CountryDetailPage: React.FC = () => {
   // Loading state
   if (loading) {
     return (
-      <main className="flex-grow p-4">
-        <div className="max-w-7xl mx-auto">
-          <Skeleton className="h-8 w-64 mb-4" />
-          <Skeleton className="h-4 w-full mb-2" />
-          <Skeleton className="h-4 w-3/4 mb-8" />
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {Array.from({ length: 6 }).map((_, i) => (
-              <Skeleton key={i} className="h-48 w-full" />
-            ))}
+      <div className="min-h-screen bg-yp-gray-light flex flex-col">
+        <Header />
+        <main className="flex-grow p-4">
+          <div className="max-w-7xl mx-auto">
+            <Skeleton className="h-8 w-64 mb-4" />
+            <Skeleton className="h-4 w-full mb-2" />
+            <Skeleton className="h-4 w-3/4 mb-8" />
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <Skeleton key={i} className="h-48 w-full" />
+              ))}
+            </div>
           </div>
-        </div>
-      </main>
+        </main>
+        <Footer />
+      </div>
     );
   }
 
   // Not found state
   if (!country) {
     return (
-      <main className="flex-grow flex items-center justify-center p-4">
-        <div className="max-w-md text-center">
-          <h1 className="text-2xl font-bold text-yp-dark mb-4">Country Not Found</h1>
-          <p className="text-gray-600 mb-6">The requested country could not be found.</p>
-          <Button onClick={() => navigate('/')} className="bg-brand-blue">
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Back to Home
-          </Button>
-        </div>
-      </main>
+      <div className="min-h-screen bg-yp-gray-light flex flex-col">
+        <Header />
+        <main className="flex-grow flex items-center justify-center p-4">
+          <div className="max-w-md text-center">
+            <h1 className="text-2xl font-bold text-yp-dark mb-4">Country Not Found</h1>
+            <p className="text-gray-600 mb-6">The requested country could not be found.</p>
+            <Button onClick={() => navigate('/')} className="bg-brand-blue">
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Back to Home
+            </Button>
+          </div>
+        </main>
+        <Footer />
+      </div>
     );
   }
 
   // Main render
   return (
+    <div className="min-h-screen bg-yp-gray-light flex flex-col">
+      <Header />
       <main className="flex-grow">
         {/* Country Header */}
         <div className="bg-white border-b border-gray-200">
@@ -440,6 +452,8 @@ export const CountryDetailPage: React.FC = () => {
           )}
         </div>
       </main>
+      <Footer />
+    </div>
   );
 };
 

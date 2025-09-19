@@ -48,6 +48,7 @@ import UserSettingsPage from "./pages/user/UserSettingsPage";
 import AdvertiseCheckoutPage from "./pages/AdvertiseCheckoutPage";
 import { SponsorCountryPage } from "./pages/SponsorCountryPage";
 import { AdminSponsoredBanners } from "./pages/admin/AdminSponsoredBanners";
+import { MainLayout } from "./components/layout/MainLayout";
 
 const queryClient = new QueryClient();
 
@@ -74,11 +75,16 @@ const AppRoutes = () => {
       <Route path="/:city/:category" element={<ListingsPage />} />
       <Route path="/:city/:category/:businessId" element={<BusinessDetailPage />} />
       <Route path="/cities/:citySlug" element={<CityDetailPage />} />
-      <Route path="/countries/:countrySlug" element={<CountryDetailPage />} />
+      <Route path="/countries/:countrySlug" element={
+        <MainLayout>
+          <CountryDetailPage />
+        </MainLayout>
+      } />
       
       {/* New Navigation Pages */}
       <Route path="/marketplace" element={<MarketplacePage />} />
       <Route path="/events" element={<EventsPage />} />
+      <Route path="/events/:eventId" element={<EventsPage />} />
       <Route path="/advertise/checkout" element={<AdvertiseCheckoutPage />} />
       <Route path="/sponsor-country" element={<SponsorCountryPage />} />
       
@@ -95,7 +101,11 @@ const AppRoutes = () => {
       
       {/* <Route path="/googlemaps" element={<GoogleMapsTest />} /> */}
       <Route path="/map-test" element={<MapTestPage />} />
-      <Route path="/global-africa/:id?" element={<GlobalAfricaPage />} />
+      <Route path="/global-africa/:id?" element={
+        <MainLayout>
+          <GlobalAfricaPage />
+        </MainLayout>
+      } />
       {/* <Route path="/simple-map-test" element={<SimpleMapTest />} */}
     {/* <Route path="/callback-map-test" element={
       <div className="p-8">
