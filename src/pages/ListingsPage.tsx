@@ -13,6 +13,7 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { db } from "@/lib/supabase";
 import { FeaturedBusinesses } from "@/components/FeaturedBusinesses";
 import PopupAd from "@/components/PopupAd";
+import HfPopupAd from "@/components/HfPopupAd";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -458,6 +459,12 @@ export const ListingsPage = () => {
         intervalSeconds={600}
         firstDelaySeconds={8}
         frequencyKey="popup_listings"
+      />
+      <HfPopupAd
+        intervalSeconds={600}
+        firstDelaySeconds={25}
+        frequencyKey="popup_listings_hf"
+        batchLength={48}
       />
       
       {/* Search Header */}

@@ -5,6 +5,7 @@ import { CategoryGrid } from "@/components/CategoryGrid";
 import { BusinessSection } from "@/components/BusinessSection";
 import { QASection } from "@/components/QASection";
 import PopupAd from "@/components/PopupAd";
+import HfPopupAd from "@/components/HfPopupAd";
 
 import Footer from "@/components/Footer";
 
@@ -18,6 +19,12 @@ const Index = () => {
         intervalSeconds={600}
         firstDelaySeconds={6}
         frequencyKey="popup_home"
+      />
+      <HfPopupAd
+        intervalSeconds={600}
+        firstDelaySeconds={20}
+        frequencyKey="popup_home_hf"
+        batchLength={48}
       />
       <BannerAd />
       <HeroSection />
