@@ -121,6 +121,11 @@ export const getAdminDb = () => {
     // Banner ad analytics operations
     banner_ad_analytics: () => adminSupabase.from('banner_ad_analytics'),
 
+    // Click analytics (events/views)
+    business_click_events: () => adminSupabase.from('business_click_events'),
+    business_clicks_by_month: () => adminSupabase.from('business_clicks_by_month'),
+    business_clicks_totals: () => adminSupabase.from('business_clicks_totals'),
+
     // Business review stats view
     business_review_stats: () => adminSupabase.from('business_review_stats'),
     
@@ -354,6 +359,11 @@ export const db = {
   
   // Banner ad analytics operations
   banner_ad_analytics: () => supabase.from('banner_ad_analytics'),
+
+  // Click analytics (events/views)
+  business_click_events: () => supabase.from('business_click_events'),
+  business_clicks_by_month: () => supabase.from('business_clicks_by_month'),
+  business_clicks_totals: () => supabase.from('business_clicks_totals'),
 
   // Business review stats view
   business_review_stats: () => supabase.from('business_review_stats'),

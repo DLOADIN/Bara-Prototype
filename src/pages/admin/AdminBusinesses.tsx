@@ -150,6 +150,8 @@ export const AdminBusinesses = () => {
   const [isSearching, setIsSearching] = useState(false);
   const [statusFilter, setStatusFilter] = useState<string>("all");
   const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [clickTotals, setClickTotals] = useState<Record<string, number>>({});
+  const [monthlyClicks, setMonthlyClicks] = useState<Record<string, Array<{ month: string; clicks: number }>>>({});
   
   // Dialog states
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
@@ -196,6 +198,7 @@ export const AdminBusinesses = () => {
     fetchCategories();
     fetchCities();
     fetchCountries();
+    fetchClicksSummary();
   }, []);
 
   // Debounced search effect
@@ -304,6 +307,37 @@ export const AdminBusinesses = () => {
       setCountries(data || []);
     } catch (error) {
       console.error('Error fetching countries:', error);
+    }
+  };
+
+  const fetchClicksSummary = async () => {
+    try {
+      // Totals per business
+      const { data: totals } = await adminDb
+        .business_clicks_totals()
+        .select('*');
+
+      const totalsMap: Record<string, number> = {};
+      (totals || []).forEach((row: any) => {
+        totalsMap[row.business_id] = row.total_clicks || 0;
+      });
+
+      // Monthly per business
+      const { data: byMonth } = await adminDb
+        .business_clicks_by_month()
+        .select('*');
+
+      const monthsMap: Record<string, Array<{ month: string; clicks: number }>> = {};
+      (byMonth || []).forEach((row: any) => {
+        const key = row.business_id;
+        if (!monthsMap[key]) monthsMap[key] = [];
+        monthsMap[key].push({ month: row.month, clicks: row.clicks });
+      });
+
+      setClickTotals(totalsMap);
+      setMonthlyClicks(monthsMap);
+    } catch (error) {
+      console.error('Error fetching click summaries:', error);
     }
   };
 
@@ -974,7 +1008,7 @@ export const AdminBusinesses = () => {
               {/* Business Features Badges */}
               <div className="flex flex-wrap gap-1 mb-3">
                 {business.is_premium && (
-                  <Badge variant="default" className="text-xs bg-yp-blue">
+                  <Badge variant="secondary" className="text-xs bg-yellow-900 text-white">
                     Premium
                   </Badge>
                 )}
@@ -1007,9 +1041,24 @@ export const AdminBusinesses = () => {
                 </div>
                 <div className="flex items-center space-x-2 text-sm text-gray-600">
                   <Eye className="w-4 h-4" />
-                  <span className="font-roboto">{business.click_count || 0} </span>
+                  <span className="font-roboto">{clickTotals[business.id] ?? business.click_count ?? 0} clicks</span>
                 </div>
               </div>
+
+              {/* Recent monthly clicks (last 3 months) */}
+              {monthlyClicks[business.id] && monthlyClicks[business.id].length > 0 && (
+                <div className="mb-3">
+                  <div className="flex flex-wrap gap-2">
+                    {monthlyClicks[business.id]
+                      .slice(-3)
+                      .map((m) => (
+                        <Badge key={String(m.month)} variant="outline" className="text-xs">
+                          {new Date(m.month).toLocaleString(undefined, { month: 'short', year: '2-digit' })}: {m.clicks}
+                        </Badge>
+                      ))}
+                  </div>
+                </div>
+              )}
               
               <div className="flex items-center justify-between">
                 <Badge 

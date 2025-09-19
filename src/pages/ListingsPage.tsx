@@ -8,7 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { MapPin, Phone, Globe, Crown, Search, Map, Building2, Users, Award, ChevronDown, UtensilsCrossed, Wine, Coffee, Car, Home, Scale, Bed, Plane, Building, Scissors, BookOpen, Film, Stethoscope, User, Church, Leaf, Palette, Landmark, Hospital, Book, ShoppingBag, Trees, Pill, Mail, Gamepad2, GraduationCap, Truck, Zap, Wrench, Heart, Dumbbell, Laptop, Shield, Calculator, Megaphone, Briefcase, Camera, Calendar, Music, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 import { useBusinessesByCategory, useBusinessSearch, useCitiesByCategory } from "@/hooks/useBusinesses";
-import { Business } from "@/lib/businessService";
+import { Business, BusinessService } from "@/lib/businessService";
 import { Skeleton } from "@/components/ui/skeleton";
 import { db } from "@/lib/supabase";
 import { FeaturedBusinesses } from "@/components/FeaturedBusinesses";
@@ -276,10 +276,20 @@ export const ListingsPage = () => {
   };
 
   // Handle business click
-  const handleBusinessClick = (business: Business) => {
-    // Increment click count
-    // BusinessService.incrementClickCount(business.id);
-    
+  const handleBusinessClick = async (business: Business) => {
+    // Increment click count + log event, give a tiny window to dispatch before navigating
+    const inc = BusinessService.incrementClickCount(business.id);
+    const log = BusinessService.logBusinessClick(business.id, {
+      source: 'listings',
+      city: city || undefined,
+      category: actualCategorySlug || undefined,
+    });
+    // Race with a short timeout so navigation stays snappy even if network is slow
+    await Promise.race([
+      Promise.allSettled([inc, log]),
+      new Promise((resolve) => setTimeout(resolve, 120))
+    ]);
+
     // Navigate to business detail
     if (city) {
       navigate(`/${city}/${actualCategorySlug}/${business.id}`);
