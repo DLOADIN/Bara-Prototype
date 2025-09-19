@@ -44,7 +44,7 @@ import {
   Upload,
   X
 } from "lucide-react";
-import { db } from "@/lib/supabase";
+import { getAdminDb } from "@/lib/supabase";
 import { uploadImage, deleteImage } from "@/lib/storage";
 import { useToast } from "@/components/ui/use-toast";
 import { useForm } from "react-hook-form";
@@ -137,6 +137,7 @@ const businessFormSchema = z.object({
 type BusinessFormData = z.infer<typeof businessFormSchema>;
 
 export const AdminBusinesses = () => {
+  const adminDb = getAdminDb();
   const { t } = useTranslation();
   const { toast } = useToast();
   const [businesses, setBusinesses] = useState<Business[]>([]);
@@ -215,7 +216,7 @@ export const AdminBusinesses = () => {
   const fetchBusinesses = async () => {
     try {
       // First, fetch businesses with basic info
-      const { data: businessesData, error: businessesError } = await db
+      const { data: businessesData, error: businessesError } = await adminDb
         .businesses()
         .select('*')
         .order('created_at', { ascending: false });
@@ -223,9 +224,9 @@ export const AdminBusinesses = () => {
       if (businessesError) throw businessesError;
 
       // Then fetch categories, cities, and countries separately
-      const { data: categoriesData } = await db.categories().select('id, name, slug');
-      const { data: citiesData } = await db.cities().select('id, name, country_id');
-      const { data: countriesData } = await db.countries().select('id, name');
+      const { data: categoriesData } = await adminDb.categories().select('id, name, slug');
+      const { data: citiesData } = await adminDb.cities().select('id, name, country_id');
+      const { data: countriesData } = await adminDb.countries().select('id, name');
 
       // Create lookup maps for better performance
       const categoriesMap = new Map(categoriesData?.map(cat => [cat.id, cat]) || []);
@@ -257,10 +258,9 @@ export const AdminBusinesses = () => {
 
   const fetchCategories = async () => {
     try {
-      const { data, error } = await db
+      const { data, error } = await adminDb
         .categories()
         .select('*')
-        .eq('is_active', true)
         .order('name');
 
       if (error) throw error;
@@ -272,13 +272,12 @@ export const AdminBusinesses = () => {
 
   const fetchCities = async () => {
     try {
-      const { data, error } = await db
+      const { data, error } = await adminDb
         .cities()
         .select(`
           *,
           countries!inner(name)
         `)
-        .eq('is_active', true)
         .order('name');
 
       if (error) throw error;
@@ -296,10 +295,9 @@ export const AdminBusinesses = () => {
 
   const fetchCountries = async () => {
     try {
-      const { data, error } = await db
+      const { data, error } = await adminDb
         .countries()
         .select('*')
-        .eq('is_active', true)
         .order('name');
 
       if (error) throw error;
@@ -414,7 +412,7 @@ export const AdminBusinesses = () => {
         updated_at: new Date().toISOString()
       };
 
-      const { data: newBusiness, error } = await db
+      const { data: newBusiness, error } = await adminDb
         .businesses()
         .insert(businessData)
         .select()
@@ -505,7 +503,7 @@ export const AdminBusinesses = () => {
         updated_at: new Date().toISOString()
       };
 
-      const { error } = await db
+      const { error } = await adminDb
         .businesses()
         .update(businessData)
         .eq('id', selectedBusiness.id);
@@ -539,7 +537,7 @@ export const AdminBusinesses = () => {
     if (!confirm('Are you sure you want to delete this business?')) return;
     
     try {
-      const { error } = await db
+      const { error } = await adminDb
         .businesses()
         .delete()
         .eq('id', businessId);

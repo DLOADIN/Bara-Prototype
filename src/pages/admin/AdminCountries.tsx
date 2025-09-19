@@ -68,7 +68,6 @@ export const AdminCountries = () => {
       const { data: countriesData, error: countriesError } = await db
         .countries()
         .select('*')
-        .eq('is_active', true)
         .order('name');
 
       if (countriesError) {
@@ -84,8 +83,7 @@ export const AdminCountries = () => {
             const { count: cityCount } = await db
               .cities()
               .select('*', { count: 'exact', head: true })
-              .eq('country_id', country.id)
-              .eq('is_active', true);
+              .eq('country_id', country.id);
 
             // Get business count
             const { count: businessCount } = await db
@@ -335,7 +333,7 @@ export const AdminCountries = () => {
       const db = getAdminDb();
       const { data, error } = await db
         .countries()
-        .update({ is_active: false })
+        .delete()
         .eq('id', countryId)
         .select();
 
