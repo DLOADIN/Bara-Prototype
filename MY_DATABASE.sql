@@ -98,6 +98,8 @@ CREATE TABLE public.businesses (
   is_sponsored_ad boolean DEFAULT false,
   order_online_url text,
   website_visible boolean DEFAULT true,
+  reviews_count integer DEFAULT 0,
+  average_rating numeric DEFAULT 0,
   CONSTRAINT businesses_pkey PRIMARY KEY (id),
   CONSTRAINT businesses_category_id_fkey FOREIGN KEY (category_id) REFERENCES public.categories(id),
   CONSTRAINT businesses_owner_id_fkey FOREIGN KEY (owner_id) REFERENCES public.users(id),
@@ -198,6 +200,8 @@ CREATE TABLE public.listing_claims (
   processed_by uuid,
   created_at timestamp with time zone DEFAULT now(),
   updated_at timestamp with time zone DEFAULT now(),
+  business_registration_number text NOT NULL DEFAULT ''::text CHECK (char_length(business_registration_number) >= 5),
+  registrant_title text,
   CONSTRAINT listing_claims_pkey PRIMARY KEY (id),
   CONSTRAINT listing_claims_business_id_fkey FOREIGN KEY (business_id) REFERENCES public.businesses(id),
   CONSTRAINT listing_claims_processed_by_fkey FOREIGN KEY (processed_by) REFERENCES public.admin_users(id)
@@ -275,6 +279,23 @@ CREATE TABLE public.reviews (
   CONSTRAINT reviews_business_id_fkey FOREIGN KEY (business_id) REFERENCES public.businesses(id),
   CONSTRAINT reviews_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
 );
+CREATE TABLE public.sponsored_banners (
+  id uuid NOT NULL DEFAULT uuid_generate_v4(),
+  country_id uuid NOT NULL,
+  company_name text NOT NULL,
+  company_website text NOT NULL,
+  banner_image_url text NOT NULL,
+  banner_alt_text text,
+  is_active boolean DEFAULT false,
+  submitted_by_user_id uuid,
+  payment_status text DEFAULT 'pending'::text,
+  payment_id text,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT sponsored_banners_pkey PRIMARY KEY (id),
+  CONSTRAINT sponsored_banners_country_id_fkey FOREIGN KEY (country_id) REFERENCES public.countries(id)
+);
+
 CREATE TABLE public.user_logs (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   user_id character varying NOT NULL,
@@ -288,6 +309,7 @@ CREATE TABLE public.user_logs (
   created_at timestamp with time zone DEFAULT now(),
   CONSTRAINT user_logs_pkey PRIMARY KEY (id)
 );
+
 CREATE TABLE public.users (
   id uuid NOT NULL,
   email text NOT NULL UNIQUE,

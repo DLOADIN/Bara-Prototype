@@ -1,13 +1,13 @@
 import { createClient } from '@supabase/supabase-js'
 
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
+export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-if (!supabaseUrl || !supabaseAnonKey) {
+if (!SUPABASE_URL || !supabaseAnonKey) {
   throw new Error('Missing Supabase environment variables')
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+export const supabase = createClient(SUPABASE_URL, supabaseAnonKey, {
   auth: {
     autoRefreshToken: false, // Disable Supabase auth since we're using Clerk
     persistSession: false,   // Disable Supabase session persistence
@@ -20,7 +20,7 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 
 // Create an authenticated Supabase client for admin operations
 export const createAuthenticatedSupabaseClient = async (clerkToken: string) => {
-  return createClient(supabaseUrl, supabaseAnonKey, {
+  return createClient(SUPABASE_URL, supabaseAnonKey, {
     global: {
       headers: {
         Authorization: `Bearer ${clerkToken}`
@@ -58,7 +58,7 @@ export const getAuthenticatedDb = async () => {
 export const getAdminDb = () => {
   // Create a client with service role key for admin operations
   // This bypasses RLS policies for admin operations
-  const adminSupabase = createClient(supabaseUrl, import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY || supabaseAnonKey, {
+  const adminSupabase = createClient(SUPABASE_URL, import.meta.env.VITE_SUPABASE_SERVICE_ROLE_KEY || supabaseAnonKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false,

@@ -589,8 +589,8 @@ export const CountryDetailPage: React.FC = () => {
             </div>
           </div>
           
-          {/* Basic Country Info Cards */}
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-6">
+          {/* Basic Country Info Cards + Sponsored Banner */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-6">
              <Card className="bg-blue-50 border-blue-200">
                <CardContent className="p-4">
                  <div className="flex items-center space-x-2">
@@ -643,6 +643,45 @@ export const CountryDetailPage: React.FC = () => {
                       </p>
                       </div>
                     </div>
+                  </CardContent>
+                </Card>
+              )}
+
+            {/* Sponsored Banner (shown inline with info cards on large screens) */}
+            {sponsoredBanners.length > 0 && (
+              <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 shadow-sm lg:col-span-1">
+                <CardContent className="p-3">
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="flex items-center space-x-2">
+                      <Building className="w-4 h-4 text-blue-600" />
+                      <span className="text-xs font-medium text-blue-800">Sponsored</span>
+                    </div>
+                    <Badge variant="outline" className="text-[10px] py-0 px-1 text-blue-600 border-blue-300">Ad</Badge>
+                  </div>
+                  {sponsoredBanners.slice(0,1).map((banner) => (
+                    <a
+                      key={banner.id}
+                      href={banner.company_website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => incrementBannerClick(banner.id)}
+                      className="block group"
+                    >
+                      <div className="relative overflow-hidden rounded-md">
+                        <img
+                          src={banner.banner_image_url}
+                          alt={banner.banner_alt_text || `${banner.company_name} banner`}
+                          className="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-300"
+                          onLoad={() => incrementBannerView(banner.id)}
+                        />
+                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
+                      </div>
+                      <div className="mt-2 text-center">
+                        <h3 className="text-sm font-semibold text-gray-900 truncate">{banner.company_name}</h3>
+                        <p className="text-[11px] text-gray-600 truncate">Visit {banner.company_website}</p>
+                      </div>
+                    </a>
+                  ))}
                   </CardContent>
                 </Card>
               )}
@@ -844,7 +883,7 @@ export const CountryDetailPage: React.FC = () => {
                           <img
                             src={banner.banner_image_url}
                             alt={banner.banner_alt_text || `${banner.company_name} banner`}
-                            className="w-full h-32 object-cover group-hover:scale-105 transition-transform duration-300"
+                            className="w-full h-[100vh] object-cover group-hover:scale-105 transition-transform duration-300"
                             onLoad={() => incrementBannerView(banner.id)}
                           />
                           <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
