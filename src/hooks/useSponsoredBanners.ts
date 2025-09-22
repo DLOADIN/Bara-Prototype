@@ -168,21 +168,46 @@ export const useSponsoredBanners = () => {
   };
 
   const createBanner = async (bannerData: CreateSponsoredBannerData): Promise<SponsoredBanner | null> => {
-    try {
-      const { data, error: createError } = await db.sponsored_banners()
-        .insert(bannerData)
-        .select('*')
-        .single();
+    const attemptInsert = async (payload: Record<string, any>, useAdmin = false) => {
+      const client = useAdmin ? getAdminDb() : db;
+      return client.sponsored_banners().insert(payload).select('*').single();
+    };
 
-      if (createError) {
-        throw createError;
+    // Known-safe columns present in base schema (per MY_DATABASE.sql)
+    const safeKeys = new Set([
+      'country_id',
+      'company_name',
+      'company_website',
+      'banner_image_url',
+      'banner_alt_text',
+      'is_active',
+      'submitted_by_user_id',
+      'payment_status',
+      'payment_id',
+    ]);
+
+    const makeSafePayload = (obj: Record<string, any>) => {
+      const safe: Record<string, any> = {};
+      Object.keys(obj).forEach((k) => {
+        if (safeKeys.has(k)) safe[k] = (obj as any)[k];
+      });
+      return safe;
+    };
+
+    try {
+      // First try with full payload on public client
+      let { data, error: createError }: any = await attemptInsert(bannerData as any, false);
+
+      // If schema cache complains about unknown column, retry with safe payload on admin client
+      if (createError && createError.code === 'PGRST204') {
+        const safePayload = makeSafePayload(bannerData as any);
+        ({ data, error: createError } = await attemptInsert(safePayload, true));
       }
 
-      const transformedBanner: SponsoredBanner = {
-        ...data,
-      };
+      if (createError) throw createError;
 
-      setBanners(prev => [transformedBanner, ...prev]);
+      const transformedBanner: SponsoredBanner = { ...data };
+      setBanners((prev) => [transformedBanner, ...prev]);
       return transformedBanner;
     } catch (err) {
       console.error('Error creating sponsored banner:', err);

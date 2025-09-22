@@ -8,6 +8,7 @@ import { Textarea } from '@/components/ui/textarea';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { 
   Building, 
   Globe, 
@@ -19,16 +20,16 @@ import {
   AlertCircle,
   Search,
   Filter,
-  Calendar,
   DollarSign,
   Mail,
   Phone,
-  MapPin
+  Plus
 } from 'lucide-react';
 import { useSponsoredBanners } from '@/hooks/useSponsoredBanners';
 import { useToast } from '@/hooks/use-toast';
-import { deleteImage } from '@/lib/storage';
+import { deleteImage, uploadImage } from '@/lib/storage';
 import { SponsoredBanner } from '@/types/sponsoredBanner.types';
+import { db } from '@/lib/supabase';
 
 export const AdminSponsoredBanners: React.FC = () => {
   const { toast } = useToast();
@@ -38,7 +39,8 @@ export const AdminSponsoredBanners: React.FC = () => {
     error, 
     fetchBanners, 
     updateBanner, 
-    deleteBanner 
+    deleteBanner,
+    createBanner
   } = useSponsoredBanners();
   
   const [searchTerm, setSearchTerm] = useState('');
@@ -47,8 +49,34 @@ export const AdminSponsoredBanners: React.FC = () => {
   const [showDetails, setShowDetails] = useState(false);
   const [adminNotes, setAdminNotes] = useState('');
 
+  // Add Banner dialog state
+  const [showAddDialog, setShowAddDialog] = useState(false);
+  const [countries, setCountries] = useState<Array<{ id: string; name: string; code: string; flag_url?: string }>>([]);
+  const [adding, setAdding] = useState(false);
+  const [newBannerImage, setNewBannerImage] = useState<File | null>(null);
+  const [newBannerImageUrl, setNewBannerImageUrl] = useState('');
+  const [newForm, setNewForm] = useState({
+    company_name: '',
+    company_website: '',
+    banner_alt_text: '',
+    country_id: '',
+    payment_status: 'paid' as 'pending' | 'paid' | 'failed' | 'refunded',
+    status: 'pending' as 'pending' | 'approved' | 'rejected' | 'active' | 'inactive',
+    payment_amount: 25 as number | undefined,
+  });
+
   useEffect(() => {
     fetchBanners(true); // Admin mode
+  }, []);
+
+  // Load countries for the add dialog
+  useEffect(() => {
+    (async () => {
+      const { data, error: err } = await db.countries()
+        .select('id, name, code, flag_url')
+        .order('name');
+      if (!err) setCountries(data || []);
+    })();
   }, []);
 
   const filteredBanners = banners.filter(banner => {
@@ -205,8 +233,14 @@ export const AdminSponsoredBanners: React.FC = () => {
             <h1 className="text-2xl font-bold text-gray-900">Sponsored Banners</h1>
             <p className="text-gray-600">Manage country page sponsored banners</p>
           </div>
-          <div className="text-sm text-gray-500">
-            {filteredBanners.length} banner{filteredBanners.length !== 1 ? 's' : ''}
+          <div className="flex items-center gap-3">
+            <div className="text-sm text-gray-500">
+              {filteredBanners.length} banner{filteredBanners.length !== 1 ? 's' : ''}
+            </div>
+            <Button onClick={() => setShowAddDialog(true)} className="bg-yellow-900 hover:bg-blue-600 text-white flex justify-center items-center">
+              <Plus className="w-4 h-4 mr-2" />
+              Add Banner
+            </Button>
           </div>
         </div>
 
@@ -512,6 +546,208 @@ export const AdminSponsoredBanners: React.FC = () => {
             </Card>
           </div>
         )}
+
+        {/* Add Banner Dialog */}
+        <Dialog open={showAddDialog} onOpenChange={setShowAddDialog}>
+          <DialogContent className="max-w-2xl">
+            <DialogHeader>
+              <DialogTitle>Add Sponsored Banner</DialogTitle>
+            </DialogHeader>
+            <div className="space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Company Name *</label>
+                  <Input
+                    value={newForm.company_name}
+                    onChange={(e) => setNewForm((p) => ({ ...p, company_name: e.target.value }))}
+                    placeholder="Your Company Name"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Website *</label>
+                  <Input
+                    type="url"
+                    value={newForm.company_website}
+                    onChange={(e) => setNewForm((p) => ({ ...p, company_website: e.target.value }))}
+                    placeholder="https://yourcompany.com"
+                  />
+                </div>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Select Country *</label>
+                <Select
+                  value={newForm.country_id}
+                  onValueChange={(value) => setNewForm((p) => ({ ...p, country_id: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Choose a country" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {countries.map((c) => (
+                      <SelectItem key={c.id} value={c.id}>
+                        <div className="flex items-center space-x-2">
+                          {c.flag_url && (<img src={c.flag_url} alt={c.name} className="w-4 h-3" />)}
+                          <span>{c.name}</span>
+                        </div>
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium mb-2">Banner Image *</label>
+                <div className="border-2 border-dashed border-gray-300 rounded-lg p-4 text-center">
+                  {newBannerImageUrl ? (
+                    <div className="space-y-3">
+                      <img src={newBannerImageUrl} alt="Banner preview" className="max-h-32 mx-auto rounded" />
+                      <div className="flex items-center justify-center gap-2">
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setNewBannerImage(null);
+                            setNewBannerImageUrl('');
+                          }}
+                        >
+                          Remove
+                        </Button>
+                      </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0] || null;
+                          if (!file) return;
+                          const allowed = ['image/jpeg','image/png','image/gif','image/webp'];
+                          if (!allowed.includes(file.type)) {
+                            toast({ title: 'Invalid File Type', description: 'Upload JPEG, PNG, GIF, or WebP.', variant: 'destructive' });
+                            return;
+                          }
+                          if (file.size > 5 * 1024 * 1024) {
+                            toast({ title: 'File Too Large', description: 'Max 5MB.', variant: 'destructive' });
+                            return;
+                          }
+                          setNewBannerImage(file);
+                          setNewBannerImageUrl(URL.createObjectURL(file));
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div className="md:col-span-2">
+                  <label className="block text-sm font-medium mb-2">Alt Text (Optional)</label>
+                  <Input
+                    value={newForm.banner_alt_text}
+                    onChange={(e) => setNewForm((p) => ({ ...p, banner_alt_text: e.target.value }))}
+                    placeholder="Describe your banner"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Payment Status</label>
+                  <Select
+                    value={newForm.payment_status}
+                    onValueChange={(value) => setNewForm((p) => ({ ...p, payment_status: value as any }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="paid">Paid</SelectItem>
+                      <SelectItem value="failed">Failed</SelectItem>
+                      <SelectItem value="refunded">Refunded</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Banner Status</label>
+                  <Select
+                    value={newForm.status}
+                    onValueChange={(value) => setNewForm((p) => ({ ...p, status: value as any }))}
+                  >
+                    <SelectTrigger>
+                      <SelectValue />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="pending">Pending</SelectItem>
+                      <SelectItem value="approved">Approved</SelectItem>
+                      <SelectItem value="rejected">Rejected</SelectItem>
+                      <SelectItem value="active">Active</SelectItem>
+                      <SelectItem value="inactive">Inactive</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2">Payment Amount</label>
+                  <Input
+                    type="number"
+                    value={newForm.payment_amount ?? ''}
+                    onChange={(e) => setNewForm((p) => ({ ...p, payment_amount: Number(e.target.value) }))}
+                  />
+                </div>
+              </div>
+
+              <div className="flex gap-3 justify-end pt-2">
+                <Button variant="outline" onClick={() => setShowAddDialog(false)} disabled={adding}>Cancel</Button>
+                <Button
+                  onClick={async () => {
+                    if (!newForm.company_name || !newForm.company_website || !newForm.country_id) {
+                      toast({ title: 'Missing Fields', description: 'Company, website, and country are required.', variant: 'destructive' });
+                      return;
+                    }
+                    if (!newBannerImage) {
+                      toast({ title: 'Image Required', description: 'Please upload a banner image.', variant: 'destructive' });
+                      return;
+                    }
+                    try {
+                      setAdding(true);
+                      const up = await uploadImage(newBannerImage, 'sponsored-banners', 'banners');
+                      if (up.error || !up.url) throw new Error(up.error || 'Upload failed');
+                      const payload: any = {
+                        country_id: newForm.country_id,
+                        company_name: newForm.company_name,
+                        company_website: newForm.company_website,
+                        banner_image_url: up.url,
+                        banner_alt_text: newForm.banner_alt_text,
+                        payment_status: newForm.payment_status,
+                      };
+                      if (typeof newForm.payment_amount === 'number') payload.payment_amount = newForm.payment_amount;
+                      if (newForm.status) payload.status = newForm.status;
+                      await createBanner(payload);
+                      toast({ title: 'Banner Added', description: 'Sponsored banner has been created.' });
+                      setShowAddDialog(false);
+                      setNewForm({ company_name: '', company_website: '', banner_alt_text: '', country_id: '', payment_status: 'paid', status: 'pending', payment_amount: 25 });
+                      setNewBannerImage(null);
+                      setNewBannerImageUrl('');
+                      fetchBanners(true);
+                    } catch (e) {
+                      console.error(e);
+                      toast({ title: 'Error', description: 'Failed to create banner.', variant: 'destructive' });
+                    } finally {
+                      setAdding(false);
+                    }
+                  }}
+                  className="bg-green-600 text-white"
+                  disabled={adding}
+                >
+                  {adding ? 'Saving...' : 'Save Banner'}
+                </Button>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
       </div>
     </AdminLayout>
   );

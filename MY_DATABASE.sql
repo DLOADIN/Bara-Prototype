@@ -63,6 +63,16 @@ CREATE TABLE public.banner_ads (
   CONSTRAINT banner_ads_pkey PRIMARY KEY (id),
   CONSTRAINT banner_ads_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id)
 );
+CREATE TABLE public.business_click_events (
+  id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
+  business_id uuid NOT NULL,
+  source text DEFAULT 'listings'::text,
+  city text,
+  category text,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT business_click_events_pkey PRIMARY KEY (id),
+  CONSTRAINT business_click_events_business_id_fkey FOREIGN KEY (business_id) REFERENCES public.businesses(id)
+);
 CREATE TABLE public.businesses (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   name text NOT NULL,
@@ -292,10 +302,10 @@ CREATE TABLE public.sponsored_banners (
   payment_id text,
   created_at timestamp with time zone DEFAULT now(),
   updated_at timestamp with time zone DEFAULT now(),
+  payment_amount numeric,
   CONSTRAINT sponsored_banners_pkey PRIMARY KEY (id),
   CONSTRAINT sponsored_banners_country_id_fkey FOREIGN KEY (country_id) REFERENCES public.countries(id)
 );
-
 CREATE TABLE public.user_logs (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   user_id character varying NOT NULL,
@@ -309,7 +319,6 @@ CREATE TABLE public.user_logs (
   created_at timestamp with time zone DEFAULT now(),
   CONSTRAINT user_logs_pkey PRIMARY KEY (id)
 );
-
 CREATE TABLE public.users (
   id uuid NOT NULL,
   email text NOT NULL UNIQUE,
