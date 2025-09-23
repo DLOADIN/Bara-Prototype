@@ -551,14 +551,7 @@
       "business": "Maswali ya kibiashara"
     }
   },
-  "claimListing": {
-    "page": {
-      "faqSection": {
-        "title": "Maswali Yanayoulizwa Sana",
-        "subtitle": "Pata majibu kuhusu kudai orodha ya biashara yako"
-      }
-    }
-  },
+ 
   "categories": {
     "title": "Kategoria Zote",
     "searchPlaceholder": "Tafuta kategoria...",

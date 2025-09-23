@@ -549,14 +549,7 @@
       "business": "Demandes professionnelles"
     }
   },
-  "claimListing": {
-    "page": {
-      "faqSection": {
-        "title": "Foire aux questions",
-        "subtitle": "Trouvez des réponses concernant la revendication de votre fiche d'entreprise"
-      }
-    }
-  },
+ 
   "categories": {
     "title": "Toutes les Catégories",
     "searchPlaceholder": "Rechercher des catégories...",

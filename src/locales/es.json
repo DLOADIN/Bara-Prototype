@@ -550,9 +550,115 @@
   },
   "claimListing": {
     "page": {
+      "title": "Reclama tu Listado de Negocios",
+      "subtitle": "Toma el control de tu listado de negocios y conéctate con más clientes",
+      "hero": {
+        "callUs": "Llámanos:",
+        "hours": "Lunes - Domingo 24/7"
+      },
+      "benefits": {
+        "title": "¿Por qué Reclamar tu Listado?",
+        "subtitle": "Al reclamar tu listado de negocios, desbloqueas herramientas poderosas para hacer crecer tu negocio",
+        "fullControl": {
+          "title": "Control Total del Negocio",
+          "description": "Actualiza tu información, medios, servicios y más."
+        },
+        "enhancedVisibility": {
+          "title": "Visibilidad Mejorada",
+          "description": "Obtén una colocación prioritaria en los resultados de búsqueda y listados destacados"
+        },
+        "customerReviews": {
+          "title": "Reseñas de Clientes",
+          "description": "Responde a las reseñas y gestiona tu reputación en línea"
+        },
+        "verifiedBadge": {
+          "title": "Insignia Verificada",
+          "description": "Obtén una insignia verificada para generar confianza con clientes potenciales"
+        }
+      },
+      "form": {
+        "title": "Reclama tu Negocio",
+        "subtitle": "Completa el formulario a continuación para iniciar el proceso de reclamación",
+        "formTitle": "Formulario de Reclamación de Negocios",
+        "requiredFields": "Todos los campos marcados con * son obligatorios",
+        "businessName": "Nombre del Negocio *",
+        "businessRegistrationNumber": "Número de Registro del Negocio *",
+        "businessAddress": "Dirección del Negocio *",
+        "contactName": "Tu Nombre *",
+        "registrantTitle": "Añade tu Título (Rol)",
+        "contactEmail": "Dirección de Correo Electrónico *",
+        "contactPhone": "Número de Teléfono",
+        "website": "Sitio Web",
+        "reasonForClaim": "Motivo de la Reclamación *",
+        "additionalInfo": "Información Adicional",
+        "placeholders": {
+          "businessName": "Ingresa el nombre de tu negocio",
+          "businessRegistrationNumber": "Por ejemplo, TIN / No. de Registro",
+          "businessAddress": "Ingresa la dirección de tu negocio",
+          "contactName": "Ingresa tu nombre completo",
+          "registrantTitle": "Por ejemplo, Propietario, Gerente, Representante Autorizado",
+          "contactEmail": "Ingresa tu dirección de correo electrónico",
+          "contactPhone": "Ingresa tu número de teléfono",
+          "website": "https://tu-sitio-web.com",
+          "reasonForClaim": "Por favor, explica por qué estás reclamando este listado de negocios...",
+          "additionalInfo": "Cualquier información adicional que pueda ayudarnos a verificar tu reclamación..."
+        },
+        "submit": "Enviar Solicitud de Reclamación",
+        "submitting": "Enviando..."
+      },
+      "contact": {
+        "title": "¿Necesitas Ayuda?",
+        "subtitle": "Nuestro equipo está aquí para ayudarte a reclamar tu listado de negocios y responder cualquier pregunta que puedas tener.",
+        "callUs": {
+          "title": "Llámanos",
+          "phone": "(+250) 791 568 519",
+          "hours": "Lunes - Domingo 24/7"
+        },
+        "emailUs": {
+          "title": "Envíanos un Correo",
+          "email": "advertise@bara.com",
+          "response": "Responderemos dentro de las 24 horas"
+        },
+        "processingTime": {
+          "title": "Tiempo de Procesamiento",
+          "time": "2-3 Días Hábiles",
+          "description": "Para la verificación de la reclamación"
+        }
+      },
       "faqSection": {
-        "title": "Preguntas frecuentes",
-        "subtitle": "Encuentra respuestas sobre cómo reclamar tu listado de negocio"
+        "title": "Preguntas Frecuentes",
+        "subtitle": "Encuentra respuestas a preguntas comunes sobre cómo reclamar tu listado de negocios"
+      },
+      "faq": {
+        "title": "Preguntas Frecuentes",
+        "processingTime": {
+          "question": "¿Cuánto tiempo tarda en procesarse una reclamación?",
+          "answer": "Normalmente procesamos las reclamaciones en 2-3 días hábiles. Recibirás una notificación por correo electrónico una vez que tu reclamación haya sido revisada."
+        },
+        "requiredInfo": {
+          "question": "¿Qué información debo proporcionar?",
+          "answer": "Deberás proporcionar el nombre de tu negocio, dirección, información de contacto y explicar por qué estás reclamando el listado. Es posible que se solicite documentación adicional para la verificación."
+        },
+        "cost": {
+          "question": "¿Hay algún costo por reclamar mi listado?",
+          "answer": "Reclamar tu listado básico es gratis. Sin embargo, las funciones premium y las opciones de visibilidad mejorada están disponibles por una tarifa."
+        },
+        "notListed": {
+          "question": "¿Qué pasa si mi negocio aún no está listado?",
+          "answer": "Si tu negocio no está actualmente listado, aún puedes enviar una solicitud de reclamación y te ayudaremos a agregar tu negocio a nuestro directorio."
+        }
+      },
+      "validation": {
+        "title": "Error de Validación",
+        "requiredFields": "Por favor, completa todos los campos obligatorios."
+      },
+      "success": {
+        "title": "Solicitud de Reclamación Enviada",
+        "description": "Tu solicitud de reclamación ha sido enviada con éxito. Nos pondremos en contacto contigo en un plazo de 2-3 días hábiles."
+      },
+      "error": {
+        "title": "Error",
+        "description": "No se pudo enviar la solicitud de reclamación. Por favor, intenta de nuevo."
       }
     }
   },

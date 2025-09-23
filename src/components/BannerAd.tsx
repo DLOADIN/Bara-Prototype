@@ -20,6 +20,18 @@ export const BannerAd: React.FC<BannerAdProps> = ({ className = "" }) => {
   const [banners, setBanners] = useState<SponsoredBannerRow[]>([]);
   const [loading, setLoading] = useState(true);
   const instanceIndexRef = useRef<number>(bannerAdInstanceCounter++ % 2);
+  
+  const ensureProtocol = (url: string | null | undefined) => {
+    if (!url) return null;
+    try {
+      // If URL constructor succeeds, protocol is present
+      const u = new URL(url);
+      return u.toString();
+    } catch {
+      // Prepend https if missing protocol
+      return `https://${url.replace(/^\/+/, '')}`;
+    }
+  };
 
   useEffect(() => {
     const fetchLatestActive = async () => {
@@ -80,11 +92,7 @@ export const BannerAd: React.FC<BannerAdProps> = ({ className = "" }) => {
     return banners[instanceIndexRef.current];
   }, [banners]);
 
-  const onClick = () => {
-    if (bannerToShow?.company_website) {
-      window.open(bannerToShow.company_website, '_blank', 'noopener,noreferrer');
-    }
-  };
+  const targetUrl = ensureProtocol(bannerToShow?.company_website || null);
 
   return (
     <div className={`w-full bg-gradient-to-r from-blue-50 to-indigo-100 border-b border-gray-200 px-[15px] py-[15px] ${className}`}>
@@ -95,17 +103,31 @@ export const BannerAd: React.FC<BannerAdProps> = ({ className = "" }) => {
               <div className="rounded bg-gray-300 w-full h-full"></div>
             </div>
           ) : bannerToShow ? (
-            <div 
-              className="w-full h-full cursor-pointer hover:opacity-90 transition-opacity overflow-hidden rounded-lg"
-              onClick={onClick}
-            >
-              <img
-                src={bannerToShow.banner_image_url}
-                alt={bannerToShow.banner_alt_text || t('bannerAd.placeholder.title')}
-                // style={{aspectRatio: 16 / 9 }}
-                className="w-full h-full object-cover"
-              />
-            </div>
+            targetUrl ? (
+              <a
+                href={targetUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="w-full h-full block hover:opacity-90 transition-opacity overflow-hidden rounded-lg"
+                aria-label={bannerToShow.banner_alt_text || t('bannerAd.placeholder.title')}
+              >
+                <img
+                  src={bannerToShow.banner_image_url}
+                  alt={bannerToShow.banner_alt_text || t('bannerAd.placeholder.title')}
+                  className="w-full h-full object-cover"
+                />
+              </a>
+            ) : (
+              <div 
+                className="w-full h-full overflow-hidden rounded-lg"
+              >
+                <img
+                  src={bannerToShow.banner_image_url}
+                  alt={bannerToShow.banner_alt_text || t('bannerAd.placeholder.title')}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            )
           ) : (
             <div className="flex items-center justify-center w-full h-full text-center">
               <div className="w-full h-full bg-gradient-to-br from-blue-500/20 to-indigo-600/20 rounded-lg flex flex-col items-center justify-center px-4">
