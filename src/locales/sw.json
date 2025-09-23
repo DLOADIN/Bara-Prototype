@@ -265,6 +265,10 @@
           "description": "Kwa uthibitisho wa madai"
         }
       },
+      "faqSection": {
+        "title": "Maswali Yanayoulizwa Sana",
+        "subtitle": "Pata majibu ya maswali ya kawaida kuhusu kudai orodha ya biashara"
+      },
       "faq": {
         "title": "Maswali Yanayoulizwa Sana",
         "processingTime": {
@@ -1009,5 +1013,101 @@
     "arusha": "Arusha, mji katika kaskazini mwa Tanzania, ni mlango wa kuingia kwenye baadhi ya maajabu ya asili ya kihistoria zaidi ya Afrika, ikiwa na Mlima Kilimanjaro, Bustani ya Taifa ya Serengeti na Kreta ya Ngorongoro. Inayojulikana kama \"Mji Mkuu wa Safari\", Arusha inakua kwenye sekta yake ya utalii, ikitoa ufikiaji wa uzoefu wa wanyama wa daraja la dunia. Masoko ya kusisimua ya mji, kama Soko la Maasai, yanaonyesha ufundi na utamaduni wa kienyeji. Arusha pia inatumika kama kituo cha kidiplomasia, ikihifadhi makao makuu ya Jumuiya ya Afrika ya Mashariki. Sekta yake ya biashara inayokua na mandharinyuma mzuri wa Mlima Meru hufanya kuwa kituo muhimu cha kiuchumi na kiutamaduni.",
     "dire-dawa": "Dire Dawa, mji katika mashariki mwa Ethiopia, ni kituo muhimu cha usafiri na biashara, ikiwa kimkakati kando ya reli ya Addis Ababa-Djibouti. Inayojulikana kwa wakazi wake wa aina mbalimbali, ikiwa na jamii za Ethiopia, Somalia na Oromo, mji una mchanganyiko mzuri wa utamaduni unaoonekana katika masoko yake, chakula na sherehe. Uchumi wa Dire Dawa unaendeshwa na biashara, uzalishaji na kilimo, na kituo chake cha reli cha kihistoria na usanifu wa kikoloni kikiongeza kina cha kihistoria. Maisha ya mitaani ya kusisimua ya mji, pamoja na jukumu lake kama kituo cha vifaa, hufanya kuwa sehemu muhimu ya mandhari ya kiuchumi ya Ethiopia.",
     "kumasi": "Kumasi, mji wa pili kwa ukubwa wa Ghana, ni moyo wa kiutamaduni wa Ufalme wa Ashanti, unaojulikana kwa mila yake mzuri na historia. Mji una Jumba la Manhyia, kiti cha Asantehene, na masoko ya kusisimua kama Kejetia, moja ya masoko makubwa zaidi ya nje ya Afrika ya Magharibi. Urithi wa kiutamaduni wa Kumasi unasherehekea kupitia sherehe kama Akwasidae na ufundi wake mgumu wa nguo ya kente. Kama kituo cha kiuchumi cha kukua, inasaidia sekta kama mbao, kilimo na biashara ya reja reja. Mchanganyiko wa Kumasi wa urithi wa kifalme, biashara ya kusisimua na tamasha la sanaa la kusisimua hufanya kuwa msingi wa utambulisho wa Ghana."
+  }
+  ,
+  "premiumFeatures": {
+    "hero": {
+      "title": "Ongeza ushiriki wa biashara yako",
+      "subtitle": "Boresha wasifu wako kwa zana na vipengele vya kipekee!"
+    },
+    "billing": {
+      "monthly": "Malipo ya Kila Mwezi",
+      "yearly": "Malipo ya Kila Mwaka",
+      "save": "Okoa 20%"
+    },
+    "common": {
+      "mostPopular": "Maarufu Zaidi",
+      "perMonth": "/mwezi",
+      "perYear": "/mwaka"
+    },
+    "features": {
+      "businessProfile": "Wasifu wa Biashara",
+      "basicContact": "Maelezo ya Msingi ya Mawasiliano",
+      "socialLinks": "Viungo vya Mitandao ya Kijamii",
+      "photoGallery": "Jumba la Picha (hadi picha 10)",
+      "businessHours": "Saa za Biashara",
+      "productServices": "Orodha za Bidhaa/Huduma",
+      "customerReviews": "Tathmini za Wateja",
+      "prioritySupport": "Msaada wa Kipaumbele",
+      "analytics": "Ujumuishaji wa Google Analytics",
+      "featuredListings": "Orodha Zilizochaguliwa",
+      "unlimitedUploads": "Upakiaji wa Midia Usio na Kizuizi",
+      "customDomain": "Kikoa Maalum"
+    },
+    "plans": {
+      "normal": {
+        "name": "Kawaida",
+        "price": "Bure",
+        "description": "Orodha ya msingi yenye vipengele muhimu",
+        "button": "Endelea Bure"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$5",
+        "description": "Inafaa kwa biashara zinazokua",
+        "button": "Chagua Pro"
+      },
+      "premium": {
+        "name": "Premium",
+        "price": "$20",
+        "description": "Kwa biashara zinazotaka bora",
+        "button": "Pata Premium"
+      }
+    },
+    "pricing": {
+      "billedAnnually": "Bili ya kila mwaka"
+    },
+    "payment": {
+      "title": "Kamilisha Ununuzi Wako",
+      "freeDescription": "Unajiandikisha kwenye orodha ya bure.",
+      "planDescription": "Unajiandikisha kwenye mpango wa {{plan}}.",
+      "selectedPlan": "Mpango wa {{plan}}",
+      "freeForever": "Bure milele",
+      "annualBilling": "Bili ya kila mwaka kwa ${{amount}}/mwaka",
+      "monthlyBilling": "Bili ya kila mwezi kwa ${{amount}}/mwezi",
+      "switchBilling": "Badilisha kwa {{to}}",
+      "method": "Njia ya Malipo",
+      "card": "Kadi ya Mkopo au Benki",
+      "cardNumber": "Nambari ya Kadi",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiry": "Muda wa Kuisha",
+      "expiryPlaceholder": "MM/YY",
+      "cvc": "CVC",
+      "cvcPlaceholder": "123",
+      "zip": "ZIP/Anwani ya Posta",
+      "zipPlaceholder": "12345"
+    },
+    "form": {
+      "fullName": "Jina Kamili",
+      "fullNamePlaceholder": "John Doe",
+      "email": "Barua Pepe",
+      "emailPlaceholder": "wewe@mfano.com"
+    },
+    "notice": {
+      "label": "Kumbuka:",
+      "text": "Hii ni ukurasa wa malipo wa majaribio. Hakuna malipo halisi yatakayoshughulikiwa. Katika uzalishaji, hii itaunganishwa na mchakato salama wa malipo."
+    },
+    "actions": {
+      "completeFree": "Kamilisha Usajili wa Bure",
+      "confirmPayment": "Thibitisha Malipo"
+    },
+    "legal": {
+      "agree": "Kwa kuendelea, unakubali Masharti ya Huduma na Sera ya Faragha."
+    },
+    "planNames": {
+      "normal": "Kawaida",
+      "pro": "Pro",
+      "premium": "Premium"
+    }
   }
 }

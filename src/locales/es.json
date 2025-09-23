@@ -264,6 +264,10 @@
           "description": "Para verificación de reclamación"
         }
       },
+      "faqSection": {
+        "title": "Preguntas Frecuentes",
+        "subtitle": "Encuentra respuestas a preguntas comunes sobre reclamar tu negocio"
+      },
       "faq": {
         "title": "Preguntas Frecuentes",
         "processingTime": {
@@ -984,6 +988,102 @@
       "description": "Nuestro equipo está listo para asistirte con cualquier pregunta o preocupación que puedas tener",
       "primaryButton": "Contactar Soporte",
       "secondaryButton": "Explorar Centro de Ayuda"
+    }
+  }
+  ,
+  "premiumFeatures": {
+    "hero": {
+      "title": "Impulsa el compromiso de tu negocio",
+      "subtitle": "¡Mejora tu perfil con herramientas y funciones exclusivas!"
+    },
+    "billing": {
+      "monthly": "Facturación mensual",
+      "yearly": "Facturación anual",
+      "save": "Ahorra 20%"
+    },
+    "common": {
+      "mostPopular": "Más popular",
+      "perMonth": "/mes",
+      "perYear": "/año"
+    },
+    "features": {
+      "businessProfile": "Perfil de negocio",
+      "basicContact": "Información de contacto básica",
+      "socialLinks": "Enlaces a redes sociales",
+      "photoGallery": "Galería de fotos (hasta 10 imágenes)",
+      "businessHours": "Horario de atención",
+      "productServices": "Listados de productos/servicios",
+      "customerReviews": "Reseñas de clientes",
+      "prioritySupport": "Soporte prioritario",
+      "analytics": "Integración con Google Analytics",
+      "featuredListings": "Listados destacados",
+      "unlimitedUploads": "Cargas de medios ilimitadas",
+      "customDomain": "Dominio personalizado"
+    },
+    "plans": {
+      "normal": {
+        "name": "Normal",
+        "price": "Gratis",
+        "description": "Listado básico con funciones esenciales",
+        "button": "Continuar Gratis"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$5",
+        "description": "Ideal para negocios en crecimiento",
+        "button": "Hazte Pro"
+      },
+      "premium": {
+        "name": "Premium",
+        "price": "$20",
+        "description": "Para negocios que quieren lo mejor",
+        "button": "Obtener Premium"
+      }
+    },
+    "pricing": {
+      "billedAnnually": "Facturado anualmente"
+    },
+    "payment": {
+      "title": "Completa tu compra",
+      "freeDescription": "Te estás registrando en un listado gratuito.",
+      "planDescription": "Te estás registrando en el plan {{plan}}.",
+      "selectedPlan": "Plan {{plan}}",
+      "freeForever": "Gratis para siempre",
+      "annualBilling": "Facturado anualmente a ${{amount}}/año",
+      "monthlyBilling": "Facturado mensualmente a ${{amount}}/mes",
+      "switchBilling": "Cambiar a {{to}}",
+      "method": "Método de pago",
+      "card": "Tarjeta de crédito o débito",
+      "cardNumber": "Número de tarjeta",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiry": "Vencimiento",
+      "expiryPlaceholder": "MM/AA",
+      "cvc": "CVC",
+      "cvcPlaceholder": "123",
+      "zip": "Código postal",
+      "zipPlaceholder": "28001"
+    },
+    "form": {
+      "fullName": "Nombre completo",
+      "fullNamePlaceholder": "Juan Pérez",
+      "email": "Email",
+      "emailPlaceholder": "tú@ejemplo.com"
+    },
+    "notice": {
+      "label": "Nota:",
+      "text": "Esta es una página de pago de prueba. No se procesará ningún pago real. En producción, esto se conectaría a un procesador de pagos seguro."
+    },
+    "actions": {
+      "completeFree": "Completar registro gratis",
+      "confirmPayment": "Confirmar pago"
+    },
+    "legal": {
+      "agree": "Al continuar, aceptas nuestros Términos de servicio y Política de privacidad."
+    },
+    "planNames": {
+      "normal": "Normal",
+      "pro": "Pro",
+      "premium": "Premium"
     }
   }
 } 

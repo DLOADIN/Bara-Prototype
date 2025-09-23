@@ -458,91 +458,37 @@ export const ClaimListingPage = () => {
             <Accordion type="single" collapsible className="w-full space-y-4">
               <AccordionItem value="item-1" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                 <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50">
-                  <span className="text-lg font-medium text-left">How long does the verification process take?</span>
+                  <span className="text-lg font-medium text-left">{t('claimListing.page.faq.processingTime.question')}</span>
                 </AccordionTrigger>
                 <AccordionContent className="px-6 pb-4 text-gray-600">
-                  The verification process typically takes 2-3 business days. We'll notify you via email once your claim is approved or if we need additional information.
+                  {t('claimListing.page.faq.processingTime.answer')}
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-2" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                 <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50">
-                  <span className="text-lg font-medium text-left">What information do I need to verify my business?</span>
+                  <span className="text-lg font-medium text-left">{t('claimListing.page.faq.requiredInfo.question')}</span>
                 </AccordionTrigger>
                 <AccordionContent className="px-6 pb-4 text-gray-600">
-                  You'll need to provide official business documentation such as a business license, tax ID, or utility bill. We may also require a government-issued ID to verify your identity as an authorized representative.
+                  {t('claimListing.page.faq.requiredInfo.answer')}
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-3" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                 <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50">
-                  <span className="text-lg font-medium text-left">Is there a cost to claim my business?</span>
+                  <span className="text-lg font-medium text-left">{t('claimListing.page.faq.cost.question')}</span>
                 </AccordionTrigger>
                 <AccordionContent className="px-6 pb-4 text-gray-600">
-                  No, claiming and verifying your business listing is completely free. This allows you to manage your business information, respond to reviews, and access basic analytics at no cost.
+                  {t('claimListing.page.faq.cost.answer')}
                 </AccordionContent>
               </AccordionItem>
 
               <AccordionItem value="item-4" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
                 <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50">
-                  <span className="text-lg font-medium text-left">What if my business isn't listed yet?</span>
+                  <span className="text-lg font-medium text-left">{t('claimListing.page.faq.notListed.question')}</span>
                 </AccordionTrigger>
                 <AccordionContent className="px-6 pb-4 text-gray-600">
-                  If you can't find your business, you can add it by clicking the "Add a missing business" link at the bottom of the search results. You'll need to provide basic information about your business to create the listing.
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-5" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50">
-                  <span className="text-lg font-medium text-left">Can I claim multiple locations of my business?</span>
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4 text-gray-600">
-                  Yes, you can claim multiple locations. After claiming your first location, you'll have the option to add and manage additional locations from your business dashboard.
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-6" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50">
-                  <span className="text-lg font-medium text-left">What happens after my claim is approved?</span>
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4 text-gray-600">
-                  Once approved, you'll gain access to your business dashboard where you can update business information, respond to reviews, add photos, view analytics, and access other exclusive features for business owners.
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-7" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50">
-                  <span className="text-lg font-medium text-left">Can I transfer ownership of my business listing?</span>
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4 text-gray-600">
-                  Yes, you can transfer ownership by contacting our support team with the new owner's information. We'll guide both parties through the verification process to ensure a smooth transition.
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-8" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50">
-                  <span className="text-lg font-medium text-left">How do I update my business information?</span>
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4 text-gray-600">
-                  After claiming your business, you can update your information anytime through your business dashboard. Changes are typically reviewed and published within 24-48 hours.
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-9" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50">
-                  <span className="text-lg font-medium text-left">What if my claim is rejected?</span>
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4 text-gray-600">
-                  If your claim is rejected, we'll provide a reason and instructions on how to resolve the issue. Common reasons include insufficient documentation or incomplete information. You can reapply with the correct information.
-                </AccordionContent>
-              </AccordionItem>
-
-              <AccordionItem value="item-10" className="bg-white rounded-lg border border-gray-200 overflow-hidden">
-                <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-gray-50">
-                  <span className="text-lg font-medium text-left">How can I get help with the claiming process?</span>
-                </AccordionTrigger>
-                <AccordionContent className="px-6 pb-4 text-gray-600">
-                  Our support team is available to assist you. You can contact us through the help center or email support@baralistings.com. Include your business name and any relevant details for faster assistance.
+                  {t('claimListing.page.faq.notListed.answer')}
                 </AccordionContent>
               </AccordionItem>
             </Accordion>

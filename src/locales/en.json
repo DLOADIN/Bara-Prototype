@@ -257,6 +257,10 @@
           "description": "For claim verification"
         }
       },
+      "faqSection": {
+        "title": "Frequently Asked Questions",
+        "subtitle": "Find answers to common questions about claiming your business listing"
+      },
       "faq": {
         "title": "Frequently Asked Questions",
         "processingTime": {
@@ -275,6 +279,10 @@
           "question": "What if my business isn't listed yet?",
           "answer": "If your business isn't currently listed, you can still submit a claim request and we'll help you get your business added to our directory."
         }
+      },
+      "faqSection": {
+        "title": "Frequently Asked Questions",
+        "subtitle": "Find answers to common questions about claiming your business listing"
       },
       "validation": {
         "title": "Validation Error",
@@ -536,14 +544,6 @@
       "subtitle": "Our support team is here to help you with any other questions you might have.",
       "contact": "Contact Support",
       "business": "Business Inquiries"
-    }
-  },
-  "claimListing": {
-    "page": {
-      "faqSection": {
-        "title": "Frequently Asked Questions",
-        "subtitle": "Find answers to common questions about claiming your business listing"
-      }
     }
   },
   "categories": {
@@ -1015,6 +1015,102 @@
       "description": "Our team is ready to assist you with any questions or concerns you may have",
       "primaryButton": "Contact Support",
       "secondaryButton": "Browse Help Center"
+    }
+  }
+  ,
+  "premiumFeatures": {
+    "hero": {
+      "title": "Boost your business engagement",
+      "subtitle": "Enhance your profile with exclusive tools and features!"
+    },
+    "billing": {
+      "monthly": "Monthly Billing",
+      "yearly": "Yearly Billing",
+      "save": "Save 20%"
+    },
+    "common": {
+      "mostPopular": "Most Popular",
+      "perMonth": "/month",
+      "perYear": "/year"
+    },
+    "features": {
+      "businessProfile": "Business Profile",
+      "basicContact": "Basic Contact Information",
+      "socialLinks": "Social Media Links",
+      "photoGallery": "Photo Gallery (up to 10 images)",
+      "businessHours": "Business Hours",
+      "productServices": "Product/Service Listings",
+      "customerReviews": "Customer Reviews",
+      "prioritySupport": "Priority Customer Support",
+      "analytics": "Google Analytics Integration",
+      "featuredListings": "Featured Listings",
+      "unlimitedUploads": "Unlimited Media Uploads",
+      "customDomain": "Custom Domain"
+    },
+    "plans": {
+      "normal": {
+        "name": "Normal",
+        "price": "Free",
+        "description": "Basic listing with essential features",
+        "button": "Continue Free"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "$5",
+        "description": "Ideal for growing businesses",
+        "button": "Go Pro"
+      },
+      "premium": {
+        "name": "Premium",
+        "price": "$20",
+        "description": "For businesses that want the best",
+        "button": "Get Premium"
+      }
+    },
+    "pricing": {
+      "billedAnnually": "Billed annually"
+    },
+    "payment": {
+      "title": "Complete Your Purchase",
+      "freeDescription": "You're signing up for a free listing.",
+      "planDescription": "You're signing up for the {{plan}} plan.",
+      "selectedPlan": "{{plan}} Plan",
+      "freeForever": "Free forever",
+      "annualBilling": "Billed annually at ${{amount}}/year",
+      "monthlyBilling": "Billed monthly at ${{amount}}/month",
+      "switchBilling": "Switch to {{to}}",
+      "method": "Payment Method",
+      "card": "Credit or Debit Card",
+      "cardNumber": "Card Number",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiry": "Expiry",
+      "expiryPlaceholder": "MM/YY",
+      "cvc": "CVC",
+      "cvcPlaceholder": "123",
+      "zip": "ZIP/Postal Code",
+      "zipPlaceholder": "12345"
+    },
+    "form": {
+      "fullName": "Full Name",
+      "fullNamePlaceholder": "John Doe",
+      "email": "Email",
+      "emailPlaceholder": "you@example.com"
+    },
+    "notice": {
+      "label": "Note:",
+      "text": "This is a test payment page. No actual payment will be processed. In a production environment, this would connect to a secure payment processor."
+    },
+    "actions": {
+      "completeFree": "Complete Free Signup",
+      "confirmPayment": "Confirm Payment"
+    },
+    "legal": {
+      "agree": "By continuing, you agree to our Terms of Service and Privacy Policy."
+    },
+    "planNames": {
+      "normal": "Normal",
+      "pro": "Pro",
+      "premium": "Premium"
     }
   }
 }

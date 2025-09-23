@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -10,50 +11,51 @@ import { Check, X, Star, Zap, CheckCircle } from 'lucide-react';
 type Plan = 'normal' | 'pro' | 'premium';
 
 const features = [
-  { name: 'Business Profile', normal: true, pro: true, premium: true },
-  { name: 'Basic Contact Information', normal: true, pro: true, premium: true },
-  { name: 'Social Media Links', normal: false, pro: true, premium: true },
-  { name: 'Photo Gallery (up to 10 images)', normal: false, pro: true, premium: true },
-  { name: 'Business Hours', normal: false, pro: true, premium: true },
-  { name: 'Product/Service Listings', normal: false, pro: true, premium: true },
-  { name: 'Customer Reviews', normal: true, pro: true, premium: true },
-  { name: 'Priority Customer Support', normal: false, pro: true, premium: true },
-  { name: 'Google Analytics Integration', normal: false, pro: false, premium: true },
-  { name: 'Featured Listings', normal: false, pro: false, premium: true },
-  { name: 'Unlimited Media Uploads', normal: false, pro: false, premium: true },
-  { name: 'Custom Domain', normal: false, pro: false, premium: true },
+  { nameKey: 'premiumFeatures.features.businessProfile', normal: true, pro: true, premium: true },
+  { nameKey: 'premiumFeatures.features.basicContact', normal: true, pro: true, premium: true },
+  { nameKey: 'premiumFeatures.features.socialLinks', normal: false, pro: true, premium: true },
+  { nameKey: 'premiumFeatures.features.photoGallery', normal: false, pro: true, premium: true },
+  { nameKey: 'premiumFeatures.features.businessHours', normal: false, pro: true, premium: true },
+  { nameKey: 'premiumFeatures.features.productServices', normal: false, pro: true, premium: true },
+  { nameKey: 'premiumFeatures.features.customerReviews', normal: true, pro: true, premium: true },
+  { nameKey: 'premiumFeatures.features.prioritySupport', normal: false, pro: true, premium: true },
+  { nameKey: 'premiumFeatures.features.analytics', normal: false, pro: false, premium: true },
+  { nameKey: 'premiumFeatures.features.featuredListings', normal: false, pro: false, premium: true },
+  { nameKey: 'premiumFeatures.features.unlimitedUploads', normal: false, pro: false, premium: true },
+  { nameKey: 'premiumFeatures.features.customDomain', normal: false, pro: false, premium: true },
 ];
 
 const plans = [
   {
-    name: 'Normal',
-    price: 'Free',
-    description: 'Basic listing with essential features',
-    buttonText: 'Continue Free',
+    nameKey: 'premiumFeatures.plans.normal.name',
+    priceKey: 'premiumFeatures.plans.normal.price',
+    descriptionKey: 'premiumFeatures.plans.normal.description',
+    buttonKey: 'premiumFeatures.plans.normal.button',
     popular: false,
     type: 'normal' as Plan,
   },
   {
-    name: 'Pro',
-    price: '$5',
-    period: '/month',
-    description: 'Ideal for growing businesses',
-    buttonText: 'Go Pro',
+    nameKey: 'premiumFeatures.plans.pro.name',
+    priceKey: 'premiumFeatures.plans.pro.price',
+    periodKey: 'premiumFeatures.common.perMonth',
+    descriptionKey: 'premiumFeatures.plans.pro.description',
+    buttonKey: 'premiumFeatures.plans.pro.button',
     popular: true,
     type: 'pro' as Plan,
   },
   {
-    name: 'Premium',
-    price: '$20',
-    period: '/month',
-    description: 'For businesses that want the best',
-    buttonText: 'Get Premium',
+    nameKey: 'premiumFeatures.plans.premium.name',
+    priceKey: 'premiumFeatures.plans.premium.price',
+    periodKey: 'premiumFeatures.common.perMonth',
+    descriptionKey: 'premiumFeatures.plans.premium.description',
+    buttonKey: 'premiumFeatures.plans.premium.button',
     popular: false,
     type: 'premium' as Plan,
   },
 ];
 
 export const PremiumFeatures = () => {
+  const { t } = useTranslation();
   const [selectedPlan, setSelectedPlan] = useState<Plan | null>(null);
   const [isPaymentOpen, setIsPaymentOpen] = useState(false);
   const [isYearly, setIsYearly] = useState(false);
@@ -75,15 +77,15 @@ export const PremiumFeatures = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center">
           <h2 className="text-3xl font-bold text-foreground sm:text-4xl mb-4">
-            Boost your business engagement
+            {t('premiumFeatures.hero.title')}
           </h2>
           <p className="text-xl text-muted-foreground">
-            Enhance your profile with exclusive tools and features!
+            {t('premiumFeatures.hero.subtitle')}
           </p>
           
           <div className="mt-8 flex justify-center items-center space-x-4">
             <span className={`font-medium ${!isYearly ? 'text-primary' : 'text-muted-foreground'}`}>
-              Monthly Billing
+              {t('premiumFeatures.billing.monthly')}
             </span>
             <button
               type="button"
@@ -100,10 +102,10 @@ export const PremiumFeatures = () => {
             </button>
             <div className="relative">
               <span className="font-medium text-muted-foreground">
-                Yearly Billing
+                {t('premiumFeatures.billing.yearly')}
               </span>
               <span className="absolute -right-4 -top-4 rounded-full bg-yellow-100 px-2 py-0.5 text-xs font-medium text-yellow-800">
-                Save 20%
+                {t('premiumFeatures.billing.save')}
               </span>
             </div>
           </div>
@@ -111,11 +113,11 @@ export const PremiumFeatures = () => {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
           {plans.map((plan) => (
-            <div key={plan.name} className="relative">
+            <div key={plan.type} className="relative">
               {plan.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                   <div className="bg-yellow-400 text-yellow-900 text-xs font-semibold px-3 py-1 rounded-full shadow-md">
-                    Most Popular
+                    {t('premiumFeatures.common.mostPopular')}
                   </div>
                 </div>
               )}
@@ -123,23 +125,23 @@ export const PremiumFeatures = () => {
                 <CardHeader className="pb-4">
                   <div className="flex justify-between items-start">
                     <div>
-                      <CardTitle className="text-2xl font-bold text-foreground">{plan.name}</CardTitle>
-                      <p className="text-muted-foreground mt-1">{plan.description}</p>
+                      <CardTitle className="text-2xl font-bold text-foreground">{t(plan.nameKey)}</CardTitle>
+                      <p className="text-muted-foreground mt-1">{t(plan.descriptionKey)}</p>
                     </div>
                     {plan.popular && <Star className="h-5 w-5 text-yellow-400" />}
                   </div>
                   <div className="mt-4">
                     <p className="text-4xl font-bold text-foreground">
-                      {plan.price}
-                      {plan.period && (
+                      {t(plan.priceKey)}
+                      {(plan as any).periodKey && (
                         <span className="text-lg font-normal text-muted-foreground">
-                          {isYearly ? '/year' : plan.period}
+                          {isYearly ? t('premiumFeatures.common.perYear') : t((plan as any).periodKey)}
                         </span>
                       )}
                     </p>
                     {isYearly && plan.type !== 'normal' && (
                       <p className="text-sm text-muted-foreground mt-1">
-                        Billed annually (${plan.type === 'pro' ? '50' : '200'})
+                        {t('premiumFeatures.pricing.billedAnnually', { amount: plan.type === 'pro' ? '50' : '200' })}
                       </p>
                     )}
                   </div>
@@ -147,13 +149,13 @@ export const PremiumFeatures = () => {
                 <CardContent className="flex-grow">
                   <ul className="space-y-3">
                     {features.map((feature) => (
-                      <li key={feature.name} className="flex items-start">
+                      <li key={feature.nameKey} className="flex items-start">
                         {feature[plan.type] ? (
                           <CheckCircle className="h-5 w-5 text-green-500 mr-2 flex-shrink-0 mt-0.5" />
                         ) : (
                           <X className="h-5 w-5 text-muted-foreground/50 mr-2 flex-shrink-0 mt-0.5" />
                         )}
-                        <span className="text-foreground">{feature.name}</span>
+                        <span className="text-foreground">{t(feature.nameKey)}</span>
                       </li>
                     ))}
                   </ul>
@@ -163,7 +165,7 @@ export const PremiumFeatures = () => {
                     onClick={() => handleSelectPlan(plan.type)}
                     className={`w-full py-6 text-base ${plan.popular ? 'bg-primary hover:bg-primary/90' : 'bg-foreground hover:bg-foreground/90'}`}
                   >
-                    {plan.buttonText}
+                    {t(plan.buttonKey)}
                     {plan.popular && <Zap className="ml-2 h-4 w-4" />}
                   </Button>
                 </CardFooter>
@@ -177,11 +179,11 @@ export const PremiumFeatures = () => {
       <Dialog open={isPaymentOpen} onOpenChange={setIsPaymentOpen}>
         <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
-            <DialogTitle>Complete Your Purchase</DialogTitle>
+            <DialogTitle>{t('premiumFeatures.payment.title')}</DialogTitle>
             <DialogDescription>
               {selectedPlan === 'normal' 
-                ? 'You\'re signing up for a free listing.'
-                : `You're signing up for the ${selectedPlan?.charAt(0).toUpperCase() + selectedPlan?.slice(1)} plan.`}
+                ? t('premiumFeatures.payment.freeDescription')
+                : t('premiumFeatures.payment.planDescription', { plan: selectedPlan ? t(`premiumFeatures.planNames.${selectedPlan}`) : '' })}
             </DialogDescription>
           </DialogHeader>
           
@@ -189,14 +191,14 @@ export const PremiumFeatures = () => {
             <div className="flex justify-between items-center">
               <div>
                 <h4 className="font-medium text-foreground">
-                  {selectedPlan ? `${selectedPlan.charAt(0).toUpperCase() + selectedPlan.slice(1)} Plan` : ''}
+                  {selectedPlan ? t('premiumFeatures.payment.selectedPlan', { plan: t(`premiumFeatures.planNames.${selectedPlan}`) }) : ''}
                 </h4>
                 <p className="text-sm text-muted-foreground">
                   {selectedPlan === 'normal' 
-                    ? 'Free forever' 
+                    ? t('premiumFeatures.payment.freeForever') 
                     : isYearly 
-                      ? `Billed annually at $${selectedPlan === 'pro' ? '50' : '200'}/year`
-                      : `Billed monthly at $${selectedPlan === 'pro' ? '5' : '20'}/month`}
+                      ? t('premiumFeatures.payment.annualBilling', { amount: selectedPlan === 'pro' ? '50' : '200' })
+                      : t('premiumFeatures.payment.monthlyBilling', { amount: selectedPlan === 'pro' ? '5' : '20' })}
                 </p>
               </div>
               {selectedPlan !== 'normal' && (
@@ -206,7 +208,7 @@ export const PremiumFeatures = () => {
                   onClick={() => setIsYearly(!isYearly)}
                   className="text-sm"
                 >
-                  Switch to {isYearly ? 'Monthly' : 'Yearly'} Billing
+                  {t('premiumFeatures.payment.switchBilling', { to: isYearly ? t('premiumFeatures.billing.monthly') : t('premiumFeatures.billing.yearly') })}
                 </Button>
               )}
             </div>
@@ -214,18 +216,18 @@ export const PremiumFeatures = () => {
 
           <form onSubmit={handlePaymentSubmit} className="space-y-4 mt-6">
             <div className="space-y-2">
-              <Label htmlFor="name">Full Name</Label>
-              <Input id="name" placeholder="John Doe" required />
+              <Label htmlFor="name">{t('premiumFeatures.form.fullName')}</Label>
+              <Input id="name" placeholder={t('premiumFeatures.form.fullNamePlaceholder')} required />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
-              <Input id="email" type="email" placeholder="you@example.com" required />
+              <Label htmlFor="email">{t('premiumFeatures.form.email')}</Label>
+              <Input id="email" type="email" placeholder={t('premiumFeatures.form.emailPlaceholder')} required />
             </div>
 
             {selectedPlan !== 'normal' && (
               <div className="space-y-2">
-                <Label>Payment Method</Label>
+                <Label>{t('premiumFeatures.payment.method')}</Label>
                 <div className="border rounded-md p-4">
                   <div className="flex items-center space-x-2 mb-4">
                     <div className="w-8 h-6 bg-muted-foreground/10 rounded-sm flex items-center justify-center">
@@ -235,24 +237,24 @@ export const PremiumFeatures = () => {
                         <path d="M12 10C10.9 10 10 9.1 10 8C10 6.9 10.9 6 12 6C13.1 6 14 6.9 14 8C14 9.1 13.1 10 12 10Z" fill="#0066CC"/>
                       </svg>
                     </div>
-                    <span className="text-sm font-medium">Credit or Debit Card</span>
+                    <span className="text-sm font-medium">{t('premiumFeatures.payment.card')}</span>
                   </div>
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label className="text-xs" htmlFor="card-number">Card Number</Label>
-                      <Input id="card-number" placeholder="1234 5678 9012 3456" />
+                      <Label className="text-xs" htmlFor="card-number">{t('premiumFeatures.payment.cardNumber')}</Label>
+                      <Input id="card-number" placeholder={t('premiumFeatures.payment.cardNumberPlaceholder')} />
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-xs" htmlFor="expiry">Expiry</Label>
-                      <Input id="expiry" placeholder="MM/YY" />
+                      <Label className="text-xs" htmlFor="expiry">{t('premiumFeatures.payment.expiry')}</Label>
+                      <Input id="expiry" placeholder={t('premiumFeatures.payment.expiryPlaceholder')} />
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-xs" htmlFor="cvc">CVC</Label>
-                      <Input id="cvc" placeholder="123" />
+                      <Label className="text-xs" htmlFor="cvc">{t('premiumFeatures.payment.cvc')}</Label>
+                      <Input id="cvc" placeholder={t('premiumFeatures.payment.cvcPlaceholder')} />
                     </div>
                     <div className="space-y-2">
-                      <Label className="text-xs" htmlFor="zip">ZIP/Postal Code</Label>
-                      <Input id="zip" placeholder="12345" />
+                      <Label className="text-xs" htmlFor="zip">{t('premiumFeatures.payment.zip')}</Label>
+                      <Input id="zip" placeholder={t('premiumFeatures.payment.zipPlaceholder')} />
                     </div>
                   </div>
                 </div>
@@ -261,16 +263,16 @@ export const PremiumFeatures = () => {
 
             <div className="bg-blue-50 dark:bg-blue-900/20 p-4 rounded-md mt-6">
               <p className="text-sm text-blue-700 dark:text-blue-300">
-                <strong>Note:</strong> This is a test payment page. No actual payment will be processed. In a production environment, this would connect to a secure payment processor.
+                <strong>{t('premiumFeatures.notice.label')} </strong>{t('premiumFeatures.notice.text')}
               </p>
             </div>
 
             <div className="mt-6">
               <Button type="submit" className="w-full py-6 text-base">
-                {selectedPlan === 'normal' ? 'Complete Free Signup' : 'Confirm Payment'}
+                {selectedPlan === 'normal' ? t('premiumFeatures.actions.completeFree') : t('premiumFeatures.actions.confirmPayment')}
               </Button>
               <p className="mt-2 text-center text-sm text-muted-foreground">
-                By continuing, you agree to our Terms of Service and Privacy Policy.
+                {t('premiumFeatures.legal.agree')}
               </p>
             </div>
           </form>

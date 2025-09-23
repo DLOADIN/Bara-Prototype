@@ -258,6 +258,10 @@
             "description": "للتحقق من المطالبة"
           }
         },
+      "faqSection": {
+        "title": "الأسئلة الشائعة",
+        "subtitle": "اعثر على إجابات للأسئلة الشائعة حول المطالبة بقائمة عملك"
+      },
         "faq": {
           "title": "الأسئلة الشائعة",
           "processingTime": {
@@ -1006,5 +1010,100 @@
         "primaryButton": "تواصل مع الدعم",
         "secondaryButton": "تصفح مركز المساعدة"
       }
+    },
+  "premiumFeatures": {
+    "hero": {
+      "title": "عزّز تفاعل عملك",
+      "subtitle": "حسّن ملفك بميزات وأدوات حصرية!"
+    },
+    "billing": {
+      "monthly": "الفوترة الشهرية",
+      "yearly": "الفوترة السنوية",
+      "save": "وفّر 20%"
+    },
+    "common": {
+      "mostPopular": "الأكثر شيوعاً",
+      "perMonth": "/شهر",
+      "perYear": "/سنة"
+    },
+    "features": {
+      "businessProfile": "ملف العمل",
+      "basicContact": "معلومات الاتصال الأساسية",
+      "socialLinks": "روابط وسائل التواصل الاجتماعي",
+      "photoGallery": "معرض الصور (حتى 10 صور)",
+      "businessHours": "ساعات العمل",
+      "productServices": "قوائم المنتجات/الخدمات",
+      "customerReviews": "مراجعات العملاء",
+      "prioritySupport": "دعم عملاء أولوية",
+      "analytics": "تكامل Google Analytics",
+      "featuredListings": "قوائم مميزة",
+      "unlimitedUploads": "تحميلات وسائط غير محدودة",
+      "customDomain": "نطاق مخصص"
+    },
+    "plans": {
+      "normal": {
+        "name": "عادي",
+        "price": "مجاني",
+        "description": "قائمة أساسية بميزات ضرورية",
+        "button": "متابعة مجاناً"
+      },
+      "pro": {
+        "name": "احترافي",
+        "price": "$5",
+        "description": "مثالي للأعمال المتنامية",
+        "button": "الترقية للاحترافي"
+      },
+      "premium": {
+        "name": "بريميوم",
+        "price": "$20",
+        "description": "للأعمال التي تريد الأفضل",
+        "button": "احصل على بريميوم"
+      }
+    },
+    "pricing": {
+      "billedAnnually": "يتم الفوترة سنوياً"
+    },
+    "payment": {
+      "title": "أكمل عملية الشراء",
+      "freeDescription": "أنت تسجل في قائمة مجانية.",
+      "planDescription": "أنت تسجل في خطة {{plan}}.",
+      "selectedPlan": "خطة {{plan}}",
+      "freeForever": "مجاني للأبد",
+      "annualBilling": "يتم الفوترة سنوياً بمقدار ${{amount}}/سنة",
+      "monthlyBilling": "يتم الفوترة شهرياً بمقدار ${{amount}}/شهر",
+      "switchBilling": "التبديل إلى {{to}}",
+      "method": "طريقة الدفع",
+      "card": "بطاقة ائتمان أو خصم",
+      "cardNumber": "رقم البطاقة",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiry": "تاريخ الانتهاء",
+      "expiryPlaceholder": "MM/YY",
+      "cvc": "CVC",
+      "cvcPlaceholder": "123",
+      "zip": "الرمز البريدي",
+      "zipPlaceholder": "12345"
+    },
+    "form": {
+      "fullName": "الاسم الكامل",
+      "fullNamePlaceholder": "محمد أحمد",
+      "email": "البريد الإلكتروني",
+      "emailPlaceholder": "you@example.com"
+    },
+    "notice": {
+      "label": "ملاحظة:",
+      "text": "هذه صفحة دفع اختبارية. لن تتم معالجة أي دفع فعلي. في بيئة الإنتاج، سيتم الاتصال بمعالج دفع آمن."
+    },
+    "actions": {
+      "completeFree": "إكمال التسجيل المجاني",
+      "confirmPayment": "تأكيد الدفع"
+    },
+    "legal": {
+      "agree": "بالمتابعة، فإنك توافق على شروط الخدمة وسياسة الخصوصية."
+    },
+    "planNames": {
+      "normal": "عادي",
+      "pro": "احترافي",
+      "premium": "بريميوم"
     }
   }
+}

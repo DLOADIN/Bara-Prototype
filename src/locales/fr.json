@@ -265,6 +265,10 @@
           "description": "Pour la vérification de la réclamation"
         }
       },
+      "faqSection": {
+        "title": "Questions Fréquemment Posées",
+        "subtitle": "Trouvez des réponses aux questions courantes sur la réclamation de votre entreprise"
+      },
       "faq": {
         "title": "Questions Fréquemment Posées",
         "processingTime": {
@@ -985,6 +989,102 @@
       "description": "Notre équipe est prête à vous assister avec toute question ou préoccupation que vous pourriez avoir",
       "primaryButton": "Contacter le Support",
       "secondaryButton": "Parcourir le Centre d'Aide"
+    }
+  }
+  ,
+  "premiumFeatures": {
+    "hero": {
+      "title": "Boostez l'engagement de votre entreprise",
+      "subtitle": "Améliorez votre profil avec des outils et fonctionnalités exclusifs !"
+    },
+    "billing": {
+      "monthly": "Facturation mensuelle",
+      "yearly": "Facturation annuelle",
+      "save": "Économisez 20%"
+    },
+    "common": {
+      "mostPopular": "Le plus populaire",
+      "perMonth": "/mois",
+      "perYear": "/an"
+    },
+    "features": {
+      "businessProfile": "Profil d'entreprise",
+      "basicContact": "Informations de contact de base",
+      "socialLinks": "Liens vers les réseaux sociaux",
+      "photoGallery": "Galerie photo (jusqu'à 10 images)",
+      "businessHours": "Heures d'ouverture",
+      "productServices": "Listes de produits/services",
+      "customerReviews": "Avis clients",
+      "prioritySupport": "Support client prioritaire",
+      "analytics": "Intégration Google Analytics",
+      "featuredListings": "Annonces en vedette",
+      "unlimitedUploads": "Téléversements de médias illimités",
+      "customDomain": "Domaine personnalisé"
+    },
+    "plans": {
+      "normal": {
+        "name": "Normal",
+        "price": "Gratuit",
+        "description": "Annonce de base avec fonctionnalités essentielles",
+        "button": "Continuer Gratuitement"
+      },
+      "pro": {
+        "name": "Pro",
+        "price": "5 $",
+        "description": "Idéal pour les entreprises en croissance",
+        "button": "Passer en Pro"
+      },
+      "premium": {
+        "name": "Premium",
+        "price": "20 $",
+        "description": "Pour les entreprises qui veulent le meilleur",
+        "button": "Obtenir Premium"
+      }
+    },
+    "pricing": {
+      "billedAnnually": "Facturé annuellement"
+    },
+    "payment": {
+      "title": "Finalisez votre achat",
+      "freeDescription": "Vous vous inscrivez à une annonce gratuite.",
+      "planDescription": "Vous vous inscrivez au plan {{plan}}.",
+      "selectedPlan": "Plan {{plan}}",
+      "freeForever": "Gratuit pour toujours",
+      "annualBilling": "Facturé annuellement à {{amount}} $/an",
+      "monthlyBilling": "Facturé mensuellement à {{amount}} $/mois",
+      "switchBilling": "Basculer vers {{to}}",
+      "method": "Méthode de paiement",
+      "card": "Carte de crédit ou de débit",
+      "cardNumber": "Numéro de carte",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiry": "Expiration",
+      "expiryPlaceholder": "MM/AA",
+      "cvc": "CVC",
+      "cvcPlaceholder": "123",
+      "zip": "Code postal",
+      "zipPlaceholder": "75000"
+    },
+    "form": {
+      "fullName": "Nom complet",
+      "fullNamePlaceholder": "Jean Dupont",
+      "email": "Email",
+      "emailPlaceholder": "vous@exemple.com"
+    },
+    "notice": {
+      "label": "Note :",
+      "text": "Ceci est une page de paiement de test. Aucun paiement réel ne sera traité. En production, cela se connecterait à un processeur de paiement sécurisé."
+    },
+    "actions": {
+      "completeFree": "Terminer l'inscription gratuite",
+      "confirmPayment": "Confirmer le paiement"
+    },
+    "legal": {
+      "agree": "En continuant, vous acceptez nos Conditions d'utilisation et notre Politique de confidentialité."
+    },
+    "planNames": {
+      "normal": "Normal",
+      "pro": "Pro",
+      "premium": "Premium"
     }
   }
 } 
