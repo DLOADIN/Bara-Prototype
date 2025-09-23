@@ -30,6 +30,7 @@ import { useToast } from '@/hooks/use-toast';
 import { deleteImage, uploadImage } from '@/lib/storage';
 import { SponsoredBanner } from '@/types/sponsoredBanner.types';
 import { db } from '@/lib/supabase';
+import { Switch } from '@/components/ui/switch';
 
 export const AdminSponsoredBanners: React.FC = () => {
   const { toast } = useToast();
@@ -111,6 +112,24 @@ export const AdminSponsoredBanners: React.FC = () => {
         title: "Error",
         description: "Failed to update banner status",
         variant: "destructive",
+      });
+    }
+  };
+
+  const handleToggleActive = async (banner: SponsoredBanner) => {
+    try {
+      const newValue = !banner.is_active;
+      await updateBanner(banner.id, { is_active: newValue } as any);
+      toast({
+        title: newValue ? 'Activated' : 'Deactivated',
+        description: `Banner ${newValue ? 'is now active' : 'has been deactivated'}`,
+      });
+    } catch (error) {
+      console.error('Error toggling active state:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update active state',
+        variant: 'destructive',
       });
     }
   };
@@ -329,7 +348,8 @@ export const AdminSponsoredBanners: React.FC = () => {
                       <TableHead>Contact</TableHead>
                       <TableHead>Payment</TableHead>
                       <TableHead>Status</TableHead>
-                      <TableHead>Stats</TableHead>
+                      <TableHead>Active</TableHead>
+                      {/* <TableHead>Stats</TableHead> */}
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -388,8 +408,20 @@ export const AdminSponsoredBanners: React.FC = () => {
                         <TableCell>
                           {getStatusBadge(banner.status)}
                         </TableCell>
-                        
+
                         <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Switch
+                              checked={!!banner.is_active}
+                              onCheckedChange={() => handleToggleActive(banner)}
+                            />
+                            <span className={`text-sm font-medium ${banner.is_active ? 'text-green-700' : 'text-red-600'}`}>
+                              {banner.is_active ? 'On' : 'Off'}
+                            </span>
+                          </div>
+                        </TableCell>
+                        
+                        {/* <TableCell>
                           <div className="text-sm">
                             <div className="flex items-center text-gray-600">
                               <Eye className="w-3 h-3 mr-1" />
@@ -400,7 +432,7 @@ export const AdminSponsoredBanners: React.FC = () => {
                               {banner.click_count || 0} clicks
                             </div>
                           </div>
-                        </TableCell>
+                        </TableCell> */}
                         
                         <TableCell>
                           <div className="flex space-x-2">
@@ -415,22 +447,6 @@ export const AdminSponsoredBanners: React.FC = () => {
                             >
                               View
                             </Button>
-                            
-                            <Select
-                              value={banner.status || 'pending'}
-                              onValueChange={(value) => handleStatusChange(banner.id, value)}
-                            >
-                              <SelectTrigger className="w-24 h-8">
-                                <SelectValue />
-                              </SelectTrigger>
-                              <SelectContent>
-                                <SelectItem value="pending">Pending</SelectItem>
-                                <SelectItem value="approved">Approve</SelectItem>
-                                <SelectItem value="rejected">Reject</SelectItem>
-                                <SelectItem value="active">Activate</SelectItem>
-                                <SelectItem value="inactive">Deactivate</SelectItem>
-                              </SelectContent>
-                            </Select>
                             
                             <Button
                               size="sm"

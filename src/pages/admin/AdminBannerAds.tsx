@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { useUser } from '@clerk/clerk-react';
 import { AdminLayout } from '@/components/admin/AdminLayout';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,12 +28,9 @@ import {
   Edit, 
   Trash2, 
   Eye, 
-  MousePointer, 
-  Upload,
-  ExternalLink,
-  Calendar
+  MousePointer
 } from 'lucide-react';
-import { supabase } from '@/lib/supabase';
+import { supabase, getAdminDb } from '@/lib/supabase';
 import type { Database } from '@/types/database.types';
 
 type BannerAd = Database['public']['Tables']['banner_ads']['Row'];
@@ -46,7 +42,6 @@ type BannerAdInsert = Database['public']['Tables']['banner_ads']['Insert'];
 type BannerAdUpdate = Database['public']['Tables']['banner_ads']['Update'];
 
 export const AdminBannerAds = () => {
-  const { user } = useUser();
   const { toast } = useToast();
   const [bannerAds, setBannerAds] = useState<BannerAd[]>([]);
   const [loading, setLoading] = useState(true);
@@ -82,7 +77,7 @@ export const AdminBannerAds = () => {
 
       if (error) throw error;
       setBannerAds(data || []);
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error fetching banner ads:', error);
       toast({
         title: 'Error',
@@ -121,7 +116,7 @@ export const AdminBannerAds = () => {
         title: 'Success',
         description: 'Image uploaded successfully'
       });
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error uploading image:', error);
       toast({
         title: 'Error',
@@ -194,7 +189,7 @@ export const AdminBannerAds = () => {
       setEditingAd(null);
       resetForm();
       fetchBannerAds();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error saving banner ad:', error);
       toast({
         title: 'Error',
@@ -222,7 +217,7 @@ export const AdminBannerAds = () => {
       });
 
       fetchBannerAds();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error deleting banner ad:', error);
       toast({
         title: 'Error',
@@ -247,7 +242,7 @@ export const AdminBannerAds = () => {
       });
 
       fetchBannerAds();
-    } catch (error) {
+    } catch (error: any) {
       console.error('Error toggling banner ad status:', error);
       toast({
         title: 'Error',
