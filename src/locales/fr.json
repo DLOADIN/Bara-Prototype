@@ -41,6 +41,13 @@
       "title": "🚀 Faites la promotion de votre entreprise ici",
       "subtitle": "Touchez des milliers de clients locaux • Emplacement premium",
       "learnMore": "En savoir plus"
+    },
+    "labels": {
+      "sponsored": "Sponsorisé",
+      "sponsoredBy": "Sponsorisé par"
+    },
+    "actions": {
+      "visitSite": "Visiter le sponsor"
     }
   },
   "languages": {

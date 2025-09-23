@@ -40,6 +40,13 @@
       "title": "🚀 Anuncia tu negocio aquí",
       "subtitle": "Alcanza a miles de clientes locales • Ubicación premium",
       "learnMore": "Saber más"
+    },
+    "labels": {
+      "sponsored": "Patrocinado",
+      "sponsoredBy": "Patrocinado por"
+    },
+    "actions": {
+      "visitSite": "Visitar patrocinador"
     }
   },
   "languages": {
