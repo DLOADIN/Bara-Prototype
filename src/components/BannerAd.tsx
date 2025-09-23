@@ -24,7 +24,7 @@ export const BannerAd: React.FC<BannerAdProps> = ({ className = "" }) => {
   const ensureProtocol = (url: string | null | undefined) => {
     if (!url) return null;
     try {
-      // If URL constructor succeeds, protocol is present
+      // If URL constructor succeeds, protocol is present and other details are also present
       const u = new URL(url);
       return u.toString();
     } catch {
