@@ -87,16 +87,16 @@ export const BannerAd: React.FC<BannerAdProps> = ({ className = "" }) => {
   };
 
   return (
-    <div className={`w-full bg-gradient-to-r from-blue-50 to-indigo-100 border-b border-gray-200 px-[15px] py-[15px] ${className}`}>
+    <div className={`w-full bg-gradient-to-r from-blue-50 to-indigo-100 border-b border-gray-200 px-4 py-2 ${className}`}>
       <div className="w-full">
-        <div className="flex items-center justify-center h-[500px]">
+        <div className="flex items-center justify-center h-[125px] md:h-[150px]">
           {loading ? (
             <div className="animate-pulse flex w-full h-full">
               <div className="rounded bg-gray-300 w-full h-full"></div>
             </div>
           ) : bannerToShow ? (
             <div 
-              className="w-full h-full cursor-pointer hover:opacity-90 transition-opacity overflow-hidden rounded-lg"
+              className="w-full h-full max-h-[120px] md:max-h-[140px] object-contain cursor-pointer hover:opacity-90 transition-opacity overflow-hidden rounded-lg"
               onClick={onClick}
             >
               <img
