@@ -56,7 +56,6 @@ import html2canvas from "html2canvas";
 interface Business {
   id: string;
   name: string;
-  slug: string;
   description: string | null;
   address: string | null;
   phone: string | null;
@@ -111,7 +110,6 @@ interface Country {
 // Form validation schema
 const businessFormSchema = z.object({
   name: z.string().min(1, "Business name is required"),
-  slug: z.string().min(1, "Slug is required"),
   description: z.string().optional(),
   address: z.string().optional(),
   phone: z.string().optional(),
@@ -173,7 +171,6 @@ export const AdminBusinesses = () => {
     resolver: zodResolver(businessFormSchema),
     defaultValues: {
       name: "",
-      slug: "",
       description: "",
       address: "",
       phone: "",
@@ -365,8 +362,7 @@ export const AdminBusinesses = () => {
       business.whatsapp,
       business.city_name,
       business.country_name,
-      business.category_name,
-      business.slug
+      business.category_name
     ].filter(Boolean); // Remove null/undefined values
     
     // Check if ALL search words are found in ANY of the searchable fields
@@ -607,7 +603,6 @@ export const AdminBusinesses = () => {
     setLogoFile(null); // Reset logo file for new uploads
     form.reset({
       name: business.name,
-      slug: business.slug,
       description: business.description || "",
       address: business.address || "",
       phone: business.phone || "",
@@ -1182,17 +1177,6 @@ export const AdminBusinesses = () => {
                   )}
                 </div>
                 <div>
-                  <Label htmlFor="slug" className="font-roboto">Slug *</Label>
-                  <Input
-                    id="slug"
-                    {...form.register("slug")}
-                    className="font-roboto"
-                  />
-                  {form.formState.errors.slug && (
-                    <p className="text-sm text-red-600 mt-1">{form.formState.errors.slug.message}</p>
-                  )}
-                </div>
-                <div>
                   <Label htmlFor="description" className="font-roboto">Description</Label>
                   <Textarea
                     id="description"
@@ -1555,17 +1539,6 @@ export const AdminBusinesses = () => {
                   />
                   {form.formState.errors.name && (
                     <p className="text-sm text-red-600 mt-1">{form.formState.errors.name.message}</p>
-                  )}
-                </div>
-                <div>
-                  <Label htmlFor="edit-slug" className="font-roboto">Slug *</Label>
-                  <Input
-                    id="edit-slug"
-                    {...form.register("slug")}
-                    className="font-roboto"
-                  />
-                  {form.formState.errors.slug && (
-                    <p className="text-sm text-red-600 mt-1">{form.formState.errors.slug.message}</p>
                   )}
                 </div>
                 <div>
