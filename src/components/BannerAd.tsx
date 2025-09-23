@@ -84,42 +84,29 @@ export const BannerAd: React.FC<BannerAdProps> = ({ className = "" }) => {
   };
 
   return (
-    <div className={`w-full bg-gradient-to-r from-blue-50 to-indigo-100 border-b border-gray-200 ${className}`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-center h-[120px]">
+    <div className={`w-full bg-gradient-to-r from-blue-50 to-indigo-100 border-b border-gray-200 px-[15px] py-[15px] ${className}`}>
+      <div className="w-full">
+        <div className="flex items-center justify-center h-[500px]">
           {loading ? (
-            <div className="animate-pulse flex space-x-4">
-              <div className="rounded bg-gray-300 h-16 w-16"></div>
-              <div className="flex-1 space-y-2 py-1">
-                <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-                <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-              </div>
+            <div className="animate-pulse flex w-full h-full">
+              <div className="rounded bg-gray-300 w-full h-full"></div>
             </div>
           ) : bannerToShow ? (
             <div 
-              className="w-full h-full flex items-center justify-center cursor-pointer hover:opacity-90 transition-opacity"
+              className="w-full h-full cursor-pointer hover:opacity-90 transition-opacity overflow-hidden rounded-lg"
               onClick={onClick}
             >
               <img
                 src={bannerToShow.banner_image_url}
                 alt={bannerToShow.banner_alt_text || 'Sponsored banner'}
-                className="max-w-full max-h-full object-contain rounded-lg shadow-sm"
+                // style={{aspectRatio: 16 / 9 }}
+                className="w-full h-full object-cover"
               />
             </div>
           ) : (
-            <div className="flex items-center space-x-6 text-center">
-              <div className="hidden sm:block">
-                <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-lg flex items-center justify-center">
-                  <span className="text-white font-bold text-xl">Ad</span>
-                </div>
-              </div>
-              <div className="flex-1">
-                <div className="text-gray-700 text-lg font-semibold mb-1">
-                  Sponsored Banner
-                </div>
-                <div className="text-gray-500 text-sm">
-                  Your company here
-                </div>
+            <div className="flex items-center justify-center w-full h-full text-center">
+              <div className="w-full h-full bg-gradient-to-br from-blue-500/20 to-indigo-600/20 rounded-lg flex items-center justify-center">
+                <span className="text-gray-700 font-semibold">Sponsored Banner</span>
               </div>
             </div>
           )}
