@@ -447,10 +447,10 @@ export const ClaimListingPage = () => {
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold text-yp-dark font-comfortaa mb-4">
-              Frequently Asked Questions
+              {t('claimListing.page.faqSection.title')}
             </h2>
             <p className="text-lg text-gray-600 max-w-2xl mx-auto">
-              Find answers to common questions about claiming your business listing
+              {t('claimListing.page.faqSection.subtitle')}
             </p>
           </div>
           

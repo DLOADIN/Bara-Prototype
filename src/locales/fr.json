@@ -447,7 +447,111 @@
     "legal": "Mentions légales",
     "copyright": "© 2025 BARA, Inc. Tous droits réservés.",
     "trademark": "BARA, le logo BARA, The Real BARA Listings, et toutes les autres marques BARA sont des marques déposées de BARA, Inc.",
-    "otherMarks": "Toutes les autres marques contenues ici sont la propriété de leurs propriétaires respectifs."
+    "otherMarks": "Toutes les autres marques contenues ici sont la propriété de leurs propriétaires respectifs.",
+    "countries": "Pays",
+    "loadingCountries": "Chargement des pays...",
+    "noCountriesFound": "Aucun pays trouvé",
+    "globalAfrica": "Afrique Globale",
+    "africanAmericans": "Afro-Américains",
+    "hbcusUSA": "HBCUs (USA)",
+    "sponsorCountryPage": "Sponsoriser une page pays",
+    "faq": "FAQ",
+    "askBara": "Demander à BARA"
+  },
+  "sponsorCountry": {
+    "title": "Sponsoriser une page pays",
+    "subtitle": "Affichez la bannière de votre entreprise sur n'importe quelle page de pays pour seulement 25 $. Atteignez des milliers d'utilisateurs intéressés par ce pays.",
+    "benefits": {
+      "title": "Ce que vous obtenez",
+      "banner": {"title": "Bannière de page pays", "description": "Votre bannière affichée en évidence sur la page du pays choisi"},
+      "visibility": {"title": "Visibilité de l'entreprise", "description": "Augmentez la notoriété auprès des utilisateurs ciblés par pays"},
+      "audience": {"title": "Audience ciblée", "description": "Atteignez des utilisateurs intéressés spécifiquement par ce pays"}
+    },
+    "price": {"label": "Prix", "amount": "$25", "note": "Paiement unique"},
+    "form": {
+      "title": "Formulaire de soumission de bannière",
+      "companyInfo": "Informations sur l'entreprise",
+      "companyName": "Nom de l'entreprise",
+      "companyNamePlaceholder": "Nom de votre entreprise",
+      "website": "Site Web",
+      "websitePlaceholder": "https://votreentreprise.com",
+      "bannerInfo": "Informations sur la bannière",
+      "selectCountry": "Sélectionner un pays",
+      "chooseCountry": "Choisissez un pays",
+      "bannerImage": "Image de bannière",
+      "uploadHint": "Téléchargez votre image de bannière (Recommandé : 1200x300px)",
+      "chooseImage": "Choisir une image",
+      "altText": "Texte alternatif (Optionnel)",
+      "altTextPlaceholder": "Décrivez votre bannière pour l'accessibilité",
+      "terms": "En soumettant ce formulaire, vous acceptez nos conditions. Votre bannière sera examinée et approuvée sous 24 à 48 heures.",
+      "submitCta": "Payer 25 $ et soumettre"
+    },
+    "payment": {
+      "detailsTitle": "Détails du paiement",
+      "amountLabel": "Montant",
+      "companyLabel": "Entreprise",
+      "cardNumber": "Numéro de carte",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "Date d'expiration",
+      "expiryPlaceholder": "MM/AA",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "cardholderName": "Nom du titulaire",
+      "cardholderPlaceholder": "Jean Dupont",
+      "successTitle": "Paiement réussi !",
+      "successDescription": "Paiement de ${{amount}} traité pour {{companyName}}",
+      "payAmount": "Payer ${{amount}}"
+    }
+  },
+  "faq": {
+    "title": "Foire aux questions",
+    "subtitle": "Trouvez des réponses aux questions fréquentes sur l'utilisation de BARA LISTINGS en tant que client ou propriétaire d'entreprise.",
+    "general": {
+      "title": "Questions générales",
+      "subtitle": "Questions courantes sur l'utilisation de BARA LISTINGS",
+      "items": {
+        "0": {"q": "Qu'est-ce que BARA LISTINGS ?", "a": "BARA LISTINGS est un annuaire d'entreprises complet qui vous aide à découvrir et à contacter des entreprises à travers l'Afrique et ses diasporas."},
+        "1": {"q": "Comment rechercher des entreprises ?", "a": "Utilisez la barre de recherche en haut de chaque page. Filtrez par lieu, catégorie ou mots-clés."},
+        "2": {"q": "BARA LISTINGS est-il gratuit ?", "a": "Oui, pour les utilisateurs. Les propriétaires peuvent revendiquer leur fiche gratuitement, avec des options premium."},
+        "3": {"q": "Comment contacter une entreprise ?", "a": "Chaque fiche comporte téléphone, email et site web pour contacter directement l'entreprise."},
+        "4": {"q": "Comment laisser un avis ?", "a": "Allez sur la page du profil de l'entreprise et cliquez sur 'Écrire un avis'. Connexion requise."},
+        "5": {"q": "Puis-je suggérer une entreprise ?", "a": "Oui, via le lien 'Ajouter une entreprise' dans la navigation."},
+        "6": {"q": "Fréquence de mise à jour ?", "a": "En temps réel par les propriétaires. Nous vérifions aussi périodiquement l'exactitude."},
+        "7": {"q": "Comment signaler une erreur ?", "a": "Cliquez sur 'Signaler' sur la fiche. Notre équipe examinera et mettra à jour."},
+        "8": {"q": "Mes données sont-elles sécurisées ?", "a": "Oui, nous respectons la confidentialité selon notre politique de confidentialité."},
+        "9": {"q": "Application mobile ?", "a": "Oui, disponible sur iOS et Android."}
+      }
+    },
+    "business": {
+      "title": "Pour les propriétaires d'entreprise",
+      "subtitle": "Informations pour les entreprises listées sur BARA LISTINGS",
+      "items": {
+        "0": {"q": "Comment revendiquer ma fiche ?", "a": "Recherchez votre entreprise puis cliquez sur 'Revendiquer'. Vérification requise."},
+        "1": {"q": "Avantages ?", "a": "Mettre à jour les infos, répondre aux avis, ajouter des photos, accéder aux analyses."},
+        "2": {"q": "Coût ?", "a": "L'inscription de base est gratuite. Offres premium disponibles."},
+        "3": {"q": "Améliorer la visibilité ?", "a": "Profil complet, photos de qualité, encourager les avis. Options premium."},
+        "4": {"q": "Répondre aux avis ?", "a": "Oui, en tant que propriétaire vérifié."},
+        "5": {"q": "Mettre à jour les informations ?", "a": "Depuis le tableau de bord > Modifier l'entreprise. Vérification possible."},
+        "6": {"q": "Méthodes de paiement ?", "a": "Cartes, PayPal et virements. Transactions sécurisées."},
+        "7": {"q": "Promotions et événements ?", "a": "Oui, avec un compte premium."},
+        "8": {"q": "Annuler l'abonnement premium ?", "a": "Dans la section Facturation du tableau de bord."},
+        "9": {"q": "Support entreprises ?", "a": "business@baralistings.com ou le formulaire de contact."}
+      }
+    },
+    "cta": {
+      "title": "Vous avez encore des questions ?",
+      "subtitle": "Notre équipe est là pour vous aider.",
+      "contact": "Contacter le support",
+      "business": "Demandes professionnelles"
+    }
+  },
+  "claimListing": {
+    "page": {
+      "faqSection": {
+        "title": "Foire aux questions",
+        "subtitle": "Trouvez des réponses concernant la revendication de votre fiche d'entreprise"
+      }
+    }
   },
   "categories": {
     "title": "Toutes les Catégories",

@@ -449,7 +449,111 @@
     "legal": "Kisheria",
     "copyright": "© 2025 BARA, Inc. Haki zote zimehifadhiwa.",
     "trademark": "BARA, alama ya BARA, The Real BARA Listings, na alama zingine zote za BARA ni alama zilizosajiliwa za BARA, Inc.",
-    "otherMarks": "Alama zote zingine zilizomo hapa ni mali ya wamiliki wao."
+    "otherMarks": "Alama zote zingine zilizomo hapa ni mali ya wamiliki wao.",
+    "countries": "Nchi",
+    "loadingCountries": "Inapakia nchi...",
+    "noCountriesFound": "Hakuna nchi zilizopatikana",
+    "globalAfrica": "Afrika ya Ulimwengu",
+    "africanAmericans": "Waamerika Weusi",
+    "hbcusUSA": "HBCUs (USA)",
+    "sponsorCountryPage": "Dhamini ukurasa wa nchi",
+    "faq": "Maswali Yanayoulizwa Sana",
+    "askBara": "Uliza BARA"
+  },
+  "sponsorCountry": {
+    "title": "Dhamini ukurasa wa nchi",
+    "subtitle": "Onyesha bendera ya kampuni yako kwenye ukurasa wowote wa nchi kwa $25 tu. Fikia maelfu ya watumiaji wanaovutiwa na nchi hiyo.",
+    "benefits": {
+      "title": "Unachopata",
+      "banner": {"title": "Bendera ya ukurasa wa nchi", "description": "Bendera yako itaonyeshwa kwa uwazi kwenye ukurasa wa nchi uliyochagua"},
+      "visibility": {"title": "Uonekano wa kampuni", "description": "Ongeza utambuzi kwa watumiaji waliolengwa kwa nchi"},
+      "audience": {"title": "Hadhira lengwa", "description": "Fikia watumiaji wanaovutiwa maalum na nchi hiyo"}
+    },
+    "price": {"label": "Bei", "amount": "$25", "note": "Malipo ya mara moja"},
+    "form": {
+      "title": "Fomu ya kutuma bendera",
+      "companyInfo": "Taarifa za kampuni",
+      "companyName": "Jina la kampuni",
+      "companyNamePlaceholder": "Jina la kampuni yako",
+      "website": "Tovuti",
+      "websitePlaceholder": "https://kampuniako.com",
+      "bannerInfo": "Taarifa za bendera",
+      "selectCountry": "Chagua nchi",
+      "chooseCountry": "Chagua nchi",
+      "bannerImage": "Picha ya bendera",
+      "uploadHint": "Pakia picha ya bendera (Inapendekezwa: 1200x300px)",
+      "chooseImage": "Chagua picha",
+      "altText": "Maandishi mbadala (Hiari)",
+      "altTextPlaceholder": "Eleza bendera yako kwa upatikanaji",
+      "terms": "Kwa kutuma fomu hii, unakubali masharti yetu. Bendera yako itakaguliwa na kuidhinishwa ndani ya masaa 24-48.",
+      "submitCta": "Lipa $25 na tuma"
+    },
+    "payment": {
+      "detailsTitle": "Maelezo ya malipo",
+      "amountLabel": "Kiasi",
+      "companyLabel": "Kampuni",
+      "cardNumber": "Nambari ya kadi",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "Tarehe ya mwisho",
+      "expiryPlaceholder": "MM/YY",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "cardholderName": "Jina la mwenye kadi",
+      "cardholderPlaceholder": "John Doe",
+      "successTitle": "Malipo yamefanikiwa!",
+      "successDescription": "Malipo ya ${{amount}} yamefanyika kwa {{companyName}}",
+      "payAmount": "Lipa ${{amount}}"
+    }
+  },
+  "faq": {
+    "title": "Maswali Yanayoulizwa Sana",
+    "subtitle": "Pata majibu ya maswali ya kawaida kuhusu kutumia BARA LISTINGS kama mteja au mmiliki wa biashara.",
+    "general": {
+      "title": "Maswali ya jumla",
+      "subtitle": "Maswali ya kawaida kuhusu kutumia BARA LISTINGS",
+      "items": {
+        "0": {"q": "BARA LISTINGS ni nini?", "a": "BARA LISTINGS ni orodha ya biashara inayokusaidia kugundua na kuwasiliana na biashara barani Afrika na diaspora."},
+        "1": {"q": "Jinsi ya kutafuta biashara?", "a": "Tumia kisanduku cha utafutaji juu ya ukurasa. Chuja kwa eneo, aina au maneno muhimu."},
+        "2": {"q": "Je, ni bure?", "a": "Ndiyo, kwa watumiaji. Wamiliki wanaweza kudai orodha zao bure, na vipengele vya ziada kwa malipo."},
+        "3": {"q": "Jinsi ya kuwasiliana na biashara?", "a": "Kila orodha ina simu, barua pepe na tovuti kwa kuwasiliana moja kwa moja."},
+        "4": {"q": "Jinsi ya kuacha tathmini?", "a": "Nenda kwenye ukurasa wa biashara na bonyeza 'Andika tathmini'. Inahitaji kuingia."},
+        "5": {"q": "Naweza kupendekeza biashara?", "a": "Ndiyo, kupitia kiungo cha 'Ongeza biashara' kwenye menyu."},
+        "6": {"q": "Habari husasishwa mara ngapi?", "a": "Kwa wakati halisi na wamiliki. Pia tunathibitisha mara kwa mara."},
+        "7": {"q": "Jinsi ya kuripoti taarifa isiyo sahihi?", "a": "Bonyeza 'Ripoti' kwenye orodha. Timu yetu itapitia na kusasisha."},
+        "8": {"q": "Je, taarifa zangu ni salama?", "a": "Ndiyo, tunalinda faragha kulingana na sera yetu."},
+        "9": {"q": "Je, mna programu ya simu?", "a": "Ndiyo, inapatikana kwenye iOS na Android."}
+      }
+    },
+    "business": {
+      "title": "Kwa wamiliki wa biashara",
+      "subtitle": "Taarifa kwa biashara zilizo kwenye BARA LISTINGS",
+      "items": {
+        "0": {"q": "Jinsi ya kudai biashara yangu?", "a": "Tafuta biashara yako kisha bonyeza 'Dai'. Inahitaji uthibitisho."},
+        "1": {"q": "Faida ni zipi?", "a": "Sasisha taarifa, jibu tathmini, ongeza picha, pata takwimu."},
+        "2": {"q": "Gharama?", "a": "Orodha ya msingi ni bure. Chaguo za premium zinapatikana."},
+        "3": {"q": "Kuongeza uonekano?", "a": "Wasifu kamili, picha bora na kuhamasisha tathmini. Chaguo za premium."},
+        "4": {"q": "Kujibu tathmini?", "a": "Ndiyo, kama mmiliki aliyethibitishwa."},
+        "5": {"q": "Kusasisha taarifa?", "a": "Kutoka dashibodi > Hariri biashara. Inaweza kuhitaji uthibitisho."},
+        "6": {"q": "Mbinu za malipo?", "a": "Kadi, PayPal na uhamisho wa benki. Malipo salama."},
+        "7": {"q": "Matangazo au matukio?", "a": "Ndiyo, kwa akaunti ya premium."},
+        "8": {"q": "Kufuta premium?", "a": "Kwenye sehemu ya Malipo ya dashibodi."},
+        "9": {"q": "Msaada kwa biashara?", "a": "business@baralistings.com au fomu ya mawasiliano."}
+      }
+    },
+    "cta": {
+      "title": "Bado una maswali?",
+      "subtitle": "Timu yetu iko hapa kukusaidia.",
+      "contact": "Wasiliana na usaidizi",
+      "business": "Maswali ya kibiashara"
+    }
+  },
+  "claimListing": {
+    "page": {
+      "faqSection": {
+        "title": "Maswali Yanayoulizwa Sana",
+        "subtitle": "Pata majibu kuhusu kudai orodha ya biashara yako"
+      }
+    }
   },
   "categories": {
     "title": "Kategoria Zote",

@@ -107,7 +107,7 @@ const Footer = () => {
               </li>
               <li>
                 <Link to="/sponsor-country" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
-                  Sponsor Country Page
+                  {t('footer.sponsorCountryPage')}
                 </Link>
               </li>
               <li>
@@ -117,12 +117,12 @@ const Footer = () => {
               </li>
               <li>
                 <Link to="/faq" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
-                  FAQ
+                  {t('footer.faq')}
                 </Link>
               </li>
               <li>
                 <Link to="/ask-question" onClick={scrollToTop} className="text-gray-600 hover:text-gray-800 transition-colors font-roboto text-sm sm:text-base">
-                  Ask BARA
+                  {t('footer.askBara')}
                 </Link>
               </li>
             </ul>
@@ -175,10 +175,10 @@ const Footer = () => {
           {/* Countries Column - Split into two columns */}
           <div className="lg:col-span-1">
             <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 pb-2 border-b-2 border-[#70905a] font-comfortaa">
-              Countries
+              {t('footer.countries')}
             </h3>
             {isLoading ? (
-              <div className="text-gray-500 text-sm">Loading countries...</div>
+              <div className="text-gray-500 text-sm">{t('footer.loadingCountries')}</div>
             ) : countries.length > 0 ? (
               <div className="grid grid-cols-2 gap-1.5 sm:gap-2">
                 {countries.map((country) => (
@@ -204,14 +204,14 @@ const Footer = () => {
                 ))}
               </div>
             ) : (
-              <div className="text-gray-500 text-sm">No countries found</div>
+              <div className="text-gray-500 text-sm">{t('footer.noCountriesFound')}</div>
             )}
           </div>
 
           {/* Global Africa Column - Split into two columns on larger screens */}
           <div className="lg:col-span-1">
             <h3 className="text-base sm:text-lg font-bold text-gray-800 mb-3 sm:mb-4 pb-2 border-b-2 border-[#70905a] font-comfortaa">
-              Global Africa
+              {t('footer.globalAfrica')}
             </h3>
             <div className="grid grid-cols-1 gap-1.5 sm:gap-2">
               <div>
@@ -221,7 +221,7 @@ const Footer = () => {
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🇺🇸</span>
-                  African Americans
+                  {t('footer.africanAmericans')}
                 </Link>
               </div>
               <div>
@@ -231,7 +231,7 @@ const Footer = () => {
                   className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                 >
                   <span className="mr-2">🎓</span>
-                  HBCUs (USA)
+                  {t('footer.hbcusUSA')}
                 </Link>
               </div>
               <div>

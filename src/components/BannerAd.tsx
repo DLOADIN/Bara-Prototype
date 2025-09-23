@@ -1,5 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { db } from '../lib/supabase';
+import { useTranslation } from 'react-i18next';
 
 interface BannerAdProps {
   className?: string;
@@ -15,6 +16,7 @@ interface SponsoredBannerRow {
 let bannerAdInstanceCounter = 0;
 
 export const BannerAd: React.FC<BannerAdProps> = ({ className = "" }) => {
+  const { t } = useTranslation();
   const [banners, setBanners] = useState<SponsoredBannerRow[]>([]);
   const [loading, setLoading] = useState(true);
   const instanceIndexRef = useRef<number>(bannerAdInstanceCounter++ % 2);
@@ -59,7 +61,8 @@ export const BannerAd: React.FC<BannerAdProps> = ({ className = "" }) => {
           banner_image_url: b.banner_image_url,
           banner_alt_text: b.banner_alt_text || null,
           company_website: b.company_website || null,
-        }));
+        }))
+        .filter((b: SponsoredBannerRow) => !!b.banner_image_url);
         setBanners(rows);
       } catch (err) {
         console.error('Error fetching sponsored banners for BannerAd:', err);
@@ -98,15 +101,16 @@ export const BannerAd: React.FC<BannerAdProps> = ({ className = "" }) => {
             >
               <img
                 src={bannerToShow.banner_image_url}
-                alt={bannerToShow.banner_alt_text || 'Sponsored banner'}
+                alt={bannerToShow.banner_alt_text || t('bannerAd.placeholder.title')}
                 // style={{aspectRatio: 16 / 9 }}
                 className="w-full h-full object-cover"
               />
             </div>
           ) : (
             <div className="flex items-center justify-center w-full h-full text-center">
-              <div className="w-full h-full bg-gradient-to-br from-blue-500/20 to-indigo-600/20 rounded-lg flex items-center justify-center">
-                <span className="text-gray-700 font-semibold">Sponsored Banner</span>
+              <div className="w-full h-full bg-gradient-to-br from-blue-500/20 to-indigo-600/20 rounded-lg flex flex-col items-center justify-center px-4">
+                <span className="text-gray-700 font-semibold text-lg">{t('bannerAd.placeholder.title')}</span>
+                <span className="text-gray-600 text-sm mt-2">{t('bannerAd.placeholder.subtitle')}</span>
               </div>
             </div>
           )}

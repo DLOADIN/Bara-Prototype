@@ -48,6 +48,7 @@ const PaymentDialog: React.FC<PaymentDialogProps> = ({
   amount, 
   companyName 
 }) => {
+  const { t } = useTranslation();
   const [cardDetails, setCardDetails] = useState({
     cardNumber: '',
     expiryDate: '',
@@ -65,8 +66,8 @@ const PaymentDialog: React.FC<PaymentDialogProps> = ({
     
     // In a real implementation, you would integrate with Stripe or another payment processor
     toast({
-      title: "Payment Successful!",
-      description: `Payment of $${amount} processed for ${companyName}`,
+      title: t('sponsorCountry.payment.successTitle'),
+      description: t('sponsorCountry.payment.successDescription', { amount, companyName }),
     });
     
     setIsProcessing(false);
@@ -82,24 +83,24 @@ const PaymentDialog: React.FC<PaymentDialogProps> = ({
         <CardHeader>
           <CardTitle className="flex items-center">
             <CreditCard className="w-5 h-5 mr-2" />
-            Payment Details
+            {t('sponsorCountry.payment.detailsTitle')}
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="bg-blue-50 p-3 rounded-lg">
             <p className="text-sm text-blue-800">
-              <strong>Amount:</strong> ${amount} USD
+              <strong>{t('sponsorCountry.payment.amountLabel')}:</strong> ${amount} USD
             </p>
             <p className="text-sm text-blue-800">
-              <strong>Company:</strong> {companyName}
+              <strong>{t('sponsorCountry.payment.companyLabel')}:</strong> {companyName}
             </p>
           </div>
           
           <div className="space-y-3">
             <div>
-              <label className="text-sm font-medium">Card Number</label>
+              <label className="text-sm font-medium">{t('sponsorCountry.payment.cardNumber')}</label>
               <Input
-                placeholder="1234 5678 9012 3456"
+                placeholder={t('sponsorCountry.payment.cardNumberPlaceholder')}
                 value={cardDetails.cardNumber}
                 onChange={(e) => setCardDetails(prev => ({ ...prev, cardNumber: e.target.value }))}
               />
@@ -107,17 +108,17 @@ const PaymentDialog: React.FC<PaymentDialogProps> = ({
             
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <label className="text-sm font-medium">Expiry Date</label>
+                <label className="text-sm font-medium">{t('sponsorCountry.payment.expiryDate')}</label>
                 <Input
-                  placeholder="MM/YY"
+                  placeholder={t('sponsorCountry.payment.expiryPlaceholder')}
                   value={cardDetails.expiryDate}
                   onChange={(e) => setCardDetails(prev => ({ ...prev, expiryDate: e.target.value }))}
                 />
               </div>
               <div>
-                <label className="text-sm font-medium">CVV</label>
+                <label className="text-sm font-medium">{t('sponsorCountry.payment.cvv')}</label>
                 <Input
-                  placeholder="123"
+                  placeholder={t('sponsorCountry.payment.cvvPlaceholder')}
                   value={cardDetails.cvv}
                   onChange={(e) => setCardDetails(prev => ({ ...prev, cvv: e.target.value }))}
                 />
@@ -125,9 +126,9 @@ const PaymentDialog: React.FC<PaymentDialogProps> = ({
             </div>
             
             <div>
-              <label className="text-sm font-medium">Cardholder Name</label>
+              <label className="text-sm font-medium">{t('sponsorCountry.payment.cardholderName')}</label>
               <Input
-                placeholder="John Doe"
+                placeholder={t('sponsorCountry.payment.cardholderPlaceholder')}
                 value={cardDetails.cardholderName}
                 onChange={(e) => setCardDetails(prev => ({ ...prev, cardholderName: e.target.value }))}
               />
@@ -141,14 +142,14 @@ const PaymentDialog: React.FC<PaymentDialogProps> = ({
               className="flex-1"
               disabled={isProcessing}
             >
-              Cancel
+              {t('common.cancel')}
             </Button>
             <Button
               onClick={handlePayment}
               disabled={isProcessing}
               className="flex-1 bg-green-600 hover:bg-green-700"
             >
-              {isProcessing ? 'Processing...' : `Pay $${amount}`}
+              {isProcessing ? t('common.loading') : t('sponsorCountry.payment.payAmount', { amount })}
             </Button>
           </div>
         </CardContent>
@@ -330,11 +331,10 @@ export const SponsorCountryPage: React.FC = () => {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="text-center mb-8">
           <h1 className="text-3xl font-bold text-yp-dark mb-4">
-            Sponsor a Country Page
+            {t('sponsorCountry.title')}
           </h1>
           <p className="text-lg text-yp-gray-dark max-w-2xl mx-auto">
-            Get your company banner displayed on any country page for just $25. 
-            Reach thousands of users interested in that specific country.
+            {t('sponsorCountry.subtitle')}
           </p>
         </div>
 
@@ -345,40 +345,40 @@ export const SponsorCountryPage: React.FC = () => {
               <CardHeader>
                 <CardTitle className="flex items-center">
                   <CheckCircle className="w-5 h-5 mr-2 text-green-600" />
-                  What You Get
+                  {t('sponsorCountry.benefits.title')}
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div className="flex items-start space-x-3">
                   <Globe className="w-5 h-5 text-blue-600 mt-1" />
                   <div>
-                    <h4 className="font-medium">Country Page Banner</h4>
-                    <p className="text-sm text-gray-600">Your banner displayed prominently on the chosen country page</p>
+                    <h4 className="font-medium">{t('sponsorCountry.benefits.banner.title')}</h4>
+                    <p className="text-sm text-gray-600">{t('sponsorCountry.benefits.banner.description')}</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start space-x-3">
                   <Building className="w-5 h-5 text-blue-600 mt-1" />
                   <div>
-                    <h4 className="font-medium">Company Visibility</h4>
-                    <p className="text-sm text-gray-600">Increase brand awareness among country-specific users</p>
+                    <h4 className="font-medium">{t('sponsorCountry.benefits.visibility.title')}</h4>
+                    <p className="text-sm text-gray-600">{t('sponsorCountry.benefits.visibility.description')}</p>
                   </div>
                 </div>
                 
                 <div className="flex items-start space-x-3">
                   <MapPin className="w-5 h-5 text-blue-600 mt-1" />
                   <div>
-                    <h4 className="font-medium">Targeted Audience</h4>
-                    <p className="text-sm text-gray-600">Reach users specifically interested in that country</p>
+                    <h4 className="font-medium">{t('sponsorCountry.benefits.audience.title')}</h4>
+                    <p className="text-sm text-gray-600">{t('sponsorCountry.benefits.audience.description')}</p>
                   </div>
                 </div>
                 
                 <div className="bg-blue-50 p-4 rounded-lg">
                   <div className="flex items-center justify-between">
-                    <span className="font-medium text-blue-900">Price</span>
-                    <span className="text-2xl font-bold text-blue-900">$25</span>
+                    <span className="font-medium text-blue-900">{t('sponsorCountry.price.label')}</span>
+                    <span className="text-2xl font-bold text-blue-900">{t('sponsorCountry.price.amount')}</span>
                   </div>
-                  <p className="text-sm text-blue-700 mt-1">One-time payment</p>
+                  <p className="text-sm text-blue-700 mt-1">{t('sponsorCountry.price.note')}</p>
                 </div>
               </CardContent>
             </Card>
@@ -388,37 +388,37 @@ export const SponsorCountryPage: React.FC = () => {
           <div className="lg:col-span-2">
             <Card>
               <CardHeader>
-                <CardTitle>Banner Submission Form</CardTitle>
+                <CardTitle>{t('sponsorCountry.form.title')}</CardTitle>
               </CardHeader>
               <CardContent>
                 <form onSubmit={handleSubmit} className="space-y-6">
                   {/* Company Information */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Company Information</h3>
+                    <h3 className="text-lg font-medium">{t('sponsorCountry.form.companyInfo')}</h3>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       <div>
                         <label className="block text-sm font-medium mb-2">
-                          Company Name *
+                          {t('sponsorCountry.form.companyName')} *
                         </label>
                         <Input
                           required
                           value={formData.company_name}
                           onChange={(e) => setFormData(prev => ({ ...prev, company_name: e.target.value }))}
-                          placeholder="Your Company Name"
+                          placeholder={t('sponsorCountry.form.companyNamePlaceholder')}
                         />
                       </div>
                       
                       <div>
                         <label className="block text-sm font-medium mb-2">
-                          Website *
+                          {t('sponsorCountry.form.website')} *
                         </label>
                         <Input
                           required
                           type="url"
                           value={formData.company_website}
                           onChange={(e) => setFormData(prev => ({ ...prev, company_website: e.target.value }))}
-                          placeholder="https://yourcompany.com"
+                          placeholder={t('sponsorCountry.form.websitePlaceholder')}
                         />
                       </div>
                     </div>
@@ -426,18 +426,18 @@ export const SponsorCountryPage: React.FC = () => {
 
                   {/* Banner Information */}
                   <div className="space-y-4">
-                    <h3 className="text-lg font-medium">Banner Information</h3>
+                    <h3 className="text-lg font-medium">{t('sponsorCountry.form.bannerInfo')}</h3>
                     
                     <div>
                       <label className="block text-sm font-medium mb-2">
-                        Select Country *
+                        {t('sponsorCountry.form.selectCountry')} *
                       </label>
                       <Select
                         value={formData.country_id}
                         onValueChange={(value) => setFormData(prev => ({ ...prev, country_id: value }))}
                       >
                         <SelectTrigger>
-                          <SelectValue placeholder="Choose a country" />
+                          <SelectValue placeholder={t('sponsorCountry.form.chooseCountry')} />
                         </SelectTrigger>
                         <SelectContent>
                           {countries.map((country) => (
@@ -460,7 +460,7 @@ export const SponsorCountryPage: React.FC = () => {
                     
                     <div>
                       <label className="block text-sm font-medium mb-2">
-                        Banner Image *
+                        {t('sponsorCountry.form.bannerImage')} *
                       </label>
                       <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center">
                         {bannerImageUrl ? (
@@ -489,7 +489,7 @@ export const SponsorCountryPage: React.FC = () => {
                           <div>
                             <Upload className="w-8 h-8 mx-auto text-gray-400 mb-2" />
                             <p className="text-sm text-gray-600 mb-2">
-                              Upload your banner image (Recommended: 1200x300px)
+                              {t('sponsorCountry.form.uploadHint')}
                             </p>
                             <input
                               type="file"
@@ -503,7 +503,7 @@ export const SponsorCountryPage: React.FC = () => {
                               className="cursor-pointer inline-flex items-center px-4 py-2 border border-gray-300 rounded-md text-sm font-medium text-gray-700 bg-white hover:bg-gray-50"
                             >
                               <ImageIcon className="w-4 h-4 mr-2" />
-                              Choose Image
+                              {t('sponsorCountry.form.chooseImage')}
                             </label>
                           </div>
                         )}
@@ -512,12 +512,12 @@ export const SponsorCountryPage: React.FC = () => {
                     
                     <div>
                       <label className="block text-sm font-medium mb-2">
-                        Alt Text (Optional)
+                        {t('sponsorCountry.form.altText')}
                       </label>
                       <Input
                         value={formData.banner_alt_text}
                         onChange={(e) => setFormData(prev => ({ ...prev, banner_alt_text: e.target.value }))}
-                        placeholder="Describe your banner for accessibility"
+                        placeholder={t('sponsorCountry.form.altTextPlaceholder')}
                       />
                     </div>
                   </div>
@@ -528,8 +528,7 @@ export const SponsorCountryPage: React.FC = () => {
                     <Alert>
                       <AlertCircle className="h-4 w-4" />
                       <AlertDescription>
-                        By submitting this form, you agree to our terms and conditions. 
-                        Your banner will be reviewed and approved within 24-48 hours.
+                        {t('sponsorCountry.form.terms')}
                       </AlertDescription>
                     </Alert>
                     
@@ -540,14 +539,14 @@ export const SponsorCountryPage: React.FC = () => {
                         onClick={() => navigate('/')}
                         className="flex-1"
                       >
-                        Cancel
+                        {t('common.cancel')}
                       </Button>
                       <Button
                         type="submit"
                         className="flex-1 bg-brand-blue hover:bg-brand-blue-dark"
                         disabled={submitting}
                       >
-                        {submitting ? 'Processing...' : 'Pay $25 & Submit'}
+                        {submitting ? t('common.loading') : t('sponsorCountry.form.submitCta')}
                       </Button>
                     </div>
                   </div>

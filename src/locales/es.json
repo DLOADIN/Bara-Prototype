@@ -446,7 +446,111 @@
     "legal": "Legal",
     "copyright": "© 2025 BARA, Inc. Todos los derechos reservados.",
     "trademark": "BARA, el logo de BARA, The Real BARA Listings, y todas las demás marcas BARA son marcas registradas de BARA, Inc.",
-    "otherMarks": "Todas las demás marcas contenidas aquí son propiedad de sus respectivos dueños."
+    "otherMarks": "Todas las demás marcas contenidas aquí son propiedad de sus respectivos dueños.",
+    "countries": "Países",
+    "loadingCountries": "Cargando países...",
+    "noCountriesFound": "No se encontraron países",
+    "globalAfrica": "África Global",
+    "africanAmericans": "Afroamericanos",
+    "hbcusUSA": "HBCUs (EE. UU.)",
+    "sponsorCountryPage": "Patrocinar una página de país",
+    "faq": "Preguntas frecuentes",
+    "askBara": "Preguntar a BARA"
+  },
+  "sponsorCountry": {
+    "title": "Patrocinar una página de país",
+    "subtitle": "Muestra el banner de tu empresa en cualquier página de país por solo $25. Llega a miles de usuarios interesados en ese país.",
+    "benefits": {
+      "title": "Lo que obtienes",
+      "banner": {"title": "Banner en página de país", "description": "Tu banner mostrado de manera destacada en la página del país elegido"},
+      "visibility": {"title": "Visibilidad de la empresa", "description": "Aumenta el reconocimiento entre usuarios específicos del país"},
+      "audience": {"title": "Audiencia segmentada", "description": "Llega a usuarios específicamente interesados en ese país"}
+    },
+    "price": {"label": "Precio", "amount": "$25", "note": "Pago único"},
+    "form": {
+      "title": "Formulario de envío de banner",
+      "companyInfo": "Información de la empresa",
+      "companyName": "Nombre de la empresa",
+      "companyNamePlaceholder": "Nombre de tu empresa",
+      "website": "Sitio web",
+      "websitePlaceholder": "https://tuempresa.com",
+      "bannerInfo": "Información del banner",
+      "selectCountry": "Seleccionar país",
+      "chooseCountry": "Elige un país",
+      "bannerImage": "Imagen del banner",
+      "uploadHint": "Sube tu imagen de banner (Recomendado: 1200x300px)",
+      "chooseImage": "Elegir imagen",
+      "altText": "Texto alternativo (Opcional)",
+      "altTextPlaceholder": "Describe tu banner para accesibilidad",
+      "terms": "Al enviar este formulario, aceptas nuestros términos. Tu banner será revisado y aprobado dentro de 24-48 horas.",
+      "submitCta": "Pagar $25 y enviar"
+    },
+    "payment": {
+      "detailsTitle": "Detalles de pago",
+      "amountLabel": "Monto",
+      "companyLabel": "Empresa",
+      "cardNumber": "Número de tarjeta",
+      "cardNumberPlaceholder": "1234 5678 9012 3456",
+      "expiryDate": "Fecha de vencimiento",
+      "expiryPlaceholder": "MM/AA",
+      "cvv": "CVV",
+      "cvvPlaceholder": "123",
+      "cardholderName": "Nombre del titular",
+      "cardholderPlaceholder": "Juan Pérez",
+      "successTitle": "¡Pago exitoso!",
+      "successDescription": "Pago de ${{amount}} procesado para {{companyName}}",
+      "payAmount": "Pagar ${{amount}}"
+    }
+  },
+  "faq": {
+    "title": "Preguntas frecuentes",
+    "subtitle": "Encuentra respuestas a preguntas comunes sobre el uso de BARA LISTINGS como cliente o propietario.",
+    "general": {
+      "title": "Preguntas generales",
+      "subtitle": "Preguntas comunes sobre el uso de BARA LISTINGS",
+      "items": {
+        "0": {"q": "¿Qué es BARA LISTINGS?", "a": "BARA LISTINGS es un directorio de negocios que te ayuda a descubrir y conectar con negocios en África y su diáspora."},
+        "1": {"q": "¿Cómo busco negocios?", "a": "Usa la barra de búsqueda en la parte superior. Filtra por ubicación, categoría o palabras clave."},
+        "2": {"q": "¿Es gratis BARA LISTINGS?", "a": "Sí, para los usuarios. Los dueños pueden reclamar sus listados gratis, con funciones premium opcionales."},
+        "3": {"q": "¿Cómo contacto a un negocio?", "a": "Cada ficha incluye teléfono, correo y sitio web para contacto directo."},
+        "4": {"q": "¿Cómo dejo una reseña?", "a": "En la página del negocio, haz clic en 'Escribir una reseña'. Requiere iniciar sesión."},
+        "5": {"q": "¿Puedo sugerir un negocio?", "a": "Sí, mediante el enlace 'Agregar un negocio' en la navegación."},
+        "6": {"q": "¿Cada cuánto se actualiza la información?", "a": "En tiempo real por los dueños. También verificamos periódicamente la exactitud."},
+        "7": {"q": "¿Cómo reporto información incorrecta?", "a": "Haz clic en 'Reportar' en la ficha. Nuestro equipo revisará y actualizará."},
+        "8": {"q": "¿Mis datos son seguros?", "a": "Sí, protegemos tu privacidad conforme a nuestra política."},
+        "9": {"q": "¿Tienen app móvil?", "a": "Sí, disponible para iOS y Android."}
+      }
+    },
+    "business": {
+      "title": "Para dueños de negocios",
+      "subtitle": "Información para negocios en BARA LISTINGS",
+      "items": {
+        "0": {"q": "¿Cómo reclamo mi negocio?", "a": "Busca tu negocio y haz clic en 'Reclamar'. Se requiere verificación."},
+        "1": {"q": "¿Beneficios?", "a": "Actualizar información, responder reseñas, agregar fotos, acceder a analíticas."},
+        "2": {"q": "¿Costo?", "a": "El listado básico es gratis. Opciones premium disponibles."},
+        "3": {"q": "¿Cómo mejorar la visibilidad?", "a": "Perfil completo, fotos de calidad y fomentar reseñas. Opciones premium."},
+        "4": {"q": "¿Responder reseñas?", "a": "Sí, como dueño verificado."},
+        "5": {"q": "¿Actualizar información?", "a": "Desde el panel > Editar negocio. Puede requerir verificación."},
+        "6": {"q": "¿Métodos de pago?", "a": "Tarjetas, PayPal y transferencias. Transacciones seguras."},
+        "7": {"q": "¿Ofertas o eventos?", "a": "Sí, con cuenta premium."},
+        "8": {"q": "¿Cancelar premium?", "a": "En la sección de Facturación del panel."},
+        "9": {"q": "¿Soporte empresarial?", "a": "business@baralistings.com o el formulario de contacto."}
+      }
+    },
+    "cta": {
+      "title": "¿Aún tienes preguntas?",
+      "subtitle": "Nuestro equipo está aquí para ayudarte.",
+      "contact": "Contactar soporte",
+      "business": "Consultas comerciales"
+    }
+  },
+  "claimListing": {
+    "page": {
+      "faqSection": {
+        "title": "Preguntas frecuentes",
+        "subtitle": "Encuentra respuestas sobre cómo reclamar tu listado de negocio"
+      }
+    }
   },
   "categories": {
     "title": "Todas las Categorías",
