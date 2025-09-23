@@ -768,6 +768,13 @@
       "title": "🚀 Advertise Your Business Here",
       "subtitle": "Reach thousands of local customers • Premium ad placement",
       "learnMore": "Learn More"
+    },
+    "labels": {
+      "sponsored": "Sponsored",
+      "sponsoredBy": "Sponsored by"
+    },
+    "actions": {
+      "visitSite": "Visit Sponsor"
     }
   },
   "lookForBusinesses": "Look for businesses by name and location.",

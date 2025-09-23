@@ -543,14 +543,7 @@
         "business": "استفسارات الأعمال"
       }
     },
-    "claimListing": {
-      "page": {
-        "faqSection": {
-          "title": "الأسئلة الشائعة",
-          "subtitle": "اعثر على إجابات حول المطالبة بقائمة عملك"
-        }
-      }
-    },
+ 
     "categories": {
       "title": "جميع الفئات",
       "searchPlaceholder": "البحث في الفئات...",

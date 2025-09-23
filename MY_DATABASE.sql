@@ -76,7 +76,6 @@ CREATE TABLE public.business_click_events (
 CREATE TABLE public.businesses (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   name text NOT NULL,
-  slug text NOT NULL UNIQUE,
   description text,
   category_id uuid,
   owner_id uuid,

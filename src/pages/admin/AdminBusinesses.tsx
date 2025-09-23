@@ -56,7 +56,6 @@ import html2canvas from "html2canvas";
 interface Business {
   id: string;
   name: string;
-  slug: string;
   description: string | null;
   address: string | null;
   phone: string | null;
@@ -69,8 +68,6 @@ interface Business {
   city_name?: string;
   country_id: string;
   country_name?: string;
-  latitude: number | null;
-  longitude: number | null;
   hours_of_operation: any | null;
   services: any | null;
   images: string[] | null;
@@ -111,7 +108,6 @@ interface Country {
 // Form validation schema
 const businessFormSchema = z.object({
   name: z.string().min(1, "Business name is required"),
-  slug: z.string().min(1, "Slug is required"),
   description: z.string().optional(),
   address: z.string().optional(),
   phone: z.string().optional(),
@@ -121,8 +117,6 @@ const businessFormSchema = z.object({
   category_id: z.string().min(1, "Category is required"),
   city_id: z.string().min(1, "City is required"),
   country_id: z.string().min(1, "Country is required"),
-  latitude: z.number().optional(),
-  longitude: z.number().optional(),
   hours_of_operation: z.any().optional(),
   services: z.any().optional(),
   is_premium: z.boolean().default(false),
@@ -173,7 +167,6 @@ export const AdminBusinesses = () => {
     resolver: zodResolver(businessFormSchema),
     defaultValues: {
       name: "",
-      slug: "",
       description: "",
       address: "",
       phone: "",
@@ -365,8 +358,7 @@ export const AdminBusinesses = () => {
       business.whatsapp,
       business.city_name,
       business.country_name,
-      business.category_name,
-      business.slug
+      business.category_name
     ].filter(Boolean); // Remove null/undefined values
     
     // Check if ALL search words are found in ANY of the searchable fields
@@ -392,22 +384,6 @@ export const AdminBusinesses = () => {
   // CRUD Functions
   const handleAddBusiness = async (data: BusinessFormData) => {
     try {
-      // Validate and format latitude/longitude to prevent numeric overflow
-      let latitude = data.latitude;
-      let longitude = data.longitude;
-      
-      if (latitude !== undefined) {
-        // Ensure latitude is within valid range and format to 6 decimal places
-        latitude = Math.max(-90, Math.min(90, latitude));
-        latitude = Math.round(latitude * 1000000) / 1000000; // 6 decimal places
-      }
-      
-      if (longitude !== undefined) {
-        // Ensure longitude is within valid range and format to 6 decimal places
-        longitude = Math.max(-180, Math.min(180, longitude));
-        longitude = Math.round(longitude * 1000000) / 1000000; // 6 decimal places
-      }
-
       // Upload images to storage
       let uploadedImageUrls: string[] = [];
       let uploadedLogoUrl: string | null = null;
@@ -438,8 +414,6 @@ export const AdminBusinesses = () => {
 
       const businessData = {
         ...data,
-        latitude,
-        longitude,
         images: uploadedImageUrls,
         logo_url: uploadedLogoUrl,
         created_at: new Date().toISOString(),
@@ -480,22 +454,6 @@ export const AdminBusinesses = () => {
     if (!selectedBusiness) return;
     
     try {
-      // Validate and format latitude/longitude to prevent numeric overflow
-      let latitude = data.latitude;
-      let longitude = data.longitude;
-      
-      if (latitude !== undefined) {
-        // Ensure latitude is within valid range and format to 6 decimal places
-        latitude = Math.max(-90, Math.min(90, latitude));
-        latitude = Math.round(latitude * 1000000) / 1000000; // 6 decimal places
-      }
-      
-      if (longitude !== undefined) {
-        // Ensure longitude is within valid range and format to 6 decimal places
-        longitude = Math.max(-180, Math.min(180, longitude));
-        longitude = Math.round(longitude * 1000000) / 1000000; // 6 decimal places
-      }
-
       // Handle image uploads for editing
       let finalImages = selectedBusiness.images || [];
       let finalLogoUrl = selectedBusiness.logo_url;
@@ -530,8 +488,6 @@ export const AdminBusinesses = () => {
 
       const businessData = {
         ...data,
-        latitude,
-        longitude,
         images: finalImages,
         logo_url: finalLogoUrl,
         updated_at: new Date().toISOString()
@@ -607,7 +563,6 @@ export const AdminBusinesses = () => {
     setLogoFile(null); // Reset logo file for new uploads
     form.reset({
       name: business.name,
-      slug: business.slug,
       description: business.description || "",
       address: business.address || "",
       phone: business.phone || "",
@@ -617,8 +572,6 @@ export const AdminBusinesses = () => {
       category_id: business.category_id,
       city_id: business.city_id,
       country_id: business.country_id,
-      latitude: business.latitude || undefined,
-      longitude: business.longitude || undefined,
       hours_of_operation: business.hours_of_operation,
       services: business.services,
       is_premium: business.is_premium,
@@ -768,11 +721,7 @@ export const AdminBusinesses = () => {
     return highlightedText;
   };
 
-  // Helper function to format coordinates for display
-  const formatCoordinate = (value: number | null | undefined) => {
-    if (value === null || value === undefined) return "Not set";
-    return value.toFixed(6);
-  };
+  
 
   if (loading) {
     return (
@@ -1182,17 +1131,6 @@ export const AdminBusinesses = () => {
                   )}
                 </div>
                 <div>
-                  <Label htmlFor="slug" className="font-roboto">Slug *</Label>
-                  <Input
-                    id="slug"
-                    {...form.register("slug")}
-                    className="font-roboto"
-                  />
-                  {form.formState.errors.slug && (
-                    <p className="text-sm text-red-600 mt-1">{form.formState.errors.slug.message}</p>
-                  )}
-                </div>
-                <div>
                   <Label htmlFor="description" className="font-roboto">Description</Label>
                   <Textarea
                     id="description"
@@ -1307,57 +1245,7 @@ export const AdminBusinesses = () => {
                     <p className="text-sm text-red-600 mt-1">{form.formState.errors.city_id.message}</p>
                   )}
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="latitude" className="font-roboto">Latitude</Label>
-                    <Input
-                      id="latitude"
-                      type="number"
-                      step="0.000001"
-                      min="-90"
-                      max="90"
-                      placeholder="-90 to 90"
-                      {...form.register("latitude", { 
-                        valueAsNumber: true,
-                        validate: (value) => {
-                          if (value === undefined || value === null) return true;
-                          return (value >= -90 && value <= 90) || "Latitude must be between -90 and 90";
-                        }
-                      })}
-                      className="font-roboto"
-                    />
-                    {form.formState.errors.latitude && (
-                      <p className="text-sm text-red-600 mt-1">{form.formState.errors.latitude.message}</p>
-                    )}
-                  </div>
-                  <div>
-                    <Label htmlFor="longitude" className="font-roboto">Longitude</Label>
-                    <Input
-                      id="longitude"
-                      type="number"
-                      step="0.000001"
-                      min="-180"
-                      max="180"
-                      placeholder="-180 to 180"
-                      {...form.register("longitude", { 
-                        valueAsNumber: true,
-                        validate: (value) => {
-                          if (value === undefined || value === null) return true;
-                          return (value >= -180 && value <= 180) || "Longitude must be between -180 and 180";
-                        }
-                      })}
-                      className="font-roboto"
-                    />
-                    {form.formState.errors.longitude && (
-                      <p className="text-sm text-red-600 mt-1">{form.formState.errors.longitude.message}</p>
-                    )}
-                  </div>
-                </div>
-                <div className="text-xs text-gray-500 font-roboto mb-4">
-                  <p>💡 <strong>Coordinate Format:</strong> Use decimal degrees (e.g., 30.0444 for Cairo, 31.2357 for longitude)</p>
-                  <p>• Latitude: -90 to +90 (negative = South, positive = North)</p>
-                  <p>• Longitude: -180 to +180 (negative = West, positive = East)</p>
-                </div>
+              
                 <div>
                   <Label htmlFor="status" className="font-roboto">Status</Label>
                   <Select value={form.watch("status")} onValueChange={(value) => form.setValue("status", value as 'pending' | 'active' | 'suspended')}>
@@ -1558,17 +1446,6 @@ export const AdminBusinesses = () => {
                   )}
                 </div>
                 <div>
-                  <Label htmlFor="edit-slug" className="font-roboto">Slug *</Label>
-                  <Input
-                    id="edit-slug"
-                    {...form.register("slug")}
-                    className="font-roboto"
-                  />
-                  {form.formState.errors.slug && (
-                    <p className="text-sm text-red-600 mt-1">{form.formState.errors.slug.message}</p>
-                  )}
-                </div>
-                <div>
                   <Label htmlFor="edit-description" className="font-roboto">Description</Label>
                   <Textarea
                     id="edit-description"
@@ -1683,57 +1560,7 @@ export const AdminBusinesses = () => {
                     <p className="text-sm text-red-600 mt-1">{form.formState.errors.city_id.message}</p>
                   )}
                 </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <Label htmlFor="edit-latitude" className="font-roboto">Latitude</Label>
-                    <Input
-                      id="edit-latitude"
-                      type="number"
-                      step="0.000001"
-                      min="-90"
-                      max="90"
-                      placeholder="-90 to 90"
-                      {...form.register("latitude", { 
-                        valueAsNumber: true,
-                        validate: (value) => {
-                          if (value === undefined || value === null) return true;
-                          return (value >= -90 && value <= 90) || "Latitude must be between -90 and 90";
-                        }
-                      })}
-                      className="font-roboto"
-                    />
-                    {form.formState.errors.latitude && (
-                      <p className="text-sm text-red-600 mt-1">{form.formState.errors.latitude.message}</p>
-                    )}
-                  </div>
-                  <div>
-                    <Label htmlFor="edit-longitude" className="font-roboto">Longitude</Label>
-                    <Input
-                      id="edit-longitude"
-                      type="number"
-                      step="0.000001"
-                      min="-180"
-                      max="180"
-                      placeholder="-180 to 180"
-                      {...form.register("longitude", { 
-                        valueAsNumber: true,
-                        validate: (value) => {
-                          if (value === undefined || value === null) return true;
-                          return (value >= -180 && value <= 180) || "Longitude must be between -180 and 180";
-                        }
-                      })}
-                      className="font-roboto"
-                    />
-                    {form.formState.errors.longitude && (
-                      <p className="text-sm text-red-600 mt-1">{form.formState.errors.longitude.message}</p>
-                    )}
-                  </div>
-                </div>
-                <div className="text-xs text-gray-500 font-roboto mb-4">
-                  <p>💡 <strong>Coordinate Format:</strong> Use decimal degrees (e.g., 30.0444 for Cairo, 31.2357 for longitude)</p>
-                  <p>• Latitude: -90 to +90 (negative = South, positive = North)</p>
-                  <p>• Longitude: -180 to +180 (negative = West, positive = East)</p>
-                </div>
+                
                 <div>
                   <Label htmlFor="edit-status" className="font-roboto">Status</Label>
                   <Select value={form.watch("status")} onValueChange={(value) => form.setValue("status", value as 'pending' | 'active' | 'suspended')}>
@@ -2017,14 +1844,7 @@ export const AdminBusinesses = () => {
                       <span className="font-roboto font-medium">Country:</span>
                       <span className="font-roboto">{selectedBusiness.country_name}</span>
                     </div>
-                    {selectedBusiness.latitude && selectedBusiness.longitude && (
-                      <div className="flex items-center space-x-2">
-                        <span className="font-roboto font-medium">Coordinates:</span>
-                        <span className="font-roboto">
-                          {formatCoordinate(selectedBusiness.latitude)}, {formatCoordinate(selectedBusiness.longitude)}
-                        </span>
-                      </div>
-                    )}
+                  
                   </div>
                 </div>
               </div>

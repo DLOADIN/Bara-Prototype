@@ -5,6 +5,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useAuthLogging } from "@/hooks/useAuthLogging";
 import { ScrollToTop } from "@/components/ScrollToTop";
+import { useEffect } from "react";
+import { useTranslation } from "react-i18next";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { ListingsPage } from "./pages/ListingsPage";
@@ -55,6 +57,15 @@ const queryClient = new QueryClient();
 const AppRoutes = () => {
   // Use the auth logging hook to track all authentication events
   useAuthLogging();
+  const { i18n } = useTranslation();
+
+  // Keep document language and direction in sync with current i18n language
+  useEffect(() => {
+    const lang = i18n.language || 'en';
+    const rtlLangs = ['ar', 'fa', 'ur', 'he'];
+    document.documentElement.lang = lang;
+    document.documentElement.dir = rtlLangs.includes(lang) ? 'rtl' : 'ltr';
+  }, [i18n.language]);
 
   return (
     <>
