@@ -13,13 +13,6 @@ const Index = () => {
   return (
     <div className="min-h-screen bg-background font-roboto">
       <Header />
-      <PopupAd
-        imageUrl="/1.jpg"
-        linkUrl="https://your-sponsor.com"
-        intervalSeconds={600}
-        firstDelaySeconds={6}
-        frequencyKey="popup_home"
-      />
       <HfPopupAd
         intervalSeconds={600}
         firstDelaySeconds={20}
