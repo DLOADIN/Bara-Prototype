@@ -18,7 +18,8 @@ import {
   LogOut,
   Megaphone,
   FolderOpen,
-  Mail
+  Mail,
+  Info
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -46,6 +47,12 @@ const adminMenuItems = [
     icon: Globe,
     path: "/admin/countries",
     description: "Manage countries"
+  },
+  {
+    title: "Country Info",
+    icon: Info,
+    path: "/admin/country-info",
+    description: "Manage country information"
   },
   {
     title: "Categories",

@@ -25,6 +25,7 @@ import { SignUpPage } from "./pages/SignUpPage";
 import { AdminDashboard } from "./pages/admin/AdminDashboard";
 import { AdminCities } from "./pages/admin/AdminCities";
 import { AdminCountries } from "./pages/admin/AdminCountries";
+import { AdminCountryInfo } from "./pages/admin/AdminCountryInfo";
 import { AdminBusinesses } from "./pages/admin/AdminBusinesses";
 import { AdminReviews } from "./pages/admin/AdminReviews";
 import { AdminSponsoredAds } from "./pages/admin/AdminSponsoredAds";
@@ -168,6 +169,11 @@ const AppRoutes = () => {
       <Route path="/admin/countries" element={
         <AdminAuthGuard>
           <AdminCountries />
+        </AdminAuthGuard>
+      } />
+      <Route path="/admin/country-info" element={
+        <AdminAuthGuard>
+          <AdminCountryInfo />
         </AdminAuthGuard>
       } />
       <Route path="/admin/businesses" element={

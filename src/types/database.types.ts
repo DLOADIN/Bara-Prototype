@@ -85,6 +85,134 @@ export interface Database {
           created_at?: string
         }
       }
+      country_info: {
+        Row: {
+          id: string
+          country_id: string
+          description: string | null
+          capital: string | null
+          currency: string | null
+          language: string | null
+          population: number | null
+          area_sq_km: number | null
+          president_name: string | null
+          government_type: string | null
+          formation_date: string | null
+          gdp_usd: number | null
+          gdp_per_capita: number | null
+          currency_code: string | null
+          latitude: number | null
+          longitude: number | null
+          timezone: string | null
+          calling_code: string | null
+          average_age: number | null
+          largest_city: string | null
+          largest_city_population: number | null
+          capital_population: number | null
+          hdi_score: number | null
+          literacy_rate: number | null
+          life_expectancy: number | null
+          ethnic_groups: Json | null
+          religions: Json | null
+          national_holidays: Json | null
+          flag_url: string | null
+          coat_of_arms_url: string | null
+          national_anthem_url: string | null
+          climate: string | null
+          natural_resources: string | null
+          main_industries: string | null
+          tourism_attractions: string | null
+          is_active: boolean
+          created_at: string
+          updated_at: string
+          created_by: string | null
+          updated_by: string | null
+        }
+        Insert: {
+          id?: string
+          country_id: string
+          description?: string | null
+          capital?: string | null
+          currency?: string | null
+          language?: string | null
+          population?: number | null
+          area_sq_km?: number | null
+          president_name?: string | null
+          government_type?: string | null
+          formation_date?: string | null
+          gdp_usd?: number | null
+          gdp_per_capita?: number | null
+          currency_code?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          timezone?: string | null
+          calling_code?: string | null
+          average_age?: number | null
+          largest_city?: string | null
+          largest_city_population?: number | null
+          capital_population?: number | null
+          hdi_score?: number | null
+          literacy_rate?: number | null
+          life_expectancy?: number | null
+          ethnic_groups?: Json | null
+          religions?: Json | null
+          national_holidays?: Json | null
+          flag_url?: string | null
+          coat_of_arms_url?: string | null
+          national_anthem_url?: string | null
+          climate?: string | null
+          natural_resources?: string | null
+          main_industries?: string | null
+          tourism_attractions?: string | null
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+          updated_by?: string | null
+        }
+        Update: {
+          id?: string
+          country_id?: string
+          description?: string | null
+          capital?: string | null
+          currency?: string | null
+          language?: string | null
+          population?: number | null
+          area_sq_km?: number | null
+          president_name?: string | null
+          government_type?: string | null
+          formation_date?: string | null
+          gdp_usd?: number | null
+          gdp_per_capita?: number | null
+          currency_code?: string | null
+          latitude?: number | null
+          longitude?: number | null
+          timezone?: string | null
+          calling_code?: string | null
+          average_age?: number | null
+          largest_city?: string | null
+          largest_city_population?: number | null
+          capital_population?: number | null
+          hdi_score?: number | null
+          literacy_rate?: number | null
+          life_expectancy?: number | null
+          ethnic_groups?: Json | null
+          religions?: Json | null
+          national_holidays?: Json | null
+          flag_url?: string | null
+          coat_of_arms_url?: string | null
+          national_anthem_url?: string | null
+          climate?: string | null
+          natural_resources?: string | null
+          main_industries?: string | null
+          tourism_attractions?: string | null
+          is_active?: boolean
+          created_at?: string
+          updated_at?: string
+          created_by?: string | null
+          updated_by?: string | null
+        }
+      }
     }
     Views: {
       [_ in never]: never

@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import { UltraSimpleMap } from "@/components/UltraSimpleMap";
 import { CityInfo } from "@/components/CityInfo";
 import { 
@@ -22,12 +23,15 @@ import {
   User,
   Calendar,
   Star,
-  Hash
+  Hash,
+  DollarSign,
+  FileText
 } from "lucide-react";
 import { db } from "@/lib/supabase";
 import { Skeleton } from "@/components/ui/skeleton";
 import { fetchWikipediaCountryInfo } from "@/lib/wikipedia";
 import { useSponsoredBanners } from "@/hooks/useSponsoredBanners";
+import { useCountryInfo } from "@/hooks/useCountryInfo";
 
 interface Country {
   id: string;
@@ -105,6 +109,9 @@ export const CountryDetailPage: React.FC = () => {
   
   // Sponsored banner functionality
   const { banners: sponsoredBanners, fetchBannerByCountry, incrementBannerClick, incrementBannerView } = useSponsoredBanners();
+  
+  // Country information from database
+  const { countryInfo, loading: countryInfoLoading } = useCountryInfo(country?.id || null);
 
   useEffect(() => {
     if (!countrySlug) {
@@ -522,7 +529,7 @@ export const CountryDetailPage: React.FC = () => {
   if (loading) {
     return (
       <div className="min-h-screen bg-yp-gray-light">
-        <Header />
+        
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <Skeleton className="h-8 w-64 mb-4" />
           <Skeleton className="h-4 w-full mb-2" />
@@ -541,7 +548,6 @@ export const CountryDetailPage: React.FC = () => {
   if (!country) {
     return (
       <div className="min-h-screen bg-yp-gray-light">
-        <Header />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-yp-dark mb-4">Country Not Found</h1>
@@ -558,8 +564,6 @@ export const CountryDetailPage: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-yp-gray-light">
-      <Header />
-      
       <div className="bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
           <div className="flex items-center space-x-4 mb-4">
@@ -589,272 +593,6 @@ export const CountryDetailPage: React.FC = () => {
             </div>
           </div>
           
-          {/* Basic Country Info Cards + Sponsored Banner */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4 mt-6">
-             <Card className="bg-blue-50 border-blue-200">
-               <CardContent className="p-4">
-                 <div className="flex items-center space-x-2">
-                   <Globe className="w-5 h-5 text-blue-600" />
-                   <div>
-                     <p className="text-sm text-blue-600 font-medium">Code</p>
-                     <p className="text-lg font-semibold text-blue-800">{country.code}</p>
-                   </div>
-                 </div>
-               </CardContent>
-             </Card>
-             
-                           {country.capital && country.capital !== 'Territory' && country.capital.length > 0 && (
-                <Card className="bg-purple-50 border-purple-200">
-                  <CardContent className="p-4">
-                    <div className="flex items-center space-x-2">
-                      <Landmark className="w-5 h-5 text-purple-600" />
-                      <div>
-                        <p className="text-sm text-purple-600 font-medium">Capital</p>
-                        <p className="text-lg font-semibold text-purple-800">{country.capital}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-             
-                           {country.currency && country.currency.length > 0 && (
-                <Card className="bg-yellow-50 border-yellow-200">
-                  <CardContent className="p-4">
-                    <div className="flex items-center space-x-2">
-                      <Building className="w-5 h-5 text-yellow-600" />
-                      <div>
-                        <p className="text-sm text-yellow-600 font-medium">Currency</p>
-                        <p className="text-lg font-semibold text-yellow-800">{country.currency}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
-            {country.population && country.population > 0 && (
-              <Card className="bg-green-50 border-green-200">
-                <CardContent className="p-4">
-                  <div className="flex items-center space-x-2">
-                    <Users className="w-5 h-5 text-green-600" />
-                    <div>
-                      <p className="text-sm text-green-600 font-medium">Population</p>
-                      <p className="text-lg font-semibold text-green-800">
-                        {country.population.toLocaleString()} Million
-                      </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
-            {/* Sponsored Banner (shown inline with info cards on large screens) */}
-            {sponsoredBanners.length > 0 && (
-              <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 shadow-sm lg:col-span-1">
-                <CardContent className="p-3">
-                  <div className="flex items-center justify-between mb-2">
-                    <div className="flex items-center space-x-2">
-                      <Building className="w-4 h-4 text-blue-600" />
-                      <span className="text-xs font-medium text-blue-800">Sponsored</span>
-                    </div>
-                    <Badge variant="outline" className="text-[10px] py-0 px-1 text-blue-600 border-blue-300">Ad</Badge>
-                  </div>
-                  {sponsoredBanners.slice(0,1).map((banner) => (
-                    <a
-                      key={banner.id}
-                      href={banner.company_website}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      onClick={() => incrementBannerClick(banner.id)}
-                      className="block group"
-                    >
-                      <div className="relative overflow-hidden rounded-md">
-                        <img
-                          src={banner.banner_image_url}
-                          alt={banner.banner_alt_text || `${banner.company_name} banner`}
-                          className="w-full h-24 object-cover group-hover:scale-105 transition-transform duration-300"
-                          onLoad={() => incrementBannerView(banner.id)}
-                        />
-                        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
-                      </div>
-                      <div className="mt-2 text-center">
-                        <h3 className="text-sm font-semibold text-gray-900 truncate">{banner.company_name}</h3>
-                        <p className="text-[11px] text-gray-600 truncate">Visit {banner.company_website}</p>
-                      </div>
-                    </a>
-                  ))}
-                  </CardContent>
-                </Card>
-              )}
-           </div>
-
-          {/* Enhanced Country Info Cards from Wikipedia */}
-          {(country.president_name || country.gdp_usd || country.average_age || country.largest_city || country.formation_date || country.hdi_score || country.calling_code) && (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
-              {/* President */}
-              {country.president_name && (
-                <Card className="bg-red-50 border-red-200">
-                    <CardContent className="p-4">
-                      <div className="flex items-center space-x-2">
-                      <User className="w-5 h-5 text-red-600" />
-                        <div>
-                        <p className="text-sm text-red-600 font-medium">President</p>
-                        <p className="text-lg font-semibold text-red-800">{country.president_name}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-              )}
-                
-              {/* GDP */}
-              {country.gdp_usd && (
-                  <Card className="bg-emerald-50 border-emerald-200">
-                    <CardContent className="p-4">
-                      <div className="flex items-center space-x-2">
-                        <Building className="w-5 h-5 text-emerald-600" />
-                        <div>
-                          <p className="text-sm text-emerald-600 font-medium">GDP</p>
-                        <p className="text-lg font-semibold text-emerald-800">
-                          ${(country.gdp_usd / 1000000000).toFixed(1)}B
-                        </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-                
-              {/* Average Age */}
-              {country.average_age && (
-                <Card className="bg-purple-50 border-purple-200">
-                  <CardContent className="p-4">
-                    <div className="flex items-center space-x-2">
-                      <Users className="w-5 h-5 text-purple-600" />
-                      <div>
-                        <p className="text-sm text-purple-600 font-medium">Avg Age</p>
-                        <p className="text-lg font-semibold text-purple-800">{country.average_age} years</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Largest City */}
-              {country.largest_city && (
-                <Card className="bg-indigo-50 border-indigo-200">
-                  <CardContent className="p-4">
-                    <div className="flex items-center space-x-2">
-                      <Landmark className="w-5 h-5 text-indigo-600" />
-                      <div>
-                        <p className="text-sm text-indigo-600 font-medium">Largest City</p>
-                        <p className="text-lg font-semibold text-indigo-800">{country.largest_city}</p>
-                        {country.largest_city_population && (
-                          <p className="text-xs text-indigo-600">
-                            {country.largest_city_population.toLocaleString()} people
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Formation Date */}
-              {country.formation_date && (
-                <Card className="bg-cyan-50 border-cyan-200">
-                  <CardContent className="p-4">
-                    <div className="flex items-center space-x-2">
-                      <Calendar className="w-5 h-5 text-cyan-600" />
-                      <div>
-                        <p className="text-sm text-cyan-600 font-medium">Gained Independence In</p>
-                        <p className="text-lg font-semibold text-cyan-800">
-                          {new Date(country.formation_date).getFullYear()}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* HDI Score */}
-              {country.hdi_score && (
-                <Card className="bg-teal-50 border-teal-200">
-                  <CardContent className="p-4">
-                    <div className="flex items-center space-x-2">
-                      <Star className="w-5 h-5 text-teal-600" />
-                      <div>
-                        <p className="text-sm text-teal-600 font-medium">HDI</p>
-                        <p className="text-lg font-semibold text-teal-800">
-                          {country.hdi_score.toFixed(3)}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Calling Code */}
-              {country.calling_code && (
-                  <Card className="bg-orange-50 border-orange-200">
-                    <CardContent className="p-4">
-                      <div className="flex items-center space-x-2">
-                      <Phone className="w-5 h-5 text-orange-600" />
-                        <div>
-                        <p className="text-sm text-orange-600 font-medium">Calling Code</p>
-                        <p className="text-lg font-semibold text-orange-800">{country.calling_code}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-                
-              {/* Area */}
-              {country.area_sq_km && (
-                  <Card className="bg-pink-50 border-pink-200">
-                    <CardContent className="p-4">
-                      <div className="flex items-center space-x-2">
-                        <Globe className="w-5 h-5 text-pink-600" />
-                        <div>
-                        <p className="text-sm text-pink-600 font-medium">Area</p>
-                        <p className="text-lg font-semibold text-pink-800">
-                          {country.area_sq_km.toLocaleString()}K km²
-                        </p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                )}
-
-              {/* Timezone */}
-              {country.timezone && (
-                <Card className="bg-violet-50 border-violet-200">
-                  <CardContent className="p-4">
-                    <div className="flex items-center space-x-2">
-                      <Globe className="w-5 h-5 text-violet-600" />
-                      <div>
-                        <p className="text-sm text-violet-600 font-medium">Timezone</p>
-                        <p className="text-lg font-semibold text-violet-800">{country.timezone}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-
-              {/* Language */}
-              {country.language && country.language.length > 0 && (
-                <Card className="bg-rose-50 border-rose-200">
-                  <CardContent className="p-4">
-                    <div className="flex items-center space-x-2">
-                      <Globe className="w-5 h-5 text-rose-600" />
-                      <div>
-                        <p className="text-sm text-rose-600 font-medium">Language</p>
-                        <p className="text-lg font-semibold text-rose-800">{getDisplayLanguage(country.language)}</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              )}
-            </div>
-          )}
-
           {/* Sponsored Banner Section */}
           {sponsoredBanners.length > 0 && (
             <div className="mt-6">
@@ -883,7 +621,7 @@ export const CountryDetailPage: React.FC = () => {
                           <img
                             src={banner.banner_image_url}
                             alt={banner.banner_alt_text || `${banner.company_name} banner`}
-                            className="w-full h-[100vh] object-cover group-hover:scale-105 transition-transform duration-300"
+                            className="w-full h-[200px] object-cover group-hover:scale-105 transition-transform duration-300"
                             onLoad={() => incrementBannerView(banner.id)}
                           />
                           <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
@@ -903,164 +641,385 @@ export const CountryDetailPage: React.FC = () => {
             </div>
           )}
 
-          {/* Ethnic Groups Section */}
-          {country.ethnic_groups && country.ethnic_groups.length > 0 && (
-            <div className="mt-6">
-              <Card className="bg-gray-50 border-gray-200">
+          {/* Complete Country Information Display */}
+          {countryInfo && (
+            <div className="mt-6 space-y-6">
+              {/* Basic Information Section */}
+              <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 shadow-lg">
                 <CardHeader>
-                  <CardTitle className="text-lg text-gray-800">Ethnic Groups</CardTitle>
+                  <CardTitle className="text-xl text-gray-800 flex items-center">
+                    <Globe className="w-6 h-6 mr-2 text-blue-600" />
+                    Basic Information
+                  </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {country.ethnic_groups.map((group, index) => (
-                      <div key={index} className="bg-white p-4 rounded-lg border">
-                        <div className="flex justify-between items-center mb-2">
-                          <h4 className="font-semibold text-gray-900">{group.name}</h4>
-                          <span className="text-sm font-medium text-blue-600">{group.percentage}%</span>
-                        </div>
-                        {group.note && (
-                          <p className="text-sm text-gray-600">{group.note}</p>
-                        )}
-                      </div>
-                    ))}
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">Country Code</Label>
+                      <p className="text-lg font-semibold text-gray-900">{country.code || '-'}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">Capital</Label>
+                      <p className="text-lg font-semibold text-gray-900">{countryInfo.capital || '-'}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">Currency</Label>
+                      <p className="text-lg font-semibold text-gray-900">{countryInfo.currency || '-'}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">Language</Label>
+                      <p className="text-lg font-semibold text-gray-900">{countryInfo.language || '-'}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">Population</Label>
+                      <p className="text-lg font-semibold text-gray-900">
+                        {countryInfo.population ? countryInfo.population.toLocaleString() : '-'}
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">Area (km²)</Label>
+                      <p className="text-lg font-semibold text-gray-900">
+                        {countryInfo.area_sq_km ? countryInfo.area_sq_km.toLocaleString() : '-'}
+                      </p>
+                    </div>
                   </div>
                 </CardContent>
               </Card>
-              </div>
-            )}
 
-           {/* Wikipedia Data Loading Indicator */}
-           {wikipediaLoading && (
-             <div className="mt-6">
-               <Card className="bg-blue-50 border-blue-200">
-                 <CardContent className="p-6">
-                   <div className="flex items-center justify-center space-x-3">
-                     <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-                     <p className="text-blue-800 font-medium">Loading Wikipedia information...</p>
-                   </div>
-                 </CardContent>
-               </Card>
-             </div>
-           )}
+              {/* Government & Leadership Section */}
+              <Card className="bg-gradient-to-r from-red-50 to-pink-50 border-red-200 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-xl text-gray-800 flex items-center">
+                    <User className="w-6 h-6 mr-2 text-red-600" />
+                    Government & Leadership
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">President/Leader</Label>
+                      <p className="text-lg font-semibold text-gray-900">{countryInfo.president_name || '-'}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">Government Type</Label>
+                      <p className="text-lg font-semibold text-gray-900">{countryInfo.government_type || '-'}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">Formation Date</Label>
+                      <p className="text-lg font-semibold text-gray-900">
+                        {countryInfo.formation_date ? new Date(countryInfo.formation_date).toLocaleDateString() : '-'}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-           {/* Country Description and Coat of Arms */}
-           {(country.wikipedia_description || country.coat_of_arms_url) && !wikipediaLoading && (
-             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-6">
-               {country.wikipedia_description && (
-                 <div className="lg:col-span-2">
-                  <Card className="bg-gradient-to-br from-blue-50 to-indigo-50 border-blue-200 shadow-lg">
-                    <CardHeader className="pb-4">
-                      <CardTitle className="text-xl text-gray-800 flex items-center">
-                        <Globe className="w-6 h-6 mr-2 text-blue-600" />
-                        About {country.name}
-                      </CardTitle>
-                      <p className="text-sm text-gray-600">Comprehensive overview from Wikipedia</p>
-                     </CardHeader>
-                     <CardContent>
-                      <div className="prose prose-sm max-w-none">
-                        <p className="text-gray-700 leading-relaxed text-base">
-                         {country.wikipedia_description}
-                       </p>
-                      </div>
-                     </CardContent>
-                   </Card>
-                 </div>
-               )}
-               
-               {country.coat_of_arms_url && (
-                 <div className="lg:col-span-1">
-                  <Card className="bg-amber-50 border-amber-200 shadow-lg">
-                     <CardHeader>
-                      <CardTitle className="text-lg text-amber-800 flex items-center">
-                        <Landmark className="w-5 h-5 mr-2" />
-                        Coat of Arms
-                      </CardTitle>
-                     </CardHeader>
-                     <CardContent className="flex justify-center">
-                       <img 
-                         src={country.coat_of_arms_url} 
-                         alt={`${country.name} coat of arms`}
-                         className="w-32 h-32 object-contain rounded-lg shadow-md"
-                       />
-                     </CardContent>
-                   </Card>
-                 </div>
-               )}
-             </div>
-           )}
-
-          {/* Additional Wikipedia Information */}
-          {country.wikipedia_description && !wikipediaLoading && (
-            <div className="mt-6">
+              {/* Economic Information Section */}
               <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 shadow-lg">
                 <CardHeader>
-                  <CardTitle className="text-lg text-gray-800 flex items-center">
-                    <Hash className="w-5 h-5 mr-2 text-green-600" />
-                    Key Facts & Information
+                  <CardTitle className="text-xl text-gray-800 flex items-center">
+                    <DollarSign className="w-6 h-6 mr-2 text-green-600" />
+                    Economic Information
                   </CardTitle>
-                  <p className="text-sm text-gray-600">Essential details about {country.name}</p>
                 </CardHeader>
                 <CardContent>
-                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    {country.president_name && (
-                      <div className="bg-white p-3 rounded-lg border border-green-100">
-                        <h4 className="font-semibold text-gray-800 text-sm">Head of State</h4>
-                        <p className="text-gray-600 text-sm">{country.president_name}</p>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">GDP (USD)</Label>
+                      <p className="text-lg font-semibold text-gray-900">
+                        {countryInfo.gdp_usd ? `$${(countryInfo.gdp_usd / 1000000000).toFixed(1)}B` : '-'}
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">GDP Per Capita</Label>
+                      <p className="text-lg font-semibold text-gray-900">
+                        {countryInfo.gdp_per_capita ? `$${countryInfo.gdp_per_capita.toLocaleString()}` : '-'}
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">Currency Code</Label>
+                      <p className="text-lg font-semibold text-gray-900">{countryInfo.currency_code || '-'}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Geographic Information Section */}
+              <Card className="bg-gradient-to-r from-purple-50 to-violet-50 border-purple-200 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-xl text-gray-800 flex items-center">
+                    <MapPin className="w-6 h-6 mr-2 text-purple-600" />
+                    Geographic Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">Coordinates</Label>
+                      <p className="text-lg font-semibold text-gray-900">
+                        {countryInfo.latitude && countryInfo.longitude 
+                          ? `${countryInfo.latitude}, ${countryInfo.longitude}` 
+                          : '-'
+                        }
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">Timezone</Label>
+                      <p className="text-lg font-semibold text-gray-900">{countryInfo.timezone || '-'}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">Calling Code</Label>
+                      <p className="text-lg font-semibold text-gray-900">{countryInfo.calling_code || '-'}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Demographics Section */}
+              <Card className="bg-gradient-to-r from-orange-50 to-yellow-50 border-orange-200 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-xl text-gray-800 flex items-center">
+                    <Users className="w-6 h-6 mr-2 text-orange-600" />
+                    Demographics
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">Average Age</Label>
+                      <p className="text-lg font-semibold text-gray-900">
+                        {countryInfo.average_age ? `${countryInfo.average_age} years` : '-'}
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">Largest City</Label>
+                      <p className="text-lg font-semibold text-gray-900">{countryInfo.largest_city || '-'}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">Largest City Population</Label>
+                      <p className="text-lg font-semibold text-gray-900">
+                        {countryInfo.largest_city_population ? countryInfo.largest_city_population.toLocaleString() : '-'}
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">Capital Population</Label>
+                      <p className="text-lg font-semibold text-gray-900">
+                        {countryInfo.capital_population ? countryInfo.capital_population.toLocaleString() : '-'}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Development Indicators Section */}
+              <Card className="bg-gradient-to-r from-teal-50 to-cyan-50 border-teal-200 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-xl text-gray-800 flex items-center">
+                    <Star className="w-6 h-6 mr-2 text-teal-600" />
+                    Development Indicators
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">HDI Score</Label>
+                      <p className="text-lg font-semibold text-gray-900">
+                        {countryInfo.hdi_score ? countryInfo.hdi_score.toFixed(3) : '-'}
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">Literacy Rate</Label>
+                      <p className="text-lg font-semibold text-gray-900">
+                        {countryInfo.literacy_rate ? `${countryInfo.literacy_rate}%` : '-'}
+                      </p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">Life Expectancy</Label>
+                      <p className="text-lg font-semibold text-gray-900">
+                        {countryInfo.life_expectancy ? `${countryInfo.life_expectancy} years` : '-'}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Cultural Information Section */}
+              <Card className="bg-gradient-to-r from-pink-50 to-rose-50 border-pink-200 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-xl text-gray-800 flex items-center">
+                    <Landmark className="w-6 h-6 mr-2 text-pink-600" />
+                    Cultural Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="space-y-6">
+                    {/* Ethnic Groups */}
+                    {countryInfo.ethnic_groups && Array.isArray(countryInfo.ethnic_groups) && countryInfo.ethnic_groups.length > 0 ? (
+                      <div>
+                        <Label className="text-sm font-medium text-gray-700 mb-3 block">Ethnic Groups</Label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {countryInfo.ethnic_groups.map((group: any, index: number) => (
+                            <div key={index} className="bg-white p-3 rounded-lg border">
+                              <div className="flex justify-between items-center">
+                                <span className="font-semibold text-gray-900">{group.name}</span>
+                                <span className="text-sm font-medium text-blue-600">{group.percentage}%</span>
+                              </div>
+                              {group.note && (
+                                <p className="text-sm text-gray-600 mt-1">{group.note}</p>
+                              )}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <Label className="text-sm font-medium text-gray-700">Ethnic Groups</Label>
+                        <p className="text-lg font-semibold text-gray-900">-</p>
                       </div>
                     )}
-                    {country.language && country.language.length > 0 && (
-                      <div className="bg-white p-3 rounded-lg border border-green-100">
-                        <h4 className="font-semibold text-gray-800 text-sm">Official Language</h4>
-                        <p className="text-gray-600 text-sm">{country.language}</p>
+
+                    {/* Religions */}
+                    {countryInfo.religions && Array.isArray(countryInfo.religions) && countryInfo.religions.length > 0 ? (
+                      <div>
+                        <Label className="text-sm font-medium text-gray-700 mb-3 block">Religions</Label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {countryInfo.religions.map((religion: any, index: number) => (
+                            <div key={index} className="bg-white p-3 rounded-lg border">
+                              <div className="flex justify-between items-center">
+                                <span className="font-semibold text-gray-900">{religion.name}</span>
+                                <span className="text-sm font-medium text-blue-600">{religion.percentage}%</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    ) : (
+                      <div>
+                        <Label className="text-sm font-medium text-gray-700">Religions</Label>
+                        <p className="text-lg font-semibold text-gray-900">-</p>
                       </div>
                     )}
-                    {country.formation_date && (
-                      <div className="bg-white p-3 rounded-lg border border-green-100">
-                        <h4 className="font-semibold text-gray-800 text-sm">Independence</h4>
-                        <p className="text-gray-600 text-sm">{country.formation_date}</p>
+
+                    {/* National Holidays */}
+                    {countryInfo.national_holidays && Array.isArray(countryInfo.national_holidays) && countryInfo.national_holidays.length > 0 ? (
+                      <div>
+                        <Label className="text-sm font-medium text-gray-700 mb-3 block">National Holidays</Label>
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {countryInfo.national_holidays.map((holiday: any, index: number) => (
+                            <div key={index} className="bg-white p-3 rounded-lg border">
+                              <div className="flex justify-between items-center">
+                                <span className="font-semibold text-gray-900">{holiday.name}</span>
+                                <span className="text-sm font-medium text-blue-600">{holiday.date}</span>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
                       </div>
-                    )}
-                    {country.calling_code && (
-                      <div className="bg-white p-3 rounded-lg border border-green-100">
-                        <h4 className="font-semibold text-gray-800 text-sm">Calling Code</h4>
-                        <p className="text-gray-600 text-sm">{country.calling_code}</p>
-                      </div>
-                    )}
-                    {country.timezone && (
-                      <div className="bg-white p-3 rounded-lg border border-green-100">
-                        <h4 className="font-semibold text-gray-800 text-sm">Timezone</h4>
-                        <p className="text-gray-600 text-sm">{country.timezone}</p>
-                      </div>
-                    )}
-                    {country.hdi_score && (
-                      <div className="bg-white p-3 rounded-lg border border-green-100">
-                        <h4 className="font-semibold text-gray-800 text-sm">HDI Score</h4>
-                        <p className="text-gray-600 text-sm">{country.hdi_score.toFixed(3)}</p>
-                      </div>
-                    )}
-                     {country.area_sq_km && (
-                      <div className="bg-white p-3 rounded-lg border border-green-100">
-                        <h4 className="font-semibold text-gray-800 text-sm">Total Area</h4>
-                        <p className="text-gray-600 text-sm">{country.area_sq_km.toLocaleString()} km²</p>
-                      </div>
-                    )} 
-                    {country.gdp_usd && (
-                      <div className="bg-white p-3 rounded-lg border border-green-100">
-                        <h4 className="font-semibold text-gray-800 text-sm">GDP (USD)</h4>
-                        <p className="text-gray-600 text-sm">${(country.gdp_usd / 1000000000).toFixed(1)}B</p>
-                      </div>
-                    )}
-                    {country.largest_city && (
-                      <div className="bg-white p-3 rounded-lg border border-green-100">
-                        <h4 className="font-semibold text-gray-800 text-sm">Largest City</h4>
-                        <p className="text-gray-600 text-sm">{country.largest_city}</p>
+                    ) : (
+                      <div>
+                        <Label className="text-sm font-medium text-gray-700">National Holidays</Label>
+                        <p className="text-lg font-semibold text-gray-900">-</p>
                       </div>
                     )}
                   </div>
                 </CardContent>
               </Card>
+
+              {/* Additional Information Section */}
+              <Card className="bg-gradient-to-r from-indigo-50 to-blue-50 border-indigo-200 shadow-lg">
+                <CardHeader>
+                  <CardTitle className="text-xl text-gray-800 flex items-center">
+                    <FileText className="w-6 h-6 mr-2 text-indigo-600" />
+                    Additional Information
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">Climate</Label>
+                      <p className="text-lg font-semibold text-gray-900">{countryInfo.climate || '-'}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">Natural Resources</Label>
+                      <p className="text-lg font-semibold text-gray-900">{countryInfo.natural_resources || '-'}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">Main Industries</Label>
+                      <p className="text-lg font-semibold text-gray-900">{countryInfo.main_industries || '-'}</p>
+                    </div>
+                    <div className="space-y-2">
+                      <Label className="text-sm font-medium text-gray-700">Tourism Attractions</Label>
+                      <p className="text-lg font-semibold text-gray-900">{countryInfo.tourism_attractions || '-'}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Visual Assets Section */}
+              {(countryInfo.flag_url || countryInfo.coat_of_arms_url || countryInfo.national_anthem_url) && (
+                <Card className="bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-200 shadow-lg">
+                  <CardHeader>
+                    <CardTitle className="text-xl text-gray-800 flex items-center">
+                      <Landmark className="w-6 h-6 mr-2 text-amber-600" />
+                      Visual Assets
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                      {countryInfo.flag_url && (
+                        <div className="text-center">
+                          <Label className="text-sm font-medium text-gray-700 mb-2 block">Flag</Label>
+                          <img 
+                            src={countryInfo.flag_url} 
+                            alt={`${country.name} flag`}
+                            className="w-24 h-16 object-cover rounded-lg shadow-md mx-auto"
+                          />
+                        </div>
+                      )}
+                      {countryInfo.coat_of_arms_url && (
+                        <div className="text-center">
+                          <Label className="text-sm font-medium text-gray-700 mb-2 block">Coat of Arms</Label>
+                          <img 
+                            src={countryInfo.coat_of_arms_url} 
+                            alt={`${country.name} coat of arms`}
+                            className="w-24 h-24 object-contain rounded-lg shadow-md mx-auto"
+                          />
+                        </div>
+                      )}
+                      {countryInfo.national_anthem_url && (
+                        <div className="text-center">
+                          <Label className="text-sm font-medium text-gray-700 mb-2 block">National Anthem</Label>
+                          <a 
+                            href={countryInfo.national_anthem_url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="inline-flex items-center justify-center w-24 h-24 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors"
+                          >
+                            <span className="text-2xl">🎵</span>
+                          </a>
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              )}
             </div>
           )}
+
+          {/* No Country Information Available */}
+          {!countryInfo && !countryInfoLoading && (
+            <Card className="mt-6">
+              <CardContent className="p-12 text-center">
+                <Globe className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No detailed information available</h3>
+                <p className="text-gray-600">
+                  Detailed information for {country.name} has not been added yet.
+                </p>
+              </CardContent>
+            </Card>
+          )}
+
+
         </div>
       </div>
 
