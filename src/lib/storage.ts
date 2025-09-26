@@ -10,12 +10,14 @@ export const uploadImage = async (
   file: File,
   bucket: string = 'sponsored-banners',
   folder: string = 'banners'
-): Promise<UploadResult> => {
+): Promise<string> => {
   try {
     // Generate unique filename
     const fileExt = file.name.split('.').pop();
     const fileName = `${Date.now()}-${Math.random().toString(36).substring(2)}.${fileExt}`;
     const filePath = `${folder}/${fileName}`;
+
+    console.log(`Uploading to bucket: ${bucket}, folder: ${folder}, file: ${fileName}`);
 
     // Upload file to Supabase Storage
     const { data, error } = await supabase.storage
@@ -27,7 +29,7 @@ export const uploadImage = async (
 
     if (error) {
       console.error('Upload error:', error);
-      return { url: '', path: '', error: error.message };
+      throw new Error(`Upload failed: ${error.message}`);
     }
 
     // Get public URL
@@ -35,19 +37,14 @@ export const uploadImage = async (
       .from(bucket)
       .getPublicUrl(filePath);
 
-    return {
-      url: urlData.publicUrl,
-      path: filePath
-    };
+    console.log(`Upload successful. Public URL: ${urlData.publicUrl}`);
+    return urlData.publicUrl;
   } catch (error) {
     console.error('Upload error:', error);
-    return { 
-      url: '', 
-      path: '', 
-      error: error instanceof Error ? error.message : 'Upload failed' 
-    };
+    throw error;
   }
 };
+
 
 export const deleteImage = async (path: string, bucket: string = 'sponsored-banners'): Promise<boolean> => {
   try {

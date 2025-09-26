@@ -106,6 +106,7 @@ export const CountryDetailPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [viewMode, setViewMode] = useState<'grid' | 'list'>('grid');
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [coatOfArmsLoading, setCoatOfArmsLoading] = useState(false);
   
   // Sponsored banner functionality
   const { banners: sponsoredBanners, fetchBannerByCountry, incrementBannerClick, incrementBannerView } = useSponsoredBanners();
@@ -644,6 +645,31 @@ export const CountryDetailPage: React.FC = () => {
           {/* Complete Country Information Display */}
           {countryInfo && (
             <div className="mt-6 space-y-6">
+              {/* Debug info - remove in production */}
+              {process.env.NODE_ENV === 'development' && (
+                <div className="text-xs text-gray-500 mb-4 p-2 bg-gray-100 rounded">
+                  <div className="mb-2">
+                    Debug: Country info loaded. Coat of arms: {countryInfo.coat_of_arms_url ? 'Available' : 'Not available'}
+                  </div>
+                  {countryInfo.coat_of_arms_url && (
+                    <div className="space-y-1">
+                      <div>URL: {countryInfo.coat_of_arms_url}</div>
+                      <button 
+                        onClick={() => {
+                          console.log('Testing coat of arms image:', countryInfo.coat_of_arms_url);
+                          const img = new Image();
+                          img.onload = () => console.log('Image loads successfully');
+                          img.onerror = () => console.log('Image failed to load');
+                          img.src = countryInfo.coat_of_arms_url!;
+                        }}
+                        className="px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
+                      >
+                        Test Image Load
+                      </button>
+                    </div>
+                  )}
+                </div>
+              )}
               {/* Basic Information Section */}
               <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 shadow-lg">
                 <CardHeader>
@@ -657,11 +683,11 @@ export const CountryDetailPage: React.FC = () => {
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Country Code</Label>
                       <p className="text-lg font-semibold text-gray-900">{country.code || '-'}</p>
-                        </div>
+                      </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Capital</Label>
                       <p className="text-lg font-semibold text-gray-900">{countryInfo.capital || '-'}</p>
-                      </div>
+                    </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Currency</Label>
                       <p className="text-lg font-semibold text-gray-900">{countryInfo.currency || '-'}</p>
@@ -674,13 +700,13 @@ export const CountryDetailPage: React.FC = () => {
                       <Label className="text-sm font-medium text-gray-700">Population</Label>
                       <p className="text-lg font-semibold text-gray-900">
                         {countryInfo.population ? countryInfo.population.toLocaleString() : '-'}
-                      </p>
-                    </div>
+                        </p>
+                      </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Area (km²)</Label>
                       <p className="text-lg font-semibold text-gray-900">
                         {countryInfo.area_sq_km ? countryInfo.area_sq_km.toLocaleString() : '-'}
-                      </p>
+                        </p>
                       </div>
                     </div>
                   </CardContent>
@@ -699,20 +725,20 @@ export const CountryDetailPage: React.FC = () => {
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">President/Leader</Label>
                       <p className="text-lg font-semibold text-gray-900">{countryInfo.president_name || '-'}</p>
-                    </div>
+                        </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Government Type</Label>
                       <p className="text-lg font-semibold text-gray-900">{countryInfo.government_type || '-'}</p>
-                    </div>
+                      </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Formation Date</Label>
                       <p className="text-lg font-semibold text-gray-900">
                         {countryInfo.formation_date ? new Date(countryInfo.formation_date).toLocaleDateString() : '-'}
                         </p>
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                    </CardContent>
+                  </Card>
 
               {/* Economic Information Section */}
               <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 shadow-lg">
@@ -739,10 +765,10 @@ export const CountryDetailPage: React.FC = () => {
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Currency Code</Label>
                       <p className="text-lg font-semibold text-gray-900">{countryInfo.currency_code || '-'}</p>
-                        </div>
                       </div>
-                    </CardContent>
-                  </Card>
+                    </div>
+                  </CardContent>
+                </Card>
 
               {/* Geographic Information Section */}
               <Card className="bg-gradient-to-r from-purple-50 to-violet-50 border-purple-200 shadow-lg">
@@ -762,18 +788,18 @@ export const CountryDetailPage: React.FC = () => {
                           : '-'
                         }
                         </p>
-                        </div>
+                    </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Timezone</Label>
                       <p className="text-lg font-semibold text-gray-900">{countryInfo.timezone || '-'}</p>
-                      </div>
+                  </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Calling Code</Label>
                       <p className="text-lg font-semibold text-gray-900">{countryInfo.calling_code || '-'}</p>
+                        </div>
                       </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                </CardContent>
+              </Card>
 
               {/* Demographics Section */}
               <Card className="bg-gradient-to-r from-orange-50 to-yellow-50 border-orange-200 shadow-lg">
@@ -790,36 +816,36 @@ export const CountryDetailPage: React.FC = () => {
                       <p className="text-lg font-semibold text-gray-900">
                         {countryInfo.average_age ? `${countryInfo.average_age} years` : '-'}
                       </p>
-                      </div>
+                        </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Largest City</Label>
                       <p className="text-lg font-semibold text-gray-900">{countryInfo.largest_city || '-'}</p>
-                    </div>
+                      </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Largest City Population</Label>
                       <p className="text-lg font-semibold text-gray-900">
                         {countryInfo.largest_city_population ? countryInfo.largest_city_population.toLocaleString() : '-'}
                       </p>
-            </div>
+                  </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Capital Population</Label>
                       <p className="text-lg font-semibold text-gray-900">
                         {countryInfo.capital_population ? countryInfo.capital_population.toLocaleString() : '-'}
                       </p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+              </div>
+                   </div>
+                 </CardContent>
+               </Card>
 
               {/* Development Indicators Section */}
               <Card className="bg-gradient-to-r from-teal-50 to-cyan-50 border-teal-200 shadow-lg">
                 <CardHeader>
-                  <CardTitle className="text-xl text-gray-800 flex items-center">
+                      <CardTitle className="text-xl text-gray-800 flex items-center">
                     <Star className="w-6 h-6 mr-2 text-teal-600" />
                     Development Indicators
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
+                      </CardTitle>
+                     </CardHeader>
+                     <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">HDI Score</Label>
@@ -839,30 +865,30 @@ export const CountryDetailPage: React.FC = () => {
                         {countryInfo.life_expectancy ? `${countryInfo.life_expectancy} years` : '-'}
                       </p>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                      </div>
+                     </CardContent>
+                   </Card>
 
               
 
               {/* Additional Information Section */}
               <Card className="bg-gradient-to-r from-indigo-50 to-blue-50 border-indigo-200 shadow-lg">
-                <CardHeader>
+                     <CardHeader>
                   <CardTitle className="text-xl text-gray-800 flex items-center">
                     <FileText className="w-6 h-6 mr-2 text-indigo-600" />
                     Additional Information
-                  </CardTitle>
-                </CardHeader>
+                      </CardTitle>
+                     </CardHeader>
                 <CardContent>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Climate</Label>
                       <p className="text-lg font-semibold text-gray-900">{countryInfo.climate || '-'}</p>
-                      </div>
+                 </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Natural Resources</Label>
                       <p className="text-lg font-semibold text-gray-900">{countryInfo.natural_resources || '-'}</p>
-                      </div>
+             </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Main Industries</Label>
                       <p className="text-lg font-semibold text-gray-900">{countryInfo.main_industries || '-'}</p>
@@ -878,13 +904,13 @@ export const CountryDetailPage: React.FC = () => {
               {/* Visual Assets Section */}
               {(countryInfo.flag_url || countryInfo.coat_of_arms_url || countryInfo.national_anthem_url) && (
                 <Card className="bg-gradient-to-r from-amber-50 to-yellow-50 border-amber-200 shadow-lg">
-                  <CardHeader>
+                <CardHeader>
                     <CardTitle className="text-xl text-gray-800 flex items-center">
                       <Landmark className="w-6 h-6 mr-2 text-amber-600" />
                       Visual Assets
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                       {countryInfo.flag_url && (
                         <div className="text-center">
@@ -899,13 +925,49 @@ export const CountryDetailPage: React.FC = () => {
                       {countryInfo.coat_of_arms_url && (
                         <div className="text-center">
                           <Label className="text-sm font-medium text-gray-700 mb-2 block">Coat of Arms</Label>
-                          <img 
-                            src={countryInfo.coat_of_arms_url} 
-                            alt={`${country.name} coat of arms`}
-                            className="w-24 h-24 object-contain rounded-lg shadow-md mx-auto"
-                          />
+                          <div className="relative w-32 h-32 mx-auto">
+                            {coatOfArmsLoading && (
+                              <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-lg border border-gray-200">
+                                <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                              </div>
+                            )}
+                            <img 
+                              src={countryInfo.coat_of_arms_url} 
+                              alt={`${country.name} coat of arms`}
+                              className={`w-full h-full object-contain rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-200 ${coatOfArmsLoading ? 'opacity-0' : 'opacity-100'}`}
+                              onLoadStart={() => setCoatOfArmsLoading(true)}
+                              onError={(e) => {
+                                console.error('Failed to load coat of arms image:', countryInfo.coat_of_arms_url);
+                                setCoatOfArmsLoading(false);
+                                e.currentTarget.style.display = 'none';
+                                // Show fallback content
+                                const fallback = e.currentTarget.parentElement?.querySelector('.fallback-content');
+                                if (fallback) {
+                                  (fallback as HTMLElement).style.display = 'block';
+                                }
+                              }}
+                              onLoad={() => {
+                                console.log('Coat of arms image loaded successfully:', countryInfo.coat_of_arms_url);
+                                setCoatOfArmsLoading(false);
+                              }}
+                              loading="lazy"
+                            />
+                            <div className="fallback-content hidden w-full h-full flex items-center justify-center bg-gray-100 rounded-lg border border-gray-200">
+                              <div className="text-center">
+                                <Landmark className="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                                <p className="text-xs text-gray-500">Coat of Arms</p>
+                                <p className="text-xs text-gray-400">Image unavailable</p>
+                              </div>
+                            </div>
+                          </div>
+                          {/* Debug info for coat of arms */}
+                          {process.env.NODE_ENV === 'development' && (
+                            <div className="text-xs text-gray-400 mt-1">
+                              URL: {countryInfo.coat_of_arms_url}
+                            </div>
+                          )}
                       </div>
-                    )} 
+                    )}
                       {countryInfo.national_anthem_url && (
                         <div className="text-center">
                           <Label className="text-sm font-medium text-gray-700 mb-2 block">National Anthem</Label>
@@ -923,8 +985,8 @@ export const CountryDetailPage: React.FC = () => {
                   </CardContent>
                 </Card>
                     )}
-                  </div>
-          )}
+                      </div>
+                    )}
 
           {/* No Country Information Available */}
           {!countryInfo && !countryInfoLoading && (

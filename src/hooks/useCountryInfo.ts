@@ -72,6 +72,8 @@ export const useCountryInfo = (countryId: string | null) => {
             throw error;
           }
         } else {
+          console.log('Country info fetched successfully:', data);
+          console.log('Coat of arms URL:', data.coat_of_arms_url);
           setCountryInfo(data);
         }
       } catch (err) {

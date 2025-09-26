@@ -25,10 +25,13 @@ import {
   FileText,
   Save,
   X,
-  Trash2
+  Trash2,
+  Upload,
+  Image as ImageIcon
 } from 'lucide-react';
 import { db } from '@/lib/supabase';
 import { toast } from 'sonner';
+import { uploadImage } from '@/lib/storage';
 
 interface Country {
   id: string;
@@ -88,6 +91,8 @@ export const AdminCountryInfo: React.FC = () => {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingInfo, setEditingInfo] = useState<CountryInfo | null>(null);
   const [formData, setFormData] = useState<Partial<CountryInfo>>({});
+  const [uploadingImage, setUploadingImage] = useState(false);
+  const [imagePreview, setImagePreview] = useState<string | null>(null);
 
   useEffect(() => {
     fetchCountries();
@@ -128,13 +133,45 @@ export const AdminCountryInfo: React.FC = () => {
   const handleCreateNew = () => {
     setEditingInfo(null);
     setFormData({});
+    setImagePreview(null);
     setIsDialogOpen(true);
   };
 
   const handleEdit = (info: CountryInfo) => {
     setEditingInfo(info);
     setFormData(info);
+    setImagePreview(info.coat_of_arms_url || null);
     setIsDialogOpen(true);
+  };
+
+  const handleImageUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Validate file type
+    if (!file.type.startsWith('image/')) {
+      toast.error('Please select an image file');
+      return;
+    }
+
+    // Validate file size (max 5MB)
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image size must be less than 5MB');
+      return;
+    }
+
+    setUploadingImage(true);
+    try {
+      const imageUrl = await uploadImage(file, 'country-coat-of-arms', 'images');
+      setFormData({ ...formData, coat_of_arms_url: imageUrl });
+      setImagePreview(imageUrl);
+      toast.success('Image uploaded successfully');
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error('Failed to upload image');
+    } finally {
+      setUploadingImage(false);
+    }
   };
 
   const handleSave = async () => {
@@ -157,6 +194,7 @@ export const AdminCountryInfo: React.FC = () => {
       }
 
       setIsDialogOpen(false);
+      setImagePreview(null);
       fetchCountryInfo();
     } catch (error) {
       console.error('Error saving country info:', error);
@@ -854,6 +892,73 @@ export const AdminCountryInfo: React.FC = () => {
                     placeholder="Tourism attractions..."
                     rows={2}
                   />
+                </div>
+              </div>
+
+              {/* Visual Assets */}
+              <div className="space-y-4">
+                <h3 className="text-lg font-semibold text-gray-900 border-b pb-2">Visual Assets</h3>
+                
+                <div>
+                  <Label htmlFor="coat_of_arms">Coat of Arms (Optional)</Label>
+                  <div className="space-y-4">
+                    {imagePreview && (
+                      <div className="relative">
+                        <img 
+                          src={imagePreview} 
+                          alt="Coat of arms preview"
+                          className="w-32 h-32 object-contain border border-gray-300 rounded-lg"
+                        />
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          onClick={() => {
+                            setImagePreview(null);
+                            setFormData({...formData, coat_of_arms_url: ''});
+                          }}
+                          className="absolute -top-2 -right-2 bg-white border-red-300 text-red-600 hover:bg-red-50"
+                        >
+                          <X className="w-4 h-4" />
+                        </Button>
+                      </div>
+                    )}
+                    
+                    <div className="flex items-center space-x-4">
+                      <input
+                        type="file"
+                        id="coat_of_arms"
+                        accept="image/*"
+                        onChange={handleImageUpload}
+                        className="hidden"
+                        disabled={uploadingImage}
+                      />
+                      <label
+                        htmlFor="coat_of_arms"
+                        className="flex items-center space-x-2 px-4 py-2 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50 disabled:opacity-50"
+                      >
+                        {uploadingImage ? (
+                          <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
+                        ) : (
+                          <Upload className="w-4 h-4" />
+                        )}
+                        <span className="text-sm">
+                          {uploadingImage ? 'Uploading...' : 'Upload Coat of Arms'}
+                        </span>
+                      </label>
+                      
+                      {!imagePreview && (
+                        <div className="flex items-center space-x-2 text-sm text-gray-500">
+                          <ImageIcon className="w-4 h-4" />
+                          <span>No image selected</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <p className="text-xs text-gray-500">
+                      Supported formats: JPG, PNG, GIF. Max size: 5MB
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
