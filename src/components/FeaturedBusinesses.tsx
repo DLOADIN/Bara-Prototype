@@ -19,12 +19,14 @@ import { supabase } from '@/lib/supabase';
 interface FeaturedBusinessesProps {
   citySlug?: string;
   categorySlug?: string;
+  countrySlug?: string;
   maxDisplay?: number;
 }
 
 export const FeaturedBusinesses: React.FC<FeaturedBusinessesProps> = ({
   citySlug,
   categorySlug,
+  countrySlug,
   maxDisplay = 5
 }) => {
   const [featuredBusinesses, setFeaturedBusinesses] = useState<Business[]>([]);
@@ -32,7 +34,7 @@ export const FeaturedBusinesses: React.FC<FeaturedBusinessesProps> = ({
 
   useEffect(() => {
     fetchFeaturedBusinesses();
-  }, [citySlug, categorySlug]);
+  }, [citySlug, categorySlug, countrySlug]);
 
   const fetchFeaturedBusinesses = async () => {
     try {
@@ -158,6 +160,27 @@ export const FeaturedBusinesses: React.FC<FeaturedBusinessesProps> = ({
         });
         filtered = cityFiltered;
         console.log(`Filtering for city '${citySlug}': found ${filtered.length} businesses`);
+      }
+
+      // Also filter by country if specified
+      if (countrySlug) {
+        // First, get the country ID from the country slug
+        const { data: countryData, error: countryError } = await supabase
+          .from('countries')
+          .select('id, name, code')
+          .or(`name.ilike.%${countrySlug.replace(/-/g, ' ')}%,name.ilike.${countrySlug.replace(/-/g, ' ')}%,name.ilike.%${countrySlug.replace(/-/g, ' ')}`)
+          .single();
+
+        if (countryError) {
+          console.error('Error fetching country for filtering:', countryError);
+        } else if (countryData) {
+          // Filter businesses by country ID
+          const countryFiltered = filtered.filter(b => b.country_id === countryData.id);
+          filtered = countryFiltered;
+          console.log(`Filtering for country '${countrySlug}' (${countryData.name}): found ${filtered.length} businesses`);
+        } else {
+          console.log(`Country not found for slug '${countrySlug}', showing all businesses`);
+        }
       }
 
       // Limit the number of displayed businesses

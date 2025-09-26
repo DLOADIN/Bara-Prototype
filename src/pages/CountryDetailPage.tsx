@@ -902,8 +902,8 @@ export const CountryDetailPage: React.FC = () => {
                             {coatOfArmsLoading && (
                               <div className="absolute inset-0 flex items-center justify-center bg-gray-100 rounded-lg border border-gray-200">
                                 <div className="w-6 h-6 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
-                              </div>
-                            )}
+                      </div>
+                    )}
                             <img 
                               src={countryInfo.coat_of_arms_url} 
                               alt={`${country.name} coat of arms`}
@@ -916,9 +916,9 @@ export const CountryDetailPage: React.FC = () => {
                                 <Landmark className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                                 <p className="text-xs text-gray-500">Coat of Arms</p>
                                 <p className="text-xs text-gray-400">Image unavailable</p>
-                              </div>
-                            </div>
-                          </div>
+                      </div>
+                      </div>
+                      </div>
                       </div>
                     )}
                       {countryInfo.national_anthem_url && (
@@ -933,7 +933,7 @@ export const CountryDetailPage: React.FC = () => {
                             <span className="text-2xl">🎵</span>
                           </a>
                       </div>
-                    )}
+                    )} 
                       </div>
                   </CardContent>
                 </Card>

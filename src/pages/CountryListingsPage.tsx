@@ -7,7 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { MapPin, Phone, Globe, Crown, Search, Building2, Users, Award, ChevronDown, UtensilsCrossed, Wine, Coffee, Car, Home, Scale, Bed, Plane, Building, Scissors, BookOpen, Film, Stethoscope, User, Church, Leaf, Palette, Landmark, Hospital, Book, ShoppingBag, Trees, Pill, Mail, Gamepad2, GraduationCap, Truck, Zap, Wrench, Heart, Dumbbell, Laptop, Shield, Calculator, Megaphone, Briefcase, Camera, Calendar, Music, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
-import { useBusinessSearch } from "@/hooks/useBusinesses";
+import { useBusinesses } from "@/hooks/useBusinesses";
 import { Business, BusinessService } from "@/lib/businessService";
 import { Skeleton } from "@/components/ui/skeleton";
 import { db } from "@/lib/supabase";
@@ -217,14 +217,26 @@ export const CountryListingsPage = () => {
     fetchCountry();
   }, [countrySlug]);
 
-  // Search businesses in this country
+  // Get businesses in this country
   const { 
     data: searchResults = [], 
     isLoading: isLoadingSearch, 
     error: searchError 
-  } = useBusinessSearch(searchTerm, {
-    country: country?.id
+  } = useBusinesses({
+    countryCode: country?.code,
+    searchTerm: searchTerm.trim() || undefined
   });
+
+  // Debug logging
+  useEffect(() => {
+    console.log('CountryListingsPage Debug:', {
+      countrySlug,
+      country: country ? { id: country.id, name: country.name, code: country.code } : null,
+      searchTerm,
+      searchResultsCount: searchResults.length,
+      isLoadingSearch
+    });
+  }, [countrySlug, country, searchTerm, searchResults.length, isLoadingSearch]);
 
   // Reset to first page when filters change
   useEffect(() => {
@@ -263,8 +275,7 @@ export const CountryListingsPage = () => {
     // Increment click count + log event
     const inc = BusinessService.incrementClickCount(business.id);
     const log = BusinessService.logBusinessClick(business.id, {
-      source: 'country-listings',
-      country: countrySlug,
+      source: 'country-listings' // Using city field to track country context
     });
     
     await Promise.race([
@@ -390,7 +401,6 @@ export const CountryListingsPage = () => {
             ))}
           </div>
         </div>
-        <Footer />
       </div>
     );
   }

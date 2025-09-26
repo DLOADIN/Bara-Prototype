@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 
 type PopupAdProps = {
   intervalSeconds?: number;       // how often to show again
@@ -60,6 +60,7 @@ export default function PopupAd({
   return (
     <Dialog open={open} onOpenChange={(o) => (o ? setOpen(true) : handleClose())}>
       <DialogContent className="max-w-md p-0 overflow-hidden">
+        <DialogTitle className="sr-only">Advertisement</DialogTitle>
         <div className="relative">
           {linkUrl ? (
             <a href={linkUrl} target="_blank" rel="noopener noreferrer" onClick={handleClose}>

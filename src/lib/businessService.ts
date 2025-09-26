@@ -447,7 +447,15 @@ export class BusinessService {
       }
 
       if (filters.country) {
-        query = query.eq('countries.code', filters.country);
+        // Check if it's a UUID (country ID) or a string (country code)
+        const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(filters.country);
+        if (isUUID) {
+          // It's a country ID, filter by country_id
+          query = query.eq('country_id', filters.country);
+        } else {
+          // It's a country code, filter by countries.code
+          query = query.eq('countries.code', filters.country);
+        }
       }
 
       if (filters.is_premium) {
