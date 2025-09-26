@@ -179,6 +179,7 @@ export class BusinessService {
    */
   static async getBusinesses(params: BusinessSearchParams = {}): Promise<Business[]> {
     try {
+      console.log('getBusinesses called with params:', params);
       // Use inner joins to ensure category/city filters work reliably
       let query = db.businesses()
         .select(`
@@ -209,7 +210,21 @@ export class BusinessService {
 
       // Apply country filter
       if (params.countryCode) {
-        query = query.eq('countries.code', params.countryCode);
+        console.log('Filtering by country code:', params.countryCode);
+        // First get the country ID from the country code
+        const { data: countryData, error: countryError } = await db.countries()
+          .select('id, name, code')
+          .eq('code', params.countryCode)
+          .single();
+        
+        if (countryError) {
+          console.error('Error fetching country:', countryError);
+        } else if (countryData) {
+          console.log('Found country:', countryData.name, 'ID:', countryData.id, 'for code:', params.countryCode);
+          query = query.eq('country_id', countryData.id);
+        } else {
+          console.log('No country found for code:', params.countryCode);
+        }
       }
 
       // Apply search filter
@@ -254,6 +269,7 @@ export class BusinessService {
         query = query.range(offset, offset + params.limit - 1);
       }
 
+      console.log('Executing query for businesses...');
       const { data, error } = await query;
 
       if (error) {
@@ -261,6 +277,7 @@ export class BusinessService {
         throw error;
       }
 
+      console.log(`Found ${data?.length || 0} businesses`);
       return data || [];
     } catch (error) {
       console.error('Error in getBusinesses:', error);

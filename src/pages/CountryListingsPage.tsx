@@ -206,6 +206,7 @@ export const CountryListingsPage = () => {
           .single();
 
         if (error) throw error;
+        console.log('Country fetched:', data);
         setCountry(data);
       } catch (error) {
         console.error('Error fetching country:', error);
@@ -357,7 +358,6 @@ export const CountryListingsPage = () => {
   if (loading || isLoadingSearch) {
     return (
       <div className="min-h-screen bg-background font-roboto">
-        <Header />
         
         {/* Search Header Skeleton */}
         <div className="bg-yp-yellow py-4">
@@ -409,7 +409,6 @@ export const CountryListingsPage = () => {
   if (searchError) {
     return (
       <div className="min-h-screen bg-background font-roboto">
-        <Header />
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
           <div className="text-center">
             <div className="w-16 h-16 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-4">
@@ -426,14 +425,12 @@ export const CountryListingsPage = () => {
             </Button>
           </div>
         </div>
-        <Footer />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-background font-roboto">
-      <Header />
       <PopupAd
         imageUrl="/aboutBara.jpg"
         linkUrl="https://another-sponsor.com"
@@ -448,7 +445,7 @@ export const CountryListingsPage = () => {
         batchLength={48}
       />
       
-      {/* Search Header */}
+      {/* Search Header 
       <div className="bg-yp-yellow py-4">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
@@ -476,7 +473,7 @@ export const CountryListingsPage = () => {
             </Button>
           </div>
         </div>
-      </div>
+      </div>*/}
 
       {/* Country Info Header */}
       <div className="bg-white border-b border-gray-200 py-4">
@@ -969,7 +966,6 @@ export const CountryListingsPage = () => {
           </div>
         </div>
       </div>
-      <Footer />
     </div>
   );
 };
