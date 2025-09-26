@@ -485,14 +485,6 @@ export const ListingsPage = () => {
                 }}
               />
             </div>
-
-            <Button 
-              onClick={handleSearch}
-              className="bg-yp-blue text-white px-6 sm:px-8 font-roboto w-full sm:w-auto text-sm sm:text-base h-10 sm:h-auto"
-            >
-              <Search className="w-4 h-4 mr-2" />
-              SEARCH
-            </Button>
           </div>
         </div>
       </div>
