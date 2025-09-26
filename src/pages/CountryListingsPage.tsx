@@ -1,12 +1,10 @@
 import { useState, useEffect } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Header } from "@/components/Header";
-import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
-import { MapPin, Phone, Globe, Crown, Search, Building2, Users, Award, ChevronDown, UtensilsCrossed, Wine, Coffee, Car, Home, Scale, Bed, Plane, Building, Scissors, BookOpen, Film, Stethoscope, User, Church, Leaf, Palette, Landmark, Hospital, Book, ShoppingBag, Trees, Pill, Mail, Gamepad2, GraduationCap, Truck, Zap, Wrench, Heart, Dumbbell, Laptop, Shield, Calculator, Megaphone, Briefcase, Camera, Calendar, Music, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
+import { MapPin, Phone, Globe, Crown, Search, Building2, Users, Award, ChevronDown, UtensilsCrossed, Wine, Coffee, Car, Home, Scale, Bed, Plane, Building, Scissors, BookOpen, Film, Stethoscope, User, Church, Leaf, Palette, Landmark, Hospital, Book, ShoppingBag, Trees, Pill, Mail, Gamepad2, GraduationCap, Truck, Zap, Wrench, Heart, Dumbbell, Laptop, Shield, Calculator, Megaphone, Briefcase, Camera, Calendar, Music, Sparkles, ChevronLeft, ChevronRight, X } from "lucide-react";
 import { useBusinesses } from "@/hooks/useBusinesses";
 import { Business, BusinessService } from "@/lib/businessService";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -183,6 +181,8 @@ export const CountryListingsPage = () => {
   
   // State for search and filters
   const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState("");
+  const [isSearching, setIsSearching] = useState(false);
   const [selectedFilters, setSelectedFilters] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<'default' | 'distance' | 'rating' | 'name'>('default');
   const [sortOrder, setSortOrder] = useState<'asc' | 'desc'>('desc');
@@ -192,6 +192,23 @@ export const CountryListingsPage = () => {
   // State for pagination
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
+
+  // Debounce search term to avoid too many API calls
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedSearchTerm(searchTerm);
+      setIsSearching(false);
+    }, 300); // 300ms delay
+
+    return () => clearTimeout(timer);
+  }, [searchTerm]);
+
+  // Set searching state when user types
+  useEffect(() => {
+    if (searchTerm !== debouncedSearchTerm) {
+      setIsSearching(true);
+    }
+  }, [searchTerm, debouncedSearchTerm]);
 
   // Fetch country data
   useEffect(() => {
@@ -225,7 +242,7 @@ export const CountryListingsPage = () => {
     error: searchError 
   } = useBusinesses({
     countryCode: country?.code,
-    searchTerm: searchTerm.trim() || undefined
+    searchTerm: debouncedSearchTerm.trim() || undefined
   });
 
   // Debug logging
@@ -234,15 +251,16 @@ export const CountryListingsPage = () => {
       countrySlug,
       country: country ? { id: country.id, name: country.name, code: country.code } : null,
       searchTerm,
+      debouncedSearchTerm,
       searchResultsCount: searchResults.length,
       isLoadingSearch
     });
-  }, [countrySlug, country, searchTerm, searchResults.length, isLoadingSearch]);
+  }, [countrySlug, country, searchTerm, debouncedSearchTerm, searchResults.length, isLoadingSearch]);
 
   // Reset to first page when filters change
   useEffect(() => {
     setCurrentPage(1);
-  }, [searchTerm, selectedFilters, sortBy, sortOrder]);
+  }, [debouncedSearchTerm, selectedFilters, sortBy, sortOrder]);
 
   // Reset to first page when items per page changes
   useEffect(() => {
@@ -257,9 +275,10 @@ export const CountryListingsPage = () => {
 
   const countryName = formatTitle(countrySlug || '');
 
-  // Handle search
+  // Handle search - now triggers automatically as user types
   const handleSearch = () => {
-    // Search is handled by the hook automatically
+    // Search is handled by the hook automatically via searchTerm state
+    console.log('Search triggered with term:', searchTerm);
   };
 
   // Handle filter toggle
@@ -358,7 +377,6 @@ export const CountryListingsPage = () => {
   if (loading || isLoadingSearch) {
     return (
       <div className="min-h-screen bg-background font-roboto">
-        
         {/* Search Header Skeleton */}
         <div className="bg-yp-yellow py-4">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -445,35 +463,41 @@ export const CountryListingsPage = () => {
         batchLength={48}
       />
       
-      {/* Search Header 
+      {/* Search Header */}
       <div className="bg-yp-yellow py-4">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 lg:px-8">
           <div className="flex flex-col sm:flex-row items-stretch sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
-            <div className="flex-1 min-w-0">
+            <div className="flex-1 min-w-0 relative">
               <Input
                 type="text"
                 placeholder={`Search businesses in ${countryName}...`}
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full font-roboto bg-white border-gray-300 text-sm sm:text-base"
+                className="w-full font-roboto bg-white border-gray-300 text-sm sm:text-base pr-10"
                 onKeyPress={(e) => {
                   if (e.key === 'Enter') {
                     handleSearch();
                   }
                 }}
               />
+              {isSearching ? (
+                <div className="absolute right-3 top-1/2 transform -translate-y-1/2">
+                  <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                </div>
+              ) : searchTerm && (
+                <button
+                  onClick={() => setSearchTerm("")}
+                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                >
+                  <X className="w-4 h-4" />
+                </button>
+              )}
             </div>
 
-            <Button 
-              onClick={handleSearch}
-              className="bg-yp-blue text-white px-6 sm:px-8 font-roboto w-full sm:w-auto text-sm sm:text-base h-10 sm:h-auto"
-            >
-              <Search className="w-4 h-4 mr-2" />
-              SEARCH
-            </Button>
+
           </div>
         </div>
-      </div>*/}
+      </div>
 
       {/* Country Info Header */}
       <div className="bg-white border-b border-gray-200 py-4">
