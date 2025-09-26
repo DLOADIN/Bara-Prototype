@@ -133,9 +133,9 @@ export const Header = () => {
   const handleCountrySelect = (country: Country) => {
     setSelectedCountry(country);
     closeMobileMenu();
-    // Navigate to country detail page
+    // Navigate to country listings page
     const countrySlug = country.name.toLowerCase().replace(/\s+/g, '-');
-    navigate(`/countries/${countrySlug}`);
+    navigate(`/countries/${countrySlug}/listings`);
     scrollToTop();
   };
 

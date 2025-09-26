@@ -77,7 +77,6 @@ interface CountryInfo {
   is_active: boolean;
   created_at: string;
   updated_at: string;
-  country?: Country;
 }
 
 export const AdminCountryInfo: React.FC = () => {
@@ -113,10 +112,7 @@ export const AdminCountryInfo: React.FC = () => {
   const fetchCountryInfo = async () => {
     try {
       const { data, error } = await db.country_info()
-        .select(`
-          *,
-          country:countries(id, name, code, flag_url, flag_emoji)
-        `)
+        .select('*')
         .order('created_at', { ascending: false });
 
       if (error) throw error;
@@ -169,7 +165,8 @@ export const AdminCountryInfo: React.FC = () => {
   };
 
   const handleDelete = async (info: CountryInfo) => {
-    if (!confirm(`Are you sure you want to delete the country information for ${info.country?.name}?`)) {
+    const country = countries.find(c => c.id === info.country_id);
+    if (!confirm(`Are you sure you want to delete the country information for ${country?.name}?`)) {
       return;
     }
 
@@ -188,8 +185,9 @@ export const AdminCountryInfo: React.FC = () => {
   };
 
   const filteredInfo = countryInfo.filter(info => {
+    const country = countries.find(c => c.id === info.country_id);
     const matchesSearch = 
-      info.country?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      country?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       info.capital?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       info.president_name?.toLowerCase().includes(searchTerm.toLowerCase());
     
@@ -293,21 +291,23 @@ export const AdminCountryInfo: React.FC = () => {
 
         {/* Country Info Cards */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {filteredInfo.map((info) => (
+          {filteredInfo.map((info) => {
+            const country = countries.find(c => c.id === info.country_id);
+            return (
             <Card key={info.id} className="hover:shadow-lg transition-shadow">
               <CardHeader className="pb-3">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center space-x-3">
-                    {info.country?.flag_url && (
+                    {country?.flag_url && (
                       <img 
-                        src={info.country.flag_url} 
-                        alt={`${info.country.name} flag`}
+                        src={country.flag_url} 
+                        alt={`${country.name} flag`}
                         className="w-8 h-6 rounded shadow-sm"
                       />
                     )}
                     <div>
-                      <CardTitle className="text-lg">{info.country?.name}</CardTitle>
-                      <p className="text-sm text-gray-600">{info.country?.code}</p>
+                      <CardTitle className="text-lg">{country?.name}</CardTitle>
+                      <p className="text-sm text-gray-600">{country?.code}</p>
                     </div>
                   </div>
                   <Badge variant={info.is_active ? "default" : "secondary"}>
@@ -348,7 +348,7 @@ export const AdminCountryInfo: React.FC = () => {
                       <DialogHeader>
                         <DialogTitle className="flex items-center space-x-2">
                           <Globe className="w-5 h-5" />
-                          <span>{info.country?.name} - Detailed Information</span>
+                          <span>{country?.name} - Detailed Information</span>
                         </DialogTitle>
                       </DialogHeader>
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -515,7 +515,8 @@ export const AdminCountryInfo: React.FC = () => {
                 </div>
               </CardContent>
             </Card>
-          ))}
+            );
+          })}
         </div>
 
         {filteredInfo.length === 0 && (
