@@ -541,7 +541,6 @@ export const CountryDetailPage: React.FC = () => {
             ))}
           </div>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -558,7 +557,6 @@ export const CountryDetailPage: React.FC = () => {
             </Button>
           </div>
         </div>
-        <Footer />
       </div>
     );
   }
@@ -645,31 +643,6 @@ export const CountryDetailPage: React.FC = () => {
           {/* Complete Country Information Display */}
           {countryInfo && (
             <div className="mt-6 space-y-6">
-              {/* Debug info - remove in production */}
-              {process.env.NODE_ENV === 'development' && (
-                <div className="text-xs text-gray-500 mb-4 p-2 bg-gray-100 rounded">
-                  <div className="mb-2">
-                    Debug: Country info loaded. Coat of arms: {countryInfo.coat_of_arms_url ? 'Available' : 'Not available'}
-                  </div>
-                  {countryInfo.coat_of_arms_url && (
-                    <div className="space-y-1">
-                      <div>URL: {countryInfo.coat_of_arms_url}</div>
-                      <button 
-                        onClick={() => {
-                          console.log('Testing coat of arms image:', countryInfo.coat_of_arms_url);
-                          const img = new Image();
-                          img.onload = () => console.log('Image loads successfully');
-                          img.onerror = () => console.log('Image failed to load');
-                          img.src = countryInfo.coat_of_arms_url!;
-                        }}
-                        className="px-2 py-1 bg-blue-500 text-white text-xs rounded hover:bg-blue-600"
-                      >
-                        Test Image Load
-                      </button>
-                    </div>
-                  )}
-                </div>
-              )}
               {/* Basic Information Section */}
               <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 shadow-lg">
                 <CardHeader>
@@ -936,20 +909,6 @@ export const CountryDetailPage: React.FC = () => {
                               alt={`${country.name} coat of arms`}
                               className={`w-full h-full object-contain rounded-lg shadow-md border border-gray-200 hover:shadow-lg transition-shadow duration-200 ${coatOfArmsLoading ? 'opacity-0' : 'opacity-100'}`}
                               onLoadStart={() => setCoatOfArmsLoading(true)}
-                              onError={(e) => {
-                                console.error('Failed to load coat of arms image:', countryInfo.coat_of_arms_url);
-                                setCoatOfArmsLoading(false);
-                                e.currentTarget.style.display = 'none';
-                                // Show fallback content
-                                const fallback = e.currentTarget.parentElement?.querySelector('.fallback-content');
-                                if (fallback) {
-                                  (fallback as HTMLElement).style.display = 'block';
-                                }
-                              }}
-                              onLoad={() => {
-                                console.log('Coat of arms image loaded successfully:', countryInfo.coat_of_arms_url);
-                                setCoatOfArmsLoading(false);
-                              }}
                               loading="lazy"
                             />
                             <div className="fallback-content hidden w-full h-full flex items-center justify-center bg-gray-100 rounded-lg border border-gray-200">
@@ -960,12 +919,6 @@ export const CountryDetailPage: React.FC = () => {
                               </div>
                             </div>
                           </div>
-                          {/* Debug info for coat of arms */}
-                          {process.env.NODE_ENV === 'development' && (
-                            <div className="text-xs text-gray-400 mt-1">
-                              URL: {countryInfo.coat_of_arms_url}
-                            </div>
-                          )}
                       </div>
                     )}
                       {countryInfo.national_anthem_url && (
@@ -1173,8 +1126,6 @@ export const CountryDetailPage: React.FC = () => {
           </div>
         )}
       </div>
-      
-      <Footer />
     </div>
   );
 };
