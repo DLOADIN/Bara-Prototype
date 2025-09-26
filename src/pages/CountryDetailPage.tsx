@@ -594,7 +594,7 @@ export const CountryDetailPage: React.FC = () => {
           </div>
           
           {/* Sponsored Banner Section */}
-          {sponsoredBanners.length > 0 && (
+            {sponsoredBanners.length > 0 && (
             <div className="mt-6">
               <Card className="bg-gradient-to-r from-blue-50 to-indigo-50 border-blue-200 shadow-lg">
                 <CardContent className="p-6">
@@ -610,34 +610,34 @@ export const CountryDetailPage: React.FC = () => {
                   
                   {sponsoredBanners.map((banner) => (
                     <div key={banner.id} className="space-y-4">
-                      <a
-                        href={banner.company_website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        onClick={() => incrementBannerClick(banner.id)}
-                        className="block group"
-                      >
+                    <a
+                      href={banner.company_website}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      onClick={() => incrementBannerClick(banner.id)}
+                      className="block group"
+                    >
                         <div className="relative overflow-hidden rounded-lg">
-                          <img
-                            src={banner.banner_image_url}
-                            alt={banner.banner_alt_text || `${banner.company_name} banner`}
+                        <img
+                          src={banner.banner_image_url}
+                          alt={banner.banner_alt_text || `${banner.company_name} banner`}
                             className="w-full h-[200px] object-cover group-hover:scale-105 transition-transform duration-300"
-                            onLoad={() => incrementBannerView(banner.id)}
-                          />
+                          onLoad={() => incrementBannerView(banner.id)}
+                        />
                           <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-10 transition-all duration-300"></div>
-                        </div>
-                      </a>
+                      </div>
+                    </a>
                       
                       <div className="text-center">
                         <h3 className="font-semibold text-gray-900">{banner.company_name}</h3>
                         <p className="text-sm text-gray-600">
                           Visit {banner.company_website}
                         </p>
+                        </div>
                       </div>
-                    </div>
                   ))}
-                </CardContent>
-              </Card>
+                    </CardContent>
+                  </Card>
             </div>
           )}
 
@@ -657,15 +657,15 @@ export const CountryDetailPage: React.FC = () => {
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Country Code</Label>
                       <p className="text-lg font-semibold text-gray-900">{country.code || '-'}</p>
-                    </div>
+                        </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Capital</Label>
                       <p className="text-lg font-semibold text-gray-900">{countryInfo.capital || '-'}</p>
-                    </div>
+                      </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Currency</Label>
                       <p className="text-lg font-semibold text-gray-900">{countryInfo.currency || '-'}</p>
-                    </div>
+                      </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Language</Label>
                       <p className="text-lg font-semibold text-gray-900">{countryInfo.language || '-'}</p>
@@ -681,10 +681,10 @@ export const CountryDetailPage: React.FC = () => {
                       <p className="text-lg font-semibold text-gray-900">
                         {countryInfo.area_sq_km ? countryInfo.area_sq_km.toLocaleString() : '-'}
                       </p>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
 
               {/* Government & Leadership Section */}
               <Card className="bg-gradient-to-r from-red-50 to-pink-50 border-red-200 shadow-lg">
@@ -708,11 +708,11 @@ export const CountryDetailPage: React.FC = () => {
                       <Label className="text-sm font-medium text-gray-700">Formation Date</Label>
                       <p className="text-lg font-semibold text-gray-900">
                         {countryInfo.formation_date ? new Date(countryInfo.formation_date).toLocaleDateString() : '-'}
-                      </p>
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
 
               {/* Economic Information Section */}
               <Card className="bg-gradient-to-r from-green-50 to-emerald-50 border-green-200 shadow-lg">
@@ -728,8 +728,8 @@ export const CountryDetailPage: React.FC = () => {
                       <Label className="text-sm font-medium text-gray-700">GDP (USD)</Label>
                       <p className="text-lg font-semibold text-gray-900">
                         {countryInfo.gdp_usd ? `$${(countryInfo.gdp_usd / 1000000000).toFixed(1)}B` : '-'}
-                      </p>
-                    </div>
+                        </p>
+                      </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">GDP Per Capita</Label>
                       <p className="text-lg font-semibold text-gray-900">
@@ -739,10 +739,10 @@ export const CountryDetailPage: React.FC = () => {
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Currency Code</Label>
                       <p className="text-lg font-semibold text-gray-900">{countryInfo.currency_code || '-'}</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
+                        </div>
+                      </div>
+                    </CardContent>
+                  </Card>
 
               {/* Geographic Information Section */}
               <Card className="bg-gradient-to-r from-purple-50 to-violet-50 border-purple-200 shadow-lg">
@@ -761,19 +761,19 @@ export const CountryDetailPage: React.FC = () => {
                           ? `${countryInfo.latitude}, ${countryInfo.longitude}` 
                           : '-'
                         }
-                      </p>
-                    </div>
+                        </p>
+                        </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Timezone</Label>
                       <p className="text-lg font-semibold text-gray-900">{countryInfo.timezone || '-'}</p>
-                    </div>
+                      </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Calling Code</Label>
                       <p className="text-lg font-semibold text-gray-900">{countryInfo.calling_code || '-'}</p>
+                      </div>
                     </div>
-                  </div>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
 
               {/* Demographics Section */}
               <Card className="bg-gradient-to-r from-orange-50 to-yellow-50 border-orange-200 shadow-lg">
@@ -790,7 +790,7 @@ export const CountryDetailPage: React.FC = () => {
                       <p className="text-lg font-semibold text-gray-900">
                         {countryInfo.average_age ? `${countryInfo.average_age} years` : '-'}
                       </p>
-                    </div>
+                      </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Largest City</Label>
                       <p className="text-lg font-semibold text-gray-900">{countryInfo.largest_city || '-'}</p>
@@ -800,7 +800,7 @@ export const CountryDetailPage: React.FC = () => {
                       <p className="text-lg font-semibold text-gray-900">
                         {countryInfo.largest_city_population ? countryInfo.largest_city_population.toLocaleString() : '-'}
                       </p>
-                    </div>
+            </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Capital Population</Label>
                       <p className="text-lg font-semibold text-gray-900">
@@ -826,13 +826,13 @@ export const CountryDetailPage: React.FC = () => {
                       <p className="text-lg font-semibold text-gray-900">
                         {countryInfo.hdi_score ? countryInfo.hdi_score.toFixed(3) : '-'}
                       </p>
-                    </div>
+                        </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Literacy Rate</Label>
                       <p className="text-lg font-semibold text-gray-900">
                         {countryInfo.literacy_rate ? `${countryInfo.literacy_rate}%` : '-'}
-                      </p>
-                    </div>
+                        </p>
+                      </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Life Expectancy</Label>
                       <p className="text-lg font-semibold text-gray-900">
@@ -862,21 +862,21 @@ export const CountryDetailPage: React.FC = () => {
                             <div key={index} className="bg-white p-3 rounded-lg border">
                               <div className="flex justify-between items-center">
                                 <span className="font-semibold text-gray-900">{group.name}</span>
-                                <span className="text-sm font-medium text-blue-600">{group.percentage}%</span>
-                              </div>
-                              {group.note && (
-                                <p className="text-sm text-gray-600 mt-1">{group.note}</p>
-                              )}
-                            </div>
-                          ))}
+                          <span className="text-sm font-medium text-blue-600">{group.percentage}%</span>
                         </div>
+                        {group.note && (
+                                <p className="text-sm text-gray-600 mt-1">{group.note}</p>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                       </div>
                     ) : (
                       <div>
                         <Label className="text-sm font-medium text-gray-700">Ethnic Groups</Label>
                         <p className="text-lg font-semibold text-gray-900">-</p>
-                      </div>
-                    )}
+              </div>
+            )}
 
                     {/* Religions */}
                     {countryInfo.religions && Array.isArray(countryInfo.religions) && countryInfo.religions.length > 0 ? (
@@ -888,18 +888,18 @@ export const CountryDetailPage: React.FC = () => {
                               <div className="flex justify-between items-center">
                                 <span className="font-semibold text-gray-900">{religion.name}</span>
                                 <span className="text-sm font-medium text-blue-600">{religion.percentage}%</span>
-                              </div>
-                            </div>
+                   </div>
+             </div>
                           ))}
-                        </div>
+                      </div>
                       </div>
                     ) : (
                       <div>
                         <Label className="text-sm font-medium text-gray-700">Religions</Label>
                         <p className="text-lg font-semibold text-gray-900">-</p>
-                      </div>
-                    )}
-
+                 </div>
+               )}
+               
                     {/* National Holidays */}
                     {countryInfo.national_holidays && Array.isArray(countryInfo.national_holidays) && countryInfo.national_holidays.length > 0 ? (
                       <div>
@@ -910,7 +910,7 @@ export const CountryDetailPage: React.FC = () => {
                               <div className="flex justify-between items-center">
                                 <span className="font-semibold text-gray-900">{holiday.name}</span>
                                 <span className="text-sm font-medium text-blue-600">{holiday.date}</span>
-                              </div>
+                 </div>
                             </div>
                           ))}
                         </div>
@@ -919,8 +919,8 @@ export const CountryDetailPage: React.FC = () => {
                       <div>
                         <Label className="text-sm font-medium text-gray-700">National Holidays</Label>
                         <p className="text-lg font-semibold text-gray-900">-</p>
-                      </div>
-                    )}
+             </div>
+           )}
                   </div>
                 </CardContent>
               </Card>
@@ -938,20 +938,20 @@ export const CountryDetailPage: React.FC = () => {
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Climate</Label>
                       <p className="text-lg font-semibold text-gray-900">{countryInfo.climate || '-'}</p>
-                    </div>
+                      </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Natural Resources</Label>
                       <p className="text-lg font-semibold text-gray-900">{countryInfo.natural_resources || '-'}</p>
-                    </div>
+                      </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Main Industries</Label>
                       <p className="text-lg font-semibold text-gray-900">{countryInfo.main_industries || '-'}</p>
-                    </div>
+                      </div>
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-700">Tourism Attractions</Label>
                       <p className="text-lg font-semibold text-gray-900">{countryInfo.tourism_attractions || '-'}</p>
-                    </div>
-                  </div>
+                      </div>
+                      </div>
                 </CardContent>
               </Card>
 
@@ -974,8 +974,8 @@ export const CountryDetailPage: React.FC = () => {
                             alt={`${country.name} flag`}
                             className="w-24 h-16 object-cover rounded-lg shadow-md mx-auto"
                           />
-                        </div>
-                      )}
+                      </div>
+                    )}
                       {countryInfo.coat_of_arms_url && (
                         <div className="text-center">
                           <Label className="text-sm font-medium text-gray-700 mb-2 block">Coat of Arms</Label>
@@ -984,8 +984,8 @@ export const CountryDetailPage: React.FC = () => {
                             alt={`${country.name} coat of arms`}
                             className="w-24 h-24 object-contain rounded-lg shadow-md mx-auto"
                           />
-                        </div>
-                      )}
+                      </div>
+                    )} 
                       {countryInfo.national_anthem_url && (
                         <div className="text-center">
                           <Label className="text-sm font-medium text-gray-700 mb-2 block">National Anthem</Label>
@@ -997,13 +997,13 @@ export const CountryDetailPage: React.FC = () => {
                           >
                             <span className="text-2xl">🎵</span>
                           </a>
-                        </div>
-                      )}
-                    </div>
+                      </div>
+                    )}
+                      </div>
                   </CardContent>
                 </Card>
-              )}
-            </div>
+                    )}
+                  </div>
           )}
 
           {/* No Country Information Available */}
@@ -1015,8 +1015,8 @@ export const CountryDetailPage: React.FC = () => {
                 <p className="text-gray-600">
                   Detailed information for {country.name} has not been added yet.
                 </p>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
           )}
 
 

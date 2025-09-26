@@ -24,7 +24,8 @@ import {
   Landmark,
   FileText,
   Save,
-  X
+  X,
+  Trash2
 } from 'lucide-react';
 import { db } from '@/lib/supabase';
 import { toast } from 'sonner';
@@ -84,7 +85,7 @@ export const AdminCountryInfo: React.FC = () => {
   const [countryInfo, setCountryInfo] = useState<CountryInfo[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
-  const [selectedCountry, setSelectedCountry] = useState<string>('');
+  const [selectedCountry, setSelectedCountry] = useState<string>('all');
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [editingInfo, setEditingInfo] = useState<CountryInfo | null>(null);
   const [formData, setFormData] = useState<Partial<CountryInfo>>({});
@@ -111,7 +112,7 @@ export const AdminCountryInfo: React.FC = () => {
 
   const fetchCountryInfo = async () => {
     try {
-      const { data, error } = await (db as any).country_info()
+      const { data, error } = await db.country_info()
         .select(`
           *,
           country:countries(id, name, code, flag_url, flag_emoji)
@@ -144,7 +145,7 @@ export const AdminCountryInfo: React.FC = () => {
     try {
       if (editingInfo) {
         // Update existing
-        const { error } = await (db as any).country_info()
+        const { error } = await db.country_info()
           .update(formData)
           .eq('id', editingInfo.id);
 
@@ -152,7 +153,7 @@ export const AdminCountryInfo: React.FC = () => {
         toast.success('Country information updated successfully');
       } else {
         // Create new
-        const { error } = await (db as any).country_info()
+        const { error } = await db.country_info()
           .insert([formData]);
 
         if (error) throw error;
@@ -167,13 +168,32 @@ export const AdminCountryInfo: React.FC = () => {
     }
   };
 
+  const handleDelete = async (info: CountryInfo) => {
+    if (!confirm(`Are you sure you want to delete the country information for ${info.country?.name}?`)) {
+      return;
+    }
+
+    try {
+      const { error } = await db.country_info()
+        .delete()
+        .eq('id', info.id);
+
+      if (error) throw error;
+      toast.success('Country information deleted successfully');
+      fetchCountryInfo();
+    } catch (error) {
+      console.error('Error deleting country info:', error);
+      toast.error('Failed to delete country information');
+    }
+  };
+
   const filteredInfo = countryInfo.filter(info => {
     const matchesSearch = 
       info.country?.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       info.capital?.toLowerCase().includes(searchTerm.toLowerCase()) ||
       info.president_name?.toLowerCase().includes(searchTerm.toLowerCase());
     
-    const matchesCountry = !selectedCountry || info.country_id === selectedCountry;
+    const matchesCountry = !selectedCountry || selectedCountry === "all" || info.country_id === selectedCountry;
     
     return matchesSearch && matchesCountry;
   });
@@ -247,7 +267,7 @@ export const AdminCountryInfo: React.FC = () => {
                     <SelectValue placeholder="All countries" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="">All countries</SelectItem>
+                    <SelectItem value="all">All countries</SelectItem>
                     {countries.map((country) => (
                       <SelectItem key={country.id} value={country.id}>
                         {country.name}
@@ -261,7 +281,7 @@ export const AdminCountryInfo: React.FC = () => {
                   variant="outline" 
                   onClick={() => {
                     setSearchTerm('');
-                    setSelectedCountry('');
+                    setSelectedCountry('all');
                   }}
                 >
                   Clear Filters
@@ -483,6 +503,15 @@ export const AdminCountryInfo: React.FC = () => {
                     <Edit className="w-4 h-4 mr-1" />
                     Edit
                   </Button>
+                  
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={() => handleDelete(info)}
+                    className="text-red-600 hover:text-red-700 hover:bg-red-50"
+                  >
+                    <Trash2 className="w-4 h-4" />
+                  </Button>
                 </div>
               </CardContent>
             </Card>
@@ -525,7 +554,7 @@ export const AdminCountryInfo: React.FC = () => {
                 <div>
                   <Label htmlFor="country_id">Country *</Label>
                   <Select 
-                    value={formData.country_id || ''} 
+                    value={formData.country_id || undefined} 
                     onValueChange={(value) => setFormData({...formData, country_id: value})}
                   >
                     <SelectTrigger>
