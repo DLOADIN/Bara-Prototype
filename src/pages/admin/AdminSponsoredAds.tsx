@@ -27,10 +27,27 @@ interface Business {
   description: string | null;
   website: string | null;
   is_sponsored_ad: boolean;
-  slug: string;
   status: string;
   created_at: string;
   updated_at: string;
+}
+
+interface SponsoredBanner {
+  id: string;
+  country_id: string;
+  company_name: string;
+  company_website: string;
+  banner_image_url: string;
+  banner_alt_text: string | null;
+  is_active: boolean;
+  show_on_country_detail: boolean;
+  payment_status: string;
+  created_at: string;
+  updated_at: string;
+  countries?: {
+    name: string;
+    code: string;
+  } | null;
 }
 
 export const AdminSponsoredAds = () => {
@@ -38,14 +55,63 @@ export const AdminSponsoredAds = () => {
   const { toast } = useToast();
   
   const [businesses, setBusinesses] = useState<Business[]>([]);
+  const [sponsoredBanners, setSponsoredBanners] = useState<SponsoredBanner[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [updatingBusiness, setUpdatingBusiness] = useState<string | null>(null);
+  const [updatingBanner, setUpdatingBanner] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<'businesses' | 'banners'>('businesses');
   
   // Pagination state
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage] = useState(10);
   
+  // Fetch sponsored banners from database
+  const fetchSponsoredBanners = async () => {
+    try {
+      const { data, error } = await supabase
+        .from('sponsored_banners')
+        .select(`
+          id,
+          country_id,
+          company_name,
+          company_website,
+          banner_image_url,
+          banner_alt_text,
+          is_active,
+          show_on_country_detail,
+          payment_status,
+          created_at,
+          updated_at,
+          countries(name, code)
+        `)
+        .order('created_at', { ascending: false });
+
+      if (error) {
+        console.error('Error fetching sponsored banners:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to fetch sponsored banners',
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      const transformedBanners: SponsoredBanner[] = data?.map((banner: any) => ({
+        ...banner,
+        countries: banner.countries?.[0] || null
+      })) || [];
+      setSponsoredBanners(transformedBanners);
+    } catch (error) {
+      console.error('Error fetching sponsored banners:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to fetch sponsored banners',
+        variant: 'destructive'
+      });
+    }
+  };
+
   // Fetch businesses from database
   const fetchBusinesses = async () => {
     try {
@@ -58,7 +124,6 @@ export const AdminSponsoredAds = () => {
           description,
           website,
           is_sponsored_ad,
-          slug,
           status,
           created_at,
           updated_at
@@ -85,6 +150,53 @@ export const AdminSponsoredAds = () => {
       });
     } finally {
       setLoading(false);
+    }
+  };
+
+  // Toggle country detail display for sponsored banner
+  const toggleCountryDetailDisplay = async (bannerId: string, currentStatus: boolean) => {
+    try {
+      setUpdatingBanner(bannerId);
+      
+      const { error } = await supabase
+        .from('sponsored_banners')
+        .update({ 
+          show_on_country_detail: !currentStatus,
+          updated_at: new Date().toISOString()
+        })
+        .eq('id', bannerId);
+
+      if (error) {
+        console.error('Error updating banner:', error);
+        toast({
+          title: 'Error',
+          description: 'Failed to update country detail display status',
+          variant: 'destructive'
+        });
+        return;
+      }
+
+      // Update local state
+      setSponsoredBanners(prev => prev.map(banner => 
+        banner.id === bannerId 
+          ? { ...banner, show_on_country_detail: !currentStatus }
+          : banner
+      ));
+    
+      toast({
+        title: 'Success',
+        description: `Country detail display ${!currentStatus ? 'enabled' : 'disabled'} for ${sponsoredBanners.find(b => b.id === bannerId)?.company_name}`,
+        variant: 'default'
+      });
+    } catch (error) {
+      console.error('Error updating banner:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update country detail display status',
+        variant: 'destructive'
+      });
+    } finally {
+      setUpdatingBanner(null);
     }
   };
 
@@ -176,7 +288,13 @@ export const AdminSponsoredAds = () => {
   };
 
   useEffect(() => {
-    fetchBusinesses();
+    const fetchData = async () => {
+      await Promise.all([
+        fetchBusinesses(),
+        fetchSponsoredBanners()
+      ]);
+    };
+    fetchData();
   }, []);
 
   // Reset to first page when search term changes
@@ -195,12 +313,12 @@ export const AdminSponsoredAds = () => {
   }
 
   return (
-    <AdminLayout title="Sponsored Ads Management" subtitle="Manage sponsored advertising status for businesses">
+    <AdminLayout title="Sponsored Ads Management" subtitle="Manage sponsored advertising status for businesses and banners">
       {/* Header Actions */}
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
         <div>
           <h2 className="text-2xl font-comfortaa font-bold text-yp-dark">Sponsored Ads</h2>
-          <p className="text-gray-600 font-roboto">Manage sponsored advertising status for businesses</p>
+          <p className="text-gray-600 font-roboto">Manage sponsored advertising status for businesses and banners that are displayed on the Country Information Page</p>
         </div>
         
         <Button 
@@ -211,8 +329,37 @@ export const AdminSponsoredAds = () => {
           <Download className="w-4 h-4 mr-2" />
           Download Data
         </Button>
-          </div>
+      </div>
 
+      {/* Tab Navigation */}
+      <div className="flex space-x-1 bg-gray-100 p-1 rounded-lg mb-6">
+        <button
+          onClick={() => setActiveTab('businesses')}
+          className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors ${
+            activeTab === 'businesses'
+              ? 'bg-white text-yp-dark shadow-sm'
+              : 'text-gray-600 hover:text-yp-dark'
+          }`}
+        >
+          <Building2 className="w-4 h-4 inline mr-2" />
+          Businesses ({businesses.length})
+        </button>
+        <button
+          onClick={() => setActiveTab('banners')}
+          className={`flex-1 py-2 px-4 text-sm font-medium rounded-md transition-colors ${
+            activeTab === 'banners'
+              ? 'bg-white text-yp-dark shadow-sm'
+              : 'text-gray-600 hover:text-yp-dark'
+          }`}
+        >
+          <Target className="w-4 h-4 inline mr-2" />
+          Banners ({sponsoredBanners.length})
+        </button>
+      </div>
+
+      {/* Content based on active tab */}
+      {activeTab === 'businesses' ? (
+        <>
           {/* Stats Cards */}
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
             <Card>
@@ -418,7 +565,140 @@ export const AdminSponsoredAds = () => {
             )}
           </>
         )}
-      </div>
+        </div>
+        </>
+      ) : (
+        /* Banners Tab */
+        <div className="space-y-4">
+          {sponsoredBanners.length === 0 ? (
+            <Card>
+              <CardContent className="p-8 text-center">
+                <Target className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                <h3 className="text-lg font-medium text-gray-900 mb-2">No sponsored banners found</h3>
+                <p className="text-gray-600">No sponsored banners have been created yet.</p>
+              </CardContent>
+            </Card>
+          ) : (
+            <Card>
+              <CardContent className="p-0">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead className="bg-gray-50 border-b border-gray-200">
+                      <tr>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Banner Preview
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Company
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Country
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Status
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Show on Country Detail
+                        </th>
+                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                          Actions
+                        </th>
+                      </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                      {sponsoredBanners.map((banner) => (
+                        <tr key={banner.id} className="hover:bg-gray-50">
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            {banner.banner_image_url ? (
+                              <img 
+                                src={banner.banner_image_url} 
+                                alt={banner.banner_alt_text || 'Banner preview'}
+                                className="w-16 h-10 object-cover rounded border border-gray-200"
+                              />
+                            ) : (
+                              <div className="w-16 h-10 bg-gray-100 rounded border border-gray-200 flex items-center justify-center">
+                                <Target className="w-4 h-4 text-gray-400" />
+                              </div>
+                            )}
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div>
+                              <div className="text-sm font-medium text-gray-900">
+                                {banner.company_name}
+                              </div>
+                              <div className="text-sm text-gray-500">
+                                <a 
+                                  href={banner.company_website.startsWith('http') ? banner.company_website : `https://${banner.company_website}`}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="text-blue-600 hover:underline"
+                                >
+                                  {banner.company_website}
+                                </a>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="text-sm text-gray-900">
+                              {banner.countries?.name || 'Unknown Country'}
+                            </div>
+                            <div className="text-sm text-gray-500">
+                              {banner.countries?.code || ''}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex flex-col space-y-1">
+                              <Badge variant={banner.is_active ? "default" : "secondary"} className="w-fit">
+                                {banner.is_active ? "Active" : "Inactive"}
+                              </Badge>
+                              <Badge variant="outline" className="w-fit">
+                                {banner.payment_status}
+                              </Badge>
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap">
+                            <div className="flex items-center space-x-3">
+                              <Switch
+                                checked={banner.show_on_country_detail}
+                                onCheckedChange={() => toggleCountryDetailDisplay(banner.id, banner.show_on_country_detail)}
+                                disabled={updatingBanner === banner.id}
+                                className={cn(
+                                  "peer inline-flex h-6 w-11 shrink-0 cursor-pointer items-center rounded-full border-2 border-transparent transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background disabled:cursor-not-allowed disabled:opacity-50",
+                                  banner.show_on_country_detail 
+                                    ? "data-[state=checked]:bg-green-600 data-[state=unchecked]:bg-gray-300" 
+                                    : "data-[state=checked]:bg-green-600 data-[state=unchecked]:bg-red-500"
+                                )}
+                                style={{
+                                  '--switch-bg-checked': banner.show_on_country_detail ? '#16a34a' : '#16a34a',
+                                  '--switch-bg-unchecked': banner.show_on_country_detail ? '#d1d5db' : '#ef4444'
+                                } as React.CSSProperties}
+                              />
+                              {updatingBanner === banner.id && (
+                                <div className="w-4 h-4 border-2 border-gray-300 border-t-blue-600 rounded-full animate-spin"></div>
+                              )}
+                            </div>
+                            <div className="text-xs text-gray-500 mt-1">
+                              {banner.show_on_country_detail ? 'Visible on Country Detail' : 'Hidden from Country Detail'}
+                            </div>
+                          </td>
+                          <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                            <div className="text-xs">
+                              Created: {new Date(banner.created_at).toLocaleDateString()}
+                            </div>
+                            <div className="text-xs">
+                              Updated: {new Date(banner.updated_at).toLocaleDateString()}
+                            </div>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </CardContent>
+            </Card>
+          )}
+        </div>
+      )}
     </AdminLayout>
   );
 };

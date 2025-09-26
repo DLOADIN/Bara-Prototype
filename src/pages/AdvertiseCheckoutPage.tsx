@@ -83,7 +83,7 @@ const AdvertiseCheckoutPage = () => {
                 </div>
               </div>
             </div>
-            <Button onClick={handleCheckout} className="mt-6 w-full bg-yp-blue text-white">
+            <Button onClick={handleCheckout} className="mt-6 w-full bg-yellow-600 text-white">
               Pay ${plans[selectedPlan].price} / month
             </Button>
             <p className="text-xs text-gray-500 mt-2">Secure payments. We accept Visa, Mastercard and more. Backend processing will be integrated next.</p>

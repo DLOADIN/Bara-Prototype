@@ -349,6 +349,7 @@ CREATE TABLE public.sponsored_banners (
   contact_name text,
   contact_email text,
   contact_phone text,
+  show_on_country_detail boolean DEFAULT true,
   CONSTRAINT sponsored_banners_pkey PRIMARY KEY (id),
   CONSTRAINT sponsored_banners_country_id_fkey FOREIGN KEY (country_id) REFERENCES public.countries(id)
 );

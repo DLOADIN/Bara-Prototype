@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { db, getAdminDb, SUPABASE_URL } from '@/lib/supabase';
+import { db, getAdminDb, SUPABASE_URL, supabase } from '@/lib/supabase';
 import { SponsoredBanner, CreateSponsoredBannerData, UpdateSponsoredBannerData } from '@/types/sponsoredBanner.types';
 
 export const useSponsoredBanners = () => {
@@ -12,8 +12,8 @@ export const useSponsoredBanners = () => {
     setError(null);
     
     try {
-      const client = adminMode ? getAdminDb() : db;
-      const { data, error: fetchError } = await client.sponsored_banners()
+      const { data, error: fetchError } = await supabase
+        .from('sponsored_banners')
         .select(`
           *,
           countries!sponsored_banners_country_id_fkey(
@@ -25,6 +25,7 @@ export const useSponsoredBanners = () => {
         .order('created_at', { ascending: false });
 
       if (fetchError) {
+        console.error('Database error:', fetchError);
         throw fetchError;
       }
 
@@ -40,6 +41,7 @@ export const useSponsoredBanners = () => {
     } catch (err) {
       console.error('Error fetching sponsored banners:', err);
       setError(err instanceof Error ? err.message : 'Failed to fetch banners');
+      // Don't throw the error, just set it in state
     } finally {
       setLoading(false);
     }
@@ -50,7 +52,8 @@ export const useSponsoredBanners = () => {
     setError(null);
     
     try {
-      const { data, error: fetchError } = await db.sponsored_banners()
+      const { data, error: fetchError } = await supabase
+        .from('sponsored_banners')
         .select(`
           *,
           countries!sponsored_banners_country_id_fkey(
@@ -90,7 +93,8 @@ export const useSponsoredBanners = () => {
     
     try {
       // 1) Prefer active + paid
-      let { data, error: fetchError } = await db.sponsored_banners()
+      let { data, error: fetchError } = await supabase
+        .from('sponsored_banners')
         .select(`
           *,
           countries!sponsored_banners_country_id_fkey(
@@ -106,7 +110,8 @@ export const useSponsoredBanners = () => {
 
       // 2) If none, try any active
       if (fetchError && fetchError.code === 'PGRST116') {
-        const res = await db.sponsored_banners()
+        const res = await supabase
+          .from('sponsored_banners')
           .select(`
             *,
             countries!sponsored_banners_country_id_fkey(
@@ -126,7 +131,8 @@ export const useSponsoredBanners = () => {
 
       // 3) If still none, take latest regardless of flags
       if ((!data || fetchError?.code === 'PGRST116')) {
-        const res = await db.sponsored_banners()
+        const res = await supabase
+          .from('sponsored_banners')
           .select(`
             *,
             countries!sponsored_banners_country_id_fkey(
@@ -169,8 +175,7 @@ export const useSponsoredBanners = () => {
 
   const createBanner = async (bannerData: CreateSponsoredBannerData): Promise<SponsoredBanner | null> => {
     const attemptInsert = async (payload: Record<string, any>, useAdmin = false) => {
-      const client = useAdmin ? getAdminDb() : db;
-      return client.sponsored_banners().insert(payload).select('*').single();
+      return supabase.from('sponsored_banners').insert(payload).select('*').single();
     };
 
     // Known-safe columns present in base schema (per MY_DATABASE.sql)
@@ -218,7 +223,8 @@ export const useSponsoredBanners = () => {
 
   const updateBanner = async (id: string, updates: UpdateSponsoredBannerData): Promise<SponsoredBanner | null> => {
     try {
-      const { data, error: updateError } = await getAdminDb().sponsored_banners()
+      const { data, error: updateError } = await supabase
+        .from('sponsored_banners')
         .update(updates)
         .eq('id', id)
         .select('*')
@@ -246,7 +252,8 @@ export const useSponsoredBanners = () => {
 
   const deleteBanner = async (id: string): Promise<boolean> => {
     try {
-      const { error: deleteError } = await getAdminDb().sponsored_banners()
+      const { error: deleteError } = await supabase
+        .from('sponsored_banners')
         .delete()
         .eq('id', id);
 

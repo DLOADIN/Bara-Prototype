@@ -189,15 +189,6 @@ const Footer = () => {
                       className="text-gray-600 hover:text-gray-800 transition-colors flex items-center font-roboto text-sm sm:text-base"
                       title={country.name}
                     >
-                      {country.flag_url ? (
-                        <img 
-                          src={country.flag_url} 
-                          alt={`${country.name} flag`} 
-                          className="w-5 h-3.5 mr-2 flex-shrink-0"
-                        />
-                      ) : (
-                        <span className="mr-2">🌍</span>
-                      )}
                       <span className="truncate">{country.name}</span>
                     </Link>
                   </div>

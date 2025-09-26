@@ -109,7 +109,10 @@ export const CountryDetailPage: React.FC = () => {
   const [coatOfArmsLoading, setCoatOfArmsLoading] = useState(false);
   
   // Sponsored banner functionality
-  const { banners: sponsoredBanners, fetchBannerByCountry, incrementBannerClick, incrementBannerView } = useSponsoredBanners();
+  const { banners: allSponsoredBanners, fetchBannerByCountry, incrementBannerClick, incrementBannerView } = useSponsoredBanners();
+  
+  // Filter banners to only show those enabled for country detail page
+  const sponsoredBanners = allSponsoredBanners.filter(banner => banner.show_on_country_detail);
   
   // Country information from database
   const { countryInfo, loading: countryInfoLoading } = useCountryInfo(country?.id || null);

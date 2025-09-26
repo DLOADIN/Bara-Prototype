@@ -250,7 +250,7 @@ export const AdminSponsoredBanners: React.FC = () => {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold text-gray-900">Sponsored Banners</h1>
-            <p className="text-gray-600">Manage country page sponsored banners</p>
+            <p className="text-gray-600">Manage country page sponsored banners displayed on the Homepage</p>
           </div>
           <div className="flex items-center gap-3">
             <div className="text-sm text-gray-500">
@@ -729,13 +729,12 @@ export const AdminSponsoredBanners: React.FC = () => {
                     }
                     try {
                       setAdding(true);
-                      const up = await uploadImage(newBannerImage, 'sponsored-banners', 'banners');
-                      if (up.error || !up.url) throw new Error(up.error || 'Upload failed');
+                      const bannerImageUrl = await uploadImage(newBannerImage, 'sponsored-banners', 'banners');
                       const payload: any = {
                         country_id: newForm.country_id,
                         company_name: newForm.company_name,
                         company_website: newForm.company_website,
-                        banner_image_url: up.url,
+                        banner_image_url: bannerImageUrl,
                         banner_alt_text: newForm.banner_alt_text,
                         payment_status: newForm.payment_status,
                       };

@@ -6,6 +6,7 @@ export interface SponsoredBanner {
   banner_image_url: string;
   banner_alt_text?: string | null;
   is_active: boolean;
+  show_on_country_detail: boolean;
   submitted_by_user_id?: string | null;
   payment_status: 'pending' | 'paid' | 'failed';
   payment_id?: string | null;
@@ -32,6 +33,7 @@ export interface CreateSponsoredBannerData {
   company_website: string;
   banner_image_url: string;
   banner_alt_text?: string | null;
+  show_on_country_detail?: boolean;
   submitted_by_user_id?: string | null;
   payment_status?: 'pending' | 'paid' | 'failed';
   payment_id?: string | null;
@@ -44,6 +46,7 @@ export interface UpdateSponsoredBannerData {
   banner_image_url?: string;
   banner_alt_text?: string | null;
   is_active?: boolean;
+  show_on_country_detail?: boolean;
   submitted_by_user_id?: string | null;
   payment_status?: 'pending' | 'paid' | 'failed';
   payment_id?: string | null;
