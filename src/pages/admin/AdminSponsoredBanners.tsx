@@ -31,7 +31,6 @@ import { deleteImage, uploadImage } from '@/lib/storage';
 import { SponsoredBanner } from '@/types/sponsoredBanner.types';
 import { supabase } from '@/lib/supabase';
 import { Switch } from '@/components/ui/switch';
-import { BannerAnalyticsService } from '@/lib/bannerAnalyticsService';
 
 export const AdminSponsoredBanners: React.FC = () => {
   const { toast } = useToast();
@@ -93,13 +92,16 @@ export const AdminSponsoredBanners: React.FC = () => {
     try {
       const analyticsData: Record<string, any> = {};
       
-      // Fetch analytics for each banner
-      await Promise.all(
-        banners.map(async (banner) => {
-          const summary = await BannerAnalyticsService.getBannerAnalyticsSummary(banner.id);
-          analyticsData[banner.id] = summary;
-        })
-      );
+      // Simplified analytics - use data from the banner itself
+      banners.forEach((banner) => {
+        analyticsData[banner.id] = {
+          total_views: banner.view_count || 0,
+          total_clicks: banner.click_count || 0,
+          click_through_rate: banner.view_count > 0 ? ((banner.click_count || 0) / banner.view_count) * 100 : 0,
+          recent_views: 0, // Can be implemented later
+          recent_clicks: 0, // Can be implemented later
+        };
+      });
       
       setBannerAnalytics(analyticsData);
     } catch (error) {
