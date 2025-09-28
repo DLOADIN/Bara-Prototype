@@ -332,6 +332,33 @@ CREATE TABLE public.reviews (
   CONSTRAINT reviews_business_id_fkey FOREIGN KEY (business_id) REFERENCES public.businesses(id),
   CONSTRAINT reviews_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
 );
+CREATE TABLE public.slideshow_images (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  title text,
+  description text,
+  image_url text NOT NULL,
+  image_alt_text text,
+  is_active boolean DEFAULT true,
+  sort_order integer DEFAULT 0,
+  uploaded_by uuid,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT slideshow_images_pkey PRIMARY KEY (id),
+  CONSTRAINT slideshow_images_uploaded_by_fkey FOREIGN KEY (uploaded_by) REFERENCES auth.users(id)
+);
+CREATE TABLE public.sponsored_banner_analytics (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  banner_id uuid NOT NULL,
+  event_type character varying NOT NULL CHECK (event_type::text = ANY (ARRAY['view'::character varying::text, 'click'::character varying::text])),
+  user_agent text,
+  ip_address inet,
+  referrer text,
+  country_code text,
+  city text,
+  created_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT sponsored_banner_analytics_pkey PRIMARY KEY (id),
+  CONSTRAINT sponsored_banner_analytics_banner_id_fkey FOREIGN KEY (banner_id) REFERENCES public.sponsored_banners(id)
+);
 CREATE TABLE public.sponsored_banners (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   country_id uuid NOT NULL,
@@ -350,6 +377,8 @@ CREATE TABLE public.sponsored_banners (
   contact_email text,
   contact_phone text,
   show_on_country_detail boolean DEFAULT true,
+  view_count integer DEFAULT 0,
+  click_count integer DEFAULT 0,
   CONSTRAINT sponsored_banners_pkey PRIMARY KEY (id),
   CONSTRAINT sponsored_banners_country_id_fkey FOREIGN KEY (country_id) REFERENCES public.countries(id)
 );

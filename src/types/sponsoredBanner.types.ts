@@ -19,6 +19,8 @@ export interface SponsoredBanner {
   view_count?: number;
   click_count?: number;
   admin_notes?: string;
+  display_on_top?: boolean;
+  display_on_bottom?: boolean;
   created_at: string;
   updated_at: string;
   // Joined fields
@@ -59,6 +61,8 @@ export interface UpdateSponsoredBannerData {
   view_count?: number;
   click_count?: number;
   admin_notes?: string;
+  display_on_top?: boolean;
+  display_on_bottom?: boolean;
 }
 
 

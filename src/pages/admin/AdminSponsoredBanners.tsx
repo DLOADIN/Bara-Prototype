@@ -64,6 +64,8 @@ export const AdminSponsoredBanners: React.FC = () => {
     payment_status: 'paid' as 'pending' | 'paid' | 'failed' | 'refunded',
     status: 'pending' as 'pending' | 'approved' | 'rejected' | 'active' | 'inactive',
     payment_amount: 25 as number | undefined,
+    display_on_top: true,
+    display_on_bottom: false,
   });
 
   // Analytics state
@@ -171,6 +173,42 @@ export const AdminSponsoredBanners: React.FC = () => {
       toast({
         title: 'Error',
         description: 'Failed to update active state',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleToggleTopDisplay = async (banner: SponsoredBanner) => {
+    try {
+      const newValue = !banner.display_on_top;
+      await updateBanner(banner.id, { display_on_top: newValue } as any);
+      toast({
+        title: newValue ? 'Top Display Enabled' : 'Top Display Disabled',
+        description: `Banner ${newValue ? 'will show at top' : 'will not show at top'}`,
+      });
+    } catch (error) {
+      console.error('Error toggling top display:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update top display setting',
+        variant: 'destructive',
+      });
+    }
+  };
+
+  const handleToggleBottomDisplay = async (banner: SponsoredBanner) => {
+    try {
+      const newValue = !banner.display_on_bottom;
+      await updateBanner(banner.id, { display_on_bottom: newValue } as any);
+      toast({
+        title: newValue ? 'Bottom Display Enabled' : 'Bottom Display Disabled',
+        description: `Banner ${newValue ? 'will show at bottom' : 'will not show at bottom'}`,
+      });
+    } catch (error) {
+      console.error('Error toggling bottom display:', error);
+      toast({
+        title: 'Error',
+        description: 'Failed to update bottom display setting',
         variant: 'destructive',
       });
     }
@@ -400,6 +438,8 @@ export const AdminSponsoredBanners: React.FC = () => {
                       <TableHead>Payment</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Active</TableHead>
+                      <TableHead>Top Banner</TableHead>
+                      <TableHead>Bottom Banner</TableHead>
                       <TableHead>Stats</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
@@ -468,6 +508,30 @@ export const AdminSponsoredBanners: React.FC = () => {
                             />
                             <span className={`text-sm font-medium ${banner.is_active ? 'text-green-700' : 'text-red-600'}`}>
                               {banner.is_active ? 'On' : 'Off'}
+                            </span>
+                          </div>
+                        </TableCell>
+
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Switch
+                              checked={!!banner.display_on_top}
+                              onCheckedChange={() => handleToggleTopDisplay(banner)}
+                            />
+                            <span className={`text-sm font-medium ${banner.display_on_top ? 'text-blue-700' : 'text-gray-500'}`}>
+                              {banner.display_on_top ? 'Top' : 'Off'}
+                            </span>
+                          </div>
+                        </TableCell>
+
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <Switch
+                              checked={!!banner.display_on_bottom}
+                              onCheckedChange={() => handleToggleBottomDisplay(banner)}
+                            />
+                            <span className={`text-sm font-medium ${banner.display_on_bottom ? 'text-purple-700' : 'text-gray-500'}`}>
+                              {banner.display_on_bottom ? 'Bottom' : 'Off'}
                             </span>
                           </div>
                         </TableCell>
@@ -801,6 +865,34 @@ export const AdminSponsoredBanners: React.FC = () => {
                 </div>
               </div>
 
+              {/* Banner Positioning Controls */}
+              <div>
+                <h4 className="font-medium mb-3">Banner Positioning</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="flex items-center space-x-3">
+                    <Switch
+                      checked={newForm.display_on_top}
+                      onCheckedChange={(checked) => setNewForm((p) => ({ ...p, display_on_top: checked }))}
+                    />
+                    <div>
+                      <label className="text-sm font-medium">Display on Top</label>
+                      <p className="text-xs text-gray-500">Show banner at the top of the page</p>
+                    </div>
+                  </div>
+                  
+                  <div className="flex items-center space-x-3">
+                    <Switch
+                      checked={newForm.display_on_bottom}
+                      onCheckedChange={(checked) => setNewForm((p) => ({ ...p, display_on_bottom: checked }))}
+                    />
+                    <div>
+                      <label className="text-sm font-medium">Display on Bottom</label>
+                      <p className="text-xs text-gray-500">Show banner at the bottom of the page</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
               <div className="flex gap-3 justify-end pt-2">
                 <Button variant="outline" onClick={() => setShowAddDialog(false)} disabled={adding}>Cancel</Button>
                 <Button
@@ -823,13 +915,15 @@ export const AdminSponsoredBanners: React.FC = () => {
                         banner_image_url: bannerImageUrl,
                         banner_alt_text: newForm.banner_alt_text,
                         payment_status: newForm.payment_status,
+                        display_on_top: newForm.display_on_top,
+                        display_on_bottom: newForm.display_on_bottom,
                       };
                       if (typeof newForm.payment_amount === 'number') payload.payment_amount = newForm.payment_amount;
                       if (newForm.status) payload.status = newForm.status;
                       await createBanner(payload);
                       toast({ title: 'Banner Added', description: 'Sponsored banner has been created.' });
                       setShowAddDialog(false);
-                      setNewForm({ company_name: '', company_website: '', banner_alt_text: '', country_id: '', payment_status: 'paid', status: 'pending', payment_amount: 25 });
+                      setNewForm({ company_name: '', company_website: '', banner_alt_text: '', country_id: '', payment_status: 'paid', status: 'pending', payment_amount: 25, display_on_top: true, display_on_bottom: false });
                       setNewBannerImage(null);
                       setNewBannerImageUrl('');
                       fetchBanners(true);
