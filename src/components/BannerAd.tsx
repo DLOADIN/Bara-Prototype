@@ -1,7 +1,6 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { supabase } from '../lib/supabase';
 import { useTranslation } from 'react-i18next';
-import { BannerAnalyticsService } from '../lib/bannerAnalyticsService';
 
 interface BannerAdProps {
   className?: string;
@@ -178,20 +177,10 @@ export const BannerAd: React.FC<BannerAdProps> = ({ className = "" }) => {
     return banners[currentBannerIndex];
   }, [banners, currentBannerIndex]);
 
-  // Track banner view when banner changes
-  useEffect(() => {
-    if (bannerToShow?.id) {
-      BannerAnalyticsService.trackView(bannerToShow.id);
-    }
-  }, [bannerToShow?.id]);
-
-  // Track banner click
+  // Track banner click (simplified without analytics service)
   const handleBannerClick = (bannerId: string, event: React.MouseEvent) => {
-    // Track the click
-    BannerAnalyticsService.trackClick(bannerId);
-    
-    // Don't prevent the default navigation
-    // The link will handle the navigation naturally
+    // Simple click tracking - you can add analytics here later if needed
+    console.log('Banner clicked:', bannerId);
   };
 
   const targetUrl = ensureProtocol(bannerToShow?.company_website || null);
@@ -224,53 +213,10 @@ export const BannerAd: React.FC<BannerAdProps> = ({ className = "" }) => {
       onMouseLeave={() => setIsPaused(false)}
     >
       <div className="w-full">
-        <div className="flex flex-col md:flex-row items-stretch gap-4">
-          {/* Left: Sponsor info */}
-          <div className="md:w-2/5 w-full bg-white/60 rounded-lg p-4 md:p-6 border border-white/70 shadow-sm flex flex-col justify-between">
-            <div>
-              <div className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-blue-700 bg-blue-100 rounded-full px-2 py-1">
-                <span>{t('bannerAd.labels.sponsored')}</span>
-              </div>
-              <div 
-                className={`transition-all duration-600 ease-in-out ${
-                  isTransitioning ? 'opacity-0 transform translate-y-2' : 'opacity-100 transform translate-y-0'
-                }`}
-              >
-                <h3 className="mt-3 text-xl md:text-2xl font-bold text-yp-dark">
-                  {bannerToShow?.banner_alt_text || t('bannerAd.placeholder.title')}
-                </h3>
-                <p className="mt-2 text-sm text-gray-700">
-                  {t('bannerAd.placeholder.subtitle')}
-                </p>
-                {sponsorHost && (
-                  <p className="mt-3 text-sm text-gray-600">
-                    {t('bannerAd.labels.sponsoredBy')} <span className="font-semibold">{sponsorHost}</span>
-                  </p>
-                )}
-              </div>
-            </div>
-            {targetUrl && (
-              <div className="mt-4">
-                <a
-                  href={targetUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
-                  onClick={(e) => {
-                    console.log('Visit Site button clicked, navigating to:', targetUrl);
-                    bannerToShow?.id && handleBannerClick(bannerToShow.id, e);
-                  }}
-                >
-                  {t('bannerAd.actions.visitSite')}
-                </a>
-              </div>
-            )}
-          </div>
-
-          {/* Right: Banner image (smaller height) */}
-          <div className="md:w-3/5 w-full relative">
+        {/* Full width banner image */}
+        <div className="w-full relative">
             {loading ? (
-              <div className="animate-pulse w-full h-[260px] md:h-[320px] rounded-lg bg-gray-300" />
+              <div className="animate-pulse w-full h-[250px] md:h-[200px] rounded-lg bg-gray-300" />
             ) : bannerToShow ? (
               targetUrl ? (
                 <a
@@ -292,7 +238,7 @@ export const BannerAd: React.FC<BannerAdProps> = ({ className = "" }) => {
                     <img
                       src={bannerToShow.banner_image_url}
                       alt={bannerToShow.banner_alt_text || t('bannerAd.placeholder.title')}
-                      className="w-full h-[260px] md:h-[320px] object-cover"
+                      className="w-full h-[250px] md:h-[200px] object-cover"
                     />
                   </div>
                 </a>
@@ -306,13 +252,13 @@ export const BannerAd: React.FC<BannerAdProps> = ({ className = "" }) => {
                     <img
                       src={bannerToShow.banner_image_url}
                       alt={bannerToShow.banner_alt_text || t('bannerAd.placeholder.title')}
-                      className="w-full h-[260px] md:h-[320px] object-cover"
+                      className="w-full h-[120px] md:h-[200px] object-cover"
                     />
                   </div>
                 </div>
               )
             ) : (
-              <div className="w-full h-[260px] md:h-[320px] bg-gradient-to-br from-blue-500/20 to-indigo-600/20 rounded-lg flex items-center justify-center text-center px-4">
+              <div className="w-full h-[120px] md:h-[150px] bg-gradient-to-br from-blue-500/20 to-indigo-600/20 rounded-lg flex items-center justify-center text-center px-4">
                 <div>
                   <span className="text-gray-700 font-semibold text-lg">{t('bannerAd.placeholder.title')}</span>
                   <span className="block text-gray-600 text-sm mt-2">{t('bannerAd.placeholder.subtitle')}</span>
@@ -353,7 +299,6 @@ export const BannerAd: React.FC<BannerAdProps> = ({ className = "" }) => {
                 </div>
               </div>
             )}
-          </div>
         </div>
       </div>
     </div>
