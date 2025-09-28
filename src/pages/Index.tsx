@@ -1,5 +1,6 @@
 import { Header } from "@/components/Header";
-import { BannerAd } from "@/components/BannerAd";
+import { TopBannerAd } from "@/components/TopBannerAd";
+import { BottomBannerAd } from "@/components/BottomBannerAd";
 import { HeroSection } from "@/components/HeroSection";
 import { CategoryGrid } from "@/components/CategoryGrid";
 import { BusinessSection } from "@/components/BusinessSection";
@@ -19,12 +20,12 @@ const Index = () => {
         frequencyKey="popup_home_hf"
         batchLength={48}
       />
-      <BannerAd />
+      <TopBannerAd />
       <HeroSection />
       <CategoryGrid />
-      <BannerAd />
       <BusinessSection />
       <QASection />
+      <BottomBannerAd />
       <Footer />
     </div>
   );
