@@ -481,18 +481,18 @@ export const AdminSponsoredBanners: React.FC = () => {
                               </div>
                             ) : (
                               <>
-                                <div className="flex items-center text-gray-600">
-                                  <Eye className="w-3 h-3 mr-1" />
+                            <div className="flex items-center text-gray-600">
+                              <Eye className="w-3 h-3 mr-1" />
                                   {bannerAnalytics[banner.id]?.total_views || 0} views
-                                </div>
-                                <div className="flex items-center text-gray-600">
-                                  <MousePointer className="w-3 h-3 mr-1" />
+                            </div>
+                            <div className="flex items-center text-gray-600">
+                              <MousePointer className="w-3 h-3 mr-1" />
                                   {bannerAnalytics[banner.id]?.total_clicks || 0} clicks
                                 </div>
                                 {bannerAnalytics[banner.id]?.click_through_rate > 0 && (
                                   <div className="text-xs text-blue-600 font-medium">
                                     {bannerAnalytics[banner.id].click_through_rate}% CTR
-                                  </div>
+                            </div>
                                 )}
                               </>
                             )}

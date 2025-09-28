@@ -18,6 +18,7 @@ import {
   LogOut,
   Megaphone,
   FolderOpen,
+  Image,
   Mail,
   Info
 } from "lucide-react";
@@ -89,6 +90,12 @@ const adminMenuItems = [
     icon: Megaphone,
     path: "/admin/sponsored-banners",
     description: "Manage country page banners"
+  },
+  {
+    title: "Slideshow Images",
+    icon: Image,
+    path: "/admin/slideshow-images",
+    description: "Manage homepage slideshow images"
   },
   {
     title: "Users",

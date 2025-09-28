@@ -10,7 +10,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-const heroSlides: string[] = [
+// Default fallback images in case database images fail to load
+const defaultHeroSlides: string[] = [
   "/Homepage/jeremy-pelletier-MoPM7OM3D18-unsplash.jpg",
   "/Homepage/rabah-al-shammary-VV08UXxnhnc-unsplash.jpg",
   "/Homepage/pexels-followalice-667200.jpg",
@@ -20,8 +21,6 @@ const heroSlides: string[] = [
   "/Homepage/pexels-laukevtravel-26924196.jpg",
   "/Homepage/pexels-blue-ox-studio-218748-2014342.jpg",
   "/Homepage/pexels-mwauraken-29093739.jpg",
-
-
 ];
 import { db } from "@/lib/supabase";
 import { BusinessService, Business } from "@/lib/businessService";
@@ -49,13 +48,51 @@ export const HeroSection = () => {
   const [searchResults, setSearchResults] = useState<Business[]>([]);
   const [searchLoading, setSearchLoading] = useState(false);
   const [currentSlide, setCurrentSlide] = useState(0);
+  const [heroSlides, setHeroSlides] = useState<string[]>(defaultHeroSlides);
+  const [slidesLoading, setSlidesLoading] = useState(true);
 
-  // Background slideshow (2 seconds interval)
+  // Background slideshow (8 seconds interval)
   useEffect(() => {
+    if (heroSlides.length === 0) return;
+    
     const interval = setInterval(() => {
       setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
     }, 8000);
     return () => clearInterval(interval);
+  }, [heroSlides.length]);
+
+  // Fetch slideshow images from database
+  useEffect(() => {
+    const fetchSlideshowImages = async () => {
+      try {
+        const { data, error } = await db.slideshow_images()
+          .select('image_url, sort_order')
+          .eq('is_active', true)
+          .order('sort_order', { ascending: true });
+
+        if (error) {
+          console.error('Error fetching slideshow images:', error);
+          // Use default images if database fetch fails
+          setHeroSlides(defaultHeroSlides);
+        } else if (data && data.length > 0) {
+          // Use database images
+          const imageUrls = data.map(item => item.image_url);
+          setHeroSlides(imageUrls);
+          setCurrentSlide(0); // Reset to first slide
+        } else {
+          // No active images in database, use defaults
+          setHeroSlides(defaultHeroSlides);
+          setCurrentSlide(0); // Reset to first slide
+        }
+      } catch (error) {
+        console.error('Error fetching slideshow images:', error);
+        setHeroSlides(defaultHeroSlides);
+      } finally {
+        setSlidesLoading(false);
+      }
+    };
+
+    fetchSlideshowImages();
   }, []);
 
   useEffect(() => {
@@ -293,10 +330,18 @@ export const HeroSection = () => {
       <div
         className="relative h-[100vh] sm:h-[65vh] md:h-[80vh] lg:h-[80vh] bg-cover bg-center bg-no-repeat transition-background duration-700"
            style={{ 
-          backgroundImage: `url(${heroSlides[currentSlide]})`,
+          backgroundImage: slidesLoading ? 'none' : `url(${heroSlides[currentSlide]})`,
              filter: 'brightness(1.2)'
         }}
       >
+        {slidesLoading && (
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
+            <div className="text-white text-center">
+              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white mx-auto mb-4"></div>
+              <p className="text-lg">Loading slideshow...</p>
+            </div>
+          </div>
+        )}
         <div className="absolute inset-0 bg-[#202124] bg-opacity-30"></div>
         
         {/* Content Overlay */}

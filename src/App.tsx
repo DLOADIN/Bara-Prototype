@@ -52,6 +52,7 @@ import UserSettingsPage from "./pages/user/UserSettingsPage";
 import AdvertiseCheckoutPage from "./pages/AdvertiseCheckoutPage";
 import { SponsorCountryPage } from "./pages/SponsorCountryPage";
 import { AdminSponsoredBanners } from "./pages/admin/AdminSponsoredBanners";
+import { AdminSlideshowImages } from "./pages/admin/AdminSlideshowImages";
 import { MainLayout } from "./components/layout/MainLayout";
 
 const queryClient = new QueryClient();
@@ -230,6 +231,11 @@ const AppRoutes = () => {
       <Route path="/admin/sponsored-banners" element={
         <AdminAuthGuard>
           <AdminSponsoredBanners />
+        </AdminAuthGuard>
+      } />
+      <Route path="/admin/slideshow-images" element={
+        <AdminAuthGuard>
+          <AdminSlideshowImages />
         </AdminAuthGuard>
       } />
       

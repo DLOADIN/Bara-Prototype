@@ -136,7 +136,10 @@ export const getAdminDb = () => {
     sponsored_banner_analytics: () => adminSupabase.from('sponsored_banner_analytics'),
     
     // Country info operations
-    country_info: () => adminSupabase.from('country_info')
+    country_info: () => adminSupabase.from('country_info'),
+    
+    // Slideshow images operations
+    slideshow_images: () => adminSupabase.from('slideshow_images')
   };
 };
 
@@ -381,7 +384,10 @@ export const db = {
   sponsored_banner_analytics: () => supabase.from('sponsored_banner_analytics'),
   
   // Country info operations
-  country_info: () => supabase.from('country_info')
+  country_info: () => supabase.from('country_info'),
+  
+  // Slideshow images operations
+  slideshow_images: () => supabase.from('slideshow_images')
 }
 
 // Auth helper functions

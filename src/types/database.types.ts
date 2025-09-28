@@ -312,11 +312,49 @@ export interface Database {
           city?: string | null
           created_at?: string
         }
-      }
-    }
-    Views: {
-      [_ in never]: never
-    }
+       }
+       slideshow_images: {
+         Row: {
+           id: string
+           title: string | null
+           description: string | null
+           image_url: string
+           image_alt_text: string | null
+           is_active: boolean
+           sort_order: number
+           uploaded_by: string | null
+           created_at: string
+           updated_at: string
+         }
+         Insert: {
+           id?: string
+           title?: string | null
+           description?: string | null
+           image_url: string
+           image_alt_text?: string | null
+           is_active?: boolean
+           sort_order?: number
+           uploaded_by?: string | null
+           created_at?: string
+           updated_at?: string
+         }
+         Update: {
+           id?: string
+           title?: string | null
+           description?: string | null
+           image_url?: string
+           image_alt_text?: string | null
+           is_active?: boolean
+           sort_order?: number
+           uploaded_by?: string | null
+           created_at?: string
+           updated_at?: string
+         }
+       }
+     }
+     Views: {
+       [_ in never]: never
+     }
     Functions: {
       increment_banner_ad_views: {
         Args: { banner_ad_id: string }
