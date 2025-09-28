@@ -226,9 +226,7 @@ export const TopBannerAd: React.FC<TopBannerAdProps> = ({ className = "" }) => {
   }, [targetUrl]);
 
   if (loading) {
-    return (
-      <div className="w-full bg-gray-100 animate-pulse h-20 rounded-lg"></div>
-    );
+    return null; // Don't show anything while loading
   }
 
   if (!bannerToShow) {
@@ -244,9 +242,7 @@ export const TopBannerAd: React.FC<TopBannerAdProps> = ({ className = "" }) => {
       <div className="w-full">
         {/* Full width banner image */}
         <div className="w-full relative">
-            {loading ? (
-              <div className="animate-pulse w-full h-[250px] md:h-[200px] rounded-lg bg-gray-300" />
-            ) : bannerToShow ? (
+            {bannerToShow ? (
               targetUrl ? (
                 <a
                   href={targetUrl}

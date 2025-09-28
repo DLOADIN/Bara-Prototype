@@ -226,9 +226,7 @@ export const BottomBannerAd: React.FC<BottomBannerAdProps> = ({ className = "" }
   }, [targetUrl]);
 
   if (loading) {
-    return (
-      <div className="w-full bg-gray-100 animate-pulse h-20 rounded-lg"></div>
-    );
+    return null; // Don't show anything while loading
   }
 
   if (!bannerToShow) {
@@ -244,9 +242,7 @@ export const BottomBannerAd: React.FC<BottomBannerAdProps> = ({ className = "" }
       <div className="w-full">
         {/* Full width banner image */}
         <div className="w-full relative">
-            {loading ? (
-              <div className="animate-pulse w-full h-[250px] md:h-[200px] rounded-lg bg-gray-300" />
-            ) : bannerToShow ? (
+            {bannerToShow ? (
               targetUrl ? (
                 <a
                   href={targetUrl}
@@ -299,9 +295,9 @@ export const BottomBannerAd: React.FC<BottomBannerAdProps> = ({ className = "" }
             {banners.length > 1 && (
               <div className="absolute bottom-4 right-4 flex flex-col items-end gap-2">
                 {/* Progress bar */}
-                <div className="w-16 h-1 bg-white/30 rounded-full overflow-hidden">
+                <div className="w-16 h-1 rounded-full overflow-hidden">
                   <div 
-                    className="h-full bg-white transition-all duration-75 ease-linear"
+                    className="h-full transition-all duration-75 ease-linear"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
@@ -313,8 +309,6 @@ export const BottomBannerAd: React.FC<BottomBannerAdProps> = ({ className = "" }
                       key={index}
                       className={`w-2 h-2 rounded-full transition-all duration-300 ${
                         index === currentBannerIndex 
-                          ? 'bg-white shadow-lg' 
-                          : 'bg-white/50 hover:bg-white/70'
                       }`}
                       onClick={() => {
                         setCurrentBannerIndex(index);
