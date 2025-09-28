@@ -213,6 +213,106 @@ export interface Database {
           updated_by?: string | null
         }
       }
+      sponsored_banners: {
+        Row: {
+          id: string
+          country_id: string
+          company_name: string
+          company_website: string
+          banner_image_url: string
+          banner_alt_text: string | null
+          is_active: boolean
+          submitted_by_user_id: string | null
+          payment_status: string
+          payment_id: string | null
+          created_at: string
+          updated_at: string
+          payment_amount: number | null
+          contact_name: string | null
+          contact_email: string | null
+          contact_phone: string | null
+          show_on_country_detail: boolean
+          view_count: number
+          click_count: number
+        }
+        Insert: {
+          id?: string
+          country_id: string
+          company_name: string
+          company_website: string
+          banner_image_url: string
+          banner_alt_text?: string | null
+          is_active?: boolean
+          submitted_by_user_id?: string | null
+          payment_status?: string
+          payment_id?: string | null
+          created_at?: string
+          updated_at?: string
+          payment_amount?: number | null
+          contact_name?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          show_on_country_detail?: boolean
+          view_count?: number
+          click_count?: number
+        }
+        Update: {
+          id?: string
+          country_id?: string
+          company_name?: string
+          company_website?: string
+          banner_image_url?: string
+          banner_alt_text?: string | null
+          is_active?: boolean
+          submitted_by_user_id?: string | null
+          payment_status?: string
+          payment_id?: string | null
+          created_at?: string
+          updated_at?: string
+          payment_amount?: number | null
+          contact_name?: string | null
+          contact_email?: string | null
+          contact_phone?: string | null
+          show_on_country_detail?: boolean
+          view_count?: number
+          click_count?: number
+        }
+      }
+      sponsored_banner_analytics: {
+        Row: {
+          id: string
+          banner_id: string
+          event_type: string
+          user_agent: string | null
+          ip_address: string | null
+          referrer: string | null
+          country_code: string | null
+          city: string | null
+          created_at: string
+        }
+        Insert: {
+          id?: string
+          banner_id: string
+          event_type: string
+          user_agent?: string | null
+          ip_address?: string | null
+          referrer?: string | null
+          country_code?: string | null
+          city?: string | null
+          created_at?: string
+        }
+        Update: {
+          id?: string
+          banner_id?: string
+          event_type?: string
+          user_agent?: string | null
+          ip_address?: string | null
+          referrer?: string | null
+          country_code?: string | null
+          city?: string | null
+          created_at?: string
+        }
+      }
     }
     Views: {
       [_ in never]: never

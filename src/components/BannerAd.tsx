@@ -1,6 +1,7 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-import { db } from '../lib/supabase';
+import { supabase } from '../lib/supabase';
 import { useTranslation } from 'react-i18next';
+import { BannerAnalyticsService } from '../lib/bannerAnalyticsService';
 
 interface BannerAdProps {
   className?: string;
@@ -11,6 +12,7 @@ interface SponsoredBannerRow {
   banner_image_url: string;
   banner_alt_text: string | null;
   company_website: string | null;
+  company_name?: string;
 }
 
 let bannerAdInstanceCounter = 0;
@@ -28,14 +30,26 @@ export const BannerAd: React.FC<BannerAdProps> = ({ className = "" }) => {
   const progressRef = useRef<NodeJS.Timeout | null>(null);
   
   const ensureProtocol = (url: string | null | undefined) => {
-    if (!url) return null;
+    if (!url || url.trim() === '') return null;
+    
+    // Clean the URL
+    const cleanUrl = url.trim();
+    
     try {
       // If URL constructor succeeds, protocol is present and other details are also present
-      const u = new URL(url);
+      const u = new URL(cleanUrl);
       return u.toString();
     } catch {
       // Prepend https if missing protocol
-      return `https://${url.replace(/^\/+/, '')}`;
+      const urlWithProtocol = `https://${cleanUrl.replace(/^\/+/, '')}`;
+      try {
+        // Validate the constructed URL
+        new URL(urlWithProtocol);
+        return urlWithProtocol;
+      } catch {
+        console.warn('Invalid URL provided:', cleanUrl);
+        return null;
+      }
     }
   };
 
@@ -44,7 +58,8 @@ export const BannerAd: React.FC<BannerAdProps> = ({ className = "" }) => {
       setLoading(true);
       try {
         // 1) Primary: only active banners
-        let { data, error }: any = await db.sponsored_banners()
+        let { data, error }: any = await supabase
+          .from('sponsored_banners')
           .select('*')
           .eq('is_active', true)
           .order('created_at', { ascending: false })
@@ -52,7 +67,8 @@ export const BannerAd: React.FC<BannerAdProps> = ({ className = "" }) => {
 
         // 2) If none or schema issues, try approved status
         if ((error && error.code === 'PGRST204') || !data || data.length === 0) {
-          const res1 = await db.sponsored_banners()
+          const res1 = await supabase
+            .from('sponsored_banners')
             .select('*')
             .eq('status', 'approved')
             .order('created_at', { ascending: false })
@@ -63,7 +79,8 @@ export const BannerAd: React.FC<BannerAdProps> = ({ className = "" }) => {
 
         // 3) If still none, try paid banners
         if ((!data || data.length === 0) && !error) {
-          const res2 = await db.sponsored_banners()
+          const res2 = await supabase
+            .from('sponsored_banners')
             .select('*')
             .eq('payment_status', 'paid')
             .order('created_at', { ascending: false })
@@ -79,6 +96,7 @@ export const BannerAd: React.FC<BannerAdProps> = ({ className = "" }) => {
           banner_image_url: b.banner_image_url,
           banner_alt_text: b.banner_alt_text || null,
           company_website: b.company_website || null,
+          company_name: b.company_name || null,
         }))
         .filter((b: SponsoredBannerRow) => !!b.banner_image_url);
         setBanners(rows);
@@ -160,7 +178,35 @@ export const BannerAd: React.FC<BannerAdProps> = ({ className = "" }) => {
     return banners[currentBannerIndex];
   }, [banners, currentBannerIndex]);
 
+  // Track banner view when banner changes
+  useEffect(() => {
+    if (bannerToShow?.id) {
+      BannerAnalyticsService.trackView(bannerToShow.id);
+    }
+  }, [bannerToShow?.id]);
+
+  // Track banner click
+  const handleBannerClick = (bannerId: string, event: React.MouseEvent) => {
+    // Track the click
+    BannerAnalyticsService.trackClick(bannerId);
+    
+    // Don't prevent the default navigation
+    // The link will handle the navigation naturally
+  };
+
   const targetUrl = ensureProtocol(bannerToShow?.company_website || null);
+  
+  // Debug: Log the target URL to help troubleshoot
+  useEffect(() => {
+    if (bannerToShow && targetUrl) {
+      console.log('Banner URL Debug:', {
+        bannerId: bannerToShow.id,
+        companyName: bannerToShow.company_name,
+        originalUrl: bannerToShow.company_website,
+        processedUrl: targetUrl
+      });
+    }
+  }, [bannerToShow, targetUrl]);
   const sponsorHost = useMemo(() => {
     if (!targetUrl) return null;
     try {
@@ -210,6 +256,10 @@ export const BannerAd: React.FC<BannerAdProps> = ({ className = "" }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-md text-sm font-medium transition-colors"
+                  onClick={(e) => {
+                    console.log('Visit Site button clicked, navigating to:', targetUrl);
+                    bannerToShow?.id && handleBannerClick(bannerToShow.id, e);
+                  }}
                 >
                   {t('bannerAd.actions.visitSite')}
                 </a>
@@ -227,8 +277,12 @@ export const BannerAd: React.FC<BannerAdProps> = ({ className = "" }) => {
                   href={targetUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block overflow-hidden rounded-lg hover:opacity-95 transition-opacity"
-                  aria-label={bannerToShow.banner_alt_text || t('bannerAd.placeholder.title')}
+                  className="block overflow-hidden rounded-lg hover:opacity-95 transition-opacity cursor-pointer"
+                  aria-label={`Visit ${bannerToShow.company_name} - ${bannerToShow.banner_alt_text || t('bannerAd.placeholder.title')}`}
+                  onClick={(e) => {
+                    console.log('Banner clicked, navigating to:', targetUrl);
+                    bannerToShow?.id && handleBannerClick(bannerToShow.id, e);
+                  }}
                 >
                   <div 
                     className={`transition-all duration-600 ease-in-out ${

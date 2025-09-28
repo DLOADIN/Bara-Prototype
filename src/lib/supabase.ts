@@ -132,6 +132,9 @@ export const getAdminDb = () => {
     // Sponsored banners operations
     sponsored_banners: () => adminSupabase.from('sponsored_banners'),
     
+    // Sponsored banner analytics operations
+    sponsored_banner_analytics: () => adminSupabase.from('sponsored_banner_analytics'),
+    
     // Country info operations
     country_info: () => adminSupabase.from('country_info')
   };
@@ -373,6 +376,9 @@ export const db = {
   
   // Sponsored banners operations
   sponsored_banners: () => supabase.from('sponsored_banners'),
+  
+  // Sponsored banner analytics operations
+  sponsored_banner_analytics: () => supabase.from('sponsored_banner_analytics'),
   
   // Country info operations
   country_info: () => supabase.from('country_info')

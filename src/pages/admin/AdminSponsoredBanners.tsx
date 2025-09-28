@@ -29,8 +29,9 @@ import { useSponsoredBanners } from '@/hooks/useSponsoredBanners';
 import { useToast } from '@/hooks/use-toast';
 import { deleteImage, uploadImage } from '@/lib/storage';
 import { SponsoredBanner } from '@/types/sponsoredBanner.types';
-import { db } from '@/lib/supabase';
+import { supabase } from '@/lib/supabase';
 import { Switch } from '@/components/ui/switch';
+import { BannerAnalyticsService } from '@/lib/bannerAnalyticsService';
 
 export const AdminSponsoredBanners: React.FC = () => {
   const { toast } = useToast();
@@ -66,14 +67,53 @@ export const AdminSponsoredBanners: React.FC = () => {
     payment_amount: 25 as number | undefined,
   });
 
+  // Analytics state
+  const [bannerAnalytics, setBannerAnalytics] = useState<Record<string, {
+    total_views: number;
+    total_clicks: number;
+    click_through_rate: number;
+    recent_views: number;
+    recent_clicks: number;
+  }>>({});
+  const [loadingAnalytics, setLoadingAnalytics] = useState(false);
+
   useEffect(() => {
     fetchBanners(true); // Admin mode
   }, []);
 
+  // Fetch analytics data when banners change
+  useEffect(() => {
+    if (banners.length > 0) {
+      fetchBannerAnalytics();
+    }
+  }, [banners]);
+
+  const fetchBannerAnalytics = async () => {
+    setLoadingAnalytics(true);
+    try {
+      const analyticsData: Record<string, any> = {};
+      
+      // Fetch analytics for each banner
+      await Promise.all(
+        banners.map(async (banner) => {
+          const summary = await BannerAnalyticsService.getBannerAnalyticsSummary(banner.id);
+          analyticsData[banner.id] = summary;
+        })
+      );
+      
+      setBannerAnalytics(analyticsData);
+    } catch (error) {
+      console.error('Error fetching banner analytics:', error);
+    } finally {
+      setLoadingAnalytics(false);
+    }
+  };
+
   // Load countries for the add dialog
   useEffect(() => {
     (async () => {
-      const { data, error: err } = await db.countries()
+      const { data, error: err } = await supabase
+        .from('countries')
         .select('id, name, code, flag_url')
         .order('name');
       if (!err) setCountries(data || []);
@@ -256,6 +296,15 @@ export const AdminSponsoredBanners: React.FC = () => {
             <div className="text-sm text-gray-500">
               {filteredBanners.length} banner{filteredBanners.length !== 1 ? 's' : ''}
             </div>
+            <Button 
+              onClick={fetchBannerAnalytics} 
+              variant="outline" 
+              disabled={loadingAnalytics}
+              className="flex justify-center items-center"
+            >
+              <Eye className="w-4 h-4 mr-2" />
+              {loadingAnalytics ? 'Refreshing...' : 'Refresh Stats'}
+            </Button>
             <Button onClick={() => setShowAddDialog(true)} className="bg-yellow-900 hover:bg-blue-600 text-white flex justify-center items-center">
               <Plus className="w-4 h-4 mr-2" />
               Add Banner
@@ -349,7 +398,7 @@ export const AdminSponsoredBanners: React.FC = () => {
                       <TableHead>Payment</TableHead>
                       <TableHead>Status</TableHead>
                       <TableHead>Active</TableHead>
-                      {/* <TableHead>Stats</TableHead> */}
+                      <TableHead>Stats</TableHead>
                       <TableHead>Actions</TableHead>
                     </TableRow>
                   </TableHeader>
@@ -421,18 +470,32 @@ export const AdminSponsoredBanners: React.FC = () => {
                           </div>
                         </TableCell>
                         
-                        {/* <TableCell>
+                        <TableCell>
                           <div className="text-sm">
-                            <div className="flex items-center text-gray-600">
-                              <Eye className="w-3 h-3 mr-1" />
-                              {banner.view_count || 0} views
-                            </div>
-                            <div className="flex items-center text-gray-600">
-                              <MousePointer className="w-3 h-3 mr-1" />
-                              {banner.click_count || 0} clicks
-                            </div>
+                            {loadingAnalytics ? (
+                              <div className="animate-pulse">
+                                <div className="h-4 bg-gray-200 rounded w-16 mb-1"></div>
+                                <div className="h-4 bg-gray-200 rounded w-20"></div>
+                              </div>
+                            ) : (
+                              <>
+                                <div className="flex items-center text-gray-600">
+                                  <Eye className="w-3 h-3 mr-1" />
+                                  {bannerAnalytics[banner.id]?.total_views || 0} views
+                                </div>
+                                <div className="flex items-center text-gray-600">
+                                  <MousePointer className="w-3 h-3 mr-1" />
+                                  {bannerAnalytics[banner.id]?.total_clicks || 0} clicks
+                                </div>
+                                {bannerAnalytics[banner.id]?.click_through_rate > 0 && (
+                                  <div className="text-xs text-blue-600 font-medium">
+                                    {bannerAnalytics[banner.id].click_through_rate}% CTR
+                                  </div>
+                                )}
+                              </>
+                            )}
                           </div>
-                        </TableCell> */}
+                        </TableCell>
                         
                         <TableCell>
                           <div className="flex space-x-2">
@@ -538,6 +601,27 @@ export const AdminSponsoredBanners: React.FC = () => {
                     <div><strong>Amount:</strong> ${selectedBanner.payment_amount}</div>
                     <div><strong>Reference:</strong> {(selectedBanner as any).payment_reference || 'None'}</div>
                     <div><strong>Current Status:</strong> {getStatusBadge(selectedBanner.status)}</div>
+                  </div>
+                </div>
+
+                {/* Analytics Information */}
+                <div>
+                  <h4 className="font-medium mb-2">Analytics</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
+                    <div className="flex items-center">
+                      <Eye className="w-4 h-4 mr-2 text-gray-500" />
+                      <strong>Total Views:</strong> {bannerAnalytics[selectedBanner.id]?.total_views || 0}
+                    </div>
+                    <div className="flex items-center">
+                      <MousePointer className="w-4 h-4 mr-2 text-gray-500" />
+                      <strong>Total Clicks:</strong> {bannerAnalytics[selectedBanner.id]?.total_clicks || 0}
+                    </div>
+                    <div>
+                      <strong>Click-Through Rate:</strong> {bannerAnalytics[selectedBanner.id]?.click_through_rate || 0}%
+                    </div>
+                    <div>
+                      <strong>Recent Activity (7 days):</strong> {bannerAnalytics[selectedBanner.id]?.recent_views || 0} views, {bannerAnalytics[selectedBanner.id]?.recent_clicks || 0} clicks
+                    </div>
                   </div>
                 </div>
 
