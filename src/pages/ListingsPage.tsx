@@ -8,6 +8,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { MapPin, Phone, Globe, Crown, Search, Map, Building2, Users, Award, ChevronDown, UtensilsCrossed, Wine, Coffee, Car, Home, Scale, Bed, Plane, Building, Scissors, BookOpen, Film, Stethoscope, User, Church, Leaf, Palette, Landmark, Hospital, Book, ShoppingBag, Trees, Pill, Mail, Gamepad2, GraduationCap, Truck, Zap, Wrench, Heart, Dumbbell, Laptop, Shield, Calculator, Megaphone, Briefcase, Camera, Calendar, Music, Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
 import { useBusinessesByCategory, useBusinessSearch, useCitiesByCategory } from "@/hooks/useBusinesses";
+import { useCountrySelection } from "@/context/CountrySelectionContext";
 import { Business, BusinessService } from "@/lib/businessService";
 import { Skeleton } from "@/components/ui/skeleton";
 import { db } from "@/lib/supabase";
@@ -209,6 +210,9 @@ export const ListingsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
+  // Selected country from header dropdown
+  const { selectedCountry } = useCountrySelection();
+
   // Update search term when URL changes
   useEffect(() => {
     if (isSearchPage && urlSearchTerm) {
@@ -231,7 +235,11 @@ export const ListingsPage = () => {
     data: businesses = [], 
     isLoading: isLoadingCategory, 
     error: categoryError 
-  } = useBusinessesByCategory(actualCategorySlug || "", selectedCity || undefined);
+  } = useBusinessesByCategory(
+    actualCategorySlug || "",
+    selectedCity || undefined,
+    selectedCountry?.id
+  );
 
   // Search businesses (for search page or when search term is provided)
   const { 
@@ -240,7 +248,8 @@ export const ListingsPage = () => {
     error: searchError 
   } = useBusinessSearch(searchTerm, {
     category: isSearchPage ? undefined : actualCategorySlug, // Don't filter by category on search page
-    city: selectedCity || undefined
+    city: selectedCity || undefined,
+    country: selectedCountry?.id
   });
 
   // Get cities that have businesses in this category

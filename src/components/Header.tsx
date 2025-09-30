@@ -34,6 +34,7 @@ import { db } from "@/lib/supabase";
 import { useToast } from "@/components/ui/use-toast";
 import { fetchWikipediaCountryInfo } from "@/lib/wikipedia";
 import { scrollToTop } from "@/lib/scrollToTop";
+import { useCountrySelection } from "@/context/CountrySelectionContext";
 
 interface Country {
   id: string;
@@ -70,7 +71,7 @@ export const Header = () => {
   const [isCitiesLoading, setIsCitiesLoading] = useState(false);
   const [countriesExpanded, setCountriesExpanded] = useState(false);
   const [loading, setLoading] = useState(false);
-  const [selectedCountry, setSelectedCountry] = useState<Country | null>(null);
+  const { selectedCountry, setSelectedCountry } = useCountrySelection();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [mobileMenuClosing, setMobileMenuClosing] = useState(false);
 
@@ -131,12 +132,8 @@ export const Header = () => {
   };
 
   const handleCountrySelect = (country: Country) => {
-    setSelectedCountry(country);
+    setSelectedCountry({ id: country.id, name: country.name, code: country.code, flag_url: country.flag_url || undefined });
     closeMobileMenu();
-    // Navigate to country listings page
-    const countrySlug = country.name.toLowerCase().replace(/\s+/g, '-');
-    navigate(`/countries/${countrySlug}/listings`);
-    scrollToTop();
   };
 
   const toggleMobileMenu = () => {
@@ -213,7 +210,7 @@ export const Header = () => {
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="default" className="font-roboto">
-                  {t('navigation.searchByCountry')}
+                  {selectedCountry ? formatCountryDisplay(selectedCountry as Country) : t('navigation.searchByCountry')}
                   <ChevronDown className="w-4 h-4 ml-1 transition-transform duration-200" />
                 </Button>
               </DropdownMenuTrigger>

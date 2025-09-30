@@ -3,6 +3,7 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { CountrySelectionProvider } from "@/context/CountrySelectionContext";
 import { useAuthLogging } from "@/hooks/useAuthLogging";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { useEffect } from "react";
@@ -251,9 +252,11 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <AppRoutes />
-      </BrowserRouter>
+      <CountrySelectionProvider>
+        <BrowserRouter>
+          <AppRoutes />
+        </BrowserRouter>
+      </CountrySelectionProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );

@@ -317,9 +317,9 @@ export class BusinessService {
   /**
    * Get businesses by category slug
    */
-  static async getBusinessesByCategory(categorySlug: string, citySlug?: string, countryName?: string): Promise<Business[]> {
+  static async getBusinessesByCategory(categorySlug: string, citySlug?: string, countryId?: string): Promise<Business[]> {
     try {
-      console.log('Fetching businesses for category:', categorySlug, 'city:', citySlug, 'country:', countryName);
+      console.log('Fetching businesses for category:', categorySlug, 'city:', citySlug, 'countryId:', countryId);
       
       // First, get the category ID from the slug
       const { data: categoryData, error: categoryError } = await db.categories()
@@ -347,9 +347,9 @@ export class BusinessService {
         .eq('status', 'active')
         .eq('category_id', categoryData.id);
 
-      // Apply country filter if provided
-      if (countryName) {
-        query = query.eq('countries.name', countryName);
+      // Apply country filter if provided (use country_id exact match)
+      if (countryId) {
+        query = query.eq('country_id', countryId);
       }
 
       // Apply city filter if provided
@@ -387,7 +387,7 @@ export class BusinessService {
         throw error;
       }
 
-      console.log(`Found ${data?.length || 0} businesses for category ${categorySlug}${countryName ? ` in ${countryName}` : ''}`);
+      console.log(`Found ${data?.length || 0} businesses for category ${categorySlug}${countryId ? ` in countryId ${countryId}` : ''}`);
       return data || [];
     } catch (error) {
       console.error('Error in getBusinessesByCategory:', error);

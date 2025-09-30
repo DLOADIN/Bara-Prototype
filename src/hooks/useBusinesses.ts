@@ -12,10 +12,10 @@ export const useBusinesses = (params: BusinessSearchParams = {}) => {
 };
 
 // Updated to support country filtering
-export const useBusinessesByCategory = (categorySlug: string, citySlug?: string, countryName?: string) => {
+export const useBusinessesByCategory = (categorySlug: string, citySlug?: string, countryId?: string) => {
   return useQuery({
-    queryKey: ['businesses', 'category', categorySlug, citySlug, countryName],
-    queryFn: () => BusinessService.getBusinessesByCategory(categorySlug, citySlug, countryName),
+    queryKey: ['businesses', 'category', categorySlug, citySlug, countryId],
+    queryFn: () => BusinessService.getBusinessesByCategory(categorySlug, citySlug, countryId),
     staleTime: 5 * 60 * 1000, // 5 minutes
     gcTime: 10 * 60 * 1000, // 10 minutes
     refetchOnWindowFocus: false,
