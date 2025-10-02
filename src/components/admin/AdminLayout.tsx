@@ -84,12 +84,12 @@ export const AdminLayout = ({ children, title, subtitle }: AdminLayoutProps) => 
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen h-screen bg-gray-50 flex w-full ">
       {/* Sidebar */}
       <AdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col bg-gray-50 min-h-screen">
         {/* Mobile menu button */}
         <div className="lg:hidden fixed top-4 left-4 z-50">
           <Button
@@ -103,7 +103,7 @@ export const AdminLayout = ({ children, title, subtitle }: AdminLayoutProps) => 
         </div>
 
         {/* Top header */}
-        <header className="bg-white border-b border-gray-200 px-4 py-4 lg:px-8 flex-shrink-0">
+        <header className="bg-white border-b border-gray-200 px-4 py-4 lg:px-8 flex-shrink-0 shadow-sm">
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-2xl font-comfortaa font-bold text-gray-900">
@@ -118,7 +118,7 @@ export const AdminLayout = ({ children, title, subtitle }: AdminLayoutProps) => 
             <div className="flex items-center space-x-4">
               {/* User menu */}
               <div className="relative group">
-                <Button variant="ghost" size="sm" className="flex items-center space-x-2">
+                <Button variant="ghost" size="sm" className="flex items-center space-x-2 hover:bg-gray-100">
                   <div className="w-8 h-8 bg-gradient-to-br from-yp-blue to-yp-green rounded-full flex items-center justify-center">
                     {user?.imageUrl ? (
                       <img 
@@ -130,7 +130,7 @@ export const AdminLayout = ({ children, title, subtitle }: AdminLayoutProps) => 
                       <User className="w-4 h-4 text-white" />
                     )}
                   </div>
-                  <span className="hidden md:block font-roboto">
+                  <span className="hidden md:block font-roboto text-gray-700">
                     {user?.firstName && user?.lastName 
                       ? `${user.firstName} ${user.lastName}` 
                       : user?.primaryEmailAddress?.emailAddress?.split('@')[0] || 'Admin User'
@@ -143,15 +143,15 @@ export const AdminLayout = ({ children, title, subtitle }: AdminLayoutProps) => 
                   <div className="py-2">
                     <button 
                       onClick={() => navigate('/admin/settings')}
-                      className="w-full flex items-center space-x-3 px-4 py-2 text-left text-gray-700 hover:bg-gray-100 font-roboto"
+                      className="w-full flex items-center space-x-3 px-4 py-2 text-left text-gray-700 hover:bg-gray-100 font-roboto transition-colors"
                     >
                       <Settings className="w-4 h-4" />
                       <span>Account Settings</span>
                     </button>
-                    <hr className="my-2" />
+                    <hr className="my-2 border-gray-200" />
                     <button 
                       onClick={handleLogout}
-                      className="w-full flex items-center space-x-3 px-4 py-2 text-left text-red-600 hover:bg-red-50 font-roboto"
+                      className="w-full flex items-center space-x-3 px-4 py-2 text-left text-red-600 hover:bg-red-50 font-roboto transition-colors"
                     >
                       <LogOut className="w-4 h-4" />
                       <span>Sign Out</span>
@@ -164,8 +164,10 @@ export const AdminLayout = ({ children, title, subtitle }: AdminLayoutProps) => 
         </header>
 
         {/* Page content */}
-        <main className="flex-1 p-4 lg:p-8 overflow-auto">
-          {children}
+        <main className="flex-1 p-4 lg:p-8 overflow-auto bg-gray-50">
+          <div className="max-w-full">
+            {children}
+          </div>
         </main>
       </div>
     </div>
