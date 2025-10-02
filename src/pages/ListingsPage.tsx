@@ -589,7 +589,6 @@ export const ListingsPage = () => {
                   </DropdownMenuContent>
                 </DropdownMenu>
               </div>
-              
               <span className="text-xs sm:text-sm text-gray-600 font-roboto">
                 {sortedBusinesses.length} {t('listings.businessesFound')}
               </span>

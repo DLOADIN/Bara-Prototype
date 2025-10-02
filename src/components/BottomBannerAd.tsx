@@ -295,9 +295,9 @@ export const BottomBannerAd: React.FC<BottomBannerAdProps> = ({ className = "" }
             {banners.length > 1 && (
               <div className="absolute bottom-4 right-4 flex flex-col items-end gap-2">
                 {/* Progress bar */}
-                <div className="w-16 h-1 rounded-full overflow-hidden">
+                <div className="w-16 h-1 bg-white/30 rounded-full overflow-hidden">
                   <div 
-                    className="h-full transition-all duration-75 ease-linear"
+                    className="h-full bg-white transition-all duration-75 ease-linear"
                     style={{ width: `${progress}%` }}
                   />
                 </div>
@@ -309,6 +309,8 @@ export const BottomBannerAd: React.FC<BottomBannerAdProps> = ({ className = "" }
                       key={index}
                       className={`w-2 h-2 rounded-full transition-all duration-300 ${
                         index === currentBannerIndex 
+                          ? 'bg-white shadow-lg' 
+                          : 'bg-white/50 hover:bg-white/70'
                       }`}
                       onClick={() => {
                         setCurrentBannerIndex(index);
