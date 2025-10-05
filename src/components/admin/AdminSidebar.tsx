@@ -20,7 +20,8 @@ import {
   FolderOpen,
   Image,
   Mail,
-  Info
+  Info,
+  Calendar
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -66,6 +67,12 @@ const adminMenuItems = [
     icon: Building2,
     path: "/admin/businesses",
     description: "Manage business listings"
+  },
+  {
+    title: "Events",
+    icon: Calendar,
+    path: "/admin/events",
+    description: "Manage events and event details"
   },
   {
     title: "Sponsored Ads",

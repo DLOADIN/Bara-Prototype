@@ -29,6 +29,7 @@ import { AdminCities } from "./pages/admin/AdminCities";
 import { AdminCountries } from "./pages/admin/AdminCountries";
 import { AdminCountryInfo } from "./pages/admin/AdminCountryInfo";
 import { AdminBusinesses } from "./pages/admin/AdminBusinesses";
+import { AdminEventsEnhanced as AdminEvents } from "./pages/admin/AdminEventsEnhanced";
 import { AdminReviews } from "./pages/admin/AdminReviews";
 import { AdminSponsoredAds } from "./pages/admin/AdminSponsoredAds";
 import { AdminReports } from "./pages/admin/AdminReports";
@@ -44,7 +45,7 @@ import FaqPage from "./pages/FaqPage";
 // import { SimpleMapTest } from "./pages/SimpleMapTest";
 import { UltraSimpleMap } from "./components/UltraSimpleMap";
 import MarketplacePage from "./pages/MarketplacePage";
-import EventsPage from "./pages/EventsPage";
+import {EventsPage} from "./pages/EventsPage";
 import CommunitiesPage from "./pages/communities";
 import { CommunityPage } from "./pages/communities/CommunityPage";
 import UserSignInPage from "./pages/user/UserSignInPage";
@@ -187,6 +188,11 @@ const AppRoutes = () => {
       <Route path="/admin/businesses" element={
         <AdminAuthGuard>
           <AdminBusinesses />
+        </AdminAuthGuard>
+      } />
+      <Route path="/admin/events" element={
+        <AdminAuthGuard>
+          <AdminEvents />
         </AdminAuthGuard>
       } />
       <Route path="/admin/sponsored-ads" element={

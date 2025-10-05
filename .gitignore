@@ -34,3 +34,4 @@ ADMIN_DASHBOARD_README.md
 *.njsproj
 *.sln
 *.sw?
+/zoea.md
