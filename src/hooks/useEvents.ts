@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { EventsService, Event, EventSearchParams, EventSearchResult, EventCategory, City } from '@/lib/eventsService';
+import { db } from '@/lib/supabase';
 
 export const useEvents = () => {
   const [events, setEvents] = useState<Event[]>([]);
@@ -277,5 +278,44 @@ export const useEventManagement = () => {
     updateEvent,
     deleteEvent,
     updateEventTickets
+  };
+};
+
+// Hook for fetching countries
+export const useCountries = () => {
+  const [countries, setCountries] = useState<Array<{id: string; name: string; code: string}>>([]);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const fetchCountries = useCallback(async () => {
+    setLoading(true);
+    setError(null);
+    
+    try {
+      const { data, error } = await db.countries()
+        .select('id, name, code')
+        .eq('is_active', true)
+        .order('name', { ascending: true });
+
+      if (error) throw error;
+      setCountries(data || []);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : 'Failed to fetch countries';
+      setError(errorMessage);
+      console.error('Error fetching countries:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCountries();
+  }, [fetchCountries]);
+
+  return {
+    countries,
+    loading,
+    error,
+    refetch: fetchCountries
   };
 };

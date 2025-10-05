@@ -93,25 +93,25 @@ export const EventsPage = () => {
     }
   }, [selectedEvent, navigate]);
 
-  // Event Detail Component
+// Event Detail Component
   const EventDetail = ({ event, onBack }: { event: DatabaseEvent; onBack: () => void }) => (
     <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
-      <button 
-        onClick={onBack}
-        className="flex items-center text-brand-blue hover:text-brand-blue/80 mb-6 transition-colors"
-      >
-        <ArrowLeft className="w-5 h-5 mr-2" />
-        Back to Events
-      </button>
-      
-      <div className="md:flex">
+    <button 
+      onClick={onBack}
+      className="flex items-center text-brand-blue hover:text-brand-blue/80 mb-6 transition-colors"
+    >
+      <ArrowLeft className="w-5 h-5 mr-2" />
+      Back to Events
+    </button>
+    
+    <div className="md:flex">
         <div className="md:flex-shrink-0 md:w-1/2">
-          <img 
+        <img 
             className="h-80 w-full object-cover md:h-full" 
             src={event.event_image_url || event.images?.[0] || 'https://via.placeholder.com/600x400?text=Event+Image'} 
-            alt={event.title} 
-          />
-        </div>
+          alt={event.title} 
+        />
+      </div>
         <div className="p-8 md:w-1/2">
           <div className="flex items-center mb-4">
             <Badge variant="secondary" className="bg-brand-blue/10 text-brand-blue border-brand-blue/20">
@@ -121,9 +121,9 @@ export const EventsPage = () => {
           <h1 className="text-4xl font-bold text-gray-900 mb-4">{event.title}</h1>
           
           <div className="space-y-6">
-            <div className="flex items-start">
+          <div className="flex items-start">
               <Calendar className="h-6 w-6 text-brand-blue mr-3 mt-1 flex-shrink-0" />
-              <div>
+            <div>
                 <p className="text-lg text-gray-700 font-medium">
                   {new Date(event.start_date).toLocaleDateString('en-US', { 
                     weekday: 'long', 
@@ -136,60 +136,60 @@ export const EventsPage = () => {
                   {new Date(event.start_date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - {new Date(event.end_date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                 </p>
                 <p className="text-sm text-brand-blue mt-1 cursor-pointer hover:underline">Add to calendar</p>
-              </div>
             </div>
-            
-            <div className="flex items-start">
+          </div>
+          
+          <div className="flex items-start">
               <MapPin className="h-6 w-6 text-brand-blue mr-3 mt-1 flex-shrink-0" />
-              <div>
+            <div>
                 <p className="text-lg text-gray-700 font-medium">{event.venue_name}</p>
                 <p className="text-gray-600">{event.venue_address}</p>
                 {event.city_name && (
                   <p className="text-sm text-gray-500">{event.city_name}, {event.country_name}</p>
                 )}
                 <p className="text-sm text-brand-blue mt-1 cursor-pointer hover:underline">Get directions</p>
-              </div>
             </div>
-            
+          </div>
+          
             <div className="pt-6 border-t border-gray-200">
               <h3 className="text-xl font-semibold text-gray-900 mb-3">About this event</h3>
               <p className="text-gray-600 leading-relaxed">{event.description}</p>
-            </div>
-            
+          </div>
+          
             <div className="pt-6 border-t border-gray-200">
               <h3 className="text-xl font-semibold text-gray-900 mb-4">Event Details</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
+              <div>
                   <p className="text-sm text-gray-500 uppercase tracking-wide">Organizer</p>
                   <p className="text-gray-700 font-medium">{event.organizer_name}</p>
                   {event.organizer_handle && (
                     <p className="text-sm text-gray-500">{event.organizer_handle}</p>
                   )}
-                </div>
-                <div>
+              </div>
+              <div>
                   <p className="text-sm text-gray-500 uppercase tracking-wide">Capacity</p>
                   <p className="text-gray-700 font-medium">{event.capacity || 'Unlimited'}</p>
                   {event.registration_count && (
                     <p className="text-sm text-gray-500">{event.registration_count} registered</p>
                   )}
-                </div>
+              </div>
                 {event.organizer_email && (
-                  <div>
+              <div>
                     <p className="text-sm text-gray-500 uppercase tracking-wide">Contact</p>
                     <p className="text-gray-700 font-medium">{event.organizer_email}</p>
-                  </div>
+              </div>
                 )}
                 {event.website_url && (
-                  <div>
+              <div>
                     <p className="text-sm text-gray-500 uppercase tracking-wide">Website</p>
                     <a href={event.website_url} className="text-brand-blue hover:underline font-medium" target="_blank" rel="noopener noreferrer">
-                      Visit website
-                    </a>
-                  </div>
-                )}
+                  Visit website
+                </a>
               </div>
+                )}
             </div>
-            
+          </div>
+          
             {/* Social Media Links */}
             {(event.facebook_url || event.twitter_url || event.instagram_url) && (
               <div className="pt-6 border-t border-gray-200">
@@ -225,14 +225,14 @@ export const EventsPage = () => {
             
             <div className="pt-6">
               <Button className="w-full bg-brand-blue hover:bg-brand-blue-hover text-white font-semibold py-4 px-6 rounded-lg text-lg">
-                Get Tickets
-              </Button>
-            </div>
+              Get Tickets
+            </Button>
           </div>
         </div>
       </div>
     </div>
-  );
+  </div>
+);
 
   if (selectedEvent) {
     return (
@@ -264,65 +264,65 @@ export const EventsPage = () => {
       <div className="bg-gray-100 py-8">
         <div className="container mx-auto px-4">
           <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-            {/* Search */}
+                {/* Search */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Search</label>
-              <div className="relative">
-                <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
+                  <div className="relative">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
+                    <Input
                   placeholder="Search events, venues, or organizers"
-                  value={searchQuery}
+                      value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-9"
-                />
-              </div>
-            </div>
+                    />
+                  </div>
+                </div>
 
-            {/* Category */}
+                {/* Category */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">Category</label>
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
                 <SelectTrigger>
-                  <SelectValue placeholder="All Categories" />
-                </SelectTrigger>
-                <SelectContent>
+                      <SelectValue placeholder="All Categories" />
+                    </SelectTrigger>
+                    <SelectContent>
                   <SelectItem value="all">All Categories</SelectItem>
-                  {categories.map((category) => (
+                      {categories.map((category) => (
                     <SelectItem key={category.id} value={category.slug}>
-                      {category.name}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+                          {category.name}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
 
             {/* From Date */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">From Date</label>
-              <div className="relative">
+                  <div className="relative">
                 <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  type="date"
+                    <Input
+                      type="date"
                   value={startDate}
                   onChange={(e) => setStartDate(e.target.value)}
                   className="pl-9"
-                />
-              </div>
+                    />
+                  </div>
             </div>
 
             {/* To Date */}
             <div className="space-y-2">
               <label className="text-sm font-medium text-gray-700">To Date</label>
-              <div className="relative">
+                  <div className="relative">
                 <Calendar className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-                <Input
-                  type="date"
+                    <Input
+                      type="date"
                   value={endDate}
                   onChange={(e) => setEndDate(e.target.value)}
                   className="pl-9"
-                />
-              </div>
-            </div>
+                    />
+                  </div>
+                </div>
 
             {/* Sort By */}
             <div className="space-y-2">
@@ -330,18 +330,18 @@ export const EventsPage = () => {
               <Select value={sortBy} onValueChange={setSortBy}>
                 <SelectTrigger>
                   <ArrowUpDown className="h-4 w-4 mr-2" />
-                  <SelectValue placeholder="Sort by" />
-                </SelectTrigger>
-                <SelectContent>
+                      <SelectValue placeholder="Sort by" />
+                    </SelectTrigger>
+                    <SelectContent>
                   <SelectItem value="date">Date</SelectItem>
                   <SelectItem value="title">Title</SelectItem>
                   <SelectItem value="location">Location</SelectItem>
-                </SelectContent>
-              </Select>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
 
       {/* Events Grid */}
       <div className="container mx-auto px-4 py-12">
@@ -349,7 +349,7 @@ export const EventsPage = () => {
           <div className="text-center py-12">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-brand-blue mx-auto mb-4"></div>
             <p className="text-gray-600">Loading events...</p>
-          </div>
+        </div>
         ) : currentEvents.length > 0 ? (
           <>
             <div className="mb-8">
@@ -359,14 +359,14 @@ export const EventsPage = () => {
               <p className="text-gray-600">
                 Showing {startIndex + 1}-{Math.min(startIndex + eventsPerPage, sortedEvents.length)} of {sortedEvents.length} events
               </p>
-            </div>
+      </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-              {currentEvents.map((event) => (
-                <div key={event.id} onClick={() => handleViewEvent(event)} className="cursor-pointer">
-                  <EventCard
-                    id={event.id}
-                    title={event.title}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {currentEvents.map((event) => (
+                  <div key={event.id} onClick={() => handleViewEvent(event)} className="cursor-pointer">
+                    <EventCard
+                      id={event.id}
+                      title={event.title}
                     date={new Date(event.start_date).toLocaleDateString()}
                     time={`${new Date(event.start_date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - ${new Date(event.end_date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`}
                     location={event.city_name ? `${event.city_name}, ${event.country_name}` : event.venue_address || ''}
@@ -378,49 +378,49 @@ export const EventsPage = () => {
                         handleViewEvent(eventToView);
                       }
                     }}
-                  />
-                </div>
-              ))}
-            </div>
+                    />
+                  </div>
+                ))}
+              </div>
 
-            {/* Pagination */}
-            {totalPages > 1 && (
+              {/* Pagination */}
+              {totalPages > 1 && (
               <div className="flex justify-center items-center mt-12 space-x-2">
-                <Button
-                  variant="outline"
+                  <Button
+                    variant="outline"
                   onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                  disabled={currentPage === 1}
-                >
+                    disabled={currentPage === 1}
+                  >
                   <ChevronLeft className="w-4 h-4 mr-1" />
                   Previous
-                </Button>
-                
+                  </Button>
+                  
                 <div className="flex space-x-1">
                   {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-                    <Button
+                      <Button
                       key={page}
                       variant={currentPage === page ? "default" : "outline"}
                       onClick={() => setCurrentPage(page)}
                       className="w-10 h-10"
                     >
                       {page}
-                    </Button>
+                      </Button>
                   ))}
                 </div>
-                
-                <Button
-                  variant="outline"
+                  
+                  <Button
+                    variant="outline"
                   onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                  disabled={currentPage === totalPages}
-                >
+                    disabled={currentPage === totalPages}
+                  >
                   Next
                   <ChevronRight className="w-4 h-4 ml-1" />
-                </Button>
-              </div>
-            )}
-          </>
-        ) : (
-          <div className="text-center py-12">
+                  </Button>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="text-center py-12">
             <Calendar className="w-16 h-16 text-gray-400 mx-auto mb-4" />
             <h3 className="text-xl font-semibold text-gray-900 mb-2">No events found</h3>
             <p className="text-gray-600 mb-6">
@@ -441,10 +441,10 @@ export const EventsPage = () => {
                 Clear Filters
               </Button>
             )}
-          </div>
-        )}
-      </div>
-
+            </div>
+          )}
+        </div>
+      
       <Footer />
     </div>
   );

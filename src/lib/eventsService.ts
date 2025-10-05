@@ -225,9 +225,45 @@ export class EventsService {
         query = query.lte('end_date', end_date);
       }
 
-      const { data, error, count } = await query;
+      const { data, error } = await query;
 
       if (error) throw error;
+
+      // Get total count separately to avoid any potential issues
+      let totalCount = 0;
+      try {
+        const countQuery = supabase
+          .from('events')
+          .select('*', { count: 'exact', head: true })
+          .eq('is_public', true)
+          .in('event_status', ['upcoming', 'ongoing']);
+
+        // Apply the same filters for count
+        if (search_query) {
+          countQuery.or(`title.ilike.%${search_query}%,description.ilike.%${search_query}%,venue_name.ilike.%${search_query}%,organizer_name.ilike.%${search_query}%`);
+        }
+        if (country_id) {
+          countQuery.eq('country_id', country_id);
+        }
+        if (city_id) {
+          countQuery.eq('city_id', city_id);
+        }
+        if (category) {
+          countQuery.eq('category', category);
+        }
+        if (start_date) {
+          countQuery.gte('start_date', start_date);
+        }
+        if (end_date) {
+          countQuery.lte('end_date', end_date);
+        }
+
+        const { count } = await countQuery;
+        totalCount = count || 0;
+      } catch (countError) {
+        console.warn('Error getting count:', countError);
+        totalCount = data?.length || 0;
+      }
 
       // Get related data separately to avoid foreign key issues
       const events: Event[] = [];
@@ -279,8 +315,8 @@ export class EventsService {
 
       return {
         events,
-        total_count: count || 0,
-        has_more: (offset + limit) < (count || 0)
+        total_count: totalCount,
+        has_more: (offset + limit) < totalCount
       };
     } catch (error) {
       console.error('Error searching events:', error);

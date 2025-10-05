@@ -29,8 +29,7 @@ import {
   Camera
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
-import { useEvents, useEventCategories, useEventManagement } from '@/hooks/useEvents';
-import { useCitiesByCountry } from '@/hooks/useEvents';
+import { useEvents, useEventCategories, useEventManagement, useCountries, useCitiesByCountry } from '@/hooks/useEvents';
 import { uploadEventImage, deleteEventImage } from '@/lib/eventsService';
 import { Event as DatabaseEvent } from '@/lib/eventsService';
 
@@ -75,6 +74,7 @@ export const AdminEventsEnhanced = () => {
   const { events, loading, searchEvents } = useEvents();
   const { categories } = useEventCategories();
   const { createEvent, updateEvent, deleteEvent } = useEventManagement();
+  const { countries, loading: countriesLoading } = useCountries();
 
   // Form state
   const [formData, setFormData] = useState<FormData>({
@@ -100,10 +100,22 @@ export const AdminEventsEnhanced = () => {
     tickets: [{ name: '', description: '', selected: true }]
   });
 
+  // Cities hook - depends on formData.country_id
+  const { cities, loading: citiesLoading, fetchCities } = useCitiesByCountry(formData.country_id);
+
   // Load events on component mount
   useEffect(() => {
     searchEvents({ limit: 100 });
   }, [searchEvents]);
+
+  // Handle country change
+  const handleCountryChange = (countryId: string) => {
+    setFormData(prev => ({ 
+      ...prev, 
+      country_id: countryId,
+      city_id: '' // Reset city when country changes
+    }));
+  };
 
   // Filter events
   const filteredEvents = events.filter(event => {
@@ -479,6 +491,58 @@ export const AdminEventsEnhanced = () => {
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
+                    <Label htmlFor="country_id">Country *</Label>
+                    <Select
+                      value={formData.country_id}
+                      onValueChange={handleCountryChange}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select country" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {countriesLoading ? (
+                          <SelectItem value="loading" disabled>Loading countries...</SelectItem>
+                        ) : (
+                          countries.map((country) => (
+                            <SelectItem key={country.id} value={country.id}>
+                              {country.name} ({country.code})
+                            </SelectItem>
+                          ))
+                        )}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="city_id">City *</Label>
+                    <Select
+                      value={formData.city_id}
+                      onValueChange={(value) => setFormData(prev => ({ ...prev, city_id: value }))}
+                      disabled={!formData.country_id}
+                    >
+                      <SelectTrigger>
+                        <SelectValue placeholder={formData.country_id ? "Select city" : "Select country first"} />
+                      </SelectTrigger>
+                      <SelectContent>
+                        {citiesLoading ? (
+                          <SelectItem value="loading" disabled>Loading cities...</SelectItem>
+                        ) : cities.length > 0 ? (
+                          cities.map((city) => (
+                            <SelectItem key={city.id} value={city.id}>
+                              {city.name}
+                            </SelectItem>
+                          ))
+                        ) : formData.country_id ? (
+                          <SelectItem value="no-cities" disabled>No cities found</SelectItem>
+                        ) : (
+                          <SelectItem value="select-country" disabled>Select a country first</SelectItem>
+                        )}
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
                     <Label htmlFor="organizer_name">Organizer Name *</Label>
                     <Input
                       id="organizer_name"
@@ -659,7 +723,9 @@ export const AdminEventsEnhanced = () => {
                     <TableHead>Event</TableHead>
                     <TableHead>Category</TableHead>
                     <TableHead>Date & Time</TableHead>
-                    <TableHead>Location</TableHead>
+                    <TableHead>Country</TableHead>
+                    <TableHead>City</TableHead>
+                    <TableHead>Venue</TableHead>
                     <TableHead>Organizer</TableHead>
                     <TableHead>Status</TableHead>
                     <TableHead>Capacity</TableHead>
@@ -694,6 +760,17 @@ export const AdminEventsEnhanced = () => {
                             {new Date(event.start_date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - 
                             {new Date(event.end_date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}
                           </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm">
+                          <div>{event.country_name || 'N/A'}</div>
+                          <div className="text-gray-500">{event.country_code || ''}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="text-sm">
+                          <div>{event.city_name || 'N/A'}</div>
                         </div>
                       </TableCell>
                       <TableCell>
