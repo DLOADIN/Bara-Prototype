@@ -1,4 +1,3 @@
-import { Link } from 'react-router-dom';
 import { Calendar, Clock, MapPin } from 'lucide-react';
 
 interface EventCardProps {
@@ -9,6 +8,7 @@ interface EventCardProps {
   location: string;
   imageUrl: string;
   category?: string;
+  onViewEvent?: (id: string) => void;
 }
 
 export const EventCard = ({
@@ -19,7 +19,18 @@ export const EventCard = ({
   location,
   imageUrl,
   category,
+  onViewEvent,
 }: EventCardProps) => {
+  const handleViewEvent = (e: React.MouseEvent) => {
+    e.preventDefault();
+    if (onViewEvent) {
+      onViewEvent(id);
+    } else {
+      // Fallback to URL navigation if no handler provided
+      window.location.href = `/events/${id}`;
+    }
+  };
+
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1">
       <div className="h-48 bg-gray-200 overflow-hidden relative">
@@ -52,10 +63,7 @@ export const EventCard = ({
         </div>
         <div className="mt-4">
           <button
-            onClick={(e) => {
-              e.preventDefault();
-              window.location.href = `/events/${id}`;
-            }}
+            onClick={handleViewEvent}
             className="w-full text-center bg-orange-500 hover:bg-orange-600 text-white font-medium py-2 px-4 rounded-md transition-colors duration-300"
           >
             View Event
