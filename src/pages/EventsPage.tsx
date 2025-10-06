@@ -10,6 +10,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { useNavigate } from 'react-router-dom';
 import { useEvents, useEventCategories } from '@/hooks/useEvents';
 import { Event as DatabaseEvent } from '@/lib/eventsService';
+import { useCountrySelection } from '@/context/CountrySelectionContext';
 
 export const EventsPage = () => {
   const navigate = useNavigate();
@@ -25,11 +26,12 @@ export const EventsPage = () => {
   // Use real data from database
   const { events, loading, searchEvents } = useEvents();
   const { categories } = useEventCategories();
+  const { selectedCountry } = useCountrySelection();
 
-  // Load events on component mount
+  // Load events on component mount and when selected country changes
   useEffect(() => {
-    searchEvents({ limit: 100 });
-  }, [searchEvents]);
+    searchEvents({ limit: 100, country_id: selectedCountry?.id });
+  }, [searchEvents, selectedCountry]);
 
   // Filter events based on search and filters
   const filteredEvents = events.filter(event => {

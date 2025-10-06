@@ -22,6 +22,7 @@ CREATE TABLE public.ad_campaigns (
   CONSTRAINT ad_campaigns_pkey PRIMARY KEY (id),
   CONSTRAINT ad_campaigns_business_id_fkey FOREIGN KEY (business_id) REFERENCES public.businesses(id)
 );
+
 CREATE TABLE public.admin_users (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   user_id character varying NOT NULL UNIQUE,
@@ -35,6 +36,7 @@ CREATE TABLE public.admin_users (
   updated_at timestamp with time zone DEFAULT now(),
   CONSTRAINT admin_users_pkey PRIMARY KEY (id)
 );
+
 CREATE TABLE public.banner_ad_analytics (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   banner_ad_id uuid,
@@ -46,6 +48,7 @@ CREATE TABLE public.banner_ad_analytics (
   CONSTRAINT banner_ad_analytics_pkey PRIMARY KEY (id),
   CONSTRAINT banner_ad_analytics_banner_ad_id_fkey FOREIGN KEY (banner_ad_id) REFERENCES public.banner_ads(id)
 );
+
 CREATE TABLE public.banner_ads (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   title character varying NOT NULL,
@@ -63,6 +66,7 @@ CREATE TABLE public.banner_ads (
   CONSTRAINT banner_ads_pkey PRIMARY KEY (id),
   CONSTRAINT banner_ads_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id)
 );
+
 CREATE TABLE public.business_click_events (
   id bigint GENERATED ALWAYS AS IDENTITY NOT NULL,
   business_id uuid NOT NULL,
@@ -73,6 +77,7 @@ CREATE TABLE public.business_click_events (
   CONSTRAINT business_click_events_pkey PRIMARY KEY (id),
   CONSTRAINT business_click_events_business_id_fkey FOREIGN KEY (business_id) REFERENCES public.businesses(id)
 );
+
 CREATE TABLE public.businesses (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   name text NOT NULL,
@@ -113,6 +118,7 @@ CREATE TABLE public.businesses (
   CONSTRAINT businesses_city_id_fkey FOREIGN KEY (city_id) REFERENCES public.cities(id),
   CONSTRAINT businesses_country_id_fkey FOREIGN KEY (country_id) REFERENCES public.countries(id)
 );
+
 CREATE TABLE public.categories (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   name text NOT NULL UNIQUE,
@@ -126,6 +132,7 @@ CREATE TABLE public.categories (
   CONSTRAINT categories_pkey PRIMARY KEY (id),
   CONSTRAINT categories_parent_id_fkey FOREIGN KEY (parent_id) REFERENCES public.categories(id)
 );
+
 CREATE TABLE public.cities (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   name text NOT NULL,
@@ -138,6 +145,7 @@ CREATE TABLE public.cities (
   CONSTRAINT cities_pkey PRIMARY KEY (id),
   CONSTRAINT cities_country_id_fkey FOREIGN KEY (country_id) REFERENCES public.countries(id)
 );
+
 CREATE TABLE public.contact_messages (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   first_name text NOT NULL,
@@ -151,6 +159,7 @@ CREATE TABLE public.contact_messages (
   updated_at timestamp with time zone DEFAULT now(),
   CONSTRAINT contact_messages_pkey PRIMARY KEY (id)
 );
+
 CREATE TABLE public.countries (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   name text NOT NULL UNIQUE,
@@ -167,6 +176,7 @@ CREATE TABLE public.countries (
   flag_emoji text,
   CONSTRAINT countries_pkey PRIMARY KEY (id)
 );
+
 CREATE TABLE public.country_info (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   country_id uuid NOT NULL,
@@ -213,6 +223,7 @@ CREATE TABLE public.country_info (
   CONSTRAINT country_info_created_by_fkey FOREIGN KEY (created_by) REFERENCES auth.users(id),
   CONSTRAINT country_info_updated_by_fkey FOREIGN KEY (updated_by) REFERENCES auth.users(id)
 );
+
 CREATE TABLE public.event_categories (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   name text NOT NULL UNIQUE,
@@ -226,6 +237,7 @@ CREATE TABLE public.event_categories (
   updated_at timestamp with time zone DEFAULT now(),
   CONSTRAINT event_categories_pkey PRIMARY KEY (id)
 );
+
 CREATE TABLE public.event_tickets (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   event_id uuid NOT NULL,
@@ -240,6 +252,7 @@ CREATE TABLE public.event_tickets (
   CONSTRAINT event_tickets_pkey PRIMARY KEY (id),
   CONSTRAINT event_tickets_event_id_fkey FOREIGN KEY (event_id) REFERENCES public.events(id)
 );
+
 CREATE TABLE public.events (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   title text NOT NULL,
@@ -286,6 +299,7 @@ CREATE TABLE public.events (
   CONSTRAINT events_city_id_fkey FOREIGN KEY (city_id) REFERENCES public.cities(id),
   CONSTRAINT events_country_id_fkey FOREIGN KEY (country_id) REFERENCES public.countries(id)
 );
+
 CREATE TABLE public.listing_claims (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   business_id uuid,
@@ -309,6 +323,7 @@ CREATE TABLE public.listing_claims (
   CONSTRAINT listing_claims_business_id_fkey FOREIGN KEY (business_id) REFERENCES public.businesses(id),
   CONSTRAINT listing_claims_processed_by_fkey FOREIGN KEY (processed_by) REFERENCES public.admin_users(id)
 );
+
 CREATE TABLE public.payments (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   business_id uuid,
@@ -325,6 +340,7 @@ CREATE TABLE public.payments (
   CONSTRAINT payments_business_id_fkey FOREIGN KEY (business_id) REFERENCES public.businesses(id),
   CONSTRAINT payments_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
 );
+
 CREATE TABLE public.premium_features (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   business_id uuid,
@@ -335,6 +351,7 @@ CREATE TABLE public.premium_features (
   CONSTRAINT premium_features_pkey PRIMARY KEY (id),
   CONSTRAINT premium_features_business_id_fkey FOREIGN KEY (business_id) REFERENCES public.businesses(id)
 );
+
 CREATE TABLE public.products (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   seller_id uuid,
@@ -354,6 +371,7 @@ CREATE TABLE public.products (
   CONSTRAINT products_seller_id_fkey FOREIGN KEY (seller_id) REFERENCES public.users(id),
   CONSTRAINT products_business_id_fkey FOREIGN KEY (business_id) REFERENCES public.businesses(id)
 );
+
 CREATE TABLE public.questions (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   title character varying NOT NULL,
@@ -366,6 +384,7 @@ CREATE TABLE public.questions (
   updated_at timestamp with time zone DEFAULT now(),
   CONSTRAINT questions_pkey PRIMARY KEY (id)
 );
+
 CREATE TABLE public.reviews (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   business_id uuid,
@@ -382,6 +401,7 @@ CREATE TABLE public.reviews (
   CONSTRAINT reviews_business_id_fkey FOREIGN KEY (business_id) REFERENCES public.businesses(id),
   CONSTRAINT reviews_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
 );
+
 CREATE TABLE public.slideshow_images (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   title text,
@@ -396,6 +416,7 @@ CREATE TABLE public.slideshow_images (
   CONSTRAINT slideshow_images_pkey PRIMARY KEY (id),
   CONSTRAINT slideshow_images_uploaded_by_fkey FOREIGN KEY (uploaded_by) REFERENCES auth.users(id)
 );
+
 CREATE TABLE public.sponsored_banner_analytics (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   banner_id uuid NOT NULL,
@@ -409,6 +430,7 @@ CREATE TABLE public.sponsored_banner_analytics (
   CONSTRAINT sponsored_banner_analytics_pkey PRIMARY KEY (id),
   CONSTRAINT sponsored_banner_analytics_banner_id_fkey FOREIGN KEY (banner_id) REFERENCES public.sponsored_banners(id)
 );
+
 CREATE TABLE public.sponsored_banners (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   country_id uuid NOT NULL,
@@ -434,6 +456,7 @@ CREATE TABLE public.sponsored_banners (
   CONSTRAINT sponsored_banners_pkey PRIMARY KEY (id),
   CONSTRAINT sponsored_banners_country_id_fkey FOREIGN KEY (country_id) REFERENCES public.countries(id)
 );
+
 CREATE TABLE public.user_logs (
   id uuid NOT NULL DEFAULT gen_random_uuid(),
   user_id character varying NOT NULL,
@@ -447,6 +470,7 @@ CREATE TABLE public.user_logs (
   created_at timestamp with time zone DEFAULT now(),
   CONSTRAINT user_logs_pkey PRIMARY KEY (id)
 );
+
 CREATE TABLE public.users (
   id uuid NOT NULL,
   email text NOT NULL UNIQUE,
