@@ -30,7 +30,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useEvents, useEventCategories, useEventManagement, useCountries, useCitiesByCountry } from '@/hooks/useEvents';
-import { uploadEventImage, deleteEventImage } from '@/lib/eventsService';
+import { uploadEventImage } from '@/lib/eventsService';
 import { Event as DatabaseEvent } from '@/lib/eventsService';
 
 interface FormTicket {
@@ -47,6 +47,7 @@ interface FormData {
   venue_name: string;
   venue_address: string;
   event_image_url: string;
+  event_images: string[];
   category: string;
   organizer_name: string;
   organizer_handle: string;
@@ -85,6 +86,7 @@ export const AdminEventsEnhanced = () => {
     venue_name: '',
     venue_address: '',
     event_image_url: '',
+    event_images: [],
     category: '',
     organizer_name: '',
     organizer_handle: '',
@@ -131,7 +133,11 @@ export const AdminEventsEnhanced = () => {
       // For new events, we'll use a temporary ID, for existing events use the event ID
       const eventId = editingEvent?.id || 'temp';
       const imageUrl = await uploadEventImage(file, eventId);
-      setFormData(prev => ({ ...prev, event_image_url: imageUrl }));
+      setFormData(prev => ({ 
+        ...prev, 
+        event_image_url: prev.event_image_url || imageUrl,
+        event_images: [...prev.event_images, imageUrl]
+      }));
       setImagePreview(URL.createObjectURL(file));
       toast({
         title: "Image uploaded successfully",
@@ -149,10 +155,22 @@ export const AdminEventsEnhanced = () => {
   };
 
   const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      handleImageUpload(file);
+    const files = e.target.files ? Array.from(e.target.files) : [];
+    if (files.length > 0) {
+      files.forEach((file) => handleImageUpload(file));
     }
+  };
+
+  const setCoverImage = (url: string) => {
+    setFormData(prev => ({ ...prev, event_image_url: url }));
+  };
+
+  const removeImage = (url: string) => {
+    setFormData(prev => {
+      const filtered = prev.event_images.filter(img => img !== url);
+      const newCover = prev.event_image_url === url ? (filtered[0] || '') : prev.event_image_url;
+      return { ...prev, event_images: filtered, event_image_url: newCover };
+    });
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -178,6 +196,7 @@ export const AdminEventsEnhanced = () => {
         venue_name: formData.venue_name,
         venue_address: formData.venue_address,
         event_image_url: formData.event_image_url,
+        event_images: formData.event_images,
         category: formData.category,
         organizer_name: formData.organizer_name,
         organizer_handle: formData.organizer_handle,
@@ -231,6 +250,7 @@ export const AdminEventsEnhanced = () => {
       venue_name: event.venue_name || '',
       venue_address: event.venue_address || '',
       event_image_url: event.event_image_url || '',
+      event_images: event.event_images || [],
       category: event.category || '',
       organizer_name: event.organizer_name || '',
       organizer_handle: event.organizer_handle || '',
@@ -279,6 +299,7 @@ export const AdminEventsEnhanced = () => {
       venue_name: '',
       venue_address: '',
       event_image_url: '',
+      event_images: [],
       category: '',
       organizer_name: '',
       organizer_handle: '',
@@ -359,6 +380,7 @@ export const AdminEventsEnhanced = () => {
                       <input
                         type="file"
                         accept="image/*"
+                        multiple
                         onChange={handleImageChange}
                         className="hidden"
                         id="image-upload"
@@ -389,7 +411,7 @@ export const AdminEventsEnhanced = () => {
                     </div>
                     <div className="flex-1">
                       <p className="text-sm text-gray-500">
-                        Upload an image for your event. Recommended size: 1200x630px
+                        Upload one or more images for your event. Recommended size: 1200x630px
                       </p>
                       {formData.event_image_url && (
                         <p className="text-xs text-green-600 mt-1">
@@ -398,6 +420,37 @@ export const AdminEventsEnhanced = () => {
                       )}
                     </div>
                   </div>
+                  {formData.event_images.length > 0 && (
+                    <div className="mt-4">
+                      <Label className="text-sm">Gallery</Label>
+                      <div className="mt-2 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+                        {formData.event_images.map((url) => (
+                          <div key={url} className="relative group">
+                            <img src={url} alt="event" className="w-full h-28 object-cover rounded" />
+                            {formData.event_image_url === url && (
+                              <span className="absolute top-1 left-1 bg-black/70 text-white text-[10px] px-2 py-0.5 rounded">Cover</span>
+                            )}
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors flex items-center justify-center gap-2 rounded">
+                              <button
+                                type="button"
+                                className="text-white text-xs bg-black/60 px-2 py-1 rounded"
+                                onClick={() => setCoverImage(url)}
+                              >
+                                Set cover
+                              </button>
+                              <button
+                                type="button"
+                                className="text-white text-xs bg-red-600/80 px-2 py-1 rounded"
+                                onClick={() => removeImage(url)}
+                              >
+                                Remove
+                              </button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

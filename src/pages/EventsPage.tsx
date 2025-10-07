@@ -5,7 +5,7 @@ import { EventCard } from "@/components/EventCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Search, Filter, ChevronLeft, ChevronRight, MapPin, Calendar, Clock, ArrowLeft, CalendarDays, ArrowUpDown } from 'lucide-react';
+import { Search, Filter, ChevronLeft, ChevronRight, MapPin, Calendar, Clock, ArrowLeft, CalendarDays, ArrowUpDown, X } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNavigate } from 'react-router-dom';
 import { useEvents, useEventCategories } from '@/hooks/useEvents';
@@ -96,25 +96,59 @@ export const EventsPage = () => {
   }, [selectedEvent, navigate]);
 
 // Event Detail Component
-  const EventDetail = ({ event, onBack }: { event: DatabaseEvent; onBack: () => void }) => (
-    <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
-    <button 
-      onClick={onBack}
-      className="flex items-center text-brand-blue hover:text-brand-blue/80 mb-6 transition-colors"
-    >
-      <ArrowLeft className="w-5 h-5 mr-2" />
-      Back to Events
-    </button>
-    
-    <div className="md:flex">
-        <div className="md:flex-shrink-0 md:w-1/2">
-        <img 
-            className="h-80 w-full object-cover md:h-full" 
-            src={event.event_image_url || event.images?.[0] || 'https://via.placeholder.com/600x400?text=Event+Image'} 
-          alt={event.title} 
-        />
-      </div>
-        <div className="p-8 md:w-1/2">
+  const EventDetail = ({ event, onBack }: { event: DatabaseEvent; onBack: () => void }) => {
+    const images = [
+      ...(event.event_image_url ? [event.event_image_url] : []),
+      ...(event.event_images || []),
+      ...(event.images || [])
+    ];
+    const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+    const [currentImageIndex, setCurrentImageIndex] = useState(0);
+
+    const openLightboxAt = (index: number) => {
+      setCurrentImageIndex(index);
+      setIsLightboxOpen(true);
+    };
+
+    const closeLightbox = () => setIsLightboxOpen(false);
+    const showPrev = () => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+    const showNext = () => setCurrentImageIndex((prev) => (prev + 1) % images.length);
+
+    return (
+      <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+        <button 
+          onClick={onBack}
+          className="flex items-center text-brand-blue hover:text-brand-blue/80 mb-6 transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5 mr-2" />
+          Back to Events
+        </button>
+        
+        <div className="md:flex">
+          <div className="md:flex-shrink-0 md:w-1/2">
+            <div className="relative">
+              <img 
+                className="h-80 w-full object-cover md:h-full cursor-zoom-in" 
+                src={images[0] || 'https://via.placeholder.com/600x400?text=Event+Image'} 
+                alt={event.title}
+                onClick={() => openLightboxAt(0)}
+              />
+              {images.length > 1 && (
+                <div className="absolute bottom-3 left-3 right-3 flex gap-2 overflow-x-auto">
+                  {images.slice(0, 6).map((img, idx) => (
+                    <img
+                      key={`${img}-${idx}`}
+                      src={img}
+                      alt="thumbnail"
+                      className={`h-12 w-16 object-cover rounded-md border cursor-pointer ${idx === currentImageIndex ? 'ring-2 ring-brand-blue' : 'border-white/70'}`}
+                      onClick={() => openLightboxAt(idx)}
+                    />
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+          <div className="p-8 md:w-1/2">
           <div className="flex items-center mb-4">
             <Badge variant="secondary" className="bg-brand-blue/10 text-brand-blue border-brand-blue/20">
               {event.category_name || event.category}
@@ -230,11 +264,47 @@ export const EventsPage = () => {
               Get Tickets
             </Button>
           </div>
+          </div>
         </div>
+        </div>
+
+        {isLightboxOpen && (
+          <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center">
+            <button
+              className="absolute top-4 right-4 text-white hover:text-gray-300"
+              onClick={closeLightbox}
+              aria-label="Close image viewer"
+            >
+              <X className="w-7 h-7" />
+            </button>
+            {images.length > 1 && (
+              <>
+                <button
+                  className="absolute left-4 md:left-8 text-white hover:text-gray-300"
+                  onClick={showPrev}
+                  aria-label="Previous image"
+                >
+                  <ChevronLeft className="w-8 h-8" />
+                </button>
+                <button
+                  className="absolute right-4 md:right-8 text-white hover:text-gray-300"
+                  onClick={showNext}
+                  aria-label="Next image"
+                >
+                  <ChevronRight className="w-8 h-8" />
+                </button>
+              </>
+            )}
+            <img
+              src={images[currentImageIndex]}
+              alt={`event image ${currentImageIndex + 1}`}
+              className="max-h-[95vh] max-w-[95vw] object-contain"
+            />
+          </div>
+        )}
       </div>
-    </div>
-  </div>
-);
+    );
+  };
 
   if (selectedEvent) {
     return (
