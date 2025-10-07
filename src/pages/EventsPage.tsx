@@ -102,15 +102,21 @@ export const EventsPage = () => {
       ...(event.event_images || []),
       ...(event.images || [])
     ];
-    const [isLightboxOpen, setIsLightboxOpen] = useState(false);
+    const [isLightboxVisible, setIsLightboxVisible] = useState(false);
+    const [isLightboxEntered, setIsLightboxEntered] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
     const openLightboxAt = (index: number) => {
       setCurrentImageIndex(index);
-      setIsLightboxOpen(true);
+      setIsLightboxVisible(true);
+      // next tick to trigger CSS transitions
+      requestAnimationFrame(() => setIsLightboxEntered(true));
     };
 
-    const closeLightbox = () => setIsLightboxOpen(false);
+    const closeLightbox = () => {
+      setIsLightboxEntered(false);
+      setTimeout(() => setIsLightboxVisible(false), 250);
+    };
     const showPrev = () => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
     const showNext = () => setCurrentImageIndex((prev) => (prev + 1) % images.length);
 
@@ -268,10 +274,13 @@ export const EventsPage = () => {
         </div>
         </div>
 
-        {isLightboxOpen && (
-          <div className="fixed inset-0 z-50 bg-black/90 flex items-center justify-center">
+        {isLightboxVisible && (
+          <div 
+            className={`fixed inset-0 z-50 bg-black/95 backdrop-blur-[1px] flex items-center justify-center transition-opacity duration-300 ${isLightboxEntered ? 'opacity-100' : 'opacity-0'}`}
+            onClick={closeLightbox}
+          >
             <button
-              className="absolute top-4 right-4 text-white hover:text-gray-300"
+              className="absolute top-4 right-4 text-white/90 hover:text-white"
               onClick={closeLightbox}
               aria-label="Close image viewer"
             >
@@ -280,14 +289,14 @@ export const EventsPage = () => {
             {images.length > 1 && (
               <>
                 <button
-                  className="absolute left-4 md:left-8 text-white hover:text-gray-300"
+                  className="absolute left-4 md:left-8 text-white/90 hover:text-white"
                   onClick={showPrev}
                   aria-label="Previous image"
                 >
                   <ChevronLeft className="w-8 h-8" />
                 </button>
                 <button
-                  className="absolute right-4 md:right-8 text-white hover:text-gray-300"
+                  className="absolute right-4 md:right-8 text-white/90 hover:text-white"
                   onClick={showNext}
                   aria-label="Next image"
                 >
@@ -295,11 +304,16 @@ export const EventsPage = () => {
                 </button>
               </>
             )}
-            <img
-              src={images[currentImageIndex]}
-              alt={`event image ${currentImageIndex + 1}`}
-              className="max-h-[95vh] max-w-[95vw] object-contain"
-            />
+            <div 
+              className={`max-h-[95vh] max-w-[95vw] p-2 transition-all duration-300 ease-out ${isLightboxEntered ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <img
+                src={images[currentImageIndex]}
+                alt={`event image ${currentImageIndex + 1}`}
+                className="max-h-[95vh] max-w-[95vw] object-contain"
+              />
+            </div>
           </div>
         )}
       </div>
