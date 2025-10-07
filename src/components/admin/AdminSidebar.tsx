@@ -105,6 +105,12 @@ const adminMenuItems = [
     description: "Manage homepage slideshow images"
   },
   {
+    title: "Events Background",
+    icon: Image,
+    path: "/admin/events-slideshow",
+    description: "Manage Events page background slideshow"
+  },
+  {
     title: "Users",
     icon: Users,
     path: "/admin/users",

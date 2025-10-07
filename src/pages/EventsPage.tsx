@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEvents, useEventCategories } from '@/hooks/useEvents';
 import { Event as DatabaseEvent } from '@/lib/eventsService';
 import { useCountrySelection } from '@/context/CountrySelectionContext';
+import { supabase } from '@/lib/supabase';
 
 export const EventsPage = () => {
   const navigate = useNavigate();
@@ -431,15 +432,8 @@ export const EventsPage = () => {
     <div className="min-h-screen bg-gray-50">
       <Header />
       
-      {/* Hero Section */}
-      <div className="bg-black text-white py-20">
-        <div className="container mx-auto px-4 text-center">
-          <h1 className="text-5xl font-bold mb-6">Discover Amazing Events</h1>
-          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
-            Explore the latest events happening around the world. From concerts and sports to conferences and cultural events.
-          </p>
-        </div>
-      </div>
+      {/* Hero Section with background slideshow */}
+      <HeroSlideshow />
 
       {/* Filters Section - Moved beneath hero */}
       <div className="bg-gray-100 py-8">
@@ -627,6 +621,74 @@ export const EventsPage = () => {
         </div>
       
       <Footer />
+    </div>
+  );
+};
+
+const HeroSlideshow = () => {
+  const [slides, setSlides] = useState<Array<{ image_url: string; title?: string | null; description?: string | null }>>([]);
+  const [active, setActive] = useState(0);
+
+  useEffect(() => {
+    const fetchSlides = async () => {
+      const { data } = await supabase
+        .from('event_slideshow_images')
+        .select('image_url, title, description, is_active, sort_order')
+        .eq('is_active', true)
+        .order('sort_order', { ascending: true });
+      setSlides((data || []) as any);
+    };
+    fetchSlides();
+  }, []);
+
+  useEffect(() => {
+    if (slides.length <= 1) return;
+    const id = setInterval(() => setActive((idx) => (idx + 1) % slides.length), 5000);
+    return () => clearInterval(id);
+  }, [slides.length]);
+
+  if (slides.length === 0) {
+    return (
+      <div className="bg-black text-white py-20">
+        <div className="container mx-auto px-4 text-center">
+          <h1 className="text-5xl font-bold mb-6">Discover Amazing Events</h1>
+          <p className="text-xl text-gray-300 max-w-3xl mx-auto">
+            Explore the latest events happening around the world. From concerts and sports to conferences and cultural events.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  const current = slides[active];
+  return (
+    <div className="relative h-[360px] md:h-[460px] lg:h-[520px] overflow-hidden">
+      {slides.map((s, i) => (
+        <img
+          key={s.image_url + i}
+          src={s.image_url}
+          alt={s.title || 'slide'}
+          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${i === active ? 'opacity-100' : 'opacity-0'}`}
+        />
+      ))}
+      <div className="absolute inset-0 bg-black/40" />
+      <div className="absolute inset-0 flex items-center justify-center">
+        <div className="text-center text-white px-4">
+          <h1 className="text-4xl md:text-5xl font-bold mb-4">{current.title || 'Discover Amazing Events'}</h1>
+          {current.description ? (
+            <p className="text-base md:text-xl text-gray-200 max-w-3xl mx-auto">{current.description}</p>
+          ) : (
+            <p className="text-base md:text-xl text-gray-200 max-w-3xl mx-auto">Explore the latest events happening around the world.</p>
+          )}
+        </div>
+      </div>
+      {slides.length > 1 && (
+        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+          {slides.map((_, i) => (
+            <button key={i} className={`w-2.5 h-2.5 rounded-full ${i === active ? 'bg-white' : 'bg-white/50'}`} onClick={() => setActive(i)} />
+          ))}
+        </div>
+      )}
     </div>
   );
 };
