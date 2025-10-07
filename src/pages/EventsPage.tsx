@@ -105,20 +105,61 @@ export const EventsPage = () => {
     const [isLightboxVisible, setIsLightboxVisible] = useState(false);
     const [isLightboxEntered, setIsLightboxEntered] = useState(false);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
+    const [navDirection, setNavDirection] = useState<'next' | 'prev' | null>(null);
+    const [imageEntered, setImageEntered] = useState(true);
+    const [touchStartX, setTouchStartX] = useState<number | null>(null);
+    const [touchEndX, setTouchEndX] = useState<number | null>(null);
 
     const openLightboxAt = (index: number) => {
       setCurrentImageIndex(index);
       setIsLightboxVisible(true);
       // next tick to trigger CSS transitions
-      requestAnimationFrame(() => setIsLightboxEntered(true));
+      requestAnimationFrame(() => {
+        setIsLightboxEntered(true);
+        setImageEntered(true);
+      });
     };
 
     const closeLightbox = () => {
       setIsLightboxEntered(false);
       setTimeout(() => setIsLightboxVisible(false), 250);
     };
-    const showPrev = () => setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
-    const showNext = () => setCurrentImageIndex((prev) => (prev + 1) % images.length);
+    const showPrev = () => {
+      if (images.length === 0) return;
+      setNavDirection('prev');
+      setImageEntered(false);
+      setTimeout(() => {
+        setCurrentImageIndex((prev) => (prev - 1 + images.length) % images.length);
+        requestAnimationFrame(() => setImageEntered(true));
+      }, 10);
+    };
+    const showNext = () => {
+      if (images.length === 0) return;
+      setNavDirection('next');
+      setImageEntered(false);
+      setTimeout(() => {
+        setCurrentImageIndex((prev) => (prev + 1) % images.length);
+        requestAnimationFrame(() => setImageEntered(true));
+      }, 10);
+    };
+
+    useEffect(() => {
+      if (isLightboxVisible) {
+        const onKey = (e: KeyboardEvent) => {
+          if (e.key === 'Escape') closeLightbox();
+          if (e.key === 'ArrowLeft') showPrev();
+          if (e.key === 'ArrowRight') showNext();
+        };
+        document.addEventListener('keydown', onKey);
+        // lock body scroll
+        const prevOverflow = document.body.style.overflow;
+        document.body.style.overflow = 'hidden';
+        return () => {
+          document.removeEventListener('keydown', onKey);
+          document.body.style.overflow = prevOverflow;
+        };
+      }
+    }, [isLightboxVisible]);
 
     return (
       <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
@@ -189,7 +230,41 @@ export const EventsPage = () => {
                 {event.city_name && (
                   <p className="text-sm text-gray-500">{event.city_name}, {event.country_name}</p>
                 )}
-                <p className="text-sm text-brand-blue mt-1 cursor-pointer hover:underline">Get directions</p>
+                {(() => {
+                  const hasCoords = typeof event.venue_latitude === 'number' && typeof event.venue_longitude === 'number';
+                  const mapsUrl = hasCoords
+                    ? `https://www.google.com/maps/search/?api=1&query=${event.venue_latitude},${event.venue_longitude}`
+                    : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${event.venue_name || ''} ${event.venue_address || ''} ${event.city_name || ''} ${event.country_name || ''}`.trim())}`;
+                  return (
+                    <a
+                      href={mapsUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-sm text-brand-blue mt-1 inline-block hover:underline"
+                    >
+                      Get directions
+                    </a>
+                  );
+                })()}
+                {/* Inline map preview */}
+                <div className="mt-4 rounded-lg overflow-hidden border border-gray-200">
+                  {(() => {
+                    const hasCoords = typeof event.venue_latitude === 'number' && typeof event.venue_longitude === 'number';
+                    const query = hasCoords
+                      ? `${event.venue_latitude},${event.venue_longitude}`
+                      : `${event.venue_name || ''} ${event.venue_address || ''} ${event.city_name || ''} ${event.country_name || ''}`.trim();
+                    const embedUrl = `https://www.google.com/maps?q=${encodeURIComponent(query)}&z=14&output=embed`;
+                    return (
+                      <iframe
+                        title="Event location map"
+                        src={embedUrl}
+                        className="w-full h-56"
+                        loading="lazy"
+                        referrerPolicy="no-referrer-when-downgrade"
+                      />
+                    );
+                  })()}
+                </div>
             </div>
           </div>
           
@@ -278,10 +353,26 @@ export const EventsPage = () => {
           <div 
             className={`fixed inset-0 z-50 bg-black/95 backdrop-blur-[1px] flex items-center justify-center transition-opacity duration-300 ${isLightboxEntered ? 'opacity-100' : 'opacity-0'}`}
             onClick={closeLightbox}
+            onTouchStart={(e) => setTouchStartX(e.changedTouches[0]?.clientX ?? null)}
+            onTouchEnd={(e) => {
+              setTouchEndX(e.changedTouches[0]?.clientX ?? null);
+              const start = touchStartX;
+              const end = e.changedTouches[0]?.clientX ?? null;
+              if (start != null && end != null) {
+                const delta = end - start;
+                if (Math.abs(delta) > 40) {
+                  if (delta < 0) {
+                    showNext();
+                  } else {
+                    showPrev();
+                  }
+                }
+              }
+            }}
           >
             <button
               className="absolute top-4 right-4 text-white/90 hover:text-white"
-              onClick={closeLightbox}
+              onClick={(e) => { e.stopPropagation(); closeLightbox(); }}
               aria-label="Close image viewer"
             >
               <X className="w-7 h-7" />
@@ -290,14 +381,14 @@ export const EventsPage = () => {
               <>
                 <button
                   className="absolute left-4 md:left-8 text-white/90 hover:text-white"
-                  onClick={showPrev}
+                  onClick={(e) => { e.stopPropagation(); showPrev(); }}
                   aria-label="Previous image"
                 >
                   <ChevronLeft className="w-8 h-8" />
                 </button>
                 <button
                   className="absolute right-4 md:right-8 text-white/90 hover:text-white"
-                  onClick={showNext}
+                  onClick={(e) => { e.stopPropagation(); showNext(); }}
                   aria-label="Next image"
                 >
                   <ChevronRight className="w-8 h-8" />
@@ -308,11 +399,15 @@ export const EventsPage = () => {
               className={`max-h-[95vh] max-w-[95vw] p-2 transition-all duration-300 ease-out ${isLightboxEntered ? 'opacity-100 scale-100' : 'opacity-0 scale-95'}`}
               onClick={(e) => e.stopPropagation()}
             >
-              <img
-                src={images[currentImageIndex]}
-                alt={`event image ${currentImageIndex + 1}`}
-                className="max-h-[95vh] max-w-[95vw] object-contain"
-              />
+              <div
+                className={`transition-all duration-300 ease-out ${imageEntered ? 'opacity-100 translate-x-0' : navDirection === 'next' ? 'opacity-0 translate-x-6' : navDirection === 'prev' ? 'opacity-0 -translate-x-6' : 'opacity-0'} `}
+              >
+                <img
+                  src={images[currentImageIndex]}
+                  alt={`event image ${currentImageIndex + 1}`}
+                  className="max-h-[95vh] max-w-[95vw] object-contain"
+                />
+              </div>
             </div>
           </div>
         )}

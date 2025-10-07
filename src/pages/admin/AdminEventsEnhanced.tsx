@@ -48,6 +48,8 @@ interface FormData {
   venue_address: string;
   event_image_url: string;
   event_images: string[];
+  venue_latitude: string;
+  venue_longitude: string;
   category: string;
   organizer_name: string;
   organizer_handle: string;
@@ -87,6 +89,8 @@ export const AdminEventsEnhanced = () => {
     venue_address: '',
     event_image_url: '',
     event_images: [],
+    venue_latitude: '',
+    venue_longitude: '',
     category: '',
     organizer_name: '',
     organizer_handle: '',
@@ -197,6 +201,8 @@ export const AdminEventsEnhanced = () => {
         venue_address: formData.venue_address,
         event_image_url: formData.event_image_url,
         event_images: formData.event_images,
+        venue_latitude: formData.venue_latitude ? Number(formData.venue_latitude) : null,
+        venue_longitude: formData.venue_longitude ? Number(formData.venue_longitude) : null,
         category: formData.category,
         organizer_name: formData.organizer_name,
         organizer_handle: formData.organizer_handle,
@@ -251,6 +257,8 @@ export const AdminEventsEnhanced = () => {
       venue_address: event.venue_address || '',
       event_image_url: event.event_image_url || '',
       event_images: event.event_images || [],
+      venue_latitude: (event.venue_latitude ?? '').toString(),
+      venue_longitude: (event.venue_longitude ?? '').toString(),
       category: event.category || '',
       organizer_name: event.organizer_name || '',
       organizer_handle: event.organizer_handle || '',
@@ -300,6 +308,8 @@ export const AdminEventsEnhanced = () => {
       venue_address: '',
       event_image_url: '',
       event_images: [],
+      venue_latitude: '',
+      venue_longitude: '',
       category: '',
       organizer_name: '',
       organizer_handle: '',
@@ -538,6 +548,28 @@ export const AdminEventsEnhanced = () => {
                       onChange={(e) => setFormData(prev => ({ ...prev, venue_address: e.target.value }))}
                       placeholder="e.g., Harambee Ave, Nairobi, Kenya"
                       required
+                    />
+                  </div>
+                </div>
+
+                {/* Coordinates (optional but recommended for precise directions) */}
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="venue_latitude">Venue Latitude</Label>
+                    <Input
+                      id="venue_latitude"
+                      value={formData.venue_latitude}
+                      onChange={(e) => setFormData(prev => ({ ...prev, venue_latitude: e.target.value }))}
+                      placeholder="e.g., -1.2921"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="venue_longitude">Venue Longitude</Label>
+                    <Input
+                      id="venue_longitude"
+                      value={formData.venue_longitude}
+                      onChange={(e) => setFormData(prev => ({ ...prev, venue_longitude: e.target.value }))}
+                      placeholder="e.g., 36.8219"
                     />
                   </div>
                 </div>
