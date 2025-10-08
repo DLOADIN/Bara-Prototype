@@ -163,22 +163,22 @@ export const EventsPage = () => {
     }, [isLightboxVisible]);
 
     return (
-      <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
-        <button 
-          onClick={onBack}
-          className="flex items-center text-brand-blue hover:text-brand-blue/80 mb-6 transition-colors"
-        >
-          <ArrowLeft className="w-5 h-5 mr-2" />
-          Back to Events
-        </button>
-        
-        <div className="md:flex">
-          <div className="md:flex-shrink-0 md:w-1/2">
+    <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden">
+    <button 
+      onClick={onBack}
+      className="flex items-center text-brand-blue hover:text-brand-blue/80 mb-6 transition-colors"
+    >
+      <ArrowLeft className="w-5 h-5 mr-2" />
+      Back to Events
+    </button>
+    
+    <div className="md:flex">
+        <div className="md:flex-shrink-0 md:w-1/2">
             <div className="relative">
-              <img 
+        <img 
                 className="h-80 w-full object-cover md:h-full cursor-zoom-in" 
                 src={images[currentImageIndex] || 'https://via.placeholder.com/600x400?text=Event+Image'} 
-                alt={event.title}
+          alt={event.title} 
                 onClick={() => openLightboxAt(0)}
               />
               {images.length > 1 && (
@@ -195,8 +195,8 @@ export const EventsPage = () => {
                 </div>
               )}
             </div>
-          </div>
-          <div className="p-8 md:w-1/2">
+      </div>
+        <div className="p-8 md:w-1/2">
           <div className="flex items-center mb-4">
             <Badge variant="secondary" className="bg-brand-blue/10 text-brand-blue border-brand-blue/20">
               {event.category_name || event.category}
@@ -346,9 +346,9 @@ export const EventsPage = () => {
               Get Tickets
             </Button>
           </div>
-          </div>
         </div>
-        </div>
+      </div>
+    </div>
 
         {isLightboxVisible && (
           <div 
@@ -412,8 +412,8 @@ export const EventsPage = () => {
             </div>
           </div>
         )}
-      </div>
-    );
+  </div>
+);
   };
 
   if (selectedEvent) {

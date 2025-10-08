@@ -56,6 +56,7 @@ import { SponsorCountryPage } from "./pages/SponsorCountryPage";
 import { AdminSponsoredBanners } from "./pages/admin/AdminSponsoredBanners";
 import { AdminSlideshowImages } from "./pages/admin/AdminSlideshowImages";
 import AdminEventsSlideshow from "./pages/admin/AdminEventsSlideshow";
+import AdminPopupAds from "./pages/admin/AdminPopupAds";
 import { MainLayout } from "./components/layout/MainLayout";
 
 const queryClient = new QueryClient();
@@ -244,6 +245,11 @@ const AppRoutes = () => {
       <Route path="/admin/slideshow-images" element={
         <AdminAuthGuard>
           <AdminSlideshowImages />
+        </AdminAuthGuard>
+      } />
+      <Route path="/admin/popup-ads" element={
+        <AdminAuthGuard>
+          <AdminPopupAds />
         </AdminAuthGuard>
       } />
       <Route path="/admin/events-slideshow" element={
