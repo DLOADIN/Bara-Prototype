@@ -84,12 +84,12 @@ export const AdminLayout = ({ children, title, subtitle }: AdminLayoutProps) => 
   };
 
   return (
-    <div className="min-h-screen h-screen bg-gray-50 flex w-full ">
+    <div className="h-full bg-gray-50 flex w-full ">
       {/* Sidebar */}
       <AdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col bg-gray-50 min-h-screen">
+      <div className="flex-1 flex flex-col bg-gray-50 h-full">
         {/* Mobile menu button */}
         <div className="lg:hidden fixed top-4 left-4 z-50">
           <Button

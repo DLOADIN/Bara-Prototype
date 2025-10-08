@@ -177,7 +177,7 @@ export const EventsPage = () => {
             <div className="relative">
               <img 
                 className="h-80 w-full object-cover md:h-full cursor-zoom-in" 
-                src={images[0] || 'https://via.placeholder.com/600x400?text=Event+Image'} 
+                src={images[currentImageIndex] || 'https://via.placeholder.com/600x400?text=Event+Image'} 
                 alt={event.title}
                 onClick={() => openLightboxAt(0)}
               />
@@ -189,7 +189,7 @@ export const EventsPage = () => {
                       src={img}
                       alt="thumbnail"
                       className={`h-12 w-16 object-cover rounded-md border cursor-pointer ${idx === currentImageIndex ? 'ring-2 ring-brand-blue' : 'border-white/70'}`}
-                      onClick={() => openLightboxAt(idx)}
+                      onClick={() => { setCurrentImageIndex(idx); openLightboxAt(idx); }}
                     />
                   ))}
                 </div>

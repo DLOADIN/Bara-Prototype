@@ -14,8 +14,11 @@ export const uploadEventImage = async (file: File, eventId: string): Promise<str
   const { data: { publicUrl } } = supabase.storage
     .from('event-images')
     .getPublicUrl(fileName);
-    
-  return publicUrl;
+  // Ensure public path for direct browser access
+  const normalizedUrl = publicUrl.includes('/object/public/')
+    ? publicUrl
+    : publicUrl.replace('/storage/v1/object/', '/storage/v1/object/public/');
+  return normalizedUrl;
 };
 
 export const deleteEventImage = async (imageUrl: string): Promise<void> => {
