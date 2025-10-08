@@ -84,7 +84,7 @@ export const AdminLayout = ({ children, title, subtitle }: AdminLayoutProps) => 
   };
 
   return (
-    <div className="h-full bg-gray-50 flex w-full ">
+    <div className="h-full bg-gray-50 flex w-full">
       {/* Sidebar */}
       <AdminSidebar isOpen={sidebarOpen} onToggle={() => setSidebarOpen(!sidebarOpen)} />
 

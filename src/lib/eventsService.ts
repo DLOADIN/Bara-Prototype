@@ -3,7 +3,8 @@ import { supabase } from './supabase';
 // Supabase Storage functions for event images
 export const uploadEventImage = async (file: File, eventId: string): Promise<string> => {
   const fileExt = file.name.split('.').pop();
-  const fileName = `${eventId}/${Date.now()}.${fileExt}`;
+  const randomPart = Math.random().toString(36).slice(2);
+  const fileName = `${eventId}/${Date.now()}-${randomPart}.${fileExt}`;
   
   const { data, error } = await supabase.storage
     .from('event-images')
@@ -144,6 +145,52 @@ export interface City {
 }
 
 export class EventsService {
+  private static extractStoragePathFromUrl(url: string): string | null {
+    // Accept both public and non-public forms and strip domain prefix
+    const marker = '/storage/v1/object/';
+    const idx = url.indexOf(marker);
+    if (idx === -1) return null;
+    const path = url.substring(idx + marker.length);
+    // expected like: public/event-images/xyz or event-images/xyz
+    return path.startsWith('public/') ? path.replace('public/', '') : path;
+  }
+
+  // Move any images uploaded under 'temp/' into the event's folder and return updated URLs
+  static async finalizeEventImages(eventId: string, imageUrls: string[]): Promise<string[]> {
+    if (!imageUrls || imageUrls.length === 0) return [];
+    const updated: string[] = [];
+
+    for (const url of imageUrls) {
+      try {
+        const storagePath = this.extractStoragePathFromUrl(url);
+        if (!storagePath) { updated.push(url); continue; }
+        // storagePath like: event-images/temp/filename.png or event-images/<eventId>/...
+        if (!storagePath.startsWith('event-images/')) { updated.push(url); continue; }
+        const objectPath = storagePath.replace('event-images/', '');
+        if (!objectPath.startsWith('temp/')) { updated.push(url); continue; }
+
+        const fileName = objectPath.split('/').pop() as string;
+        const fromPath = objectPath; // temp/xyz
+        const toPath = `${eventId}/${fileName}`;
+
+        // Copy then remove (works across all storage versions)
+        const copyRes = await supabase.storage.from('event-images').copy(fromPath, toPath);
+        if (copyRes.error) throw copyRes.error;
+        await supabase.storage.from('event-images').remove([fromPath]);
+
+        const { data: { publicUrl } } = supabase.storage.from('event-images').getPublicUrl(toPath);
+        const normalizedUrl = publicUrl.includes('/object/public/')
+          ? publicUrl
+          : publicUrl.replace('/storage/v1/object/', '/storage/v1/object/public/');
+        updated.push(normalizedUrl);
+      } catch (e) {
+        console.error('finalizeEventImages error for', url, e);
+        updated.push(url); // fallback to original url
+      }
+    }
+
+    return updated;
+  }
   // Get all event categories
   static async getEventCategories(): Promise<EventCategory[]> {
     try {

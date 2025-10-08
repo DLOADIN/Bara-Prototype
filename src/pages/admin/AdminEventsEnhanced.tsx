@@ -30,7 +30,7 @@ import {
 } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useEvents, useEventCategories, useEventManagement, useCountries, useCitiesByCountry } from '@/hooks/useEvents';
-import { uploadEventImage } from '@/lib/eventsService';
+import { uploadEventImage, EventsService } from '@/lib/eventsService';
 import { Event as DatabaseEvent } from '@/lib/eventsService';
 
 interface FormTicket {
@@ -220,13 +220,22 @@ export const AdminEventsEnhanced = () => {
       };
 
       if (editingEvent) {
-        await updateEvent(editingEvent.id, eventData);
+        // If any URLs still point to temp/, finalize them into the event's folder
+        const finalizedImages = await EventsService.finalizeEventImages(editingEvent.id, formData.event_images);
+        const payload = { ...eventData, event_images: finalizedImages };
+        await updateEvent(editingEvent.id, payload);
         toast({
           title: "Event updated successfully",
           description: "The event has been updated.",
         });
       } else {
-        await createEvent(eventData);
+        const created = await createEvent(eventData);
+        // Move temp images to eventId folder after creation
+        const finalizedImages = await EventsService.finalizeEventImages(created.id, formData.event_images);
+        if (finalizedImages.length !== (formData.event_images?.length || 0)) {
+          console.warn('Some images could not be finalized');
+        }
+        await updateEvent(created.id, { event_images: finalizedImages, event_image_url: finalizedImages[0] || created.event_image_url });
         toast({
           title: "Event created successfully",
           description: "The event has been added.",
