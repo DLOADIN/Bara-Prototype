@@ -26,3 +26,4 @@ export async function testSupabaseConnection() {
 
 // Test the connection on import
 testSupabaseConnection();
+
