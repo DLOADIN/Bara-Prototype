@@ -110,11 +110,12 @@ const adminMenuItems = [
     path: "/admin/events-slideshow",
     description: "Manage Events page background slideshow"
   },
+  
   {
-    title: "Popup Ads",
-    icon: Megaphone,
-    path: "/admin/popup-ads",
-    description: "Manage popup advertisements"
+    title: "Popups",
+    icon: Image,
+    path: "/admin/popups",
+    description: "Manage popup notifications and ads"
   },
   {
     title: "Users",

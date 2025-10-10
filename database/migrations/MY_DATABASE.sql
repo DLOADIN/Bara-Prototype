@@ -337,6 +337,19 @@ CREATE TABLE public.payments (
   CONSTRAINT payments_business_id_fkey FOREIGN KEY (business_id) REFERENCES public.businesses(id),
   CONSTRAINT payments_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id)
 );
+CREATE TABLE public.popup_ads (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  name text NOT NULL,
+  image_url text NOT NULL,
+  link_url text,
+  is_active boolean NOT NULL DEFAULT true,
+  sort_order integer NOT NULL DEFAULT 0,
+  starts_at timestamp with time zone,
+  ends_at timestamp with time zone,
+  created_at timestamp with time zone NOT NULL DEFAULT now(),
+  updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  CONSTRAINT popup_ads_pkey PRIMARY KEY (id)
+);
 CREATE TABLE public.premium_features (
   id uuid NOT NULL DEFAULT uuid_generate_v4(),
   business_id uuid,

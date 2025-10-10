@@ -13,9 +13,7 @@ import { Business, BusinessService } from "@/lib/businessService";
 import { Skeleton } from "@/components/ui/skeleton";
 import { db } from "@/lib/supabase";
 import { FeaturedBusinesses } from "@/components/FeaturedBusinesses";
-import PopupAd from "@/components/PopupAd";
-import { useRef } from "react";
-import { fetchActivePopupAds } from "@/lib/popupAdsService";
+import DbPopupAd from "@/components/DbPopupAd";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -463,14 +461,7 @@ export const ListingsPage = () => {
   return (
     <div className="min-h-screen bg-background font-roboto">
       <Header />
-      <PopupAd
-        imageUrl="/aboutBara.jpg"
-        linkUrl="https://another-sponsor.com"
-        intervalSeconds={600}
-        firstDelaySeconds={8}
-        frequencyKey="popup_listings"
-      />
-      <DbPopupListings firstDelaySeconds={25} intervalSeconds={600} frequencyKey="popup_listings_db" />
+      <DbPopupAd />
       
       {/* Search Header */}
       <div className="bg-yp-yellow py-4">
@@ -989,34 +980,3 @@ export const ListingsPage = () => {
     </div>
   );
 };
-
-type DbPopupProps = { intervalSeconds?: number; firstDelaySeconds?: number; frequencyKey?: string };
-function DbPopupListings({ intervalSeconds = 600, firstDelaySeconds = 25, frequencyKey = "popup_listings_db" }: DbPopupProps) {
-  const [imgs, setImgs] = useState<string[]>([]);
-  const [idx, setIdx] = useState(0);
-  const timerRef = useRef<number | null>(null);
-
-  useEffect(() => {
-    (async () => {
-      const ads = await fetchActivePopupAds(50);
-      setImgs(ads.map((a) => a.image_url).filter(Boolean));
-    })();
-  }, []);
-
-  useEffect(() => {
-    if (timerRef.current) window.clearTimeout(timerRef.current);
-    const schedule = (d: number) => {
-      timerRef.current = window.setTimeout(() => {
-        setIdx((i) => (imgs.length ? (i + 1) % imgs.length : i));
-        schedule(intervalSeconds);
-      }, d * 1000);
-    };
-    schedule(firstDelaySeconds);
-    return () => { if (timerRef.current) window.clearTimeout(timerRef.current); };
-  }, [imgs.length, intervalSeconds, firstDelaySeconds]);
-
-  if (imgs.length === 0) return null;
-  return (
-    <PopupAd imageUrl={imgs[idx]} intervalSeconds={intervalSeconds} firstDelaySeconds={firstDelaySeconds} frequencyKey={frequencyKey} />
-  );
-}

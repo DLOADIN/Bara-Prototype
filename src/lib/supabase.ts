@@ -3,20 +3,63 @@ import { createClient } from '@supabase/supabase-js'
 export const SUPABASE_URL = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
+console.log('Supabase URL:', SUPABASE_URL ? 'Set' : 'Missing');
+console.log('Supabase Anon Key:', supabaseAnonKey ? 'Set' : 'Missing');
+
 if (!SUPABASE_URL || !supabaseAnonKey) {
+  console.error('Missing Supabase environment variables:', {
+    VITE_SUPABASE_URL: !!SUPABASE_URL,
+    VITE_SUPABASE_ANON_KEY: !!supabaseAnonKey
+  });
   throw new Error('Missing Supabase environment variables')
 }
 
-export const supabase = createClient(SUPABASE_URL, supabaseAnonKey, {
-  auth: {
-    autoRefreshToken: false, // Disable Supabase auth since we're using Clerk
-    persistSession: false,   // Disable Supabase session persistence
-    detectSessionInUrl: false // Disable Supabase session detection
-  },
-  db: {
-    schema: 'public'
+// Create Supabase client with error handling
+let supabaseClient: any = null;
+
+try {
+  supabaseClient = createClient(SUPABASE_URL, supabaseAnonKey, {
+    auth: {
+      autoRefreshToken: false, // Disable Supabase auth since we're using Clerk
+      persistSession: false,   // Disable Supabase session persistence
+      detectSessionInUrl: false // Disable Supabase session detection
+    },
+    db: {
+      schema: 'public'
+    }
+  });
+  
+  console.log('✅ Supabase client created successfully');
+} catch (error) {
+  console.error('❌ Failed to create Supabase client:', error);
+  throw new Error('Failed to initialize Supabase client');
+}
+
+export const supabase = supabaseClient;
+
+// Verify the client is properly initialized
+if (!supabase) {
+  console.error('❌ Supabase client is null');
+  throw new Error('Failed to initialize Supabase client');
+}
+
+// Test the connection with better error handling
+const testConnection = async () => {
+  try {
+    console.log('🔍 Testing Supabase connection...');
+    const { data, error } = await supabase.from('popup_ads').select('count').limit(1);
+    if (error) {
+      console.error('❌ Supabase connection test failed:', error);
+    } else {
+      console.log('✅ Supabase connection test successful');
+    }
+  } catch (error) {
+    console.error('❌ Supabase connection test error:', error);
   }
-})
+};
+
+// Test connection asynchronously
+testConnection();
 
 // Create an authenticated Supabase client for admin operations
 export const createAuthenticatedSupabaseClient = async (clerkToken: string) => {
@@ -139,7 +182,10 @@ export const getAdminDb = () => {
     country_info: () => adminSupabase.from('country_info'),
     
     // Slideshow images operations
-    slideshow_images: () => adminSupabase.from('slideshow_images')
+    slideshow_images: () => adminSupabase.from('slideshow_images'),
+    
+    // Popup ads operations
+    popup_ads: () => adminSupabase.from('popup_ads')
   };
 };
 
@@ -387,7 +433,10 @@ export const db = {
   country_info: () => supabase.from('country_info'),
   
   // Slideshow images operations
-  slideshow_images: () => supabase.from('slideshow_images')
+  slideshow_images: () => supabase.from('slideshow_images'),
+  
+  // Popup ads operations
+  popup_ads: () => supabase.from('popup_ads')
 }
 
 // Auth helper functions

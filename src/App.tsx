@@ -8,6 +8,8 @@ import { useAuthLogging } from "@/hooks/useAuthLogging";
 import { ScrollToTop } from "@/components/ScrollToTop";
 import { useEffect } from "react";
 import { useTranslation } from "react-i18next";
+// Test Supabase connection early
+import "@/lib/testSupabase";
 import Index from "./pages/Index";
 import NotFound from "./pages/NotFound";
 import { ListingsPage } from "./pages/ListingsPage";
@@ -56,7 +58,7 @@ import { SponsorCountryPage } from "./pages/SponsorCountryPage";
 import { AdminSponsoredBanners } from "./pages/admin/AdminSponsoredBanners";
 import { AdminSlideshowImages } from "./pages/admin/AdminSlideshowImages";
 import AdminEventsSlideshow from "./pages/admin/AdminEventsSlideshow";
-import AdminPopupAds from "./pages/admin/AdminPopupAds";
+import AdminPopups from "./pages/admin/AdminPopups";
 import { MainLayout } from "./components/layout/MainLayout";
 
 const queryClient = new QueryClient();
@@ -247,9 +249,9 @@ const AppRoutes = () => {
           <AdminSlideshowImages />
         </AdminAuthGuard>
       } />
-      <Route path="/admin/popup-ads" element={
+      <Route path="/admin/popups" element={
         <AdminAuthGuard>
-          <AdminPopupAds />
+          <AdminPopups />
         </AdminAuthGuard>
       } />
       <Route path="/admin/events-slideshow" element={
