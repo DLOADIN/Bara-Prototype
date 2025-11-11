@@ -32,6 +32,8 @@ import { useToast } from '@/hooks/use-toast';
 import { useEvents, useEventCategories, useEventManagement, useCountries, useCitiesByCountry } from '@/hooks/useEvents';
 import { uploadEventImage, EventsService } from '@/lib/eventsService';
 import { Event as DatabaseEvent } from '@/lib/eventsService';
+import { HashtagInput } from '@/components/ui/hashtag-input';
+import { MultiHashtagInput } from '@/components/ui/multi-hashtag-input';
 
 interface FormTicket {
   name: string;
@@ -62,6 +64,7 @@ interface FormData {
   instagram_url: string;
   country_id: string;
   city_id: string;
+  hashtags: string[];
   tickets: FormTicket[];
 }
 
@@ -103,6 +106,7 @@ export const AdminEventsEnhanced = () => {
     instagram_url: '',
     country_id: '',
     city_id: '',
+    hashtags: [],
     tickets: [{ name: '', description: '', selected: true }]
   });
 
@@ -215,6 +219,7 @@ export const AdminEventsEnhanced = () => {
         instagram_url: formData.instagram_url,
         country_id: formData.country_id || null,
         city_id: formData.city_id || null,
+        tags: formData.hashtags, // Add hashtags as tags
         is_public: true,
         event_status: 'upcoming' as const
       };
@@ -280,6 +285,7 @@ export const AdminEventsEnhanced = () => {
       instagram_url: event.instagram_url || '',
       country_id: event.country_id || '',
       city_id: event.city_id || '',
+      hashtags: event.tags || [], // Load existing hashtags
       tickets: event.tickets?.map(ticket => ({
         name: ticket.name,
         description: ticket.description || '',
@@ -331,6 +337,7 @@ export const AdminEventsEnhanced = () => {
       instagram_url: '',
       country_id: '',
       city_id: '',
+      hashtags: [], // Reset hashtags
       tickets: [{ name: '', description: '', selected: true }]
     });
     setImagePreview(null);
@@ -500,6 +507,15 @@ export const AdminEventsEnhanced = () => {
                         ))}
                       </SelectContent>
                     </Select>
+                  </div>
+                  <div className="space-y-2">
+                    <Label htmlFor="hashtags">Event Hashtags</Label>
+                    <MultiHashtagInput
+                      hashtags={formData.hashtags}
+                      onHashtagsChange={(hashtags) => setFormData(prev => ({ ...prev, hashtags }))}
+                      placeholder="Type hashtags separated by commas, spaces, or press Enter..."
+                      maxHashtags={10}
+                    />
                   </div>
                 </div>
 

@@ -5,7 +5,7 @@ import { EventCard } from "@/components/EventCard";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Search, Filter, ChevronLeft, ChevronRight, MapPin, Calendar, Clock, ArrowLeft, CalendarDays, ArrowUpDown, X } from 'lucide-react';
+import { Search, Filter, ChevronLeft, ChevronRight, MapPin, Calendar, Clock, ArrowLeft, CalendarDays, ArrowUpDown, X, Hash } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNavigate } from 'react-router-dom';
 import { useEvents, useEventCategories } from '@/hooks/useEvents';
@@ -39,7 +39,11 @@ export const EventsPage = () => {
     const matchesSearch = event.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          (event.description || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
                          (event.venue_name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         (event.organizer_name || '').toLowerCase().includes(searchQuery.toLowerCase());
+                         (event.organizer_name || '').toLowerCase().includes(searchQuery.toLowerCase()) ||
+                         // Include hashtag search in main search
+                         (event.tags && event.tags.some(tag => 
+                           tag.toLowerCase().includes(searchQuery.toLowerCase().replace('#', ''))
+                         ));
     
     const matchesCategory = selectedCategory === 'all' || event.category === selectedCategory;
     
@@ -202,6 +206,24 @@ export const EventsPage = () => {
               {event.category_name || event.category}
             </Badge>
           </div>
+          
+          {/* Hashtags Display */}
+          {event.tags && event.tags.length > 0 && (
+            <div className="mb-4">
+              <div className="flex flex-wrap gap-2">
+                {event.tags.map((hashtag) => (
+                  <Badge 
+                    key={hashtag} 
+                    variant="outline" 
+                    className="text-xs px-2 py-1 bg-gray-50 text-gray-600 border-gray-200 hover:bg-gray-100"
+                  >
+                    #{hashtag}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          )}
+          
           <h1 className="text-4xl font-bold text-gray-900 mb-4">{event.title}</h1>
           
           <div className="space-y-6">
@@ -445,7 +467,7 @@ export const EventsPage = () => {
                   <div className="relative">
                     <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
                     <Input
-                  placeholder="Search events, venues, or organizers"
+                  placeholder="Search events, venues, organizers, or #hashtags"
                       value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-9"
@@ -547,6 +569,7 @@ export const EventsPage = () => {
                     location={event.city_name ? `${event.city_name}, ${event.country_name}` : event.venue_address || ''}
                     imageUrl={event.event_image_url || ''}
                     category={event.category_name || event.category}
+                    hashtags={event.tags || []}
                     onViewEvent={(id) => {
                       const eventToView = events.find(e => e.id === id);
                       if (eventToView) {

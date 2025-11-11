@@ -124,6 +124,7 @@ export interface EventSearchParams {
   country_id?: string;
   city_id?: string;
   category?: string;
+  hashtags?: string[];
   start_date?: string;
   end_date?: string;
   limit?: number;
@@ -235,6 +236,7 @@ export class EventsService {
         country_id,
         city_id,
         category,
+        hashtags,
         start_date,
         end_date,
         limit = 20,
@@ -265,6 +267,11 @@ export class EventsService {
 
       if (category) {
         query = query.eq('category', category);
+      }
+
+      // Add hashtag filtering
+      if (hashtags && hashtags.length > 0) {
+        query = query.overlaps('tags', hashtags);
       }
 
       if (start_date) {
@@ -866,6 +873,60 @@ export class EventsService {
     } catch (error) {
       console.error('Error fetching upcoming events:', error);
       throw error;
+    }
+  }
+
+  // Get trending hashtags
+  static async getTrendingHashtags(limit: number = 10): Promise<{ hashtag: string; count: number }[]> {
+    try {
+      const { data, error } = await supabase
+        .rpc('get_trending_hashtags', { limit_count: limit });
+
+      if (error) throw error;
+      return data || [];
+    } catch (error) {
+      console.error('Error fetching trending hashtags:', error);
+      throw error;
+    }
+  }
+
+  // Search events by hashtags
+  static async searchEventsByHashtags(hashtags: string[]): Promise<Event[]> {
+    try {
+      const { data, error } = await supabase
+        .rpc('search_events_by_hashtags', { search_hashtags: hashtags });
+
+      if (error) throw error;
+      return data || [];
+    } catch (error) {
+      console.error('Error searching events by hashtags:', error);
+      throw error;
+    }
+  }
+
+  // Get hashtag suggestions based on category and location
+  static async getHashtagSuggestions(category?: string, cityName?: string): Promise<string[]> {
+    try {
+      const suggestions = new Set<string>();
+
+      // Add category-based suggestions
+      if (category) {
+        suggestions.add(category.toLowerCase());
+      }
+
+      // Add city-based suggestions  
+      if (cityName) {
+        suggestions.add(cityName.toLowerCase().replace(/\s+/g, ''));
+      }
+
+      // Get trending hashtags from database
+      const trending = await this.getTrendingHashtags(20);
+      trending.forEach(item => suggestions.add(item.hashtag));
+
+      return Array.from(suggestions);
+    } catch (error) {
+      console.error('Error getting hashtag suggestions:', error);
+      return [];
     }
   }
 }

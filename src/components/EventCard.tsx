@@ -1,4 +1,5 @@
-import { Calendar, Clock, MapPin } from 'lucide-react';
+import { Calendar, Clock, MapPin, Hash } from 'lucide-react';
+import { Badge } from '@/components/ui/badge';
 
 interface EventCardProps {
   id: string;
@@ -8,6 +9,7 @@ interface EventCardProps {
   location: string;
   imageUrl: string;
   category?: string;
+  hashtags?: string[];
   onViewEvent?: (id: string) => void;
 }
 
@@ -19,6 +21,7 @@ export const EventCard = ({
   location,
   imageUrl,
   category,
+  hashtags,
   onViewEvent,
 }: EventCardProps) => {
   const handleViewEvent = (e: React.MouseEvent) => {
@@ -61,6 +64,30 @@ export const EventCard = ({
             <span className="line-clamp-1">{location}</span>
           </div>
         </div>
+        
+        {/* Hashtags Preview */}
+        {hashtags && hashtags.length > 0 && (
+          <div className="mt-3 flex flex-wrap gap-1">
+            {hashtags.slice(0, 3).map((hashtag) => (
+              <Badge 
+                key={hashtag} 
+                variant="outline" 
+                className="text-xs px-1.5 py-0.5 bg-gray-50 text-gray-600 border-gray-200"
+              >
+                #{hashtag}
+              </Badge>
+            ))}
+            {hashtags.length > 3 && (
+              <Badge 
+                variant="outline" 
+                className="text-xs px-1.5 py-0.5 bg-gray-50 text-gray-600 border-gray-200"
+              >
+                +{hashtags.length - 3}
+              </Badge>
+            )}
+          </div>
+        )}
+        
         <div className="mt-4">
           <button
             onClick={handleViewEvent}
