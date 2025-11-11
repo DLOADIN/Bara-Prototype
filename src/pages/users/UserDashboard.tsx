@@ -15,7 +15,8 @@ import {
   Building, 
   Star,
   CheckCircle,
-  AlertCircle
+  AlertCircle,
+  Image
 } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 
@@ -80,9 +81,9 @@ export const UserDashboard = () => {
               
               <CardContent className="pt-0">
                 <nav className="space-y-2">
-                  <Link to="/user/dashboard">
+                  <Link to="/users/dashboard">
                     <Button 
-                      variant={isActive('/user/dashboard') ? 'default' : 'ghost'} 
+                      variant={isActive('/users/dashboard') ? 'default' : 'ghost'} 
                       className="w-full justify-start"
                     >
                       <User className="mr-3 h-4 w-4" />
@@ -90,9 +91,9 @@ export const UserDashboard = () => {
                     </Button>
                   </Link>
                   
-                  <Link to="/user/events">
+                  <Link to="/users/dashboard/events">
                     <Button 
-                      variant={isActive('/user/events') ? 'default' : 'ghost'} 
+                      variant={isActive('/users/dashboard/events') ? 'default' : 'ghost'} 
                       className="w-full justify-start"
                     >
                       <Calendar className="mr-3 h-4 w-4" />
@@ -100,9 +101,19 @@ export const UserDashboard = () => {
                     </Button>
                   </Link>
                   
-                  <Link to="/user/profile">
+                  <Link to="/users/dashboard/banner-submissions">
                     <Button 
-                      variant={isActive('/user/profile') ? 'default' : 'ghost'} 
+                      variant={isActive('/users/dashboard/banner-submissions') ? 'default' : 'ghost'} 
+                      className="w-full justify-start"
+                    >
+                      <Image className="mr-3 h-4 w-4" />
+                      Banner Submissions
+                    </Button>
+                  </Link>
+                  
+                  <Link to="/users/dashboard/profile">
+                    <Button 
+                      variant={isActive('/users/dashboard/profile') ? 'default' : 'ghost'} 
                       className="w-full justify-start"
                     >
                       <Settings className="mr-3 h-4 w-4" />

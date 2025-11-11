@@ -649,14 +649,21 @@ export const EventsPage = () => {
 };
 
 const HeroSlideshow = () => {
-  const [slides, setSlides] = useState<Array<{ image_url: string; title?: string | null; description?: string | null }>>([]);
+  const [slides, setSlides] = useState<Array<{
+    image_url: string;
+    video_url?: string | null;
+    video_thumbnail?: string | null;
+    media_type: 'image' | 'video';
+    title?: string | null;
+    description?: string | null;
+  }>>([]);
   const [active, setActive] = useState(0);
 
   useEffect(() => {
     const fetchSlides = async () => {
       const { data } = await supabase
         .from('event_slideshow_images')
-        .select('image_url, title, description, is_active, sort_order')
+        .select('image_url, video_url, video_thumbnail, media_type, title, description, is_active, sort_order')
         .eq('is_active', true)
         .order('sort_order', { ascending: true });
       setSlides((data || []) as any);
@@ -687,12 +694,25 @@ const HeroSlideshow = () => {
   return (
     <div className="relative h-[360px] md:h-[460px] lg:h-[520px] overflow-hidden">
       {slides.map((s, i) => (
-        <img
-          key={s.image_url + i}
-          src={s.image_url}
-          alt={s.title || 'slide'}
-          className={`absolute inset-0 w-full h-full object-cover transition-opacity duration-700 ${i === active ? 'opacity-100' : 'opacity-0'}`}
-        />
+        <div key={s.image_url + i} className={`absolute inset-0 transition-opacity duration-700 ${i === active ? 'opacity-100' : 'opacity-0'}`}>
+          {s.media_type === 'video' && s.video_url ? (
+            <video
+              src={s.video_url}
+              poster={s.video_thumbnail || s.image_url}
+              className="w-full h-full object-cover"
+              autoPlay
+              muted
+              loop
+              playsInline
+            />
+          ) : (
+            <img
+              src={s.image_url}
+              alt={s.title || 'slide'}
+              className="w-full h-full object-cover"
+            />
+          )}
+        </div>
       ))}
       <div className="absolute inset-0 bg-black/40" />
       <div className="absolute inset-0 flex items-center justify-center">

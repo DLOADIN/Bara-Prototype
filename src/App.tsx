@@ -56,6 +56,7 @@ import UserSignUpPage from "./pages/user/UserSignUpPage";
 import { UserDashboard } from "./pages/users/UserDashboard";
 import { UserEventsPage } from "./pages/users/UserEventsPage";
 import { UserProfilePage } from "./pages/users/UserProfilePage";
+import { UserBannerSubmission } from "./pages/users/UserBannerSubmission";
 import UserSettingsPage from "./pages/users/UserSettingsPage";
 import AdvertiseCheckoutPage from "./pages/AdvertiseCheckoutPage";
 import { SponsorCountryPage } from "./pages/SponsorCountryPage";
@@ -132,6 +133,7 @@ const AppRoutes = () => {
       }>
         <Route index element={<div className="p-6"><h2 className="text-2xl font-bold mb-4">Dashboard Home</h2><p>Welcome to your dashboard!</p></div>} />
         <Route path="events" element={<UserEventsPage />} />
+        <Route path="banner-submissions" element={<UserBannerSubmission />} />
         <Route path="profile" element={<UserProfilePage />} />
       </Route>
       
