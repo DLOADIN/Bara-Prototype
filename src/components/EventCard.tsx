@@ -1,5 +1,6 @@
-import { Calendar, Clock, MapPin, Hash } from 'lucide-react';
+import { Calendar, Clock, MapPin, Hash, User } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { VerificationIcon, VerificationStatus } from '@/components/ui/verification-badge';
 
 interface EventCardProps {
   id: string;
@@ -10,6 +11,11 @@ interface EventCardProps {
   imageUrl: string;
   category?: string;
   hashtags?: string[];
+  createdBy?: {
+    name: string;
+    email: string;
+    verification?: VerificationStatus;
+  };
   onViewEvent?: (id: string) => void;
 }
 
@@ -22,6 +28,7 @@ export const EventCard = ({
   imageUrl,
   category,
   hashtags,
+  createdBy,
   onViewEvent,
 }: EventCardProps) => {
   const handleViewEvent = (e: React.MouseEvent) => {
@@ -64,6 +71,23 @@ export const EventCard = ({
             <span className="line-clamp-1">{location}</span>
           </div>
         </div>
+        
+        {/* Creator Information */}
+        {createdBy && (
+          <div className="mt-3 flex items-center justify-between">
+            <div className="flex items-center text-sm text-gray-600">
+              <User className="w-3 h-3 mr-1" />
+              <span className="truncate max-w-[120px]">{createdBy.name}</span>
+            </div>
+            {createdBy.verification && (
+              <VerificationIcon 
+                verification={createdBy.verification} 
+                size="sm" 
+                className="flex-shrink-0"
+              />
+            )}
+          </div>
+        )}
         
         {/* Hashtags Preview */}
         {hashtags && hashtags.length > 0 && (

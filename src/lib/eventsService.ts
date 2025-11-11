@@ -107,6 +107,11 @@ export interface Event {
   updated_at: string;
   updated_by?: string;
   
+  // User tracking fields
+  created_by_user_id?: string;
+  created_by_email?: string;
+  created_by_name?: string;
+  
   // Related data
   country_name?: string;
   country_code?: string;
@@ -117,6 +122,7 @@ export interface Event {
   category_icon?: string;
   category_color?: string;
   tickets?: EventTicket[];
+  creator_verification?: any;
 }
 
 export interface EventSearchParams {
@@ -927,6 +933,137 @@ export class EventsService {
     } catch (error) {
       console.error('Error getting hashtag suggestions:', error);
       return [];
+    }
+  }
+
+  // User verification methods
+  static async getUserVerificationStatus(userId: string): Promise<any> {
+    try {
+      const { data, error } = await supabase
+        .rpc('get_user_verification_status', { user_id_param: userId });
+      
+      if (error) throw error;
+      
+      // Convert array to object
+      const verificationStatus = {
+        email: false,
+        phone: false,
+        business: false,
+        trusted_organizer: false
+      };
+      
+      data?.forEach((verification: any) => {
+        verificationStatus[verification.verification_type as keyof typeof verificationStatus] = verification.is_verified;
+      });
+      
+      return verificationStatus;
+    } catch (error) {
+      console.error('Error getting user verification status:', error);
+      return {
+        email: false,
+        phone: false,
+        business: false,
+        trusted_organizer: false
+      };
+    }
+  }
+
+  static async createUserVerification(userId: string, verificationType: string, verificationData?: any): Promise<void> {
+    try {
+      const { error } = await supabase
+        .from('user_verifications')
+        .insert({
+          user_id: userId,
+          verification_type: verificationType,
+          is_verified: true,
+          verified_at: new Date().toISOString(),
+          verification_data: verificationData
+        });
+      
+      if (error) throw error;
+    } catch (error) {
+      console.error('Error creating user verification:', error);
+      throw error;
+    }
+  }
+
+  // Automatically create email verification for Clerk users (they have verified emails)
+  static async ensureEmailVerification(userId: string, email: string): Promise<void> {
+    try {
+      // Check if email verification already exists
+      const { data: existing } = await supabase
+        .from('user_verifications')
+        .select('id')
+        .eq('user_id', userId)
+        .eq('verification_type', 'email')
+        .single();
+
+      if (!existing) {
+        await this.createUserVerification(userId, 'email', { email });
+      }
+    } catch (error) {
+      console.error('Error ensuring email verification:', error);
+    }
+  }
+
+  // Update Event interface to include user tracking
+  static async createUserEvent(eventData: any, userId: string, userEmail: string, userName: string): Promise<Event> {
+    try {
+      // Ensure email verification exists for the user
+      await this.ensureEmailVerification(userId, userEmail);
+
+      // Create event with user tracking
+      const event = await this.createEvent({
+        ...eventData,
+        created_by_user_id: userId,
+        created_by_email: userEmail,
+        created_by_name: userName,
+      });
+
+      return event;
+    } catch (error) {
+      console.error('Error creating user event:', error);
+      throw error;
+    }
+  }
+
+  // Get events with creator verification status
+  static async getEventsWithCreatorInfo(params: EventSearchParams = {}): Promise<Event[]> {
+    try {
+      const events = await this.searchEvents(params);
+      
+      // Get unique user IDs from events that have creators
+      const userIds = [...new Set(
+        events.events
+          .filter(event => event.created_by_user_id)
+          .map(event => event.created_by_user_id)
+      )].filter(Boolean) as string[];
+
+      // Get verification status for all creators
+      const verificationPromises = userIds.map(userId => 
+        this.getUserVerificationStatus(userId).then(verification => ({
+          userId,
+          verification
+        }))
+      );
+      
+      const verifications = await Promise.all(verificationPromises);
+      const verificationMap = new Map(
+        verifications.map(v => [v.userId, v.verification])
+      );
+
+      // Add creator verification info to events
+      const eventsWithCreatorInfo = events.events.map(event => ({
+        ...event,
+        creator_verification: event.created_by_user_id 
+          ? verificationMap.get(event.created_by_user_id) 
+          : null
+      }));
+
+      return eventsWithCreatorInfo;
+    } catch (error) {
+      console.error('Error getting events with creator info:', error);
+      throw error;
     }
   }
 }

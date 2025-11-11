@@ -162,7 +162,6 @@ export const MultiHashtagInput = ({
         </div>
       </div>
 
-      {/* Quick Add Popular Hashtags */}
       <div className="space-y-2">
         <span className="text-sm font-medium text-gray-700">Quick Add Popular:</span>
         <div className="flex flex-wrap gap-2">

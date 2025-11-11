@@ -41,6 +41,7 @@ import { AdminSettings } from "./pages/admin/AdminSettings";
 import ContactMessagesPage from "./pages/admin/ContactMessagesPage";
 import { AdminBannerAds } from "./pages/admin/AdminBannerAds";
 import { AdminAuthGuard } from "./components/admin/AdminAuthGuard";
+import { UserAuthGuard } from "./components/users/UserAuthGuard";
 import { MapTestPage } from "./pages/MapTestPage";
 import GlobalAfricaPage from "./pages/GlobalAfricaPage";
 import FaqPage from "./pages/FaqPage";
@@ -52,7 +53,10 @@ import CommunitiesPage from "./pages/communities";
 import { CommunityPage } from "./pages/communities/CommunityPage";
 import UserSignInPage from "./pages/user/UserSignInPage";
 import UserSignUpPage from "./pages/user/UserSignUpPage";
-import UserSettingsPage from "./pages/user/UserSettingsPage";
+import { UserDashboard } from "./pages/users/UserDashboard";
+import { UserEventsPage } from "./pages/users/UserEventsPage";
+import { UserProfilePage } from "./pages/users/UserProfilePage";
+import UserSettingsPage from "./pages/users/UserSettingsPage";
 import AdvertiseCheckoutPage from "./pages/AdvertiseCheckoutPage";
 import { SponsorCountryPage } from "./pages/SponsorCountryPage";
 import { AdminSponsoredBanners } from "./pages/admin/AdminSponsoredBanners";
@@ -119,6 +123,17 @@ const AppRoutes = () => {
       <Route path="/user/sign-in" element={<UserSignInPage />} />
       <Route path="/user/sign-up" element={<UserSignUpPage />} />
       <Route path="/user/settings" element={<UserSettingsPage />} />
+      
+      {/* User Dashboard Routes */}
+      <Route path="/users/dashboard" element={
+        <UserAuthGuard>
+          <UserDashboard />
+        </UserAuthGuard>
+      }>
+        <Route index element={<div className="p-6"><h2 className="text-2xl font-bold mb-4">Dashboard Home</h2><p>Welcome to your dashboard!</p></div>} />
+        <Route path="events" element={<UserEventsPage />} />
+        <Route path="profile" element={<UserProfilePage />} />
+      </Route>
       
       {/* Community Pages */}
       <Route path="/communities" element={<CommunitiesPage />} />

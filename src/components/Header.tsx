@@ -30,6 +30,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { LanguageSelector } from "./LanguageSelector";
 import { AdminNavLink } from "./AdminNavLink";
+import { UserNavLink } from "./UserNavLink";
 import { db } from "@/lib/supabase";
 import { useToast } from "@/components/ui/use-toast";
 import { fetchWikipediaCountryInfo } from "@/lib/wikipedia";
@@ -156,7 +157,7 @@ export const Header = () => {
     <header className="bg-background border-b border-border relative">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-4">
         {/* Single Row Layout (Default - when there's enough space) */}
-        <div className="flex items-center justify-between h-20 min-[1400px]:flex">
+        <div className="flex items-center justify-between h-20 min-[2000px]:flex">
           {/* Logo */}
           <div className="flex items-center flex-shrink-0 mr-8">
             <Link to="/" onClick={scrollToTop}>
@@ -168,7 +169,7 @@ export const Header = () => {
           </div>
 
           {/* Desktop Navigation - Single Row (only when space allows) */}
-          <div className="hidden min-[1400px]:flex items-center space-x-3 flex-1 justify-center">
+          <div className="hidden min-[2000px]:flex items-center space-x-3 flex-1 justify-center">
             <Link to="/" onClick={scrollToTop}>
               <Button variant="ghost" className="font-roboto">
                 <List className="w-4 h-4 mr-1" />
@@ -189,6 +190,40 @@ export const Header = () => {
                 {t('navigation.events')}
               </Button>
             </Link>
+
+            {/* Users Menu - Show dropdown when signed in, link when not signed in */}
+            {isSignedIn ? (
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" className="font-roboto">
+                    <User className="w-4 h-4 mr-1" />
+                    {user?.fullName || user?.firstName || 'User'}
+                    <ChevronDown className="w-4 h-4 ml-1" />
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-48">
+                  <DropdownMenuItem onClick={() => navigate('/users/dashboard')}>
+                    <User className="w-4 h-4 mr-2" />
+                    Dashboard
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/users/dashboard/events')}>
+                    <Calendar className="w-4 h-4 mr-2" />
+                    My Events
+                  </DropdownMenuItem>
+                  <DropdownMenuItem onClick={() => navigate('/users/dashboard/profile')}>
+                    <Settings className="w-4 h-4 mr-2" />
+                    Profile
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                  <DropdownMenuItem onClick={() => signOut()}>
+                    <LogOut className="w-4 h-4 mr-2" />
+                    Sign Out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
+            ) : (
+              <UserNavLink />
+            )}
 
             <Link to="/advertise" onClick={scrollToTop}>
               <Button variant="ghost" className="font-roboto">
@@ -342,7 +377,7 @@ export const Header = () => {
           </div>
 
           {/* Right Side Actions for Two-Row Layout (only when space is limited) */}
-          <div className="hidden max-[1399px]:flex items-center space-x-3">
+          <div className="hidden max-[1999px]:flex items-center space-x-3">
             {/* Search by Country Dropdown */}
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -490,7 +525,7 @@ export const Header = () => {
         </div>
 
         {/* Second Row - Navigation Links (only when space is limited - high zoom) */}
-        <div className="hidden max-[1399px]:flex items-center justify-center space-x-3 pb-4 border-t border-gray-100 pt-4">
+        <div className="hidden max-[1999px]:flex items-center justify-center space-x-3 pb-4 border-t border-gray-100 pt-4">
           <Link to="/" onClick={scrollToTop}>
             <Button variant="ghost" className="font-roboto">
               <List className="w-4 h-4 mr-1" />
@@ -511,6 +546,40 @@ export const Header = () => {
               {t('navigation.events')}
             </Button>
           </Link>
+
+          {/* Users Menu - Show dropdown when signed in, link when not signed in */}
+          {isSignedIn ? (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="font-roboto">
+                  <User className="w-4 h-4 mr-1" />
+                  {user?.fullName || user?.firstName || 'User'}
+                  <ChevronDown className="w-4 h-4 ml-1" />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent className="w-48">
+                <DropdownMenuItem onClick={() => navigate('/users/dashboard')}>
+                  <User className="w-4 h-4 mr-2" />
+                  Dashboard
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/users/dashboard/events')}>
+                  <Calendar className="w-4 h-4 mr-2" />
+                  My Events
+                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => navigate('/users/dashboard/profile')}>
+                  <Settings className="w-4 h-4 mr-2" />
+                  Profile
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={() => signOut()}>
+                  <LogOut className="w-4 h-4 mr-2" />
+                  Sign Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
+          ) : (
+            <UserNavLink />
+          )}
 
           <Link to="/advertise" onClick={scrollToTop}>
             <Button variant="ghost" className="font-roboto">
@@ -607,7 +676,7 @@ export const Header = () => {
                   <h3 className="text-sm font-comfortaa font-semibold text-gray-900 uppercase tracking-wide">
                     Administration
                   </h3>
-                  <Link to="/admin" onClick={() => { closeMobileMenu(); scrollToTop(); }}>
+                  <Link to="/sign-in?redirect_url=/admin" onClick={() => { closeMobileMenu(); scrollToTop(); }}>
                     <Button variant="ghost" className="w-full justify-start font-roboto h-12">
                       <Shield className="w-5 h-5 mr-3" />
                       Admin Dashboard
@@ -641,13 +710,37 @@ export const Header = () => {
                         variant="ghost" 
                         className="w-full justify-start font-roboto h-12"
                         onClick={() => {
-                          navigate('/user/settings');
+                          navigate('/users/dashboard');
+                          closeMobileMenu();
+                          scrollToTop();
+                        }}
+                      >
+                        <User className="w-5 h-5 mr-3" />
+                        Dashboard
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        className="w-full justify-start font-roboto h-12"
+                        onClick={() => {
+                          navigate('/users/dashboard/events');
+                          closeMobileMenu();
+                          scrollToTop();
+                        }}
+                      >
+                        <Calendar className="w-5 h-5 mr-3" />
+                        My Events
+                      </Button>
+                      <Button 
+                        variant="ghost" 
+                        className="w-full justify-start font-roboto h-12"
+                        onClick={() => {
+                          navigate('/users/dashboard/profile');
                           closeMobileMenu();
                           scrollToTop();
                         }}
                       >
                         <Settings className="w-5 h-5 mr-3" />
-                        {t('navigation.profile')}
+                        Profile
                       </Button>
                       <Button 
                         variant="ghost" 
@@ -668,7 +761,7 @@ export const Header = () => {
                         variant="ghost" 
                         className="w-full justify-start font-roboto h-12"
                         onClick={() => {
-                          navigate('/user/sign-in');
+                          navigate('/sign-in?redirect_url=/users/dashboard');
                           closeMobileMenu();
                           scrollToTop();
                         }}
@@ -680,7 +773,7 @@ export const Header = () => {
                         variant="ghost" 
                         className="w-full justify-start font-roboto h-12"
                         onClick={() => {
-                          navigate('/user/sign-up');
+                          navigate('/sign-up');
                           closeMobileMenu();
                           scrollToTop();
                         }}
