@@ -80,6 +80,8 @@ export interface Event {
   venue_address?: string;
   venue_latitude?: number;
   venue_longitude?: number;
+  latitude?: number;
+  longitude?: number;
   address?: string;
   start_date: string;
   end_date: string;

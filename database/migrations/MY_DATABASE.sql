@@ -236,6 +236,10 @@ CREATE TABLE public.event_slideshow_images (
   sort_order integer NOT NULL DEFAULT 0,
   created_at timestamp with time zone NOT NULL DEFAULT now(),
   updated_at timestamp with time zone NOT NULL DEFAULT now(),
+  media_type character varying DEFAULT 'image'::character varying CHECK (media_type::text = ANY (ARRAY['image'::character varying, 'video'::character varying]::text[])),
+  video_url character varying,
+  video_duration integer,
+  video_thumbnail character varying,
   CONSTRAINT event_slideshow_images_pkey PRIMARY KEY (id)
 );
 CREATE TABLE public.event_tickets (
@@ -293,6 +297,11 @@ CREATE TABLE public.events (
   updated_by uuid,
   view_count integer DEFAULT 0,
   registration_count integer DEFAULT 0,
+  created_by_user_id character varying,
+  created_by_email character varying,
+  created_by_name character varying,
+  latitude numeric,
+  longitude numeric,
   CONSTRAINT events_pkey PRIMARY KEY (id),
   CONSTRAINT events_organizer_id_fkey FOREIGN KEY (organizer_id) REFERENCES public.users(id),
   CONSTRAINT events_city_id_fkey FOREIGN KEY (city_id) REFERENCES public.cities(id),
@@ -472,6 +481,37 @@ CREATE TABLE public.user_logs (
   user_agent text,
   created_at timestamp with time zone DEFAULT now(),
   CONSTRAINT user_logs_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.user_slideshow_submissions (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  user_id character varying NOT NULL,
+  user_email character varying NOT NULL,
+  user_name character varying NOT NULL,
+  title character varying,
+  description text,
+  media_type character varying NOT NULL DEFAULT 'image'::character varying CHECK (media_type::text = ANY (ARRAY['image'::character varying, 'video'::character varying]::text[])),
+  media_url character varying NOT NULL,
+  thumbnail_url character varying,
+  alt_text character varying,
+  submission_status character varying NOT NULL DEFAULT 'pending'::character varying CHECK (submission_status::text = ANY (ARRAY['pending'::character varying, 'approved'::character varying, 'rejected'::character varying]::text[])),
+  admin_notes text,
+  reviewed_by character varying,
+  reviewed_at timestamp with time zone,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT user_slideshow_submissions_pkey PRIMARY KEY (id)
+);
+CREATE TABLE public.user_verifications (
+  id uuid NOT NULL DEFAULT gen_random_uuid(),
+  user_id character varying NOT NULL,
+  verification_type character varying NOT NULL CHECK (verification_type::text = ANY (ARRAY['email'::character varying, 'phone'::character varying, 'business'::character varying, 'trusted_organizer'::character varying]::text[])),
+  is_verified boolean DEFAULT false,
+  verified_at timestamp with time zone,
+  verified_by character varying,
+  verification_data jsonb,
+  created_at timestamp with time zone DEFAULT now(),
+  updated_at timestamp with time zone DEFAULT now(),
+  CONSTRAINT user_verifications_pkey PRIMARY KEY (id)
 );
 CREATE TABLE public.users (
   id uuid NOT NULL,

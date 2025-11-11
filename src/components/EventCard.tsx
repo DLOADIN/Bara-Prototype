@@ -11,12 +11,16 @@ interface EventCardProps {
   imageUrl: string;
   category?: string;
   hashtags?: string[];
+  latitude?: number;
+  longitude?: number;
+  city?: string;
   createdBy?: {
     name: string;
     email: string;
     verification?: VerificationStatus;
   };
   onViewEvent?: (id: string) => void;
+  onLocationClick?: (eventId: string, city?: string) => void;
 }
 
 export const EventCard = ({
@@ -28,8 +32,12 @@ export const EventCard = ({
   imageUrl,
   category,
   hashtags,
+  latitude,
+  longitude,
+  city,
   createdBy,
   onViewEvent,
+  onLocationClick,
 }: EventCardProps) => {
   const handleViewEvent = (e: React.MouseEvent) => {
     e.preventDefault();
@@ -38,6 +46,13 @@ export const EventCard = ({
     } else {
       // Fallback to URL navigation if no handler provided
       window.location.href = `/events/${id}`;
+    }
+  };
+
+  const handleLocationClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (onLocationClick && (latitude && longitude)) {
+      onLocationClick(id, city);
     }
   };
 
@@ -67,8 +82,18 @@ export const EventCard = ({
             <span>{date} • {time}</span>
           </div>
           <div className="flex items-center">
-            <MapPin className="w-4 h-4 mr-2 text-orange-500" />
-            <span className="line-clamp-1">{location}</span>
+            <MapPin className="w-4 h-4 mr-2 text-orange-500 flex-shrink-0" />
+            {latitude && longitude && onLocationClick ? (
+              <button
+                onClick={handleLocationClick}
+                className="line-clamp-1 text-left hover:text-orange-500 hover:underline transition-colors"
+                title="Click to view on map"
+              >
+                {location}
+              </button>
+            ) : (
+              <span className="line-clamp-1">{location}</span>
+            )}
           </div>
         </div>
         

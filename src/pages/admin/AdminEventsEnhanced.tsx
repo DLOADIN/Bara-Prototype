@@ -207,6 +207,8 @@ export const AdminEventsEnhanced = () => {
         event_images: formData.event_images,
         venue_latitude: formData.venue_latitude ? Number(formData.venue_latitude) : null,
         venue_longitude: formData.venue_longitude ? Number(formData.venue_longitude) : null,
+        latitude: formData.venue_latitude ? Number(formData.venue_latitude) : null,
+        longitude: formData.venue_longitude ? Number(formData.venue_longitude) : null,
         category: formData.category,
         organizer_name: formData.organizer_name,
         organizer_handle: formData.organizer_handle,

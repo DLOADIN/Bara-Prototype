@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { Header } from "@/components/Header";
 import Footer from "@/components/Footer";
 import { EventCard } from "@/components/EventCard";
+import { FullscreenMapModal } from "@/components/FullscreenMapModal";
+import { InteractiveEventsMap } from "@/components/InteractiveEventsMap";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Search, Filter, ChevronLeft, ChevronRight, MapPin, Calendar, Clock, ArrowLeft, CalendarDays, ArrowUpDown, X, Hash } from 'lucide-react';
+import { Search, Filter, ChevronLeft, ChevronRight, MapPin, Calendar, Clock, ArrowLeft, CalendarDays, ArrowUpDown, X, Hash, Maximize2 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useNavigate } from 'react-router-dom';
 import { useEvents, useEventCategories } from '@/hooks/useEvents';
@@ -23,6 +25,9 @@ export const EventsPage = () => {
   const [selectedEvent, setSelectedEvent] = useState<DatabaseEvent | null>(null);
   const [currentPage, setCurrentPage] = useState(1);
   const eventsPerPage = 12;
+  const [mapModalOpen, setMapModalOpen] = useState(false);
+  const [mapEvents, setMapEvents] = useState<any[]>([]);
+  const [selectedEventForMap, setSelectedEventForMap] = useState<string | undefined>();
 
   // Use real data from database
   const { events, loading, searchEvents } = useEvents();
@@ -78,6 +83,69 @@ export const EventsPage = () => {
 
   const handleBackToList = () => {
     setSelectedEvent(null);
+  };
+
+  const handleLocationClick = async (eventId: string, city?: string) => {
+    const clickedEvent = events.find(e => e.id === eventId);
+    if (!clickedEvent) return;
+
+    // Get ALL events with valid coordinates from the database
+    const eventsWithCoords = events.filter(e => 
+      ((e.latitude && e.longitude) || (e.venue_latitude && e.venue_longitude))
+    );
+
+    // Map to the format expected by InteractiveEventsMap
+    const mappedEvents = eventsWithCoords.map(e => ({
+      id: e.id,
+      title: e.title,
+      description: e.description,
+      venue: e.venue_name || e.venue_address || '',
+      latitude: e.latitude || e.venue_latitude || 0,
+      longitude: e.longitude || e.venue_longitude || 0,
+      event_date: e.start_date,
+      image_url: e.event_image_url,
+      city: e.city_name,
+    }));
+
+    setMapEvents(mappedEvents);
+    setSelectedEventForMap(eventId);
+    setMapModalOpen(true);
+  };
+
+  // Get ALL events with coordinates for event detail map
+  const getAllEventsForMap = (currentEvent: DatabaseEvent) => {
+    // Get ALL events with valid coordinates from the database
+    const eventsWithCoords = events.filter(e => 
+      e.id !== currentEvent.id && // Exclude current event to add it first
+      ((e.latitude && e.longitude) || (e.venue_latitude && e.venue_longitude))
+    );
+
+    return [
+      // Include current event first (will be shown with red marker)
+      {
+        id: currentEvent.id,
+        title: currentEvent.title,
+        description: currentEvent.description,
+        venue: currentEvent.venue_name || currentEvent.venue_address || '',
+        latitude: currentEvent.latitude || currentEvent.venue_latitude || 0,
+        longitude: currentEvent.longitude || currentEvent.venue_longitude || 0,
+        event_date: currentEvent.start_date,
+        image_url: currentEvent.event_image_url,
+        city: currentEvent.city_name,
+      },
+      // Add ALL other events with coordinates (shown with blue markers)
+      ...eventsWithCoords.map(e => ({
+        id: e.id,
+        title: e.title,
+        description: e.description,
+        venue: e.venue_name || e.venue_address || '',
+        latitude: e.latitude || e.venue_latitude || 0,
+        longitude: e.longitude || e.venue_longitude || 0,
+        event_date: e.start_date,
+        image_url: e.event_image_url,
+        city: e.city_name,
+      }))
+    ];
   };
 
   // Handle direct URL access to event details
@@ -254,9 +322,12 @@ export const EventsPage = () => {
                   <p className="text-sm text-gray-500">{event.city_name}, {event.country_name}</p>
                 )}
                 {(() => {
-                  const hasCoords = typeof event.venue_latitude === 'number' && typeof event.venue_longitude === 'number';
+                  const hasCoords = (typeof event.venue_latitude === 'number' && typeof event.venue_longitude === 'number') ||
+                                   (typeof event.latitude === 'number' && typeof event.longitude === 'number');
+                  const lat = event.latitude || event.venue_latitude;
+                  const lng = event.longitude || event.venue_longitude;
                   const mapsUrl = hasCoords
-                    ? `https://www.google.com/maps/search/?api=1&query=${event.venue_latitude},${event.venue_longitude}`
+                    ? `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`
                     : `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${event.venue_name || ''} ${event.venue_address || ''} ${event.city_name || ''} ${event.country_name || ''}`.trim())}`;
                   return (
                     <a
@@ -269,25 +340,6 @@ export const EventsPage = () => {
                     </a>
                   );
                 })()}
-                {/* Inline map preview */}
-                <div className="mt-4 rounded-lg overflow-hidden border border-gray-200">
-                  {(() => {
-                    const hasCoords = typeof event.venue_latitude === 'number' && typeof event.venue_longitude === 'number';
-                    const query = hasCoords
-                      ? `${event.venue_latitude},${event.venue_longitude}`
-                      : `${event.venue_name || ''} ${event.venue_address || ''} ${event.city_name || ''} ${event.country_name || ''}`.trim();
-                    const embedUrl = `https://www.google.com/maps?q=${encodeURIComponent(query)}&z=14&output=embed`;
-                    return (
-                      <iframe
-                        title="Event location map"
-                        src={embedUrl}
-                        className="w-full h-56"
-                        loading="lazy"
-                        referrerPolicy="no-referrer-when-downgrade"
-                      />
-                    );
-                  })()}
-                </div>
             </div>
           </div>
           
@@ -370,6 +422,82 @@ export const EventsPage = () => {
           </div>
         </div>
       </div>
+
+
+      {/* Break out of container for full-width map */}
+    </div>
+
+    {/* Full-width Interactive Map Section - Outside the constrained container */}
+    <div className="w-full bg-gray-50 py-8 mt-8">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="mb-6">
+          <div className="flex items-center justify-between mb-2">
+            <h3 className="text-3xl font-bold text-gray-900">📍 Event Location & All Events Map</h3>
+            <div className="flex items-center gap-4 text-sm">
+              <span className="flex items-center">
+                <span className="w-4 h-4 bg-red-500 rounded-full mr-2"></span>
+                <span className="font-medium">This Event</span>
+              </span>
+              <span className="flex items-center">
+                <span className="w-4 h-4 bg-blue-500 rounded-full mr-2"></span>
+                <span className="font-medium">Other Events</span>
+              </span>
+            </div>
+          </div>
+          <p className="text-gray-600">
+            Explore this event's location and discover {getAllEventsForMap(event).length - 1} other events happening around the world
+          </p>
+        </div>
+        
+        <div className="rounded-xl overflow-hidden border-2 border-gray-300 shadow-2xl bg-white">
+          {(() => {
+            const hasCoords = (typeof event.venue_latitude === 'number' && typeof event.venue_longitude === 'number') ||
+                             (typeof event.latitude === 'number' && typeof event.longitude === 'number');
+            
+            if (!hasCoords) {
+              return (
+                <div className="w-full h-[600px] bg-gray-100 flex items-center justify-center">
+                  <div className="text-center">
+                    <MapPin className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                    <p className="text-lg text-gray-600 font-medium">Location coordinates not available</p>
+                    <p className="text-sm text-gray-500 mt-2">Map cannot be displayed without coordinates</p>
+                  </div>
+                </div>
+              );
+            }
+
+            const allEventsForMap = getAllEventsForMap(event);
+            
+            return (
+              <InteractiveEventsMap
+                events={allEventsForMap}
+                selectedEventId={event.id}
+                height="700px"
+                showExpandButton={true}
+                onExpand={() => {
+                  setMapEvents(allEventsForMap);
+                  setSelectedEventForMap(event.id);
+                  setMapModalOpen(true);
+                }}
+              />
+            );
+          })()}
+        </div>
+        
+        <div className="mt-4 flex items-center justify-between">
+          <p className="text-sm text-gray-600">
+            <Maximize2 className="w-4 h-4 inline mr-1 text-brand-blue" /> 
+            Click <strong className="text-brand-blue">"Expand Map"</strong> button to view in fullscreen mode
+          </p>
+          <p className="text-sm text-gray-500">
+            Total events on map: <strong>{getAllEventsForMap(event).length}</strong>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    {/* Reopen container for other content if needed */}
+    <div className="max-w-6xl mx-auto bg-white rounded-xl shadow-lg overflow-hidden" style={{ marginTop: 0 }}>
     </div>
 
         {isLightboxVisible && (
@@ -564,18 +692,22 @@ export const EventsPage = () => {
                     <EventCard
                       id={event.id}
                       title={event.title}
-                    date={new Date(event.start_date).toLocaleDateString()}
-                    time={`${new Date(event.start_date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - ${new Date(event.end_date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`}
-                    location={event.city_name ? `${event.city_name}, ${event.country_name}` : event.venue_address || ''}
-                    imageUrl={event.event_image_url || ''}
-                    category={event.category_name || event.category}
-                    hashtags={event.tags || []}
-                    onViewEvent={(id) => {
-                      const eventToView = events.find(e => e.id === id);
-                      if (eventToView) {
-                        handleViewEvent(eventToView);
-                      }
-                    }}
+                      date={new Date(event.start_date).toLocaleDateString()}
+                      time={`${new Date(event.start_date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})} - ${new Date(event.end_date).toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})}`}
+                      location={event.city_name ? `${event.city_name}, ${event.country_name}` : event.venue_address || ''}
+                      imageUrl={event.event_image_url || ''}
+                      category={event.category_name || event.category}
+                      hashtags={event.tags || []}
+                      latitude={event.latitude}
+                      longitude={event.longitude}
+                      city={event.city_name}
+                      onViewEvent={(id) => {
+                        const eventToView = events.find(e => e.id === id);
+                        if (eventToView) {
+                          handleViewEvent(eventToView);
+                        }
+                      }}
+                      onLocationClick={handleLocationClick}
                     />
                   </div>
                 ))}
@@ -644,6 +776,15 @@ export const EventsPage = () => {
         </div>
       
       <Footer />
+      
+      {/* Fullscreen Map Modal */}
+      <FullscreenMapModal
+        isOpen={mapModalOpen}
+        onClose={() => setMapModalOpen(false)}
+        events={mapEvents}
+        selectedEventId={selectedEventForMap}
+        title="Events in this Area"
+      />
     </div>
   );
 };
