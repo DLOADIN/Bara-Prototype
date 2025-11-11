@@ -125,14 +125,14 @@ export const UserDashboard = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <Mail className="h-4 w-4 text-green-500 mr-2" />
-                    <span className="text-sm">Email</span>
+                    <span className="text-sm">User Credentials & Email</span>
                   </div>
                   <Badge variant="secondary" className="bg-green-100 text-green-800">
                     ✓ Verified
                   </Badge>
                 </div>
                 
-                <div className="flex items-center justify-between">
+                {/* <div className="flex items-center justify-between">
                   <div className="flex items-center">
                     <Phone className="h-4 w-4 text-gray-400 mr-2" />
                     <span className="text-sm text-gray-600">Phone</span>
@@ -150,7 +150,7 @@ export const UserDashboard = () => {
                   <Badge variant="outline" className="text-gray-500">
                     Not Started
                   </Badge>
-                </div>
+                </div> 
                 
                 <div className="flex items-center justify-between">
                   <div className="flex items-center">
@@ -161,6 +161,9 @@ export const UserDashboard = () => {
                     Not Started
                   </Badge>
                 </div>
+                
+                */}
+
               </CardContent>
             </Card>
           </div>
